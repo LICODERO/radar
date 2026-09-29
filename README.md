@@ -32,9 +32,9 @@ Per repository, coverage is the sum of:
 
 ## Privacy and safety
 
-- The scan is **local and read-only**. Nothing leaves your machine and the app works offline.
+- The scan is **local and read-only**. Scanning sends nothing anywhere and works offline; only the optional agent drafting calls `claude`.
 - Only AI/markdown files are read. Secrets such as `.env` files and keys are never touched.
-- Files are written **only** after an explicit SAVE, and only inside detected repositories (paths are validated).
+- The only thing the app writes into a repository is a new agent file, after an explicit SAVE and only inside detected repositories (paths are validated, existing files are never overwritten). Drafting sends your description to Claude through your own CLI; nothing else leaves your machine.
 - The local server listens on `127.0.0.1` only and requires a per-session token, so other websites cannot reach it.
 
 ## Planned stack
@@ -60,7 +60,8 @@ cd radar
 1. Click **ZMIEŃ** and pick the directory that contains your repositories (macOS shows a native folder dialog). Picking a directory starts the scan right away.
 2. The overlay shows real progress from the scanner; when it finishes, close it to see the dashboard. Use **SKANUJ PONOWNIE** to rescan the same directory.
 3. Click an agent, skill or workflow (or **OTWÓRZ CLAUDE.md**) and choose **OTWÓRZ PLIK** for a read-only preview of the file.
-4. **GENERUJ POLECENIA** lists ready-made `claude` / `codex` commands for the gaps (missing `CLAUDE.md`, agents, skills, OUTPUTS, unlinked workflows). **KOPIUJ** copies a command (POSIX or PowerShell flavour, depending on your system); **URUCHOM** opens Terminal.app (macOS) or PowerShell (Windows) in the repo and starts `claude` / `codex` with the prompt after you confirm. The session is interactive, so you approve every change in the tool; the app itself never writes into your repos.
+4. **+ AGENT** (left panel) drafts a new agent from a description in your own words: it calls your `claude` CLI once, with no tools and in an empty temporary directory, sending only your description, the stack name and existing agent names. You review and edit the draft; **ZAPISZ** then creates `.claude/agents/<name>.md` (never overwriting an existing file).
+5. **GENERUJ POLECENIA** lists ready-made `claude` / `codex` commands for the gaps (missing `CLAUDE.md`, agents, skills, OUTPUTS, unlinked workflows). **KOPIUJ** copies a command (POSIX or PowerShell flavour, depending on your system); **URUCHOM** opens Terminal.app (macOS) or PowerShell (Windows) in the repo and starts `claude` / `codex` with the prompt after you confirm. The session is interactive, so you approve every change in the tool; the app itself never writes into your repos.
 
 The last scan and your settings are saved in `~/Library/Application Support/RADAR` (`%APPDATA%\RADAR` on Windows, `~/.local/share/radar` on Linux), so the next start shows the previous result immediately.
 

@@ -2,7 +2,7 @@
 
 Repo AI Discovery And Review: local tool that scans a directory of repositories, shows their AI setup
 (CLAUDE.md, agents, skills, workflows, memory), computes coverage and gaps, and generates Claude Code / Codex CLI
-commands to fill them. The MVP is **read-only**.
+commands to fill them. The MVP is read-only, except that the user can create a new agent file after reviewing a generated draft.
 
 ## Stack
 
@@ -32,7 +32,7 @@ Override with `Radar__DataDir` (tests and manual experiments must never touch th
 
 ## API (all under /api, loopback only)
 
-`GET session` (token) · `GET/PUT settings` · `POST pick-folder` · `GET scan/latest` · `GET file?repo=&path=` (read-only preview) · `GET gaps` (commands/prompts, server is the single source) · `GET tools` (platform, shell, claude/codex on PATH) · `POST run` · `POST scans` · `GET scans/current` ·
+`GET session` (token) · `GET/PUT settings` · `POST pick-folder` · `GET scan/latest` · `GET file?repo=&path=` (read-only preview) · `GET gaps` (commands/prompts, server is the single source) · `POST agents/generate` (draft) · `POST agents` (create) · `GET tools` (platform, shell, claude/codex on PATH) · `POST run` · `POST scans` · `GET scans/current` ·
 `GET scans/{id}/events` (SSE: started, phase, repo-found, repo-scanned, completed, cancelled, error) · `DELETE scans/{id}`.
 `run` opens Terminal.app (macOS) or PowerShell (Windows) in the repo and starts `claude`/`codex` with the gap prompt; the client sends only repo id + gap type + tool, the server builds the command (never accept command text from the client). The session is interactive, the app itself writes nothing into repos.
 `file` only serves paths the latest scan reported for that repo (CLAUDE.md, agents, skills, workflows), `.md` only, max 256 KB, never through a symlink leaving the repo.
@@ -46,7 +46,8 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 - Never read secrets (`.env`, keys); only AI/markdown files.
 - Any file access by path must be resolved and validated to be inside a detected repo (no symlink escapes).
 - Cross-platform: macOS and Windows are supported (Linux: everything except opening a terminal). Windows code paths (PowerShell launcher, folder dialog, `run.ps1`) are covered by unit tests of the builders but were not run on a real Windows machine yet.
-- Server listens on `127.0.0.1` only; there are no endpoints that write into repos in the MVP (only the app's own settings/cache).
+- Drafting an agent from a description (`POST agents/generate`) runs `claude -p` with no tools, `--strict-mcp-config --setting-sources project`, in an empty temp dir, and sends only the description, the stack name and existing agent names. Measured on the real CLI: ~0.06 cent per call with these flags vs ~5 cents without. `POST agents` is the only place the app writes into a repo: one new `.claude/agents/<name>.md`, only after the user confirms, never overwriting.
+- Server listens on `127.0.0.1` only; the only write into a repo is the confirmed creation of a new agent file (see above), everything else is read-only (plus the app's own settings/cache).
 - Layout: fixed 1440x900 stage scaled proportionally (`web/src/app/core/fit-scale.ts`, minimum scale 0.85, smaller windows scroll); use `fs(px)` from
   `web/src/styles/_tokens.scss` for every font size so fonts stay within 0.85x-1.2x.
 - Palette: lime `#c6ff3d` (agents), violet `#a99bff` (skills), white `#e6e9f2` (repos, workflows),

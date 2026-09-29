@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, ElementRef, computed, effect, inject, viewChild } from '@angular/core';
 import { RadarStore } from '../core/radar-store';
-import { renderBlocks } from '../core/render-markdown';
+import { MdView } from '../shared/md-view';
 
 @Component({
   selector: 'app-file-pane',
+  imports: [MdView],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './file-pane.html',
   styleUrl: './file-pane.scss'
@@ -11,7 +12,6 @@ import { renderBlocks } from '../core/render-markdown';
 export class FilePane {
   protected readonly store = inject(RadarStore);
   protected readonly f = computed(() => this.store.file()!);
-  protected readonly blocks = computed(() => (this.f().status === 'ready' ? renderBlocks(this.f().text) : []));
   protected readonly lines = computed(() => (this.f().text ? this.f().text.split('\n').length : 0));
   protected readonly closeBtn = viewChild<ElementRef<HTMLButtonElement>>('closeBtn');
 

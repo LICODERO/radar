@@ -54,6 +54,8 @@ export class RadarStore {
   readonly scan = signal<ScanUiState | null>(null);
   readonly file = signal<FileView | null>(null);
   readonly gapsOpen = signal(false);
+  /** the "new agent from a description" panel; the id of the repo it works on */
+  readonly composerRepoId = signal<string | null>(null);
   readonly tools = signal<ToolsInfo | null>(null);
   readonly gapItems = signal<GapItem[]>([]);
   readonly gapsError = signal<string | null>(null);
@@ -160,6 +162,7 @@ export class RadarStore {
   // ---- read-only file preview -------------------------------------------------------------------
   async openFile(repoId: string, path: string, kind: string, color: string): Promise<void> {
     const repo = this.repos().find((r) => r.id === repoId);
+    this.composerRepoId.set(null);
     const seq = ++this.fileSeq;
     const base: FileView = {
       repoId, repoName: repo?.name ?? repoId, path, kind, color, status: 'loading', text: '', truncated: false, bytes: 0,
@@ -185,6 +188,41 @@ export class RadarStore {
   closeFile(): void {
     this.fileSeq++;
     this.file.set(null);
+  }
+
+  // ---- new agent composer -------------------------------------------------------------------
+  openComposer(): void {
+    const id = this.selected()?.id;
+    if (!id || this.mode() === 'mock') return;
+    this.closeFile();
+    this.composerRepoId.set(id);
+  }
+
+  closeComposer(): void { this.composerRepoId.set(null); }
+
+  /**
+   * Rescans without the overlay (used after the app created a file) and resolves when the fresh result is in.
+   * Does nothing while a normal scan is running.
+   */
+  async refreshQuiet(): Promise<void> {
+    if (this.scanning()) return;
+    try {
+      const es = await this.api.openEvents(await this.api.startScan());
+      await new Promise<void>((resolve) => {
+        const done = async () => {
+          es.close();
+          try {
+            this.applyResult(await this.api.latest());
+            this.settings.set(await this.api.settings());
+            await this.loadGaps();
+          } catch { /* the next full scan will catch up */ }
+          resolve();
+        };
+        es.addEventListener('completed', () => void done());
+        es.addEventListener('error', (ev) => { if ((ev as MessageEvent).data !== undefined || es.readyState === EventSource.CLOSED) { es.close(); resolve(); } });
+        es.addEventListener('cancelled', () => { es.close(); resolve(); });
+      });
+    } catch { /* best effort */ }
   }
 
   /** Commands for the gaps come from the server, which owns the prompts. */

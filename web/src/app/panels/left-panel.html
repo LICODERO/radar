@@ -72,7 +72,7 @@
   <div class="m hint">W REPO: <span class="sel">{{ selName() }}</span></div>
 </div>
 <div class="acts">
-  <button class="m act tip tip-l" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji" style="color:#c6ff3d;border-color:#c6ff3d66;background:#c6ff3d0d"><span class="plus">+</span><span class="lbl">AGENT</span></button>
+  <button class="m act tip tip-l" type="button" [disabled]="!canCompose()" [attr.data-tip]="agentTip()" (click)="store.openComposer()" style="color:#c6ff3d;border-color:#c6ff3d66;background:#c6ff3d0d"><span class="plus">+</span><span class="lbl">AGENT</span></button>
   <button class="m act tip" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji" style="color:#a99bff;border-color:#a99bff66;background:#a99bff0d"><span class="plus">+</span><span class="lbl">SKILL</span></button>
   <button class="m act tip tip-r" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji" style="color:#e6e9f2;border-color:#e6e9f266;background:#e6e9f20d"><span class="plus">+</span><span class="lbl">WORKFLOW</span></button>
 </div>

@@ -26,6 +26,7 @@
           </div>
         }
         @if (store.file()) { <app-file-pane /> }
+        @if (store.composerRepoId()) { <app-agent-composer /> }
         @if (store.gapsOpen()) { <app-gap-panel /> }
         @if (store.scan()) { <app-scan-overlay /> }
       }

@@ -27,19 +27,4 @@
 .msg.warn { color: $amber; margin-top: 16px; }
 .src { margin: 0; font-size: fs(11.5); line-height: 1.55; color: $text; white-space: pre-wrap; word-break: break-word; }
 
-.b { line-height: 1.5; color: #d5d9e8; font-size: fs(14); margin-top: 6px; white-space: pre-wrap; word-break: break-word; }
-.b.h1 { font-size: fs(26); font-weight: 600; color: #fff; margin-top: 18px; }
-.b.h2 { font-size: fs(17); font-weight: 600; color: $lime; margin-top: 18px; }
-.b.h3 { font-size: fs(15); font-weight: 600; color: $white; margin-top: 14px; }
-.b.li, .b.ol { margin-top: 4px; }
-.dot { margin-right: 8px; color: $muted; }
-.b.blank { font-size: fs(6); margin-top: 0; }
-.b.fm { font-family: $mono; font-size: fs(11.5); color: #c9d2a8; background: #c6ff3d0d; padding: 0 8px; margin-top: 0; }
-.b.code { font-family: $mono; font-size: fs(11.5); color: $text; background: #ffffff0d; padding: 0 10px; margin-top: 0; }
-.b.table { font-family: $mono; font-size: fs(11.5); color: $text; background: #ffffff08; padding: 2px 8px; margin-top: 2px; }
-.b.quote { border-left: 2px solid $violet; padding-left: 10px; color: #a3a9bf; }
-.b.hr { border-top: 1px solid #c6ff3d33; margin-top: 12px; height: 0; }
-code { font-family: $mono; font-size: .85em; background: #ffffff14; padding: 1px 4px; }
-strong { color: #fff; font-weight: 600; }
-
 .foot { display: flex; justify-content: space-between; padding: 8px 18px; border-top: 1px solid #c6ff3d22; font-size: fs(9); letter-spacing: .1em; color: $muted; }

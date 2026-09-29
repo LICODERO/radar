@@ -1,8 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { GapItem, Tool } from './commands';
-import { FileContent, ScanResult, Settings, ToolsInfo } from './models';
+import { AgentDraft, FileContent, ScanResult, Settings, ToolsInfo } from './models';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly body?: any) {
@@ -57,6 +57,27 @@ export class RadarApi {
   /** Opens a terminal in the repo with claude/codex; the server builds the command itself. */
   run(repoId: string, type: string, tool: Tool): Promise<{ launched: boolean; toolFound: boolean }> {
     return this.call('POST', '/api/run', { repoId, type, tool });
+  }
+
+  /** Drafts an agent file from a description. Nothing is written; aborting the signal stops the claude call. */
+  async generateAgent(repoId: string, description: string, signal: AbortSignal): Promise<AgentDraft> {
+    const token = await this.ensureToken();
+    return this.abortable(this.http.post<AgentDraft>('/api/agents/generate', { repoId, description }, { headers: { 'X-Radar-Token': token } }), signal);
+  }
+
+  /** Writes the reviewed file as a brand-new .claude/agents/<name>.md (the server never overwrites). */
+  createAgent(repoId: string, content: string): Promise<{ path: string }> {
+    return this.call('POST', '/api/agents', { repoId, content });
+  }
+
+  private abortable<T>(source: Observable<T>, signal: AbortSignal): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
+      const sub = source.subscribe({
+        next: resolve,
+        error: (e) => reject(e instanceof HttpErrorResponse ? new ApiError(e.error?.error ?? `Błąd serwera (${e.status})`, e.status, e.error) : e)
+      });
+      signal.addEventListener('abort', () => { sub.unsubscribe(); reject(new DOMException('Przerwano', 'AbortError')); }, { once: true });
+    });
   }
 
   async startScan(): Promise<string> {

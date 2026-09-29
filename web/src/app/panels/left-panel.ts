@@ -14,6 +14,10 @@ export class LeftPanel {
   protected readonly total = computed(() => this.store.repos().length);
   protected readonly wfTotal = computed(() => this.store.workflows().length);
   protected readonly selName = computed(() => this.store.selected()?.name ?? '—');
+  protected readonly canCompose = computed(() => this.store.mode() === 'api' && !!this.store.selected() && !this.store.scanning());
+  protected readonly agentTip = computed(() => this.store.mode() === 'mock'
+    ? 'Wymaga działającego serwera'
+    : `Nowy agent w ${this.selName()} z opisu własnymi słowami`);
   protected readonly vault = computed(() => this.store.selected()?.outputs.exists ?? false);
 
   protected onQuery(e: Event): void {

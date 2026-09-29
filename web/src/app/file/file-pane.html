@@ -21,14 +21,7 @@
       @if (f().mode === 'source') {
         <pre class="m src">{{ f().text }}</pre>
       } @else {
-        @for (b of blocks(); track $index) {
-          <div class="b" [class]="'b ' + b.kind" [style.padding-left.px]="b.kind === 'li' || b.kind === 'ol' ? 6 + b.indent * 16 : null">
-            @if (b.kind === 'li') { <span class="dot">•</span> }
-            @for (s of b.segs; track $index) {
-              @if (s.k === 'b') { <strong>{{ s.t }}</strong> } @else if (s.k === 'c') { <code>{{ s.t }}</code> } @else { {{ s.t }} }
-            }
-          </div>
-        }
+        <app-md-view [text]="f().text" />
       }
       @if (f().truncated) {
         <div class="m msg warn">Plik jest duży ({{ size(f().bytes) }}) — pokazano początek.</div>

@@ -111,7 +111,7 @@ public class ToolLocatorTests
             File.WriteAllText(Path.Combine(dir, "codex"), "not executable");
             File.SetUnixFileMode(Path.Combine(dir, "codex"), UnixFileMode.UserRead | UnixFileMode.UserWrite);
 
-            var loc = new PathToolLocator([dir, "/definitely/not/here"]);
+            IToolLocator loc = new PathToolLocator([dir, "/definitely/not/here"]);
             Assert.True(loc.IsAvailable("claude"));
             Assert.False(loc.IsAvailable("codex"));
         }
@@ -130,7 +130,7 @@ public sealed class RecordingLauncher(bool supported = true) : ITerminalLauncher
 
 public sealed class FoundEverything : IToolLocator
 {
-    public bool IsAvailable(string tool) => true;
+    public string? Find(string tool) => "/fake/" + tool;
 }
 
 public class RunEndpointTests : IDisposable

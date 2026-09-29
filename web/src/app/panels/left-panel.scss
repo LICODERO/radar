@@ -40,7 +40,8 @@
 
 .acts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
 .acts.vault { margin-top: 8px; }
-.act { height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 1px solid; padding: 0; cursor: pointer; opacity: .5; }
+.act { height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 1px solid; padding: 0; cursor: pointer; }
+.act:disabled { opacity: .5; }
 .plus { font-size: fs(20); line-height: 1; }
 .lbl { font-size: fs(10); letter-spacing: .14em; }
 .vault button { background: transparent; border: 1px solid #ffb84d88; color: $amber; font-size: fs(10); letter-spacing: .08em; padding: 7px 4px; cursor: pointer; opacity: .5; }

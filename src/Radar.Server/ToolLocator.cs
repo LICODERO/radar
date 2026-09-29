@@ -2,7 +2,10 @@ namespace Radar.Server;
 
 public interface IToolLocator
 {
-    bool IsAvailable(string tool);
+    /// <summary>Full path of the executable, or null when it is not on PATH.</summary>
+    string? Find(string tool);
+
+    bool IsAvailable(string tool) => Find(tool) is not null;
 }
 
 /// <summary>Looks for `claude` / `codex` on PATH (plus a few usual install folders). Only informational: the terminal has its own PATH.</summary>
@@ -14,7 +17,7 @@ public sealed class PathToolLocator : IToolLocator
 
     public PathToolLocator(IReadOnlyList<string> dirs) => _dirs = dirs;
 
-    public bool IsAvailable(string tool)
+    public string? Find(string tool)
     {
         foreach (var dir in _dirs)
         {
@@ -23,12 +26,12 @@ public sealed class PathToolLocator : IToolLocator
                 try
                 {
                     var p = Path.Combine(dir, name);
-                    if (File.Exists(p) && (OperatingSystem.IsWindows() || IsExecutable(p))) return true;
+                    if (File.Exists(p) && (OperatingSystem.IsWindows() || IsExecutable(p))) return p;
                 }
                 catch (ArgumentException) { /* malformed PATH entry */ }
             }
         }
-        return false;
+        return null;
     }
 
     private static IEnumerable<string> Candidates(string tool)

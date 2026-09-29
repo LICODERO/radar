@@ -95,3 +95,12 @@ export interface ToolsInfo {
   canLaunch: boolean;
   tools: Record<string, boolean>;
 }
+
+export interface AgentDraft {
+  name: string;
+  path: string | null;
+  content: string;
+  valid: boolean;
+  errors: string[];
+  costUsd?: number;
+}
