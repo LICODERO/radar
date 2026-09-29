@@ -144,15 +144,17 @@ export class RadarStore {
     }
   }
 
+  /** Saves the scan path and, as soon as it is accepted, starts a scan of the new location. */
   async setScanPath(path: string): Promise<boolean> {
     this.notice.set(null);
     try {
       this.settings.set(await this.api.saveScanPath(path));
-      return true;
     } catch (e) {
       this.notice.set(this.messageOf(e, 'Nie udało się zapisać ścieżki.'));
       return false;
     }
+    await this.startScan();
+    return true;
   }
 
   // ---- scan ----------------------------------------------------------------------------------

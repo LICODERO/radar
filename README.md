@@ -57,8 +57,8 @@ cd radar
 
 `run.sh` builds the UI on the first run (`./run.sh --rebuild` to rebuild), starts the server on `http://127.0.0.1:5178` and opens it in your browser. Then:
 
-1. Click **ZMIEŃ** and pick the directory that contains your repositories (macOS shows a native folder dialog).
-2. Click **SKANUJ**. The overlay shows real progress from the scanner; when it finishes, close it to see the dashboard.
+1. Click **ZMIEŃ** and pick the directory that contains your repositories (macOS shows a native folder dialog). Picking a directory starts the scan right away.
+2. The overlay shows real progress from the scanner; when it finishes, close it to see the dashboard. Use **SKANUJ PONOWNIE** to rescan the same directory.
 
 The last scan and your settings are saved in `~/Library/Application Support/RADAR` (`%APPDATA%\RADAR` on Windows, `~/.local/share/radar` on Linux), so the next start shows the previous result immediately.
 

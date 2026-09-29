@@ -13,7 +13,7 @@
       <button class="m btn-ghost" type="button" (click)="cancelEdit()">ANULUJ</button>
     } @else {
       <div class="m path-box" [title]="pathText()">{{ pathText() }}</div>
-      <button class="m btn-ghost tip tip-b" type="button" [attr.data-tip]="isMock() ? 'Tryb danych przykładowych' : 'Zmień katalog skanowania'"
+      <button class="m btn-ghost tip tip-b" type="button" [attr.data-tip]="isMock() ? 'Tryb danych przykładowych' : 'Zmień katalog i od razu skanuj'"
               [disabled]="isMock() || store.scanning()" (click)="change()">ZMIEŃ</button>
     }
   </div>
