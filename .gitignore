@@ -1,0 +1,57 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vs/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+*.user
+*.suo
+*.DotSettings.user
+
+# .NET
+bin/
+obj/
+publish/
+artifacts/
+*.nupkg
+TestResults/
+*.trx
+coverage/
+*.log
+
+# Angular / Node
+node_modules/
+web/dist/
+web/.angular/
+web/out-tsc/
+web/coverage/
+web/.cache/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Playwright / screenshots from local verification
+test-results/
+playwright-report/
+.playwright/
+
+# Local config and secrets
+.env
+.env.*
+!.env.example
+appsettings.Local.json
+appsettings.*.Local.json
+
+# Claude Code local files
+.claude/settings.local.json
+.claude/worktrees/
+CLAUDE.local.md
+
+# Scratch
+tmp/
+scratch/
