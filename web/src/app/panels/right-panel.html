@@ -1,0 +1,52 @@
+<div class="kpis">
+  <div class="kpi"><div class="m kl">REPO</div><div class="kv" style="color:#c6ff3d">{{ sum()?.repos ?? 0 }}</div></div>
+  <div class="kpi"><div class="m kl">AGENCI</div><div class="kv" style="color:#c6ff3d">{{ sum()?.agents ?? 0 }}</div></div>
+  <div class="kpi"><div class="m kl">SKILLE</div><div class="kv" style="color:#a99bff">{{ sum()?.skills ?? 0 }}</div></div>
+  <div class="kpi bad"><div class="m kl" style="color:#ff9cc9">LUKI</div><div class="kv" style="color:#ff4fa3">{{ sum()?.gaps ?? 0 }}</div></div>
+</div>
+
+@if (sel(); as s) {
+  <div class="card">
+    <div class="ch"><div class="m cl">WYBRANE · {{ s.initials }}</div><div class="m cm">{{ s.stack }} · {{ s.coverage.score }}%</div></div>
+    <div class="cname">{{ s.name }}</div>
+    <div class="m flags" [style.color]="s.claudeMd.exists ? '#a99bff' : '#ff4fa3'">{{ flags() }}</div>
+    <div class="m vault">{{ vaultText() }}</div>
+    @if (s.claudeMd.exists) {
+      <button class="m btn-ghost open tip" type="button" disabled data-tip="Podgląd pliku w etapie 4">OTWÓRZ CLAUDE.md</button>
+    }
+
+    <div class="m sec">AGENCI · {{ s.agents.length }}</div>
+    <div class="chips">
+      @for (a of s.agents; track a.name) {
+        <button class="m chipx" type="button" style="color:#c6ff3d;border:1px solid #c6ff3d" (click)="store.pickItem({ kind: 'a', repoId: s.id, name: a.name })">{{ a.name }}</button>
+      } @empty {
+        <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">brak agentów</span>
+      }
+    </div>
+    <div class="m sec">SKILLE · {{ s.skills.length }}</div>
+    <div class="chips">
+      @for (k of s.skills; track k.name) {
+        <button class="m chipx" type="button" style="color:#a99bff;border:1px solid #a99bff" (click)="store.pickItem({ kind: 's', repoId: s.id, name: k.name })">{{ k.name }}</button>
+      } @empty {
+        <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">brak skilli</span>
+      }
+    </div>
+    <div class="m sec">WORKFLOWS · {{ store.selectedWorkflows().length }}</div>
+    <div class="chips">
+      @for (w of store.selectedWorkflows(); track w.id) {
+        <button class="m chipx" type="button" style="color:#e6e9f2;border:1px solid #e6e9f2" (click)="store.pickItem({ kind: 'w', name: w.id })">{{ w.name }}</button>
+      } @empty {
+        <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">brak workflowów</span>
+      }
+    </div>
+  </div>
+}
+
+<div class="m gh">LUKI DO UZUPEŁNIENIA · {{ gaps().length }}</div>
+@for (g of firstGaps(); track g.id) {
+  <button class="m grow row" type="button" (click)="store.selectRepo(g.id)">
+    <span><span style="color:#ff4fa3">◌</span> {{ g.initials }} {{ g.name }}</span><span class="gt">brak CLAUDE.md</span>
+  </button>
+}
+@if (restText()) { <div class="m rest">{{ restText() }}</div> }
+<button class="m btn-ghost tip gen" type="button" disabled [attr.data-tip]="'Generator poleceń w etapie 4'">GENERUJ POLECENIA</button>

@@ -1,0 +1,46 @@
+@use 'tokens' as *;
+
+:host { position: absolute; left: 360px; top: 100px; width: 720px; height: 720px; display: block; }
+.layer { position: absolute; left: 0; top: 0; width: 720px; height: 720px; pointer-events: none; }
+
+.legend-rings { position: absolute; right: 0; top: 0; text-align: right; font-size: fs(9); letter-spacing: .14em; line-height: 16px; color: $muted; z-index: 5; }
+.avg { font-size: fs(30); }
+.avg-l { font-size: fs(8); }
+
+.spoke { position: absolute; height: 1px; background: $lime; opacity: .09; transform-origin: 0 0; pointer-events: none; }
+.line-o { position: absolute; width: 0; height: 0; transform-origin: 0 0; pointer-events: none; }
+.line-i { height: 0; transform-origin: 0 0; }
+.slot { position: absolute; width: 11px; height: 11px; box-sizing: border-box; border: 1px dashed $magenta; border-radius: 50%; pointer-events: none; }
+
+.snode, .anode {
+  position: absolute; padding: 0; margin: 0; border: 0; background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: left .5s, top .5s, opacity .3s;
+}
+.snode > span { display: block; transition: transform .2s; border-radius: 50%; background: $violet; }
+.anode > span { display: block; transition: transform .2s; background: $lime; transform: rotate(45deg); }
+
+.node {
+  position: absolute; box-sizing: border-box; padding: 0; margin: 0; cursor: pointer; background: $panel;
+  display: flex; align-items: center; justify-content: center; font-size: fs(10);
+  transition: opacity .3s, box-shadow .3s, transform .2s;
+}
+.repo { border-radius: 50%; font-weight: 600; }
+.wf { border: 1px solid; border-radius: 6px; }
+
+.halo { position: absolute; width: 44px; height: 44px; box-sizing: border-box; border: 1px dashed $lime; border-radius: 50%; pointer-events: none; transition: left .5s, top .5s; }
+.rip { position: absolute; width: 28px; height: 28px; box-sizing: border-box; border: 1px solid $lime; border-radius: 50%; pointer-events: none; }
+
+.tip-box { position: absolute; transform: translate(-50%, -100%); pointer-events: none; z-index: 8; background: $panel; border: 1px solid; padding: 5px 9px; white-space: nowrap; }
+.l1 { font-size: fs(11); color: #fff; }
+.l2 { font-size: fs(9); letter-spacing: .08em; color: $muted; }
+
+.pop { position: absolute; width: 240px; box-sizing: border-box; z-index: 9; background: $panel; border: 1px solid; padding: 12px 14px 14px; box-shadow: 0 10px 40px rgba(0, 0, 0, .7); }
+.pop-head { display: flex; justify-content: space-between; align-items: center; }
+.kind { font-size: fs(9); letter-spacing: .2em; }
+.close { background: transparent; border: 1px solid #ffffff33; color: $white; width: 22px; height: 22px; font-size: fs(11); cursor: pointer; padding: 0; }
+.pop-title { font-size: fs(19); font-weight: 600; color: #fff; margin-top: 4px; }
+.pop-desc { font-size: fs(12); line-height: 1.4; color: #c3c8db; margin-top: 6px; }
+.pop-row { margin-top: 9px; }
+.k { font-size: fs(9); letter-spacing: .14em; color: $muted; }
+.v { font-size: fs(10.5); line-height: 15px; color: $text; word-break: break-all; }
+.open { margin-top: 12px; width: 100%; box-sizing: border-box; background: transparent; border: 1px solid; font-size: fs(10); letter-spacing: .12em; padding: 8px; cursor: pointer; opacity: .5; }

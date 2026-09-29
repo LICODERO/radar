@@ -1,0 +1,32 @@
+@use 'tokens' as *;
+
+:host { position: absolute; left: 0; top: 0; width: 1440px; height: 100px; pointer-events: none; }
+:host > * { pointer-events: auto; }
+
+.brand { position: absolute; left: 36px; top: 16px; }
+.title { font-size: fs(26); font-weight: 700; letter-spacing: .34em; color: $lime; line-height: 1.1; }
+.sub { font-size: fs(10); letter-spacing: .26em; color: $muted; margin-top: 3px; }
+
+.path { position: absolute; left: 380px; top: 14px; width: 560px; }
+.path-row { display: flex; align-items: center; gap: 10px; }
+.label { font-size: fs(9); letter-spacing: .2em; color: $muted; }
+.path-box { flex-grow: 1; font-size: fs(12); color: $text; border: 1px solid #c6ff3d55; background: #c6ff3d0d; padding: 5px 10px; }
+.path-row button {
+  background: transparent; border: 1px solid #c6ff3d88; color: $lime; font-size: fs(10); letter-spacing: .12em;
+  padding: 6px 10px; cursor: pointer; opacity: .5;
+}
+.ruler {
+  height: 14px; margin-top: 14px;
+  background-image: repeating-linear-gradient(90deg, #c6ff3d66 0 1px, transparent 1px 8px), repeating-linear-gradient(90deg, $lime 0 1px, transparent 1px 40px);
+  background-size: 100% 7px, 100% 14px; background-repeat: no-repeat; background-position: 0 7px, 0 0;
+}
+.info { display: flex; justify-content: space-between; font-size: fs(9); color: $muted; margin-top: 10px; letter-spacing: .14em; }
+
+.clock-block { position: absolute; right: 36px; top: 14px; display: flex; align-items: center; gap: 20px; }
+.clock-text { text-align: right; }
+.clock { font-size: fs(24); font-weight: 500; color: $lime; line-height: 1.2; }
+.last { font-size: fs(9); letter-spacing: .14em; color: $muted; margin-top: 6px; white-space: nowrap; }
+.clock-block button {
+  background: $lime; border: 0; color: #0b1006; font-size: fs(11); font-weight: 600; letter-spacing: .14em;
+  padding: 14px 16px; cursor: pointer; opacity: .5;
+}

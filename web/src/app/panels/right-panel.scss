@@ -1,0 +1,27 @@
+@use 'tokens' as *;
+
+:host { position: absolute; left: 1104px; top: 104px; width: 300px; display: block; }
+.kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.kpi { border: 1px solid #c6ff3d44; padding: 10px 12px; }
+.kpi.bad { border-color: #ff4fa388; }
+.kl { font-size: fs(9); letter-spacing: .16em; color: $muted; }
+.kv { font-size: fs(38); font-weight: 600; line-height: 1.1; }
+
+.card { margin-top: 18px; border: 1px solid #c6ff3d44; padding: 14px 14px 16px; background: #c6ff3d08; }
+.ch { display: flex; justify-content: space-between; align-items: center; }
+.cl { font-size: fs(10); letter-spacing: .18em; color: $lime; }
+.cm { font-size: fs(10); color: $muted; }
+.cname { font-size: fs(22); font-weight: 600; color: #fff; margin-top: 6px; word-break: break-word; }
+.flags { font-size: fs(10); margin-top: 2px; }
+.vault { font-size: fs(10); color: $amber; margin-top: 4px; }
+.open { margin-top: 10px; background: transparent; border: 1px solid #c6ff3d88; color: $lime; font-size: fs(10); letter-spacing: .12em; padding: 6px 10px; cursor: pointer; opacity: .5; }
+.sec { font-size: fs(9); letter-spacing: .16em; color: $muted; margin-top: 14px; margin-bottom: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chipx { background: transparent; font-size: fs(10); padding: 3px 7px; cursor: pointer; }
+span.chipx { cursor: default; }
+
+.gh { font-size: fs(10); letter-spacing: .18em; color: #ff9cc9; margin-top: 20px; padding-bottom: 8px; border-bottom: 1px solid #ff4fa355; }
+.grow { display: flex; justify-content: space-between; font-size: fs(11); height: 30px; align-items: center; background: transparent; border: 0; width: 100%; padding: 0; color: inherit; cursor: pointer; text-align: left; }
+.gt { color: #a3a9bf; }
+.rest { font-size: fs(10); color: $muted; height: 24px; display: flex; align-items: center; }
+.gen { margin-top: 10px; width: 100%; box-sizing: border-box; background: #c6ff3d14; border: 1px solid $lime; color: $lime; font-size: fs(11); letter-spacing: .14em; padding: 11px 14px; cursor: pointer; opacity: .5; }

@@ -55,3 +55,6 @@ CLAUDE.local.md
 # Scratch
 tmp/
 scratch/
+
+# Angular build copied next to the server
+src/Radar.Server/wwwroot/

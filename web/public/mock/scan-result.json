@@ -1,0 +1,1657 @@
+{
+  "schemaVersion": 1,
+  "sample": true,
+  "scanRoot": "~/projects",
+  "scannedAt": "2026-09-29T14:07:00+02:00",
+  "durationMs": 1840,
+  "summary": {
+    "repos": 24,
+    "agents": 22,
+    "skills": 51,
+    "workflows": 9,
+    "gaps": 4,
+    "stacks": [
+      ".NET",
+      "Angular",
+      "YAML",
+      "SQL"
+    ],
+    "avgCoverage": 49
+  },
+  "repos": [
+    {
+      "id": "orders-api",
+      "name": "orders-api",
+      "path": "orders-api",
+      "initials": "OA",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "code-reviewer",
+          "description": "Przegląd zmian przed merge: styl, błędy logiczne, brakujące testy.",
+          "tools": [
+            "Read",
+            "Grep",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/code-reviewer.md"
+        },
+        {
+          "name": "test-writer",
+          "description": "Generuje testy jednostkowe dla zmienionego kodu.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/test-writer.md"
+        },
+        {
+          "name": "migration-helper",
+          "description": "Prowadzi migracje EF Core i sprawdza skrypty SQL.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/migration-helper.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "ef-migrations",
+          "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
+          "path": ".claude/skills/ef-migrations/SKILL.md"
+        },
+        {
+          "name": "xunit-tests",
+          "description": "Konwencje testów xUnit i szablony mocków.",
+          "path": ".claude/skills/xunit-tests/SKILL.md"
+        },
+        {
+          "name": "swagger-docs",
+          "description": "Zasady opisu endpointów i modeli w Swagger.",
+          "path": ".claude/skills/swagger-docs/SKILL.md"
+        },
+        {
+          "name": "hangfire-jobs",
+          "description": "Wzorce zadań cyklicznych i kolejek Hangfire.",
+          "path": ".claude/skills/hangfire-jobs/SKILL.md"
+        },
+        {
+          "name": "serilog-logging",
+          "description": "Jednolity format logów strukturalnych.",
+          "path": ".claude/skills/serilog-logging/SKILL.md"
+        },
+        {
+          "name": "azure-devops-yaml",
+          "description": "Szablony pipeline i zmienne środowiskowe.",
+          "path": ".claude/skills/azure-devops-yaml/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": true,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 14
+      },
+      "coverage": {
+        "score": 92,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 10
+        }
+      },
+      "gaps": []
+    },
+    {
+      "id": "orders-front",
+      "name": "orders-front",
+      "path": "orders-front",
+      "initials": "OF",
+      "stack": "Angular",
+      "stacks": [
+        "Angular"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "code-reviewer",
+          "description": "Przegląd zmian przed merge: styl, błędy logiczne, brakujące testy.",
+          "tools": [
+            "Read",
+            "Grep",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/code-reviewer.md"
+        },
+        {
+          "name": "angular-refactor",
+          "description": "Refaktoryzuje komponenty Angular do standalone i signals.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Grep"
+          ],
+          "model": null,
+          "path": ".claude/agents/angular-refactor.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "angular-component",
+          "description": "Struktura i nazewnictwo komponentów Angular.",
+          "path": ".claude/skills/angular-component/SKILL.md"
+        },
+        {
+          "name": "rxjs-state",
+          "description": "Wzorce zarządzania stanem w RxJS.",
+          "path": ".claude/skills/rxjs-state/SKILL.md"
+        },
+        {
+          "name": "dashboard-charts",
+          "description": "Standardy wykresów i kafelków w dashboardach.",
+          "path": ".claude/skills/dashboard-charts/SKILL.md"
+        },
+        {
+          "name": "jest-tests",
+          "description": "Konwencje testów jednostkowych frontendu.",
+          "path": ".claude/skills/jest-tests/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": true,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 9
+      },
+      "coverage": {
+        "score": 81,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 10
+        }
+      },
+      "gaps": []
+    },
+    {
+      "id": "orders-hangfire",
+      "name": "orders-hangfire",
+      "path": "orders-hangfire",
+      "initials": "OH",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "code-reviewer",
+          "description": "Przegląd zmian przed merge: styl, błędy logiczne, brakujące testy.",
+          "tools": [
+            "Read",
+            "Grep",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/code-reviewer.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "hangfire-jobs",
+          "description": "Wzorce zadań cyklicznych i kolejek Hangfire.",
+          "path": ".claude/skills/hangfire-jobs/SKILL.md"
+        },
+        {
+          "name": "serilog-logging",
+          "description": "Jednolity format logów strukturalnych.",
+          "path": ".claude/skills/serilog-logging/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 64,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "reports-api",
+      "name": "reports-api",
+      "path": "reports-api",
+      "initials": "RA",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "code-reviewer",
+          "description": "Przegląd zmian przed merge: styl, błędy logiczne, brakujące testy.",
+          "tools": [
+            "Read",
+            "Grep",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/code-reviewer.md"
+        },
+        {
+          "name": "api-docs",
+          "description": "Uzupełnia opisy endpointów i dokumentację Swagger.",
+          "tools": [
+            "Read",
+            "Edit"
+          ],
+          "model": null,
+          "path": ".claude/agents/api-docs.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "ef-migrations",
+          "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
+          "path": ".claude/skills/ef-migrations/SKILL.md"
+        },
+        {
+          "name": "xunit-tests",
+          "description": "Konwencje testów xUnit i szablony mocków.",
+          "path": ".claude/skills/xunit-tests/SKILL.md"
+        },
+        {
+          "name": "swagger-docs",
+          "description": "Zasady opisu endpointów i modeli w Swagger.",
+          "path": ".claude/skills/swagger-docs/SKILL.md"
+        },
+        {
+          "name": "serilog-logging",
+          "description": "Jednolity format logów strukturalnych.",
+          "path": ".claude/skills/serilog-logging/SKILL.md"
+        },
+        {
+          "name": "excel-export",
+          "description": "Eksport raportów do Excela.",
+          "path": ".claude/skills/excel-export/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": true,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 11
+      },
+      "coverage": {
+        "score": 77,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 10
+        }
+      },
+      "gaps": []
+    },
+    {
+      "id": "reports-front",
+      "name": "reports-front",
+      "path": "reports-front",
+      "initials": "RF",
+      "stack": "Angular",
+      "stacks": [
+        "Angular"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "angular-refactor",
+          "description": "Refaktoryzuje komponenty Angular do standalone i signals.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Grep"
+          ],
+          "model": null,
+          "path": ".claude/agents/angular-refactor.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "angular-component",
+          "description": "Struktura i nazewnictwo komponentów Angular.",
+          "path": ".claude/skills/angular-component/SKILL.md"
+        },
+        {
+          "name": "dashboard-charts",
+          "description": "Standardy wykresów i kafelków w dashboardach.",
+          "path": ".claude/skills/dashboard-charts/SKILL.md"
+        },
+        {
+          "name": "jest-tests",
+          "description": "Konwencje testów jednostkowych frontendu.",
+          "path": ".claude/skills/jest-tests/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 58,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "auth-service",
+      "name": "auth-service",
+      "path": "auth-service",
+      "initials": "AS",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [],
+      "skills": [
+        {
+          "name": "serilog-logging",
+          "description": "Jednolity format logów strukturalnych.",
+          "path": ".claude/skills/serilog-logging/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 33,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 0,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-agents",
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "billing-api",
+      "name": "billing-api",
+      "path": "billing-api",
+      "initials": "BA",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": false,
+        "path": "CLAUDE.md"
+      },
+      "agents": [],
+      "skills": [],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 12,
+        "parts": {
+          "claudeMd": 0,
+          "agents": 0,
+          "skills": 0,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-claude-md",
+        "no-agents",
+        "no-skills",
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "portal-front",
+      "name": "portal-front",
+      "path": "portal-front",
+      "initials": "PF",
+      "stack": "Angular",
+      "stacks": [
+        "Angular"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "angular-refactor",
+          "description": "Refaktoryzuje komponenty Angular do standalone i signals.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Grep"
+          ],
+          "model": null,
+          "path": ".claude/agents/angular-refactor.md"
+        },
+        {
+          "name": "test-writer",
+          "description": "Generuje testy jednostkowe dla zmienionego kodu.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/test-writer.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "angular-component",
+          "description": "Struktura i nazewnictwo komponentów Angular.",
+          "path": ".claude/skills/angular-component/SKILL.md"
+        },
+        {
+          "name": "rxjs-state",
+          "description": "Wzorce zarządzania stanem w RxJS.",
+          "path": ".claude/skills/rxjs-state/SKILL.md"
+        },
+        {
+          "name": "dashboard-charts",
+          "description": "Standardy wykresów i kafelków w dashboardach.",
+          "path": ".claude/skills/dashboard-charts/SKILL.md"
+        },
+        {
+          "name": "jest-tests",
+          "description": "Konwencje testów jednostkowych frontendu.",
+          "path": ".claude/skills/jest-tests/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": true,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 7
+      },
+      "coverage": {
+        "score": 71,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 10
+        }
+      },
+      "gaps": []
+    },
+    {
+      "id": "notify-worker",
+      "name": "notify-worker",
+      "path": "notify-worker",
+      "initials": "NW",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": false,
+        "path": "CLAUDE.md"
+      },
+      "agents": [],
+      "skills": [],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 8,
+        "parts": {
+          "claudeMd": 0,
+          "agents": 0,
+          "skills": 0,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-claude-md",
+        "no-agents",
+        "no-skills",
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "infra-pipelines",
+      "name": "infra-pipelines",
+      "path": "infra-pipelines",
+      "initials": "IP",
+      "stack": "YAML",
+      "stacks": [
+        "YAML"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "pipeline-fixer",
+          "description": "Diagnozuje i naprawia pipeline YAML w Azure DevOps.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/pipeline-fixer.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "azure-devops-yaml",
+          "description": "Szablony pipeline i zmienne środowiskowe.",
+          "path": ".claude/skills/azure-devops-yaml/SKILL.md"
+        },
+        {
+          "name": "ef-migrations",
+          "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
+          "path": ".claude/skills/ef-migrations/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 46,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "invoices-api",
+      "name": "invoices-api",
+      "path": "invoices-api",
+      "initials": "IA",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "code-reviewer",
+          "description": "Przegląd zmian przed merge: styl, błędy logiczne, brakujące testy.",
+          "tools": [
+            "Read",
+            "Grep",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/code-reviewer.md"
+        },
+        {
+          "name": "test-writer",
+          "description": "Generuje testy jednostkowe dla zmienionego kodu.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/test-writer.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "ef-migrations",
+          "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
+          "path": ".claude/skills/ef-migrations/SKILL.md"
+        },
+        {
+          "name": "xunit-tests",
+          "description": "Konwencje testów xUnit i szablony mocków.",
+          "path": ".claude/skills/xunit-tests/SKILL.md"
+        },
+        {
+          "name": "swagger-docs",
+          "description": "Zasady opisu endpointów i modeli w Swagger.",
+          "path": ".claude/skills/swagger-docs/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": true,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 5
+      },
+      "coverage": {
+        "score": 74,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 10
+        }
+      },
+      "gaps": []
+    },
+    {
+      "id": "invoices-front",
+      "name": "invoices-front",
+      "path": "invoices-front",
+      "initials": "IF",
+      "stack": "Angular",
+      "stacks": [
+        "Angular"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "angular-refactor",
+          "description": "Refaktoryzuje komponenty Angular do standalone i signals.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Grep"
+          ],
+          "model": null,
+          "path": ".claude/agents/angular-refactor.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "angular-component",
+          "description": "Struktura i nazewnictwo komponentów Angular.",
+          "path": ".claude/skills/angular-component/SKILL.md"
+        },
+        {
+          "name": "jest-tests",
+          "description": "Konwencje testów jednostkowych frontendu.",
+          "path": ".claude/skills/jest-tests/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 66,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "stock-api",
+      "name": "stock-api",
+      "path": "stock-api",
+      "initials": "SA",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "code-reviewer",
+          "description": "Przegląd zmian przed merge: styl, błędy logiczne, brakujące testy.",
+          "tools": [
+            "Read",
+            "Grep",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/code-reviewer.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "ef-migrations",
+          "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
+          "path": ".claude/skills/ef-migrations/SKILL.md"
+        },
+        {
+          "name": "xunit-tests",
+          "description": "Konwencje testów xUnit i szablony mocków.",
+          "path": ".claude/skills/xunit-tests/SKILL.md"
+        },
+        {
+          "name": "serilog-logging",
+          "description": "Jednolity format logów strukturalnych.",
+          "path": ".claude/skills/serilog-logging/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 59,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "stock-front",
+      "name": "stock-front",
+      "path": "stock-front",
+      "initials": "SF",
+      "stack": "Angular",
+      "stacks": [
+        "Angular"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "angular-refactor",
+          "description": "Refaktoryzuje komponenty Angular do standalone i signals.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Grep"
+          ],
+          "model": null,
+          "path": ".claude/agents/angular-refactor.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "angular-component",
+          "description": "Struktura i nazewnictwo komponentów Angular.",
+          "path": ".claude/skills/angular-component/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 48,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "clients-api",
+      "name": "clients-api",
+      "path": "clients-api",
+      "initials": "CA",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [],
+      "skills": [
+        {
+          "name": "xunit-tests",
+          "description": "Konwencje testów xUnit i szablony mocków.",
+          "path": ".claude/skills/xunit-tests/SKILL.md"
+        },
+        {
+          "name": "serilog-logging",
+          "description": "Jednolity format logów strukturalnych.",
+          "path": ".claude/skills/serilog-logging/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 39,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 0,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-agents",
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "clients-front",
+      "name": "clients-front",
+      "path": "clients-front",
+      "initials": "CF",
+      "stack": "Angular",
+      "stacks": [
+        "Angular"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [],
+      "skills": [
+        {
+          "name": "jest-tests",
+          "description": "Konwencje testów jednostkowych frontendu.",
+          "path": ".claude/skills/jest-tests/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 27,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 0,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-agents",
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "identity-server",
+      "name": "identity-server",
+      "path": "identity-server",
+      "initials": "IS",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "code-reviewer",
+          "description": "Przegląd zmian przed merge: styl, błędy logiczne, brakujące testy.",
+          "tools": [
+            "Read",
+            "Grep",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/code-reviewer.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "serilog-logging",
+          "description": "Jednolity format logów strukturalnych.",
+          "path": ".claude/skills/serilog-logging/SKILL.md"
+        },
+        {
+          "name": "xunit-tests",
+          "description": "Konwencje testów xUnit i szablony mocków.",
+          "path": ".claude/skills/xunit-tests/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 52,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "gateway-api",
+      "name": "gateway-api",
+      "path": "gateway-api",
+      "initials": "GA",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "code-reviewer",
+          "description": "Przegląd zmian przed merge: styl, błędy logiczne, brakujące testy.",
+          "tools": [
+            "Read",
+            "Grep",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/code-reviewer.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "swagger-docs",
+          "description": "Zasady opisu endpointów i modeli w Swagger.",
+          "path": ".claude/skills/swagger-docs/SKILL.md"
+        },
+        {
+          "name": "serilog-logging",
+          "description": "Jednolity format logów strukturalnych.",
+          "path": ".claude/skills/serilog-logging/SKILL.md"
+        },
+        {
+          "name": "azure-devops-yaml",
+          "description": "Szablony pipeline i zmienne środowiskowe.",
+          "path": ".claude/skills/azure-devops-yaml/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 68,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "files-service",
+      "name": "files-service",
+      "path": "files-service",
+      "initials": "FS",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [],
+      "skills": [
+        {
+          "name": "serilog-logging",
+          "description": "Jednolity format logów strukturalnych.",
+          "path": ".claude/skills/serilog-logging/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 21,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 0,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-agents",
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "audit-worker",
+      "name": "audit-worker",
+      "path": "audit-worker",
+      "initials": "AW",
+      "stack": ".NET",
+      "stacks": [
+        ".NET"
+      ],
+      "claudeMd": {
+        "exists": false,
+        "path": "CLAUDE.md"
+      },
+      "agents": [],
+      "skills": [],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 6,
+        "parts": {
+          "claudeMd": 0,
+          "agents": 0,
+          "skills": 0,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-claude-md",
+        "no-agents",
+        "no-skills",
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "admin-front",
+      "name": "admin-front",
+      "path": "admin-front",
+      "initials": "AF",
+      "stack": "Angular",
+      "stacks": [
+        "Angular"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "angular-refactor",
+          "description": "Refaktoryzuje komponenty Angular do standalone i signals.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Grep"
+          ],
+          "model": null,
+          "path": ".claude/agents/angular-refactor.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "angular-component",
+          "description": "Struktura i nazewnictwo komponentów Angular.",
+          "path": ".claude/skills/angular-component/SKILL.md"
+        },
+        {
+          "name": "jest-tests",
+          "description": "Konwencje testów jednostkowych frontendu.",
+          "path": ".claude/skills/jest-tests/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 44,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "shared-ui",
+      "name": "shared-ui",
+      "path": "shared-ui",
+      "initials": "SU",
+      "stack": "Angular",
+      "stacks": [
+        "Angular"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "angular-refactor",
+          "description": "Refaktoryzuje komponenty Angular do standalone i signals.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Grep"
+          ],
+          "model": null,
+          "path": ".claude/agents/angular-refactor.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "angular-component",
+          "description": "Struktura i nazewnictwo komponentów Angular.",
+          "path": ".claude/skills/angular-component/SKILL.md"
+        },
+        {
+          "name": "dashboard-charts",
+          "description": "Standardy wykresów i kafelków w dashboardach.",
+          "path": ".claude/skills/dashboard-charts/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 63,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "db-scripts",
+      "name": "db-scripts",
+      "path": "db-scripts",
+      "initials": "DS",
+      "stack": "SQL",
+      "stacks": [
+        "SQL"
+      ],
+      "claudeMd": {
+        "exists": false,
+        "path": "CLAUDE.md"
+      },
+      "agents": [],
+      "skills": [],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 15,
+        "parts": {
+          "claudeMd": 0,
+          "agents": 0,
+          "skills": 0,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-claude-md",
+        "no-agents",
+        "no-skills",
+        "no-outputs"
+      ]
+    },
+    {
+      "id": "deploy-templates",
+      "name": "deploy-templates",
+      "path": "deploy-templates",
+      "initials": "DT",
+      "stack": "YAML",
+      "stacks": [
+        "YAML"
+      ],
+      "claudeMd": {
+        "exists": true,
+        "path": "CLAUDE.md"
+      },
+      "agents": [
+        {
+          "name": "pipeline-fixer",
+          "description": "Diagnozuje i naprawia pipeline YAML w Azure DevOps.",
+          "tools": [
+            "Read",
+            "Edit",
+            "Bash"
+          ],
+          "model": null,
+          "path": ".claude/agents/pipeline-fixer.md"
+        }
+      ],
+      "skills": [
+        {
+          "name": "azure-devops-yaml",
+          "description": "Szablony pipeline i zmienne środowiskowe.",
+          "path": ".claude/skills/azure-devops-yaml/SKILL.md"
+        },
+        {
+          "name": "ef-migrations",
+          "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
+          "path": ".claude/skills/ef-migrations/SKILL.md"
+        }
+      ],
+      "outputs": {
+        "exists": false,
+        "path": ".claude/memory/OUTPUTS.md",
+        "notes": 0
+      },
+      "coverage": {
+        "score": 57,
+        "parts": {
+          "claudeMd": 40,
+          "agents": 25,
+          "skills": 25,
+          "outputs": 0
+        }
+      },
+      "gaps": [
+        "no-outputs"
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "id": "W1",
+      "name": "pr-review",
+      "description": "Automatyczny przegląd PR i uzupełnienie brakujących testów.",
+      "when": "Otwarcie pull requesta",
+      "agents": [
+        "code-reviewer",
+        "test-writer"
+      ],
+      "repos": [
+        {
+          "repoId": "orders-api",
+          "path": ".claude/workflows/pr-review.md",
+          "linked": false
+        },
+        {
+          "repoId": "orders-front",
+          "path": ".claude/workflows/pr-review.md",
+          "linked": true
+        },
+        {
+          "repoId": "orders-hangfire",
+          "path": ".claude/workflows/pr-review.md",
+          "linked": true
+        },
+        {
+          "repoId": "reports-api",
+          "path": ".claude/workflows/pr-review.md",
+          "linked": true
+        }
+      ],
+      "issues": []
+    },
+    {
+      "id": "W2",
+      "name": "db-migration",
+      "description": "Migracja bazy od skryptu po wdrożenie w pipeline.",
+      "when": "Zmiana w katalogu Migrations",
+      "agents": [
+        "migration-helper",
+        "test-writer",
+        "pipeline-fixer"
+      ],
+      "repos": [
+        {
+          "repoId": "orders-api",
+          "path": ".claude/workflows/db-migration.md",
+          "linked": true
+        },
+        {
+          "repoId": "infra-pipelines",
+          "path": ".claude/workflows/db-migration.md",
+          "linked": false
+        }
+      ],
+      "issues": []
+    },
+    {
+      "id": "W3",
+      "name": "front-refactor",
+      "description": "Refaktoryzacja komponentów Angular wraz z testami i przeglądem.",
+      "when": "Ręcznie · komenda /refactor",
+      "agents": [
+        "angular-refactor",
+        "test-writer",
+        "code-reviewer"
+      ],
+      "repos": [
+        {
+          "repoId": "orders-front",
+          "path": ".claude/workflows/front-refactor.md",
+          "linked": true
+        },
+        {
+          "repoId": "reports-front",
+          "path": ".claude/workflows/front-refactor.md",
+          "linked": true
+        },
+        {
+          "repoId": "portal-front",
+          "path": ".claude/workflows/front-refactor.md",
+          "linked": true
+        }
+      ],
+      "issues": []
+    },
+    {
+      "id": "W4",
+      "name": "api-release",
+      "description": "Dokumentacja API, końcowy przegląd i wydanie przez pipeline.",
+      "when": "Tag release/*",
+      "agents": [
+        "api-docs",
+        "code-reviewer",
+        "pipeline-fixer"
+      ],
+      "repos": [
+        {
+          "repoId": "orders-api",
+          "path": ".claude/workflows/api-release.md",
+          "linked": true
+        },
+        {
+          "repoId": "reports-api",
+          "path": ".claude/workflows/api-release.md",
+          "linked": true
+        },
+        {
+          "repoId": "infra-pipelines",
+          "path": ".claude/workflows/api-release.md",
+          "linked": true
+        }
+      ],
+      "issues": []
+    },
+    {
+      "id": "W5",
+      "name": "security-scan",
+      "description": "Cykliczny przegląd zależności i konfiguracji pod kątem bezpieczeństwa.",
+      "when": "Nocny harmonogram",
+      "agents": [
+        "code-reviewer",
+        "pipeline-fixer"
+      ],
+      "repos": [
+        {
+          "repoId": "reports-api",
+          "path": ".claude/workflows/security-scan.md",
+          "linked": true
+        },
+        {
+          "repoId": "invoices-api",
+          "path": ".claude/workflows/security-scan.md",
+          "linked": true
+        },
+        {
+          "repoId": "gateway-api",
+          "path": ".claude/workflows/security-scan.md",
+          "linked": true
+        }
+      ],
+      "issues": []
+    },
+    {
+      "id": "W6",
+      "name": "docs-sync",
+      "description": "Synchronizacja dokumentacji API po zmianach w kontrolerach.",
+      "when": "Merge do main",
+      "agents": [
+        "api-docs",
+        "code-reviewer"
+      ],
+      "repos": [
+        {
+          "repoId": "reports-api",
+          "path": ".claude/workflows/docs-sync.md",
+          "linked": true
+        },
+        {
+          "repoId": "invoices-api",
+          "path": ".claude/workflows/docs-sync.md",
+          "linked": false
+        },
+        {
+          "repoId": "stock-api",
+          "path": ".claude/workflows/docs-sync.md",
+          "linked": true
+        },
+        {
+          "repoId": "gateway-api",
+          "path": ".claude/workflows/docs-sync.md",
+          "linked": true
+        }
+      ],
+      "issues": []
+    },
+    {
+      "id": "W7",
+      "name": "hotfix",
+      "description": "Szybka poprawka z testem regresji i wdrożeniem awaryjnym.",
+      "when": "Ręcznie · komenda /hotfix",
+      "agents": [
+        "code-reviewer",
+        "test-writer",
+        "pipeline-fixer"
+      ],
+      "repos": [
+        {
+          "repoId": "orders-api",
+          "path": ".claude/workflows/hotfix.md",
+          "linked": true
+        },
+        {
+          "repoId": "orders-hangfire",
+          "path": ".claude/workflows/hotfix.md",
+          "linked": true
+        },
+        {
+          "repoId": "infra-pipelines",
+          "path": ".claude/workflows/hotfix.md",
+          "linked": false
+        },
+        {
+          "repoId": "deploy-templates",
+          "path": ".claude/workflows/hotfix.md",
+          "linked": true
+        }
+      ],
+      "issues": []
+    },
+    {
+      "id": "W8",
+      "name": "e2e-tests",
+      "description": "Testy end-to-end po wdrożeniu na środowisko staging.",
+      "when": "Deploy na staging",
+      "agents": [
+        "test-writer",
+        "pipeline-fixer"
+      ],
+      "repos": [
+        {
+          "repoId": "orders-front",
+          "path": ".claude/workflows/e2e-tests.md",
+          "linked": true
+        },
+        {
+          "repoId": "portal-front",
+          "path": ".claude/workflows/e2e-tests.md",
+          "linked": true
+        },
+        {
+          "repoId": "admin-front",
+          "path": ".claude/workflows/e2e-tests.md",
+          "linked": true
+        }
+      ],
+      "issues": []
+    },
+    {
+      "id": "W9",
+      "name": "commit",
+      "description": "Jak przygotować i opisać commit: jedno zdanie po angielsku, czas przeszły.",
+      "when": "Przed każdym commitem",
+      "agents": [],
+      "repos": [
+        {
+          "repoId": "orders-api",
+          "path": ".claude/workflows/commit.md",
+          "linked": true
+        },
+        {
+          "repoId": "orders-front",
+          "path": ".claude/workflows/commit.md",
+          "linked": true
+        },
+        {
+          "repoId": "orders-hangfire",
+          "path": ".claude/workflows/commit.md",
+          "linked": false
+        },
+        {
+          "repoId": "reports-api",
+          "path": ".claude/workflows/commit.md",
+          "linked": true
+        },
+        {
+          "repoId": "reports-front",
+          "path": ".claude/workflows/commit.md",
+          "linked": true
+        },
+        {
+          "repoId": "portal-front",
+          "path": ".claude/workflows/commit.md",
+          "linked": false
+        },
+        {
+          "repoId": "invoices-api",
+          "path": ".claude/workflows/commit.md",
+          "linked": true
+        }
+      ],
+      "issues": []
+    }
+  ],
+  "gaps": [
+    {
+      "repoId": "billing-api",
+      "type": "no-claude-md"
+    },
+    {
+      "repoId": "notify-worker",
+      "type": "no-claude-md"
+    },
+    {
+      "repoId": "audit-worker",
+      "type": "no-claude-md"
+    },
+    {
+      "repoId": "db-scripts",
+      "type": "no-claude-md"
+    }
+  ],
+  "warnings": []
+}

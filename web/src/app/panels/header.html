@@ -1,0 +1,23 @@
+<div class="brand">
+  <div class="title">R.A.D.A.R</div>
+  <div class="m sub">REPO AI DISCOVERY AND REVIEW</div>
+</div>
+
+<div class="path">
+  <div class="path-row">
+    <div class="m label">ŚCIEŻKA SKANU</div>
+    <div class="m path-box">{{ root() }}</div>
+    <button class="m btn-ghost tip tip-b" data-tip="Wybór katalogu w etapie 3" disabled>ZMIEŃ</button>
+  </div>
+  <div class="ruler"></div>
+  <div class="m info"><span>KATALOG</span><span>{{ reposCount() }} REPO · {{ stacksCount() }} STOSY</span><span>SKAN ZAKOŃCZONY</span></div>
+</div>
+
+<div class="clock-block">
+  <div class="clock-text">
+    <div class="m label">TERAZ</div>
+    <div class="m clock">{{ clock() }}</div>
+    <div class="m last">OSTATNI SKAN {{ lastScan() }}</div>
+  </div>
+  <button class="m btn-solid tip tip-b tip-r" data-tip="Skan w etapie 3" disabled>SKANUJ PONOWNIE</button>
+</div>

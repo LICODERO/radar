@@ -1,0 +1,54 @@
+@use 'tokens' as *;
+
+html, body { margin: 0; height: 100%; background: $bg; }
+body { overflow: hidden; }
+button { font-family: inherit; }
+.m { font-family: $mono; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes blink { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+@keyframes growA { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes growB { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes ripA { from { transform: scale(1); opacity: .9; } to { transform: scale(3.6); opacity: 0; } }
+@keyframes ripB { from { transform: scale(1); opacity: .9; } to { transform: scale(3.6); opacity: 0; } }
+@keyframes popA { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes popB { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+button { transition: background .18s, border-color .18s, color .18s, box-shadow .18s, transform .18s; }
+button:focus-visible { outline: 2px solid $lime; outline-offset: 2px; }
+button:disabled { cursor: not-allowed !important; box-shadow: none !important; transform: none !important; filter: none !important; }
+.btn-ghost:hover:not(:disabled) { background: #c6ff3d22 !important; box-shadow: 0 0 16px #c6ff3d55; transform: translateY(-1px); }
+.btn-solid:hover:not(:disabled) { box-shadow: 0 0 22px #c6ff3daa; filter: brightness(1.08); transform: translateY(-1px); }
+.btn-ghost:active:not(:disabled), .btn-solid:active:not(:disabled) { transform: translateY(0) scale(.97); }
+.chipx:hover { background: #ffffff18 !important; transform: translateY(-1px); box-shadow: 0 0 10px #ffffff22; }
+.pg:hover:not(:disabled) { border-color: $lime !important; color: $lime !important; background: #c6ff3d18 !important; }
+.row:hover { background: #c6ff3d14 !important; }
+.row:hover .rn { color: #fff !important; }
+.node:hover { transform: scale(1.18) !important; }
+.node:active { transform: scale(.94) !important; }
+.anode:hover > span { transform: rotate(45deg) scale(1.55) !important; }
+.snode:hover > span { transform: scale(1.7) !important; }
+.act:hover:not(:disabled) { box-shadow: 0 0 18px currentColor; transform: translateY(-2px); background: #ffffff12 !important; }
+
+.tip { position: relative; }
+.tip::after {
+  content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translate(-50%, 4px);
+  white-space: nowrap; background: $panel; border: 1px solid #c6ff3d88; color: $text; font-family: $mono;
+  font-size: fs(10); font-weight: 400; letter-spacing: .06em; padding: 5px 9px; opacity: 0; pointer-events: none;
+  transition: opacity .18s, transform .18s; z-index: 20;
+}
+.tip-b::after { bottom: auto; top: calc(100% + 8px); transform: translate(-50%, -4px); }
+.tip:hover::after, .tip:focus-visible::after { opacity: 1; transform: translate(-50%, 0); }
+.tip-l::after { left: 0; transform: translate(0, 4px); }
+.tip-r::after { left: auto; right: 0; transform: translate(0, 4px); }
+.tip-l:hover::after, .tip-r:hover::after, .tip-l:focus-visible::after, .tip-r:focus-visible::after { transform: translate(0, 0); }
+
+.spin { animation: spin 140s linear infinite; }
+.spin2 { animation: spin 90s linear infinite reverse; }
+.sweep { animation: spin 2.6s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  .spin, .spin2, .sweep { animation: none !important; }
+}

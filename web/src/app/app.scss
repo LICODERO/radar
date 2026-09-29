@@ -1,0 +1,22 @@
+@use 'tokens' as *;
+
+.viewport { position: fixed; inset: 0; overflow: auto; background: $bg; }
+.frame { position: relative; }
+.stage {
+  position: absolute; width: 1440px; height: 900px; overflow: hidden; transform-origin: 0 0;
+  background: radial-gradient(ellipse at 50% 52%, #10121f 0%, #04050a 62%);
+  color: $white; font-family: $display;
+}
+.stars {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(1px 1px at 6% 20%, #fff8, transparent), radial-gradient(1px 1px at 19% 74%, #fff6, transparent),
+    radial-gradient(1.5px 1.5px at 33% 12%, #fffa, transparent), radial-gradient(1px 1px at 52% 94%, #fff7, transparent),
+    radial-gradient(1px 1px at 68% 9%, #fff7, transparent), radial-gradient(1px 1px at 94% 40%, #fff6, transparent),
+    radial-gradient(1.5px 1.5px at 97% 84%, #fff9, transparent), radial-gradient(1px 1px at 12% 92%, #fff7, transparent),
+    radial-gradient(1px 1px at 84% 92%, #fff6, transparent), radial-gradient(1px 1px at 3% 55%, #fff6, transparent),
+    radial-gradient(1px 1px at 91% 12%, #fff7, transparent), radial-gradient(1px 1px at 27% 48%, #fff4, transparent);
+}
+.legend { position: absolute; left: 0; top: 846px; width: 1440px; text-align: center; font-size: fs(10); letter-spacing: .08em; color: $muted; }
+.hint { position: absolute; left: 0; top: 864px; width: 1440px; text-align: center; font-size: fs(10); letter-spacing: .08em; color: $muted; }
+.sample { position: absolute; right: 36px; top: 872px; font-size: fs(9); letter-spacing: .14em; color: #7b819a; }
+.err { position: absolute; left: 0; top: 420px; width: 1440px; text-align: center; color: $magenta; font-size: fs(14); }

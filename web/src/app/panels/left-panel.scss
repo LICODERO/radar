@@ -1,0 +1,47 @@
+@use 'tokens' as *;
+
+:host { position: absolute; left: 36px; top: 104px; width: 300px; display: block; }
+.sr { position: absolute; left: -9999px; }
+
+.head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid #c6ff3d44; }
+.head.sec { margin-top: 16px; }
+.head.sec2 { margin-top: 14px; }
+.h { font-size: fs(10); letter-spacing: .18em; color: $lime; }
+.hint { font-size: fs(9); color: $muted; }
+.sel { color: #fff; }
+
+.search { display: block; margin: 10px 0 4px; }
+.search input { width: 100%; box-sizing: border-box; background: #c6ff3d0d; border: 1px solid #c6ff3d55; color: $text; font-size: fs(11); padding: 7px 10px; outline: none; }
+.search input:focus { border-color: #c6ff3d88; box-shadow: 0 0 0 1px #c6ff3d33; }
+
+.row { color: inherit; cursor: pointer; text-align: left; border: 0; border-bottom: 1px solid #c6ff3d14; width: 100%; box-sizing: border-box; }
+.repo-row { display: grid; grid-template-columns: 26px minmax(0, 1fr) 58px 34px; gap: 10px; align-items: center; height: 26px; padding: 0; background: transparent; }
+.ini { font-size: fs(11); color: $lime; padding-left: 2px; font-weight: 600; }
+.rn { font-size: fs(12); color: $text; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.meta { font-size: fs(9); color: $muted; }
+.bar { height: 4px; background: #c6ff3d1a; }
+.bar > div { height: 4px; }
+.pct { font-size: fs(11); text-align: right; }
+.none { font-size: fs(10); color: $muted; padding: 10px 0; }
+
+.wf-row { min-height: 52px; align-content: start; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; padding: 5px 0; background: transparent; }
+.wno { width: 26px; height: 26px; box-sizing: border-box; border: 1px solid $white; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: fs(10); color: $white; }
+.wname { display: flex; justify-content: space-between; font-size: fs(12); color: $text; }
+.wn { font-size: fs(9); color: $muted; }
+.chain { font-size: fs(10); line-height: 14px; color: $lime; margin-top: 2px; }
+
+.pager { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.plabel { font-size: fs(10); color: $muted; }
+.pbtns { display: flex; gap: 4px; align-items: center; }
+.pg { width: 24px; height: 24px; background: transparent; border: 1px solid #c6ff3d55; color: $lime; font-size: fs(12); cursor: pointer; padding: 0; }
+.pg:disabled { opacity: .35; }
+.pg.on { background: $lime; border-color: $lime; color: #0b1006; font-weight: 600; }
+.pos { font-size: fs(10); color: $text; padding: 0 4px; }
+
+.acts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+.acts.vault { margin-top: 8px; }
+.act { height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 1px solid; padding: 0; cursor: pointer; opacity: .5; }
+.plus { font-size: fs(20); line-height: 1; }
+.lbl { font-size: fs(10); letter-spacing: .14em; }
+.vault button { background: transparent; border: 1px solid #ffb84d88; color: $amber; font-size: fs(10); letter-spacing: .08em; padding: 7px 4px; cursor: pointer; opacity: .5; }
+.vault .small { font-size: fs(9); letter-spacing: 0; padding: 8px 2px; white-space: nowrap; }

@@ -1,0 +1,25 @@
+<div class="viewport">
+  <div class="frame" [style.width.px]="frameW()" [style.height.px]="frameH()">
+    <div class="stage" [style.left.px]="left()" [style.top.px]="top()"
+         [style.transform]="'scale(' + fit().scale + ')'" [style.--fs]="fit().fs">
+      <div class="stars"></div>
+
+      @if (store.error(); as err) {
+        <div class="m err">{{ err }}</div>
+      } @else {
+        <app-header />
+        <app-orbit />
+        <app-left-panel />
+        <app-right-panel />
+
+        <div class="m legend">
+          <span style="color:#ffffff">◯</span> REPO (KOLOR = POKRYCIE) &nbsp; <span style="color:#c6ff3d">◆</span> AGENT &nbsp;
+          <span style="color:#a99bff">●</span> SKILL &nbsp; <span style="color:#e6e9f2">▢</span> WORKFLOW &nbsp;
+          <span style="color:#ff4fa3">◌</span> PUSTY SLOT (BRAK)
+        </div>
+        <div class="m hint">NAJEDŹ = PEŁNA NAZWA · KLIKNIJ REPO = POWIĄZANIA · KLIKNIJ ELEMENT = SZCZEGÓŁY I MIEJSCA UŻYCIA</div>
+        @if (sample()) { <div class="m sample">DANE PRZYKŁADOWE</div> }
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<div class="legend-rings m">
+  <div><span style="color:#ffffff">R1</span> · REPO</div>
+  <div><span style="color:#c6ff3d">R2</span> · AGENCI</div>
+  <div><span style="color:#a99bff">R3</span> · SKILLE</div>
+  <div><span style="color:#e6e9f2">R4</span> · WORKFLOWS</div>
+</div>
+
+<div class="layer spin">
+  <svg width="720" height="720" viewBox="0 0 720 720" aria-hidden="true"><circle cx="360" cy="360" r="352" fill="none" stroke="#c6ff3d" stroke-opacity=".45" stroke-width="9" stroke-dasharray="1 5.4" /></svg>
+</div>
+<div class="layer spin2">
+  <svg width="720" height="720" viewBox="0 0 720 720" aria-hidden="true"><circle cx="360" cy="360" r="335" fill="none" stroke="#c6ff3d" stroke-opacity=".25" stroke-dasharray="14 10 2 10" /></svg>
+</div>
+<svg class="layer" width="720" height="720" viewBox="0 0 720 720" aria-hidden="true">
+  <circle cx="360" cy="360" r="315" fill="none" stroke="#e6e9f2" stroke-opacity=".32" stroke-dasharray="10 6" />
+  <circle cx="360" cy="360" r="252" fill="none" stroke="#a99bff" stroke-opacity=".3" stroke-dasharray="2 6" />
+  <circle cx="360" cy="360" r="192" fill="none" stroke="#c6ff3d" stroke-opacity=".32" stroke-dasharray="4 5" />
+  <circle cx="360" cy="360" r="125" fill="none" stroke="#ffffff" stroke-opacity=".38" />
+  <circle cx="360" cy="360" r="88" fill="none" stroke="#c6ff3d" stroke-opacity=".2" stroke-dasharray="1 3" />
+  <circle cx="360" cy="360" r="66" fill="#0a0d14" stroke="#c6ff3d" stroke-opacity=".18" stroke-width="7" />
+  <circle cx="360" cy="360" r="66" fill="none" stroke="#c6ff3d" stroke-width="7" [attr.stroke-dasharray]="arc()" transform="rotate(-90 360 360)" />
+  <text class="avg" x="360" y="366" text-anchor="middle" font-weight="600" fill="#ffffff" font-family="Oxanium, sans-serif">{{ avg() }}%</text>
+  <text class="avg-l" x="360" y="384" text-anchor="middle" letter-spacing="1.6" fill="#8a90a8" font-family="IBM Plex Mono, monospace">POKRYCIE AI</text>
+</svg>
+
+@for (l of scene().spokes; track $index) {
+  <div class="spoke" [style.left.px]="l.left" [style.top.px]="l.top" [style.width.px]="l.len" [style.transform]="'rotate(' + l.ang + 'deg)'"></div>
+}
+
+@for (l of scene().lines; track $index) {
+  <div class="line-o" [style.left.px]="l.left" [style.top.px]="l.top" [style.transform]="'rotate(' + l.ang + 'deg)'">
+    <div class="line-i" [style.width.px]="l.len" [style.border-top]="'1px ' + (l.dashed ? 'dashed ' : 'solid ') + l.color"
+         [style.opacity]="l.op" [style.animation]="l.anim + ' .6s ease-out ' + l.delay + 's both'"></div>
+  </div>
+}
+
+@for (s of scene().slots; track $index) {
+  <div class="slot" [style.left.px]="s.left" [style.top.px]="s.top"></div>
+}
+
+@for (k of scene().skills; track k.key) {
+  <button class="snode" type="button" [attr.aria-label]="k.label" (click)="pickSkill(k.repoId, k.name)"
+          (mouseenter)="hoverSkill(k.repoId, k.name)" (mouseleave)="leave()" (focus)="hoverSkill(k.repoId, k.name)" (blur)="leave()"
+          [style.left.px]="k.left" [style.top.px]="k.top" [style.width.px]="k.hit" [style.height.px]="k.hit" [style.opacity]="k.op">
+    <span [style.width.px]="k.sz" [style.height.px]="k.sz" [style.box-shadow]="'0 0 ' + k.glowPx + 'px #a99bff'"></span>
+  </button>
+}
+@for (a of scene().agents; track a.key) {
+  <button class="anode" type="button" [attr.aria-label]="a.label" (click)="pickAgent(a.repoId, a.name)"
+          (mouseenter)="hoverAgent(a.repoId, a.name)" (mouseleave)="leave()" (focus)="hoverAgent(a.repoId, a.name)" (blur)="leave()"
+          [style.left.px]="a.left" [style.top.px]="a.top" [style.width.px]="a.hit" [style.height.px]="a.hit" [style.opacity]="a.op">
+    <span [style.width.px]="a.sz" [style.height.px]="a.sz" [style.box-shadow]="'0 0 ' + a.glowPx + 'px #c6ff3d'"></span>
+  </button>
+}
+@for (w of scene().wfs; track w.id) {
+  <button class="m node wf" type="button" [attr.aria-label]="w.label" (click)="pickWf(w.id)"
+          (mouseenter)="hoverWf(w.id)" (mouseleave)="leave()" (focus)="hoverWf(w.id)" (blur)="leave()"
+          [style.left.px]="w.left" [style.top.px]="w.top" [style.width.px]="w.size" [style.height.px]="w.size"
+          [style.border-color]="w.color" [style.color]="w.color" [style.box-shadow]="'0 0 ' + w.glowPx + 'px ' + w.color"
+          [style.font-size]="w.size >= 24 ? null : '0'">{{ w.id }}</button>
+}
+
+@if (scene().halo; as h) {
+  <div class="halo" [style.left.px]="h.left" [style.top.px]="h.top"></div>
+}
+@if (scene().rip; as r) {
+  @for (x of [r.anim]; track x) {
+    <div class="rip" [style.left.px]="r.left" [style.top.px]="r.top" [style.animation]="x + ' .9s ease-out both'"></div>
+  }
+}
+
+@for (n of scene().repos; track n.id) {
+  <button class="m node repo" type="button" [attr.aria-label]="n.label" (click)="store.selectRepo(n.id)"
+          (mouseenter)="hoverRepo(n.id)" (mouseleave)="leave()" (focus)="hoverRepo(n.id)" (blur)="leave()"
+          [style.left.px]="n.left" [style.top.px]="n.top" [style.width.px]="n.size" [style.height.px]="n.size"
+          [style.border]="'1px ' + (n.dashed ? 'dashed ' : 'solid ') + n.color" [style.color]="n.color"
+          [style.box-shadow]="'0 0 ' + n.glowPx + 'px ' + n.glow" [style.opacity]="n.op"
+          [style.font-size]="n.labels ? null : '0'">{{ n.initials }}</button>
+}
+
+@if (scene().tip; as t) {
+  <div class="tip-box" [style.left.px]="t.left" [style.top.px]="t.top" [style.border-color]="t.color">
+    <div class="m l1">{{ t.l1 }}</div>
+    <div class="m l2">{{ t.l2 }}</div>
+  </div>
+}
+
+@if (scene().pop; as p) {
+  <div class="pop" [style.left.px]="p.left" [style.top.px]="p.top" [style.border-color]="p.color" [style.animation]="scene().popAnim + ' .35s ease-out both'">
+    <div class="pop-head">
+      <div class="m kind" [style.color]="p.color">{{ p.kind }}</div>
+      <button class="m btn-ghost close" type="button" aria-label="Zamknij" (click)="store.closePop()">✕</button>
+    </div>
+    <div class="pop-title">{{ p.title }}</div>
+    <div class="pop-desc">{{ p.desc }}</div>
+    @for (r of p.rows; track r.k) {
+      <div class="pop-row">
+        <div class="m k">{{ r.k }}</div>
+        <div class="m v">{{ r.v }}</div>
+      </div>
+    }
+    <button class="m btn-ghost tip open" type="button" disabled data-tip="Podgląd pliku w etapie 4"
+            [style.border-color]="p.color" [style.color]="p.color">OTWÓRZ PLIK</button>
+  </div>
+}

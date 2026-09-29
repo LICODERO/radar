@@ -1,0 +1,83 @@
+<div class="head">
+  <div class="m h">REPOZYTORIA · {{ total() }}</div>
+  <div class="m hint">A = AGENCI · S = SKILLE</div>
+</div>
+<label class="search">
+  <span class="sr">Szukaj repozytorium</span>
+  <input class="m" type="text" placeholder="Szukaj repo…  (nazwa, stos, agent)" [value]="store.query()" (input)="onQuery($event)" />
+</label>
+
+@for (r of store.pagedRepos(); track r.id) {
+  <button class="row repo-row" type="button" (click)="store.selectRepo(r.id)"
+          (mouseenter)="hoverRepo(r.id)" (mouseleave)="leave()" (focus)="hoverRepo(r.id)" (blur)="leave()"
+          [style.background]="store.selected()?.id === r.id ? 'rgba(198,255,61,.10)' : 'transparent'">
+    <div class="m ini">{{ r.initials }}</div>
+    <div>
+      <div class="m rn">{{ r.name }}</div>
+      <div class="m meta">{{ r.stack }} · A{{ r.agents.length }} · S{{ r.skills.length }}</div>
+    </div>
+    <div class="bar"><div [style.width.%]="r.coverage.score" [style.background]="color(r.coverage.score)"></div></div>
+    <div class="m pct" [style.color]="color(r.coverage.score)">{{ r.coverage.score }}%</div>
+  </button>
+} @empty {
+  <div class="m none">Brak repozytoriów pasujących do zapytania.</div>
+}
+
+<div class="pager">
+  <div class="m plabel">{{ store.repoPager().label }}</div>
+  <div class="pbtns">
+    <button class="m pg" type="button" aria-label="Poprzednia strona repozytoriów" [disabled]="store.repoPager().prevDisabled" (click)="store.goRepoPage(store.repoPager().page - 1)">‹</button>
+    @if (store.repoPager().pages.length <= 7) {
+      @for (p of store.repoPager().pages; track p) {
+        <button class="m pg" type="button" [attr.aria-label]="'Strona ' + (p + 1)" [class.on]="p === store.repoPager().page" (click)="store.goRepoPage(p)">{{ p + 1 }}</button>
+      }
+    } @else {
+      <span class="m pos">{{ store.repoPager().page + 1 }} / {{ store.repoPager().pages.length }}</span>
+    }
+    <button class="m pg" type="button" aria-label="Następna strona repozytoriów" [disabled]="store.repoPager().nextDisabled" (click)="store.goRepoPage(store.repoPager().page + 1)">›</button>
+  </div>
+</div>
+
+<div class="head sec">
+  <div class="m h">WORKFLOWS · {{ wfTotal() }}</div>
+  <div class="m hint">PROCEDURY PRACY</div>
+</div>
+@for (w of store.pagedWorkflows(); track w.id) {
+  <button class="row wf-row" type="button" (click)="store.pickItem({ kind: 'w', name: w.id })"
+          (mouseenter)="hoverWf(w.id)" (mouseleave)="leave()" (focus)="hoverWf(w.id)" (blur)="leave()">
+    <div class="m wno">{{ w.id }}</div>
+    <div>
+      <div class="m wname"><span>{{ w.name }}</span><span class="wn">{{ w.repos.length }} REPO</span></div>
+      <div class="m chain">{{ chain(w.agents, w.description) }}</div>
+    </div>
+  </button>
+}
+<div class="pager">
+  <div class="m plabel">{{ store.wfPager().label }}</div>
+  <div class="pbtns">
+    <button class="m pg" type="button" aria-label="Poprzednia strona workflowów" [disabled]="store.wfPager().prevDisabled" (click)="store.goWfPage(store.wfPager().page - 1)">‹</button>
+    @if (store.wfPager().pages.length <= 7) {
+      @for (p of store.wfPager().pages; track p) {
+        <button class="m pg" type="button" [attr.aria-label]="'Strona ' + (p + 1)" [class.on]="p === store.wfPager().page" (click)="store.goWfPage(p)">{{ p + 1 }}</button>
+      }
+    } @else {
+      <span class="m pos">{{ store.wfPager().page + 1 }} / {{ store.wfPager().pages.length }}</span>
+    }
+    <button class="m pg" type="button" aria-label="Następna strona workflowów" [disabled]="store.wfPager().nextDisabled" (click)="store.goWfPage(store.wfPager().page + 1)">›</button>
+  </div>
+</div>
+
+<div class="head sec2">
+  <div class="m h">AKCJE · TWORZENIE</div>
+  <div class="m hint">W REPO: <span class="sel">{{ selName() }}</span></div>
+</div>
+<div class="acts">
+  <button class="m act tip tip-l" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji" style="color:#c6ff3d;border-color:#c6ff3d66;background:#c6ff3d0d"><span class="plus">+</span><span class="lbl">AGENT</span></button>
+  <button class="m act tip" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji" style="color:#a99bff;border-color:#a99bff66;background:#a99bff0d"><span class="plus">+</span><span class="lbl">SKILL</span></button>
+  <button class="m act tip tip-r" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji" style="color:#e6e9f2;border-color:#e6e9f266;background:#e6e9f20d"><span class="plus">+</span><span class="lbl">WORKFLOW</span></button>
+</div>
+<div class="acts vault">
+  <button class="m btn-ghost tip tip-l" type="button" disabled data-tip="Prezentacja pamięci w kolejnej wersji">MEMORY</button>
+  <button class="m btn-ghost tip" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji">+ NOTATKA</button>
+  <button class="m btn-ghost tip tip-r small" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji">{{ vault() ? 'OUTPUTS' : '+ OUTPUTS' }}</button>
+</div>
