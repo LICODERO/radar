@@ -35,7 +35,8 @@ export class App {
   @HostListener('document:keydown.escape')
   protected onEscape(): void {
     if (this.store.scan()) return;
-    if (this.store.gapsOpen()) this.store.closeGaps();
+    if (this.store.pendingRun()) this.store.pendingRun.set(null);
+    else if (this.store.gapsOpen()) this.store.closeGaps();
     else if (this.store.file()) this.store.closeFile();
     else if (this.store.pick()) this.store.closePop();
   }

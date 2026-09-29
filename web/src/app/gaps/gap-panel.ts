@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { GapType } from '../core/models';
-import { GAP_LABELS, GAP_ORDER, Tool, buildCommand, gapItems, toScript } from '../core/commands';
+import { ApiError } from '../core/radar-api';
+import { GAP_LABELS, GAP_ORDER, GapItem, Shell, Tool, buildCommand, filterItems, toScript } from '../core/commands';
 import { RadarStore } from '../core/radar-store';
 
 const MAX_SHOWN = 100;
@@ -17,12 +18,26 @@ export class GapPanel {
   protected readonly labels = GAP_LABELS;
   protected readonly order = GAP_ORDER;
   protected readonly copied = signal<string | null>(null);
+  protected readonly pending = this.store.pendingRun;
+  protected readonly running = signal(false);
+  protected readonly runError = signal<string | null>(null);
+  protected readonly launched = signal<string | null>(null);
+
+  protected readonly shell = computed<Shell>(() => this.store.tools()?.shell ?? 'posix');
+  protected readonly canLaunch = computed(() => this.store.tools()?.canLaunch === true);
+  protected readonly terminalName = computed(() => {
+    switch (this.store.tools()?.platform) {
+      case 'macos': return 'Terminal.app';
+      case 'windows': return 'PowerShell';
+      default: return 'terminalu';
+    }
+  });
 
   /** default filter: the gaps counted in the KPI; when there are none, every type that has gaps */
   protected readonly selected = signal<ReadonlySet<GapType>>(this.initialSelection());
-  protected readonly items = computed(() => gapItems(this.store.result(), this.selected()));
+  protected readonly items = computed(() => filterItems(this.store.gapItems(), this.selected()));
   protected readonly shown = computed(() => this.items().slice(0, MAX_SHOWN).map((i) => ({
-    ...i, key: i.repoId + '|' + i.type, cmd: buildCommand(this.tool(), i.dir, i.prompt)
+    ...i, key: i.repoId + '|' + i.type, cmd: buildCommand(this.shell(), this.tool(), i.dir, i.prompt)
   })));
   protected readonly toolName = computed(() => (this.tool() === 'claude' ? 'Claude Code' : 'Codex CLI'));
 
@@ -46,7 +61,38 @@ export class GapPanel {
   }
 
   protected copyAll(): Promise<void> {
-    return this.copy('all', toScript(this.tool(), this.items()));
+    return this.copy('all', toScript(this.shell(), this.tool(), this.items()));
+  }
+
+  protected askRun(item: GapItem): void {
+    this.runError.set(null);
+    this.pending.set({
+      item,
+      command: buildCommand(this.shell(), this.tool(), item.dir, item.prompt),
+      toolFound: this.store.tools()?.tools[this.tool()] !== false
+    });
+  }
+
+  protected cancelRun(): void {
+    if (!this.running()) this.pending.set(null);
+  }
+
+  protected async confirmRun(): Promise<void> {
+    const p = this.pending();
+    if (!p || this.running()) return;
+    this.running.set(true);
+    this.runError.set(null);
+    try {
+      await this.store.runGap(p.item, this.tool());
+      const key = p.item.repoId + '|' + p.item.type;
+      this.launched.set(key);
+      setTimeout(() => { if (this.launched() === key) this.launched.set(null); }, 4000);
+      this.pending.set(null);
+    } catch (e) {
+      this.runError.set(e instanceof ApiError ? e.message : 'Nie udało się otworzyć terminala.');
+    } finally {
+      this.running.set(false);
+    }
   }
 }
 

@@ -13,7 +13,7 @@ public sealed class FakePicker(bool supported, string? result) : IFolderPicker
     public Task<string?> PickAsync(CancellationToken ct) => Task.FromResult(result);
 }
 
-public sealed class ServerFactory : WebApplicationFactory<Program>
+public class ServerFactoryBase : WebApplicationFactory<Program>
 {
     public string DataDir { get; } = Path.Combine(Path.GetTempPath(), "radar-data-" + Guid.NewGuid().ToString("N"));
     public IFolderPicker? Picker { get; init; }
@@ -44,3 +44,5 @@ public sealed class ServerFactory : WebApplicationFactory<Program>
         try { Directory.Delete(DataDir, true); } catch { /* best effort */ }
     }
 }
+
+public sealed class ServerFactory : ServerFactoryBase;

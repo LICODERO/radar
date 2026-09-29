@@ -5,6 +5,8 @@ namespace Radar.Scanner;
 /// <summary>Read-only file helpers that refuse to leave the repository through symlinks.</summary>
 public static class SafeFs
 {
+    private static StringComparison PathComparison => OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
     public const int MaxFileBytes = 256 * 1024;
 
     /// <summary>True when <paramref name="path"/> (under <paramref name="root"/>) does not pass through a symlink pointing outside the root.</summary>
@@ -12,7 +14,7 @@ public static class SafeFs
     {
         var rootFull = Path.TrimEndingDirectorySeparator(Path.GetFullPath(root));
         var full = Path.GetFullPath(path);
-        if (!full.StartsWith(rootFull + Path.DirectorySeparatorChar, StringComparison.Ordinal) && full != rootFull) return false;
+        if (!full.StartsWith(rootFull + Path.DirectorySeparatorChar, PathComparison) && !string.Equals(full, rootFull, PathComparison)) return false;
 
         var current = rootFull;
         var relative = full.Length > rootFull.Length ? full[(rootFull.Length + 1)..] : string.Empty;
@@ -26,7 +28,7 @@ public static class SafeFs
                 var target = info.ResolveLinkTarget(true);
                 if (target is null) return false;
                 var t = Path.GetFullPath(target.FullName);
-                if (!t.StartsWith(rootFull + Path.DirectorySeparatorChar, StringComparison.Ordinal)) return false;
+                if (!t.StartsWith(rootFull + Path.DirectorySeparatorChar, PathComparison)) return false;
             }
             catch (IOException) { return false; }
         }

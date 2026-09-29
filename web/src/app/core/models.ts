@@ -88,3 +88,10 @@ export interface FileContent {
   truncated: boolean;
   bytes: number;
 }
+
+export interface ToolsInfo {
+  platform: 'macos' | 'windows' | 'linux' | 'other' | string;
+  shell: 'posix' | 'powershell';
+  canLaunch: boolean;
+  tools: Record<string, boolean>;
+}

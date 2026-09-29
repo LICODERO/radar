@@ -32,10 +32,19 @@
           <span class="gap">{{ labels[i.type] }}</span>
         </div>
         <pre class="m cmd">{{ i.cmd }}</pre>
-        <button class="m btn-ghost cp" type="button" (click)="copy(i.key, i.cmd)">{{ copied() === i.key ? 'SKOPIOWANO ✓' : 'KOPIUJ' }}</button>
+        <div class="btns">
+          @if (canLaunch()) {
+            <button class="m btn-solid run" type="button" (click)="askRun(i)">{{ launched() === i.key ? 'OTWARTO ✓' : 'URUCHOM' }}</button>
+          }
+          <button class="m btn-ghost cp" type="button" (click)="copy(i.key, i.cmd)">{{ copied() === i.key ? 'SKOPIOWANO ✓' : 'KOPIUJ' }}</button>
+        </div>
       </div>
     } @empty {
-      <div class="m none">Zaznacz co najmniej jeden typ luki.</div>
+      <div class="m none">
+        @if (store.gapsError(); as e) { {{ e }} }
+        @else if (store.mode() === 'mock') { Generator wymaga działającego serwera (teraz dane przykładowe). }
+        @else { Zaznacz co najmniej jeden typ luki. }
+      </div>
     }
     @if (items().length > shown().length) {
       <div class="m more">Pokazano {{ shown().length }} z {{ items().length }} poleceń. „KOPIUJ WSZYSTKIE” zawiera komplet.</div>
@@ -43,9 +52,31 @@
   </div>
 
   <div class="foot">
-    <div class="m note">{{ toolName() }}: polecenia tylko się kopiuje, aplikacja ich nie uruchamia. Wklej w terminalu i sprawdź zmiany w repo (git diff).</div>
+    <div class="m note">
+      {{ toolName() }}: KOPIUJ tylko kopiuje polecenie. @if (canLaunch()) { URUCHOM otwiera {{ terminalName() }} w katalogu repo i startuje tam sesję interaktywną, więc zmiany zatwierdzasz sam. } Sprawdź efekt w repo (git diff).
+    </div>
     <button class="m btn-solid all" type="button" [disabled]="!items().length" (click)="copyAll()">
       {{ copied() === 'all' ? 'SKOPIOWANO ✓' : 'KOPIUJ WSZYSTKIE · ' + items().length }}
     </button>
   </div>
+
+  @if (pending(); as p) {
+    <div class="confirm-back">
+      <div class="confirm" role="alertdialog" aria-modal="true" aria-label="Potwierdź uruchomienie">
+        <div class="m eyebrow">URUCHOMIĆ W {{ terminalName().toUpperCase() }}?</div>
+        <div class="cttl">{{ toolName() }} w {{ p.item.repoName }}</div>
+        <div class="m cgap">{{ labels[p.item.type] }}</div>
+        <pre class="m cmd">{{ p.command }}</pre>
+        <div class="m cnote">Otworzy się nowe okno {{ terminalName() }} w katalogu repo. Sesja jest interaktywna: {{ toolName() }} zapyta o zgodę przed zmianami. Aplikacja niczego nie zapisuje sama.</div>
+        @if (!p.toolFound) {
+          <div class="m cwarn">Nie znaleziono „{{ tool() }}” w PATH serwera. Jeśli jest zainstalowany, terminal go znajdzie; w przeciwnym razie zobaczysz błąd w oknie terminala.</div>
+        }
+        @if (runError(); as e) { <div class="m cerr" role="alert">{{ e }}</div> }
+        <div class="cbtns">
+          <button class="m btn-ghost" type="button" [disabled]="running()" (click)="cancelRun()">ANULUJ</button>
+          <button class="m btn-solid go" type="button" [disabled]="running()" (click)="confirmRun()">{{ running() ? 'OTWIERAM…' : 'URUCHOM' }}</button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { Hover, Pick, RepoInfo, ScanResult, Settings, WorkflowInfo } from './models';
+import { Hover, Pick, RepoInfo, ScanResult, Settings, ToolsInfo, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
-import { gapCounts } from './commands';
+import { GapItem, Tool, countByType } from './commands';
 import { ScanPlayback } from './scan-playback';
 import { ScanUiState, applyScanEvent, initialScan } from './scan-state';
 import { buildScene } from '../orbit/orbit-scene';
@@ -54,8 +54,13 @@ export class RadarStore {
   readonly scan = signal<ScanUiState | null>(null);
   readonly file = signal<FileView | null>(null);
   readonly gapsOpen = signal(false);
-  readonly gapTotals = computed(() => gapCounts(this.result()));
-  readonly anyGaps = computed(() => Object.values(this.gapTotals()).some((n) => n > 0));
+  readonly tools = signal<ToolsInfo | null>(null);
+  readonly gapItems = signal<GapItem[]>([]);
+  readonly gapsError = signal<string | null>(null);
+  /** run confirmation shown inside the generator; Esc cancels it before it closes the panel */
+  readonly pendingRun = signal<{ item: GapItem; command: string; toolFound: boolean } | null>(null);
+  readonly gapTotals = computed(() => countByType(this.gapItems()));
+  readonly anyGaps = computed(() => (this.result()?.repos ?? []).some((r) => r.gaps.length > 0));
   readonly scanning = computed(() => this.scan()?.status === 'running');
   readonly canScan = computed(() => this.mode() === 'api' && !!this.settings()?.exists && !this.scanning());
   readonly staleRoot = computed(() => {
@@ -132,7 +137,9 @@ export class RadarStore {
         return;
       }
       this.settings.set(await this.api.settings());
+      this.tools.set(await this.api.toolsInfo());
       this.applyResult(await this.api.latest());
+      await this.loadGaps();
       const running = await this.api.currentScan();
       if (running) await this.attach(running);
     } catch (e) {
@@ -180,8 +187,31 @@ export class RadarStore {
     this.file.set(null);
   }
 
-  openGaps(): void { this.gapsOpen.set(true); }
-  closeGaps(): void { this.gapsOpen.set(false); }
+  /** Commands for the gaps come from the server, which owns the prompts. */
+  async loadGaps(): Promise<void> {
+    if (this.mode() === 'mock' || !this.result()) { this.gapItems.set([]); return; }
+    try {
+      this.gapItems.set(await this.api.gaps());
+      this.gapsError.set(null);
+    } catch (e) {
+      this.gapItems.set([]);
+      this.gapsError.set(this.messageOf(e, 'Nie udało się pobrać poleceń.'));
+    }
+  }
+
+  async openGaps(): Promise<void> {
+    this.gapsOpen.set(true);
+    await this.loadGaps();
+  }
+
+  /** Opens a terminal running the tool in the repo. Throws ApiError with a user-facing message. */
+  runGap(item: GapItem, tool: Tool): Promise<{ launched: boolean; toolFound: boolean }> {
+    return this.api.run(item.repoId, item.type, tool);
+  }
+  closeGaps(): void {
+    this.pendingRun.set(null);
+    this.gapsOpen.set(false);
+  }
 
   // ---- scan path -----------------------------------------------------------------------------
   /** Native folder dialog; returns false when it is unavailable and the UI should offer manual entry. */
@@ -253,6 +283,7 @@ export class RadarStore {
       try {
         this.applyResult(await this.api.latest());
         this.settings.set(await this.api.settings());
+        await this.loadGaps();
       } catch (e) {
         this.notice.set(this.messageOf(e, 'Skan się zakończył, ale nie udało się wczytać wyniku.'));
       }

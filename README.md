@@ -47,7 +47,7 @@ The UI language is Polish; code and identifiers are in English.
 
 ## Usage
 
-**From source** (requires the .NET SDK 10 and Node.js 22+):
+**From source** (requires the .NET SDK 10 and Node.js 22+; on Windows use `./run.ps1` instead of `./run.sh`):
 
 ```bash
 git clone https://github.com/<owner>/radar.git
@@ -60,7 +60,7 @@ cd radar
 1. Click **ZMIEŃ** and pick the directory that contains your repositories (macOS shows a native folder dialog). Picking a directory starts the scan right away.
 2. The overlay shows real progress from the scanner; when it finishes, close it to see the dashboard. Use **SKANUJ PONOWNIE** to rescan the same directory.
 3. Click an agent, skill or workflow (or **OTWÓRZ CLAUDE.md**) and choose **OTWÓRZ PLIK** for a read-only preview of the file.
-4. **GENERUJ POLECENIA** lists ready-made `claude` / `codex` commands for the gaps (missing `CLAUDE.md`, agents, skills, OUTPUTS, unlinked workflows). They are only copied to the clipboard, the app never runs them.
+4. **GENERUJ POLECENIA** lists ready-made `claude` / `codex` commands for the gaps (missing `CLAUDE.md`, agents, skills, OUTPUTS, unlinked workflows). **KOPIUJ** copies a command (POSIX or PowerShell flavour, depending on your system); **URUCHOM** opens Terminal.app (macOS) or PowerShell (Windows) in the repo and starts `claude` / `codex` with the prompt after you confirm. The session is interactive, so you approve every change in the tool; the app itself never writes into your repos.
 
 The last scan and your settings are saved in `~/Library/Application Support/RADAR` (`%APPDATA%\RADAR` on Windows, `~/.local/share/radar` on Linux), so the next start shows the previous result immediately.
 

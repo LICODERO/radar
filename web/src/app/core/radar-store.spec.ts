@@ -13,6 +13,8 @@ function setup(save: (p: string) => Promise<Settings>) {
     startScan: vi.fn(async () => 'scan-1'),
     openEvents: vi.fn(async () => ({ addEventListener: vi.fn(), close: vi.fn(), readyState: 0 }) as unknown as EventSource),
     pickFolder: vi.fn(async () => '/picked/dir'),
+    run: vi.fn(async () => ({ launched: true, toolFound: true })),
+    gaps: vi.fn(async () => [{ repoId: 'r', repoName: 'r', initials: 'R', type: 'no-claude-md', dir: '/p/r', prompt: 'p' }]),
     readFile: vi.fn(async (_r: string, path: string) => ({ path, content: '# ' + path, truncated: false, bytes: 10 }))
   };
   TestBed.configureTestingModule({ providers: [provideHttpClient(), { provide: RadarApi, useValue: api }] });
@@ -94,5 +96,41 @@ describe('file preview', () => {
     await store.openFile('r', 'CLAUDE.md', 'CLAUDE.md', '#c6ff3d');
     expect(api.readFile).not.toHaveBeenCalled();
     expect(store.file()!.status).toBe('error');
+  });
+});
+
+describe('gap commands', () => {
+  it('loads the commands from the server when the generator opens', async () => {
+    const { api, store } = setup(async (p) => settings(p));
+    store.result.set({ repos: [{ id: 'r' }] } as never);
+    await store.openGaps();
+    expect(api.gaps).toHaveBeenCalledTimes(1);
+    expect(store.gapsOpen()).toBe(true);
+    expect(store.gapItems()).toHaveLength(1);
+    expect(store.gapTotals()['no-claude-md']).toBe(1);
+  });
+
+  it('does not call the server for sample data', async () => {
+    const { api, store } = setup(async (p) => settings(p));
+    store.mode.set('mock');
+    await store.openGaps();
+    expect(api.gaps).not.toHaveBeenCalled();
+    expect(store.gapItems()).toEqual([]);
+  });
+
+  it('runs a gap by repo id, gap type and tool only', async () => {
+    const { api, store } = setup(async (p) => settings(p));
+    const item = { repoId: 'r', repoName: 'r', initials: 'R', type: 'no-agents', dir: '/p/r', prompt: 'p' } as const;
+    await store.runGap(item, 'codex');
+    expect(api.run).toHaveBeenCalledWith('r', 'no-agents', 'codex');
+  });
+
+  it('closing the generator also drops a pending confirmation', () => {
+    const { store } = setup(async (p) => settings(p));
+    store.gapsOpen.set(true);
+    store.pendingRun.set({ item: {} as never, command: 'x', toolFound: true });
+    store.closeGaps();
+    expect(store.pendingRun()).toBeNull();
+    expect(store.gapsOpen()).toBe(false);
   });
 });

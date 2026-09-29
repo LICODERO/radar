@@ -15,7 +15,7 @@ commands to fill them. The MVP is **read-only**.
 ## Commands
 
 ```bash
-./run.sh                           # build UI if needed + start the server on http://127.0.0.1:5178
+./run.sh                           # build UI if needed + start the server on http://127.0.0.1:5178 (Windows: ./run.ps1)
 ./dev.sh                           # dotnet watch + ng serve (http://localhost:4200, /api proxied)
 dotnet build
 dotnet test                        # scanner + server tests
@@ -32,8 +32,9 @@ Override with `Radar__DataDir` (tests and manual experiments must never touch th
 
 ## API (all under /api, loopback only)
 
-`GET session` (token) · `GET/PUT settings` · `POST pick-folder` · `GET scan/latest` · `GET file?repo=&path=` (read-only preview) · `POST scans` · `GET scans/current` ·
+`GET session` (token) · `GET/PUT settings` · `POST pick-folder` · `GET scan/latest` · `GET file?repo=&path=` (read-only preview) · `GET gaps` (commands/prompts, server is the single source) · `GET tools` (platform, shell, claude/codex on PATH) · `POST run` · `POST scans` · `GET scans/current` ·
 `GET scans/{id}/events` (SSE: started, phase, repo-found, repo-scanned, completed, cancelled, error) · `DELETE scans/{id}`.
+`run` opens Terminal.app (macOS) or PowerShell (Windows) in the repo and starts `claude`/`codex` with the gap prompt; the client sends only repo id + gap type + tool, the server builds the command (never accept command text from the client). The session is interactive, the app itself writes nothing into repos.
 `file` only serves paths the latest scan reported for that repo (CLAUDE.md, agents, skills, workflows), `.md` only, max 256 KB, never through a symlink leaving the repo.
 Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE); Host must be loopback; foreign Origins are rejected.
 
@@ -44,6 +45,7 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 - Scanning is local and read-only. Nothing leaves the machine. No network calls at runtime (fonts are bundled).
 - Never read secrets (`.env`, keys); only AI/markdown files.
 - Any file access by path must be resolved and validated to be inside a detected repo (no symlink escapes).
+- Cross-platform: macOS and Windows are supported (Linux: everything except opening a terminal). Windows code paths (PowerShell launcher, folder dialog, `run.ps1`) are covered by unit tests of the builders but were not run on a real Windows machine yet.
 - Server listens on `127.0.0.1` only; there are no endpoints that write into repos in the MVP (only the app's own settings/cache).
 - Layout: fixed 1440x900 stage scaled proportionally (`web/src/app/core/fit-scale.ts`, minimum scale 0.85, smaller windows scroll); use `fs(px)` from
   `web/src/styles/_tokens.scss` for every font size so fonts stay within 0.85x-1.2x.
@@ -67,7 +69,7 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 1. Skeleton + Orbit layout on mock data (done).
 2. Scanner + JSON result + tests on fixtures (done).
 3. Scan from the UI: SSE progress overlay, saved result, "last scan", folder picker (done).
-4. Read-only markdown preview + command generator for gaps (done). Commands are only shown/copied, never run by the app; prompts live in `web/src/app/core/commands.ts`.
+4. Read-only markdown preview + command generator for gaps (done), plus URUCHOM: opens a terminal after an explicit confirmation. Prompts live in `src/Radar.Server/GapCommands.cs`; the UI formats commands per shell in `web/src/app/core/commands.ts`.
 5. Distribution (GitHub Actions release binaries).
 
 Requirements, mockup and the MVP spec live outside the repo (see `CLAUDE.local.md` if present).

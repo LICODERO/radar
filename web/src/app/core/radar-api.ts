@@ -1,7 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { FileContent, ScanResult, Settings } from './models';
+import { GapItem, Tool } from './commands';
+import { FileContent, ScanResult, Settings, ToolsInfo } from './models';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly body?: any) {
@@ -48,6 +49,14 @@ export class RadarApi {
 
   readFile(repo: string, path: string): Promise<FileContent> {
     return this.call('GET', `/api/file?repo=${encodeURIComponent(repo)}&path=${encodeURIComponent(path)}`);
+  }
+
+  gaps(): Promise<GapItem[]> { return this.call('GET', '/api/gaps'); }
+  toolsInfo(): Promise<ToolsInfo> { return this.call('GET', '/api/tools'); }
+
+  /** Opens a terminal in the repo with claude/codex; the server builds the command itself. */
+  run(repoId: string, type: string, tool: Tool): Promise<{ launched: boolean; toolFound: boolean }> {
+    return this.call('POST', '/api/run', { repoId, type, tool });
   }
 
   async startScan(): Promise<string> {
