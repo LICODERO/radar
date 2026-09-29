@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { Hover, Pick, RepoInfo, ScanResult, Settings, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
+import { ScanPlayback } from './scan-playback';
 import { ScanUiState, applyScanEvent, initialScan } from './scan-state';
 import { buildScene } from '../orbit/orbit-scene';
 
@@ -16,6 +17,7 @@ export class RadarStore {
   private readonly api = inject(RadarApi);
   private events: EventSource | null = null;
   private scanId: string | null = null;
+  private readonly playback = new ScanPlayback((name, data) => void this.onEvent(name, data));
 
   readonly result = signal<ScanResult | null>(null);
   readonly error = signal<string | null>(null);
@@ -166,17 +168,19 @@ export class RadarStore {
 
   private async attach(id: string): Promise<void> {
     this.closeStream();
+    this.playback.clear();
     this.scanId = id;
     this.scan.set(initialScan());
     const es = await this.api.openEvents(id);
     this.events = es;
     const names = ['started', 'phase', 'repo-found', 'repo-scanned', 'completed', 'cancelled', 'error'];
     for (const name of names) {
-      es.addEventListener(name, (ev) => void this.onEvent(name, JSON.parse((ev as MessageEvent).data)));
+      es.addEventListener(name, (ev) => this.playback.push(name, JSON.parse((ev as MessageEvent).data)));
     }
     // A dropped connection would make EventSource retry forever; the server replays history, so just surface it.
     es.onerror = () => {
       if (this.scan()?.status === 'running' && es.readyState === EventSource.CLOSED) {
+        this.playback.clear();
         this.scan.update((s) => (s ? applyScanEvent(s, 'error', { message: 'Utracono połączenie z serwerem.' }) : s));
         this.closeStream();
       }
@@ -206,13 +210,22 @@ export class RadarStore {
 
   async cancelScan(): Promise<void> {
     const id = this.scanId;
-    if (id && this.scanning()) {
-      try { await this.api.cancelScan(id); } catch { /* the stream reports the outcome */ }
+    if (!id || !this.scanning()) return;
+    try {
+      await this.api.cancelScan(id);
+      // cancelled on the server: drop the queued repos, the stream delivers 'cancelled' next
+      this.playback.clear();
+      this.closeStream();
+      this.scan.set(null);
+    } catch {
+      // the scan already finished on the server and only the animation is still running: skip to the end
+      this.playback.flush();
     }
   }
 
   /** "ZAMKNIJ I ZOBACZ WYNIKI" / closing an error screen. */
   closeScan(): void {
+    this.playback.clear();
     this.closeStream();
     this.scan.set(null);
   }
