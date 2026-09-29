@@ -4,9 +4,25 @@ import { firstValueFrom } from 'rxjs';
 import { Hover, Pick, RepoInfo, ScanResult, Settings, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
+import { gapCounts } from './commands';
 import { ScanPlayback } from './scan-playback';
 import { ScanUiState, applyScanEvent, initialScan } from './scan-state';
 import { buildScene } from '../orbit/orbit-scene';
+
+export interface FileView {
+  repoId: string;
+  repoName: string;
+  path: string;
+  /** label such as CLAUDE.md, AGENT, SKILL, WORKFLOW */
+  kind: string;
+  color: string;
+  status: 'loading' | 'ready' | 'error';
+  text: string;
+  truncated: boolean;
+  bytes: number;
+  error: string | null;
+  mode: 'preview' | 'source';
+}
 
 export const REPO_PAGE_SIZE = 10;
 export const WF_PAGE_SIZE = 3;
@@ -17,6 +33,7 @@ export class RadarStore {
   private readonly api = inject(RadarApi);
   private events: EventSource | null = null;
   private scanId: string | null = null;
+  private fileSeq = 0;
   private readonly playback = new ScanPlayback((name, data) => void this.onEvent(name, data));
 
   readonly result = signal<ScanResult | null>(null);
@@ -35,6 +52,10 @@ export class RadarStore {
   readonly settings = signal<Settings | null>(null);
   readonly notice = signal<string | null>(null);
   readonly scan = signal<ScanUiState | null>(null);
+  readonly file = signal<FileView | null>(null);
+  readonly gapsOpen = signal(false);
+  readonly gapTotals = computed(() => gapCounts(this.result()));
+  readonly anyGaps = computed(() => Object.values(this.gapTotals()).some((n) => n > 0));
   readonly scanning = computed(() => this.scan()?.status === 'running');
   readonly canScan = computed(() => this.mode() === 'api' && !!this.settings()?.exists && !this.scanning());
   readonly staleRoot = computed(() => {
@@ -128,6 +149,39 @@ export class RadarStore {
     this.repoPage.set(0);
     this.wfPage.set(0);
   }
+
+  // ---- read-only file preview -------------------------------------------------------------------
+  async openFile(repoId: string, path: string, kind: string, color: string): Promise<void> {
+    const repo = this.repos().find((r) => r.id === repoId);
+    const seq = ++this.fileSeq;
+    const base: FileView = {
+      repoId, repoName: repo?.name ?? repoId, path, kind, color, status: 'loading', text: '', truncated: false, bytes: 0,
+      error: null, mode: 'preview'
+    };
+    this.file.set(base);
+    if (this.mode() === 'mock') {
+      this.file.set({ ...base, status: 'error', error: 'Podgląd plików wymaga działającego serwera (teraz dane przykładowe).' });
+      return;
+    }
+    try {
+      const f = await this.api.readFile(repoId, path);
+      if (seq === this.fileSeq) this.file.set({ ...base, status: 'ready', text: f.content, truncated: f.truncated, bytes: f.bytes });
+    } catch (e) {
+      if (seq === this.fileSeq) this.file.set({ ...base, status: 'error', error: this.messageOf(e, 'Nie udało się wczytać pliku.') });
+    }
+  }
+
+  setFileMode(mode: 'preview' | 'source'): void {
+    this.file.update((f) => (f ? { ...f, mode } : f));
+  }
+
+  closeFile(): void {
+    this.fileSeq++;
+    this.file.set(null);
+  }
+
+  openGaps(): void { this.gapsOpen.set(true); }
+  closeGaps(): void { this.gapsOpen.set(false); }
 
   // ---- scan path -----------------------------------------------------------------------------
   /** Native folder dialog; returns false when it is unavailable and the UI should offer manual entry. */

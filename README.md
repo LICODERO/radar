@@ -2,7 +2,7 @@
 
 **Repo AI Discovery And Review** – a local-first dashboard that scans a directory of repositories for their AI setup (`CLAUDE.md`, agents, skills, workflows, memory), shows coverage and gaps, and generates Claude Code / Codex CLI commands to fill them.
 
-> **Status:** early development (read-only MVP in progress). Scanning, folder selection, live scan progress and saved results work; file preview and command generation are not built yet.
+> **Status:** early development (read-only MVP in progress). Scanning, folder selection, live scan progress, saved results, read-only file preview and the command generator work.
 
 ## What it does
 
@@ -59,6 +59,8 @@ cd radar
 
 1. Click **ZMIEŃ** and pick the directory that contains your repositories (macOS shows a native folder dialog). Picking a directory starts the scan right away.
 2. The overlay shows real progress from the scanner; when it finishes, close it to see the dashboard. Use **SKANUJ PONOWNIE** to rescan the same directory.
+3. Click an agent, skill or workflow (or **OTWÓRZ CLAUDE.md**) and choose **OTWÓRZ PLIK** for a read-only preview of the file.
+4. **GENERUJ POLECENIA** lists ready-made `claude` / `codex` commands for the gaps (missing `CLAUDE.md`, agents, skills, OUTPUTS, unlinked workflows). They are only copied to the clipboard, the app never runs them.
 
 The last scan and your settings are saved in `~/Library/Application Support/RADAR` (`%APPDATA%\RADAR` on Windows, `~/.local/share/radar` on Linux), so the next start shows the previous result immediately.
 
@@ -79,7 +81,7 @@ xattr -d com.apple.quarantine ./radar
 1. ~~Skeleton and the Orbit layout on mock data~~
 2. ~~Scanner (repositories, `CLAUDE.md`, agents, skills, workflows, OUTPUTS, stack, coverage, gaps)~~
 3. ~~Scan from the UI with real progress, saved result and "last scan"~~
-4. Read-only markdown preview and command generator for gaps (Claude Code and Codex CLI)
+4. ~~Read-only markdown preview and command generator for gaps (Claude Code and Codex CLI)~~
 5. Distribution (release binaries)
 6. Later: markdown editor with templates for new files, memory vault presentation, global agents/skills, scan history
 

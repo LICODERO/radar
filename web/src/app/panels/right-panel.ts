@@ -24,6 +24,10 @@ export class RightPanel {
     const names = rest.slice(0, 2).map((r) => `${r.initials} ${r.name}`).join(', ');
     return `+ ${rest.length} kolejne · ${names}${rest.length > 2 ? '…' : ''}`;
   });
+  protected readonly genTip = computed(() => {
+    const t = this.store.gapTotals();
+    return this.store.anyGaps() ? `Polecenia dla luk: ${t['no-claude-md']} bez CLAUDE.md, pozostałe w filtrach` : 'Brak luk do uzupełnienia';
+  });
   protected readonly vaultText = computed(() => {
     const s = this.sel();
     if (!s) return '';

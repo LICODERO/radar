@@ -58,7 +58,14 @@ export interface SceneLine extends LineGeom {
   delay: number;
   anim: string;
 }
+export interface PopFile {
+  repoId: string;
+  path: string;
+  kind: string;
+  color: string;
+}
 export interface Popover {
+  file: PopFile | null;
   left: number;
   top: number;
   color: string;
@@ -254,15 +261,20 @@ export function buildScene(inp: SceneInput): Scene {
       const repo = repos[idx.get(pick.repoId ?? '') ?? -1];
       if (pick.kind === 'a') {
         const a = repo?.agents.find((x) => x.name === pick.name);
-        pop = { ...base, kind: 'AGENT', color: '#c6ff3d', title: pick.name, desc: a?.description ?? '',
+        pop = { ...base, file: a && repo ? { repoId: repo.id, path: a.path, kind: 'AGENT', color: '#c6ff3d' } : null,
+          kind: 'AGENT', color: '#c6ff3d', title: pick.name, desc: a?.description ?? '',
           rows: [{ k: 'ŚCIEŻKA', v: `${repo?.path}/${a?.path}` }, { k: 'NARZĘDZIA', v: a?.tools.join(' · ') || '—' }, { k: 'UŻYWANY W', v: usedTxt }] };
       } else if (pick.kind === 's') {
         const s = repo?.skills.find((x) => x.name === pick.name);
-        pop = { ...base, kind: 'SKILL', color: '#a99bff', title: pick.name, desc: s?.description ?? '',
+        pop = { ...base, file: s && repo ? { repoId: repo.id, path: s.path, kind: 'SKILL', color: '#a99bff' } : null,
+          kind: 'SKILL', color: '#a99bff', title: pick.name, desc: s?.description ?? '',
           rows: [{ k: 'ŚCIEŻKA', v: `${repo?.path}/${s?.path}` }, { k: 'UŻYWANY W', v: usedTxt }] };
       } else {
         const w = workflows.find((x) => x.id === pick.name);
-        if (w) pop = { ...base, kind: 'WORKFLOW ' + w.id, color: '#e6e9f2', title: w.name, desc: w.description,
+        // open the copy from the selected repo when it has one, otherwise the first repo that does
+        const ref = w?.repos.find((x) => x.repoId === selRepo?.id) ?? w?.repos[0];
+        if (w) pop = { ...base, file: ref ? { repoId: ref.repoId, path: ref.path, kind: 'WORKFLOW ' + w.id, color: '#e6e9f2' } : null,
+          kind: 'WORKFLOW ' + w.id, color: '#e6e9f2', title: w.name, desc: w.description,
           rows: [{ k: 'KIEDY', v: w.when || '—' }, { k: 'KROKI', v: w.agents.length ? w.agents.join(' → ') : 'bez agentów (sama procedura)' }, { k: 'REPOZYTORIA', v: usedTxt }] };
       }
     }

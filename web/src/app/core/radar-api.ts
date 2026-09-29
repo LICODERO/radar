@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { ScanResult, Settings } from './models';
+import { FileContent, ScanResult, Settings } from './models';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly body?: any) {
@@ -44,6 +44,10 @@ export class RadarApi {
   async latest(): Promise<ScanResult | null> {
     try { return await this.call<ScanResult>('GET', '/api/scan/latest'); }
     catch (e) { if (e instanceof ApiError && e.status === 404) return null; throw e; }
+  }
+
+  readFile(repo: string, path: string): Promise<FileContent> {
+    return this.call('GET', `/api/file?repo=${encodeURIComponent(repo)}&path=${encodeURIComponent(path)}`);
   }
 
   async startScan(): Promise<string> {

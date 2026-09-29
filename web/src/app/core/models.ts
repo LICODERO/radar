@@ -81,3 +81,10 @@ export interface Settings {
   maxDepth: number;
   canPickFolder: boolean;
 }
+
+export interface FileContent {
+  path: string;
+  content: string;
+  truncated: boolean;
+  bytes: number;
+}

@@ -25,6 +25,8 @@
             <div class="m et">Wybierz katalog z repozytoriami (ZMIEŃ) i kliknij SKANUJ.</div>
           </div>
         }
+        @if (store.file()) { <app-file-pane /> }
+        @if (store.gapsOpen()) { <app-gap-panel /> }
         @if (store.scan()) { <app-scan-overlay /> }
       }
     </div>

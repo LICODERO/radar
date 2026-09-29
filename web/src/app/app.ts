@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, HostListener, computed, inject, sig
 import { BASE_H, BASE_W, computeFit } from './core/fit-scale';
 import { RadarStore } from './core/radar-store';
 import { Orbit } from './orbit/orbit';
+import { FilePane } from './file/file-pane';
+import { GapPanel } from './gaps/gap-panel';
 import { ScanOverlay } from './scan/scan-overlay';
 import { Header } from './panels/header';
 import { LeftPanel } from './panels/left-panel';
@@ -10,7 +12,7 @@ import { RightPanel } from './panels/right-panel';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay],
+  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -27,6 +29,15 @@ export class App {
 
   constructor() {
     void this.store.init(new URLSearchParams(location.search).get('mock'));
+  }
+
+  /** Esc closes the top-most layer: generator, then file preview, then the popover. */
+  @HostListener('document:keydown.escape')
+  protected onEscape(): void {
+    if (this.store.scan()) return;
+    if (this.store.gapsOpen()) this.store.closeGaps();
+    else if (this.store.file()) this.store.closeFile();
+    else if (this.store.pick()) this.store.closePop();
   }
 
   @HostListener('window:resize')

@@ -12,7 +12,7 @@
     <div class="m flags" [style.color]="s.claudeMd.exists ? '#a99bff' : '#ff4fa3'">{{ flags() }}</div>
     <div class="m vault">{{ vaultText() }}</div>
     @if (s.claudeMd.exists) {
-      <button class="m btn-ghost open tip" type="button" disabled data-tip="Podgląd pliku w etapie 4">OTWÓRZ CLAUDE.md</button>
+      <button class="m btn-ghost open" type="button" (click)="store.openFile(s.id, s.claudeMd.path, 'CLAUDE.md', '#c6ff3d')">OTWÓRZ CLAUDE.md</button>
     }
 
     <div class="m sec">AGENCI · {{ s.agents.length }}</div>
@@ -49,4 +49,4 @@
   </button>
 }
 @if (restText()) { <div class="m rest">{{ restText() }}</div> }
-<button class="m btn-ghost tip gen" type="button" disabled [attr.data-tip]="'Generator poleceń w etapie 4'">GENERUJ POLECENIA</button>
+<button class="m btn-ghost tip gen" type="button" [disabled]="!store.anyGaps()" [attr.data-tip]="genTip()" (click)="store.openGaps()">GENERUJ POLECENIA</button>

@@ -32,8 +32,9 @@ Override with `Radar__DataDir` (tests and manual experiments must never touch th
 
 ## API (all under /api, loopback only)
 
-`GET session` (token) · `GET/PUT settings` · `POST pick-folder` · `GET scan/latest` · `POST scans` · `GET scans/current` ·
+`GET session` (token) · `GET/PUT settings` · `POST pick-folder` · `GET scan/latest` · `GET file?repo=&path=` (read-only preview) · `POST scans` · `GET scans/current` ·
 `GET scans/{id}/events` (SSE: started, phase, repo-found, repo-scanned, completed, cancelled, error) · `DELETE scans/{id}`.
+`file` only serves paths the latest scan reported for that repo (CLAUDE.md, agents, skills, workflows), `.md` only, max 256 KB, never through a symlink leaving the repo.
 Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE); Host must be loopback; foreign Origins are rejected.
 
 ## Conventions
@@ -66,7 +67,7 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 1. Skeleton + Orbit layout on mock data (done).
 2. Scanner + JSON result + tests on fixtures (done).
 3. Scan from the UI: SSE progress overlay, saved result, "last scan", folder picker (done).
-4. Read-only markdown preview + command generator for gaps.
+4. Read-only markdown preview + command generator for gaps (done). Commands are only shown/copied, never run by the app; prompts live in `web/src/app/core/commands.ts`.
 5. Distribution (GitHub Actions release binaries).
 
 Requirements, mockup and the MVP spec live outside the repo (see `CLAUDE.local.md` if present).

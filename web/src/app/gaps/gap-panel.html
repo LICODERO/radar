@@ -1,0 +1,51 @@
+<div class="backdrop" (click)="store.closeGaps()"></div>
+<div class="dlg" role="dialog" aria-modal="true" aria-label="Polecenia dla luk">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">GENERATOR POLECEŃ</div>
+      <div class="ttl">Uzupełnianie luk</div>
+    </div>
+    <button class="m btn-ghost x" type="button" aria-label="Zamknij" (click)="store.closeGaps()">✕</button>
+  </div>
+
+  <div class="bar">
+    <div class="seg" role="group" aria-label="Narzędzie">
+      <button class="m" type="button" [class.on]="tool() === 'claude'" (click)="tool.set('claude')">CLAUDE CODE</button>
+      <button class="m" type="button" [class.on]="tool() === 'codex'" (click)="tool.set('codex')">CODEX CLI</button>
+    </div>
+    <div class="chips" role="group" aria-label="Typy luk">
+      @for (g of order; track g) {
+        @if (store.gapTotals()[g] > 0) {
+          <button class="m chip" type="button" [class.on]="selected().has(g)" [attr.aria-pressed]="selected().has(g)" (click)="toggle(g)">
+            {{ labels[g] }} · {{ store.gapTotals()[g] }}
+          </button>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="list">
+    @for (i of shown(); track i.key) {
+      <div class="card">
+        <div class="m row">
+          <span><span class="ini">{{ i.initials }}</span> {{ i.repoName }}</span>
+          <span class="gap">{{ labels[i.type] }}</span>
+        </div>
+        <pre class="m cmd">{{ i.cmd }}</pre>
+        <button class="m btn-ghost cp" type="button" (click)="copy(i.key, i.cmd)">{{ copied() === i.key ? 'SKOPIOWANO ✓' : 'KOPIUJ' }}</button>
+      </div>
+    } @empty {
+      <div class="m none">Zaznacz co najmniej jeden typ luki.</div>
+    }
+    @if (items().length > shown().length) {
+      <div class="m more">Pokazano {{ shown().length }} z {{ items().length }} poleceń. „KOPIUJ WSZYSTKIE” zawiera komplet.</div>
+    }
+  </div>
+
+  <div class="foot">
+    <div class="m note">{{ toolName() }}: polecenia tylko się kopiuje, aplikacja ich nie uruchamia. Wklej w terminalu i sprawdź zmiany w repo (git diff).</div>
+    <button class="m btn-solid all" type="button" [disabled]="!items().length" (click)="copyAll()">
+      {{ copied() === 'all' ? 'SKOPIOWANO ✓' : 'KOPIUJ WSZYSTKIE · ' + items().length }}
+    </button>
+  </div>
+</div>

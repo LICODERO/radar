@@ -99,7 +99,7 @@
         <div class="m v">{{ r.v }}</div>
       </div>
     }
-    <button class="m btn-ghost tip open" type="button" disabled data-tip="Podgląd pliku w etapie 4"
-            [style.border-color]="p.color" [style.color]="p.color">OTWÓRZ PLIK</button>
+    <button class="m btn-ghost open" type="button" [disabled]="!p.file" [style.border-color]="p.color" [style.color]="p.color"
+            (click)="openFile(p.file)">OTWÓRZ PLIK</button>
   </div>
 }

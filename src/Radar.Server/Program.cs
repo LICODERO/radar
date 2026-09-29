@@ -17,6 +17,7 @@ builder.Services.ConfigureHttpJsonOptions(o =>
 builder.Services.AddSingleton(sp => new JsonFileStore(AppPaths.DataDir(sp.GetRequiredService<IConfiguration>())));
 builder.Services.AddSingleton<IScanStore>(sp => sp.GetRequiredService<JsonFileStore>());
 builder.Services.AddSingleton<ISettingsStore>(sp => sp.GetRequiredService<JsonFileStore>());
+builder.Services.AddSingleton<LatestScanCache>();
 builder.Services.AddSingleton<SessionToken>();
 builder.Services.AddSingleton<ScanManager>();
 builder.Services.AddSingleton<IFolderPicker, OsaScriptFolderPicker>();
@@ -82,6 +83,21 @@ api.MapGet("/scan/latest", async (IScanStore scans, CancellationToken ct) =>
 {
     var json = await scans.LoadLatestJsonAsync(ct);
     return json is null ? Results.NotFound(new { error = "Brak zapisanego skanu." }) : Results.Bytes(json, "application/json");
+});
+
+// Read-only preview of a file reported by the latest scan.
+api.MapGet("/file", async (string repo, string path, LatestScanCache cache, CancellationToken ct) =>
+{
+    var r = FileReader.Read(await cache.GetAsync(ct), repo, path);
+    return r.Status switch
+    {
+        FileReadStatus.Ok => Results.Ok(new { path = r.Content!.Path, content = r.Content.Content, truncated = r.Content.Truncated, bytes = r.Content.Bytes }),
+        FileReadStatus.NoScan => Results.NotFound(new { error = "Brak zapisanego skanu." }),
+        FileReadStatus.UnknownRepo => Results.NotFound(new { error = "Nieznane repozytorium." }),
+        FileReadStatus.NotInScan => Results.NotFound(new { error = "Plik nie należy do wyniku skanu." }),
+        FileReadStatus.Missing => Results.NotFound(new { error = "Plik już nie istnieje. Uruchom skan ponownie." }),
+        _ => Results.Json(new { error = "Odczyt tego pliku jest zabroniony." }, statusCode: StatusCodes.Status403Forbidden)
+    };
 });
 
 api.MapPost("/scans", (ScanManager manager, ISettingsStore settings) =>

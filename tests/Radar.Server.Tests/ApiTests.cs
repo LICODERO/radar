@@ -220,7 +220,7 @@ public class SessionTests
         for (var i = 0; i < 300; i++) Directory.CreateDirectory(Path.Combine(dir, "repo" + i, ".git"));
 
         var store = new JsonFileStore(Path.Combine(dir, "_data"));
-        var manager = new ScanManager(store, Microsoft.Extensions.Logging.Abstractions.NullLogger<ScanManager>.Instance);
+        var manager = new ScanManager(store, new LatestScanCache(store), Microsoft.Extensions.Logging.Abstractions.NullLogger<ScanManager>.Instance);
         var (session, started) = manager.Start(dir, 2);
         Assert.True(started);
         manager.Cancel(session.Id);

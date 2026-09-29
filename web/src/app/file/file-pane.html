@@ -1,0 +1,43 @@
+<div class="head">
+  <div class="m badge" [style.border-color]="f().color" [style.color]="f().color">MD</div>
+  <div class="ttl">
+    <div class="m kind" [style.color]="f().color">{{ f().kind }} · {{ f().repoName }}</div>
+    <div class="m path">{{ f().path }}</div>
+  </div>
+  <button #closeBtn class="m btn-ghost x" type="button" aria-label="Zamknij podgląd" (click)="store.closeFile()">✕</button>
+</div>
+
+<div class="tabs">
+  <button class="m tab" type="button" [class.on]="f().mode === 'preview'" (click)="store.setFileMode('preview')">PODGLĄD</button>
+  <button class="m tab" type="button" [class.on]="f().mode === 'source'" (click)="store.setFileMode('source')">ŹRÓDŁO</button>
+  <div class="m ro">TYLKO DO ODCZYTU</div>
+</div>
+
+<div class="body">
+  @switch (f().status) {
+    @case ('loading') { <div class="m msg">Wczytywanie…</div> }
+    @case ('error') { <div class="m msg err" role="alert">{{ f().error }}</div> }
+    @default {
+      @if (f().mode === 'source') {
+        <pre class="m src">{{ f().text }}</pre>
+      } @else {
+        @for (b of blocks(); track $index) {
+          <div class="b" [class]="'b ' + b.kind" [style.padding-left.px]="b.kind === 'li' || b.kind === 'ol' ? 6 + b.indent * 16 : null">
+            @if (b.kind === 'li') { <span class="dot">•</span> }
+            @for (s of b.segs; track $index) {
+              @if (s.k === 'b') { <strong>{{ s.t }}</strong> } @else if (s.k === 'c') { <code>{{ s.t }}</code> } @else { {{ s.t }} }
+            }
+          </div>
+        }
+      }
+      @if (f().truncated) {
+        <div class="m msg warn">Plik jest duży ({{ size(f().bytes) }}) — pokazano początek.</div>
+      }
+    }
+  }
+</div>
+
+<div class="m foot">
+  <span>MARKDOWN · UTF-8 · {{ lines() }} LINII · {{ f().text.length }} ZNAKÓW</span>
+  <span>{{ f().truncated ? 'SKRÓCONO' : 'BEZ ZMIAN' }}</span>
+</div>

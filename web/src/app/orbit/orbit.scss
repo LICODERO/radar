@@ -43,4 +43,5 @@
 .pop-row { margin-top: 9px; }
 .k { font-size: fs(9); letter-spacing: .14em; color: $muted; }
 .v { font-size: fs(10.5); line-height: 15px; color: $text; word-break: break-all; }
-.open { margin-top: 12px; width: 100%; box-sizing: border-box; background: transparent; border: 1px solid; font-size: fs(10); letter-spacing: .12em; padding: 8px; cursor: pointer; opacity: .5; }
+.open { margin-top: 12px; width: 100%; box-sizing: border-box; background: transparent; border: 1px solid; font-size: fs(10); letter-spacing: .12em; padding: 8px; cursor: pointer; }
+.open:disabled { opacity: .5; }

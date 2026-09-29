@@ -65,7 +65,7 @@ public sealed class ScanSession
 }
 
 /// <summary>Runs at most one scan at a time and persists the finished result.</summary>
-public sealed class ScanManager(IScanStore store, ILogger<ScanManager> log)
+public sealed class ScanManager(IScanStore store, LatestScanCache cache, ILogger<ScanManager> log)
 {
     private readonly object _lock = new();
     private ScanSession? _current;
@@ -106,6 +106,7 @@ public sealed class ScanManager(IScanStore store, ILogger<ScanManager> log)
             });
             var result = new RadarScanner().Scan(new ScanOptions(session.Root, maxDepth), progress, session.Cts.Token);
             await store.SaveAsync(result);
+            cache.Set(result);
             session.Append(new ScanCompleted(result.DurationMs, result.Summary));
         }
         catch (OperationCanceledException)
