@@ -19,6 +19,13 @@
         </div>
         <div class="m hint">NAJEDŹ = PEŁNA NAZWA · KLIKNIJ REPO = POWIĄZANIA · KLIKNIJ ELEMENT = SZCZEGÓŁY I MIEJSCA UŻYCIA</div>
         @if (sample()) { <div class="m sample">DANE PRZYKŁADOWE</div> }
+        @if (!store.loading() && !store.result()) {
+          <div class="empty">
+            <div class="ed">BRAK DANYCH</div>
+            <div class="m et">Wybierz katalog z repozytoriami (ZMIEŃ) i kliknij SKANUJ.</div>
+          </div>
+        }
+        @if (store.scan()) { <app-scan-overlay /> }
       }
     </div>
   </div>

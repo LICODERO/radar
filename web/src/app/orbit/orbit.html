@@ -19,7 +19,7 @@
   <circle cx="360" cy="360" r="88" fill="none" stroke="#c6ff3d" stroke-opacity=".2" stroke-dasharray="1 3" />
   <circle cx="360" cy="360" r="66" fill="#0a0d14" stroke="#c6ff3d" stroke-opacity=".18" stroke-width="7" />
   <circle cx="360" cy="360" r="66" fill="none" stroke="#c6ff3d" stroke-width="7" [attr.stroke-dasharray]="arc()" transform="rotate(-90 360 360)" />
-  <text class="avg" x="360" y="366" text-anchor="middle" font-weight="600" fill="#ffffff" font-family="Oxanium, sans-serif">{{ avg() }}%</text>
+  <text class="avg" x="360" y="366" text-anchor="middle" font-weight="600" fill="#ffffff" font-family="Oxanium, sans-serif">{{ hasData() ? avg() + "%" : "—" }}</text>
   <text class="avg-l" x="360" y="384" text-anchor="middle" letter-spacing="1.6" fill="#8a90a8" font-family="IBM Plex Mono, monospace">POKRYCIE AI</text>
 </svg>
 

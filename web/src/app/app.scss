@@ -20,3 +20,6 @@
 .hint { position: absolute; left: 0; top: 864px; width: 1440px; text-align: center; font-size: fs(10); letter-spacing: .08em; color: $muted; }
 .sample { position: absolute; right: 36px; top: 872px; font-size: fs(9); letter-spacing: .14em; color: #7b819a; }
 .err { position: absolute; left: 0; top: 420px; width: 1440px; text-align: center; color: $magenta; font-size: fs(14); }
+.empty { position: absolute; left: 360px; top: 600px; width: 720px; text-align: center; pointer-events: none; z-index: 6; }
+.ed { font-size: fs(20); font-weight: 600; letter-spacing: .3em; color: #fff; }
+.et { font-size: fs(11); color: $muted; margin-top: 8px; letter-spacing: .06em; }

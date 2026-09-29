@@ -11,6 +11,7 @@ import { Pick } from '../core/models';
 export class Orbit {
   protected readonly store = inject(RadarStore);
   protected readonly scene = this.store.scene;
+  protected readonly hasData = computed(() => this.store.repos().length > 0);
   protected readonly avg = computed(() => this.store.result()?.summary.avgCoverage ?? 0);
   /** stroke-dasharray of the coverage arc (circumference of r=66 is ~414.7) */
   protected readonly arc = computed(() => `${((this.avg() / 100) * 414.7).toFixed(1)} 415`);

@@ -6,27 +6,35 @@ commands to fill them. The MVP is **read-only**.
 
 ## Stack
 
-- `src/Radar.Scanner` – .NET class library: repo discovery, detectors, coverage, gaps, progress events (stage 2).
-- `src/Radar.Server` – ASP.NET Core minimal API, SSE, static hosting of the Angular build. Loopback only.
+- `src/Radar.Scanner` – .NET class library: repo discovery, detectors, coverage, gaps, progress events (`ScanEvent`).
+- `src/Radar.Server` – ASP.NET Core minimal API, SSE, JSON state files, static hosting of the Angular build. Loopback only.
+- `tests/Radar.Scanner.Tests`, `tests/Radar.Server.Tests` – xUnit; fixtures are built in temp dirs (repos cannot be committed inside a repo).
 - `web/` – Angular (standalone components, signals, zoneless, Vitest). UI lives here.
 - Storage: JSON files behind `IScanStore` (SQLite only if scan history is added later).
 
 ## Commands
 
 ```bash
-# UI (from web/)
-npm start                          # ng serve on http://localhost:4200, mock data
-npm test -- --watch=false          # Vitest unit tests
-npm run build                      # production build
-node scripts/gen-mock.mjs          # regenerate web/public/mock/*.json
-
-# Server / scanner (from repo root)
+./run.sh                           # build UI if needed + start the server on http://127.0.0.1:5178
+./dev.sh                           # dotnet watch + ng serve (http://localhost:4200, /api proxied)
 dotnet build
-dotnet run --project src/Radar.Server   # http://127.0.0.1:5178
-dotnet test                             # once test projects exist
+dotnet test                        # scanner + server tests
+
+# UI (from web/)
+npm start                          # ng serve; add ?mock (or ?mock=150 / ?mock=400) to use sample data without the server
+npm test -- --watch=false          # Vitest
+npm run build
+node scripts/gen-mock.mjs          # regenerate web/public/mock/*.json
 ```
 
-Mock data: `?mock=150` or `?mock=400` in the URL loads the stress data sets for large rings.
+State lives in the data dir (`~/Library/Application Support/RADAR`): `settings.json`, `scan-result.json`.
+Override with `Radar__DataDir` (tests and manual experiments must never touch the real one).
+
+## API (all under /api, loopback only)
+
+`GET session` (token) · `GET/PUT settings` · `POST pick-folder` · `GET scan/latest` · `POST scans` · `GET scans/current` ·
+`GET scans/{id}/events` (SSE: started, phase, repo-found, repo-scanned, completed, cancelled, error) · `DELETE scans/{id}`.
+Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE); Host must be loopback; foreign Origins are rejected.
 
 ## Conventions
 
@@ -35,7 +43,7 @@ Mock data: `?mock=150` or `?mock=400` in the URL loads the stress data sets for 
 - Scanning is local and read-only. Nothing leaves the machine. No network calls at runtime (fonts are bundled).
 - Never read secrets (`.env`, keys); only AI/markdown files.
 - Any file access by path must be resolved and validated to be inside a detected repo (no symlink escapes).
-- Server listens on `127.0.0.1` only; write endpoints do not exist in the MVP.
+- Server listens on `127.0.0.1` only; there are no endpoints that write into repos in the MVP (only the app's own settings/cache).
 - Layout: fixed 1440x900 stage scaled proportionally (`web/src/app/core/fit-scale.ts`, minimum scale 0.85, smaller windows scroll); use `fs(px)` from
   `web/src/styles/_tokens.scss` for every font size so fonts stay within 0.85x-1.2x.
 - Palette: lime `#c6ff3d` (agents), violet `#a99bff` (skills), white `#e6e9f2` (repos, workflows),
@@ -56,9 +64,9 @@ Mock data: `?mock=150` or `?mock=400` in the URL loads the stress data sets for 
 ## Stages
 
 1. Skeleton + Orbit layout on mock data (done).
-2. Scanner + JSON result + tests on fixtures.
-3. Scan from the UI (SSE progress overlay, cache, "last scan", folder picker).
+2. Scanner + JSON result + tests on fixtures (done).
+3. Scan from the UI: SSE progress overlay, saved result, "last scan", folder picker (done).
 4. Read-only markdown preview + command generator for gaps.
-5. Distribution (`run.sh`, GitHub Actions release binaries).
+5. Distribution (GitHub Actions release binaries).
 
 Requirements, mockup and the MVP spec live outside the repo (see `CLAUDE.local.md` if present).

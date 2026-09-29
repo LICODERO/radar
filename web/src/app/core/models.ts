@@ -4,7 +4,7 @@ export interface AgentInfo {
   name: string;
   description: string;
   tools: string[];
-  model: string | null;
+  model?: string | null;
   path: string;
 }
 
@@ -72,4 +72,12 @@ export interface Hover {
   kind: 'r' | PickKind;
   repoId?: string;
   name: string;
+}
+
+export interface Settings {
+  scanPath: string | null;
+  scanPathDisplay: string;
+  exists: boolean;
+  maxDepth: number;
+  canPickFolder: boolean;
 }

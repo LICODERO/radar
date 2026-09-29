@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, HostListener, computed, inject, sig
 import { BASE_H, BASE_W, computeFit } from './core/fit-scale';
 import { RadarStore } from './core/radar-store';
 import { Orbit } from './orbit/orbit';
+import { ScanOverlay } from './scan/scan-overlay';
 import { Header } from './panels/header';
 import { LeftPanel } from './panels/left-panel';
 import { RightPanel } from './panels/right-panel';
@@ -9,7 +10,7 @@ import { RightPanel } from './panels/right-panel';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Header, Orbit, LeftPanel, RightPanel],
+  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -25,8 +26,7 @@ export class App {
   protected readonly sample = computed(() => this.store.result()?.sample === true);
 
   constructor() {
-    const mock = new URLSearchParams(location.search).get('mock');
-    this.store.load(mock ? `mock/scan-result-${mock}.json` : 'mock/scan-result.json');
+    void this.store.init(new URLSearchParams(location.search).get('mock'));
   }
 
   @HostListener('window:resize')

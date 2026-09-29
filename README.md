@@ -2,7 +2,7 @@
 
 **Repo AI Discovery And Review** – a local-first dashboard that scans a directory of repositories for their AI setup (`CLAUDE.md`, agents, skills, workflows, memory), shows coverage and gaps, and generates Claude Code / Codex CLI commands to fill them.
 
-> **Status:** early development. The UI mockup is done; the scanner and the app itself are not built yet. Everything under [Usage](#usage) describes the target behaviour.
+> **Status:** early development (read-only MVP in progress). Scanning, folder selection, live scan progress and saved results work; file preview and command generation are not built yet.
 
 ## What it does
 
@@ -47,9 +47,7 @@ The UI language is Polish; code and identifiers are in English.
 
 ## Usage
 
-Planned; not available yet.
-
-**From source** (requires the .NET SDK and Node.js):
+**From source** (requires the .NET SDK 10 and Node.js 22+):
 
 ```bash
 git clone https://github.com/<owner>/radar.git
@@ -57,7 +55,18 @@ cd radar
 ./run.sh
 ```
 
-**From a release binary:** download the archive for your platform from GitHub Releases and run `radar`. It starts a local server and opens the app in your browser.
+`run.sh` builds the UI on the first run (`./run.sh --rebuild` to rebuild), starts the server on `http://127.0.0.1:5178` and opens it in your browser. Then:
+
+1. Click **ZMIEŃ** and pick the directory that contains your repositories (macOS shows a native folder dialog).
+2. Click **SKANUJ**. The overlay shows real progress from the scanner; when it finishes, close it to see the dashboard.
+
+The last scan and your settings are saved in `~/Library/Application Support/RADAR` (`%APPDATA%\RADAR` on Windows, `~/.local/share/radar` on Linux), so the next start shows the previous result immediately.
+
+**Development:** `./dev.sh` runs the .NET server with hot reload and the Angular dev server (`http://localhost:4200`). The UI can also run on sample data without the server: `cd web && npm start`, then open `http://localhost:4200/?mock` (or `?mock=150` / `?mock=400` for large data sets).
+
+**Tests:** `dotnet test` (scanner and server) and `cd web && npm test -- --watch=false` (UI).
+
+**Release binaries** (planned): download the archive for your platform from GitHub Releases and run `radar`.
 
 Binaries are not code-signed. If macOS shows an "unverified developer" warning for a file downloaded in a browser, right-click the file and choose Open, or run:
 
@@ -67,13 +76,12 @@ xattr -d com.apple.quarantine ./radar
 
 ## Roadmap
 
-1. Skeleton and the Orbit layout on mock data
-2. Scanner (repositories, `CLAUDE.md`, agents, skills, stack, coverage, gaps)
-3. Scan from the UI with real progress, cache and "last scan"
-4. Workflows and OUTPUTS detection
-5. Markdown editor with templates for new files
-6. Command generator for gaps (Claude Code and Codex CLI)
-7. Later: memory vault presentation, global agents/skills, scan history
+1. ~~Skeleton and the Orbit layout on mock data~~
+2. ~~Scanner (repositories, `CLAUDE.md`, agents, skills, workflows, OUTPUTS, stack, coverage, gaps)~~
+3. ~~Scan from the UI with real progress, saved result and "last scan"~~
+4. Read-only markdown preview and command generator for gaps (Claude Code and Codex CLI)
+5. Distribution (release binaries)
+6. Later: markdown editor with templates for new files, memory vault presentation, global agents/skills, scan history
 
 ## License
 

@@ -1,0 +1,66 @@
+<div class="head">
+  <div class="m eyebrow">R.A.D.A.R · REPO AI DISCOVERY AND REVIEW</div>
+  <div class="ttl" [style.color]="titleColor()">{{ title() }}</div>
+  <div class="m root">{{ root() }}</div>
+</div>
+
+<div class="logcol">
+  <div class="m sec">DZIENNIK SKANU</div>
+  @for (l of log(); track $index) {
+    <div class="m logrow">
+      <div class="lt" [style.color]="l.color">{{ l.t }}</div>
+      <div class="ld">{{ l.d }}</div>
+    </div>
+  }
+  @if (running() && s().current && s().phase === 'analysis') {
+    <div class="m logrow">
+      <div class="lt" style="color:#c6ff3d">{{ root() }}/{{ s().current }}</div>
+      <div class="ld">skanowanie…</div>
+    </div>
+  }
+</div>
+
+<div class="radar">
+  <svg width="440" height="440" viewBox="0 0 440 440" aria-hidden="true">
+    <defs><pattern id="gridS" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#ffffff" stroke-opacity=".06" /></pattern></defs>
+    <circle cx="220" cy="220" r="214" fill="#070a10" stroke="#c6ff3d" stroke-opacity=".5" stroke-width="2" />
+    <circle cx="220" cy="220" r="200" fill="url(#gridS)" />
+    <circle cx="220" cy="220" r="200" fill="none" stroke="#ffffff" stroke-opacity=".2" />
+    <circle cx="220" cy="220" r="150" fill="none" stroke="#ffffff" stroke-opacity=".14" stroke-dasharray="4 5" />
+    <circle cx="220" cy="220" r="100" fill="none" stroke="#ffffff" stroke-opacity=".14" />
+    <circle cx="220" cy="220" r="50" fill="none" stroke="#ffffff" stroke-opacity=".14" stroke-dasharray="2 4" />
+    <path d="M220 20V420M20 220H420" stroke="#ffffff" stroke-opacity=".18" />
+  </svg>
+  <div class="sweep" [style.opacity]="running() ? 1 : 0"></div>
+  @for (b of blips(); track $index) {
+    <div class="blip" [style.left.px]="b.left" [style.top.px]="b.top" [style.border-color]="b.color" [style.background]="b.color + '55'" [style.box-shadow]="'0 0 12px ' + b.color"></div>
+  }
+  <div class="hub"></div>
+</div>
+
+<div class="live">
+  <div class="m sec">WYNIKI NA ŻYWO</div>
+  <div class="grid">
+    <div class="kpi"><div class="m kl">REPO</div><div class="kv" style="color:#fff">{{ s().total !== null ? s().counters.repos : s().found }}<span class="of"> / {{ s().total ?? '?' }}</span></div></div>
+    <div class="kpi"><div class="m kl">AGENCI</div><div class="kv" style="color:#c6ff3d">{{ s().counters.agents }}</div></div>
+    <div class="kpi"><div class="m kl">SKILLE</div><div class="kv" style="color:#a99bff">{{ s().counters.skills }}</div></div>
+    <div class="kpi"><div class="m kl">WORKFLOWS</div><div class="kv" style="color:#e6e9f2">{{ s().workflows }}</div></div>
+  </div>
+  <div class="gaps"><div class="m kl" style="color:#ff9cc9">LUKI · BRAK CLAUDE.md</div><div class="kv" style="color:#ff4fa3">{{ s().counters.gaps }}</div></div>
+</div>
+
+<div class="progress">
+  <div class="m prow"><span style="color:#c6ff3d">{{ s().label }}</span><span>{{ pct() === null ? '—' : pct() + '%' }}</span></div>
+  <div class="bar">
+    @if (pct() === null) { <div class="fill indeterminate"></div> } @else { <div class="fill" [style.width.%]="pct()"></div> }
+  </div>
+  <div class="m cur" [style.color]="failed() ? '#ff9cc9' : '#8a90a8'">{{ cur() }}</div>
+</div>
+
+<div class="actions">
+  @if (running()) {
+    <button class="m btn-ghost cancel" type="button" (click)="store.cancelScan()">PRZERWIJ</button>
+  } @else {
+    <button class="m btn-solid close" type="button" (click)="store.closeScan()">{{ failed() ? 'ZAMKNIJ' : 'ZAMKNIJ I ZOBACZ WYNIKI' }}</button>
+  }
+</div>
