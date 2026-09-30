@@ -4,6 +4,8 @@ export const COLOR = {
   violet: '#a99bff',
   white: '#e6e9f2',
   workflow: '#4dd6ff',
+  /** workflow that is not related to the selected repo: the same hue, dimmed */
+  workflowDim: '#4dd6ff80',
   magenta: '#ff4fa3',
   amber: '#ffb84d'
 } as const;

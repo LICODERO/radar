@@ -57,7 +57,7 @@ describe('buildScene', () => {
   it('lights up workflows of the selected repo', () => {
     const s = buildScene(base);
     expect(s.wfs.find((w) => w.id === 'W1')!.color).toBe('#4dd6ff');
-    expect(s.wfs.find((w) => w.id === 'W2')!.color).toBe('#8a90a8');
+    expect(s.wfs.find((w) => w.id === 'W2')!.color).toBe('#4dd6ff80');
   });
 
   it('builds a popover with usage for a picked agent and draws dashed lines to other repos', () => {

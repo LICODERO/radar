@@ -183,7 +183,7 @@ export function buildScene(inp: SceneInput): Scene {
     const hot = isP('w', undefined, w.id) || isH('w', undefined, w.id);
     return {
       id: w.id, left: q[0] - wl.size / 2, top: q[1] - wl.size / 2, size: wl.size,
-      color: lit ? COLOR.workflow : '#8a90a8', glowPx: hot ? 16 : lit ? 8 : 0, label: t('orbit.workflowLabel', { name: w.name })
+      color: lit ? COLOR.workflow : COLOR.workflowDim, glowPx: hot ? 16 : lit ? 8 : 0, label: t('orbit.workflowLabel', { name: w.name })
     };
   });
 
