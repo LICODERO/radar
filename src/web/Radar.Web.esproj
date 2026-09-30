@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.6887863">
-  <!-- Makes the Angular app visible in the IDE solution explorer. The UI is built with npm (run.sh / dev.sh), not by dotnet. -->
-  <PropertyGroup>
-    <ShouldRunNpmInstall>false</ShouldRunNpmInstall>
-    <ShouldRunBuildScript>false</ShouldRunBuildScript>
-    <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
-    <DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**;dist\**;.angular\**;coverage\**</DefaultItemExcludes>
-  </PropertyGroup>
-</Project>
