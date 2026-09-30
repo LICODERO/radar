@@ -73,6 +73,36 @@ describe('buildScene', () => {
     expect(s.pop?.rows.find((r) => r.k === 'KROKI')!.v).toContain('bez agentów');
   });
 
+  describe('a picked workflow', () => {
+    const wf: WorkflowInfo = {
+      id: 'W9', name: 'ship', description: 'd', when: 'w', agents: ['A1'], skills: ['s1'],
+      repos: [{ repoId: 'alpha', path: 'p', linked: true }, { repoId: 'beta', path: 'p', linked: true }], issues: []
+    };
+    const pickWf = () => buildScene({ ...base, workflows: [...wfs, wf], selId: null, pick: { kind: 'w', name: 'W9' } });
+
+    it('draws lines to its repos and to the agents and skills it names (in those repos only)', () => {
+      const s = pickWf();
+      const used = (nodes: { op: number; repoId: string; name: string }[]) => nodes.filter((n) => n.op === 1).map((n) => n.repoId + '/' + n.name);
+      expect(used(s.agents)).toEqual(['alpha/a1', 'beta/a1']); // name match ignores case; a2 is not named
+      expect(used(s.skills)).toEqual(['alpha/s1']);
+      // 2 repos + 2 agents + 1 skill
+      expect(s.lines).toHaveLength(5);
+      expect(s.lines.filter((l) => l.color === '#c6ff3d')).toHaveLength(2);
+      expect(s.lines.filter((l) => l.color === '#a99bff')).toHaveLength(1);
+    });
+
+    it('lists the skills in the popover and skips agents of repos without the workflow', () => {
+      const s = buildScene({ ...base, workflows: [...wfs, { ...wf, repos: [wf.repos[1]] }], selId: null, pick: { kind: 'w', name: 'W9' } });
+      expect(s.pop?.rows.find((r) => r.k === 'SKILLE')!.v).toBe('s1');
+      expect(s.agents.filter((n) => n.op === 1).map((n) => n.repoId)).toEqual(['beta']);
+    });
+
+    it('does nothing extra for workflows without skills', () => {
+      const s = buildScene({ ...base, pick: { kind: 'w', name: 'W1' } });
+      expect(s.pop?.rows.some((r) => r.k === 'SKILLE')).toBe(false);
+    });
+  });
+
   it('dims repos that do not match the search', () => {
     const s = buildScene({ ...base, matches: new Set(['alpha']) });
     expect(s.repos.find((r) => r.id === 'alpha')!.op).toBe(1);

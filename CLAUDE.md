@@ -67,7 +67,7 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 - Detected per repo: `CLAUDE.md`, `.claude/agents/*.md`, `.claude/skills/*/SKILL.md`, `.claude/workflows/*.md`,
   `.claude/memory/OUTPUTS.md` (+ notes in `.claude/memory/`).
 - Workflow = per-project procedure for agents (how to code an API, check UI, commit...). Frontmatter: `name`,
-  `description`, `when`, optional `agents`. Same `name` across repos aggregates into one node (W1...).
+  `description`, `when`, optional `agents` and `skills` (names of the agents/skills the procedure uses; picking a workflow in the UI lights them up). Same `name` across repos aggregates into one node (W1...).
 - Coverage: CLAUDE.md 40 + agents(>=1) 25 + skills(>=1) 25 + OUTPUTS 10.
 - Gaps: `no-claude-md` (counted in the KPI), `no-agents`, `no-skills`, `no-outputs`, `workflow-not-linked`.
 

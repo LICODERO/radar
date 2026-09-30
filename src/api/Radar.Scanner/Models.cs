@@ -43,6 +43,7 @@ public sealed record WorkflowInfo(
     string Description,
     string When,
     IReadOnlyList<string> Agents,
+    IReadOnlyList<string> Skills,
     IReadOnlyList<WorkflowRepoRef> Repos,
     IReadOnlyList<string> Issues);
 

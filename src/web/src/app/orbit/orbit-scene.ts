@@ -129,6 +129,15 @@ export function buildScene(inp: SceneInput): Scene {
     else usedIn = workflows.find((w) => w.id === pick.name)?.repos.map((x) => x.repoId) ?? [];
   }
 
+  // a picked workflow also lights up the agents and skills it names, in the repos that have the workflow
+  const pickedWf = pick?.kind === 'w' ? workflows.find((w) => w.id === pick.name) : undefined;
+  const wfRepoIds = new Set(pickedWf?.repos.map((x) => x.repoId) ?? []);
+  const wfUses = (kind: 'a' | 's', repoId: string, name: string): boolean => {
+    if (!pickedWf || !wfRepoIds.has(repoId)) return false;
+    const names = kind === 'a' ? pickedWf.agents : pickedWf.skills ?? [];
+    return names.some((x) => x.toLowerCase() === name.toLowerCase());
+  };
+
   const spokes: LineGeom[] = [];
   const slots: { left: number; top: number }[] = [];
   const agents: ElementNode[] = [];
@@ -152,7 +161,8 @@ export function buildScene(inp: SceneInput): Scene {
           ? polar(radius + (j - (k - 1) / 2) * 4, ang)
           : polar(radius, ang + (j - (k - 1) / 2) * (sp.mode === 'arc' ? sp.spacing : 0));
         centers.set(kind + r.id + it.name, q);
-        const on = isSel || (pick && pick.kind === kind && pick.name === it.name);
+        const used = wfUses(kind, r.id, it.name);
+        const on = isSel || used || (pick && pick.kind === kind && pick.name === it.name);
         const hot = isP(kind, r.id, it.name) || isH(kind, r.id, it.name);
         const hit = isSel ? hitSel : dense ? hitDense : hitNorm;
         const node: ElementNode = {
@@ -160,7 +170,7 @@ export function buildScene(inp: SceneInput): Scene {
           left: q[0] - hit / 2, top: q[1] - hit / 2, hit,
           sz: isSel ? sizes.sel : dense ? sizes.dense : sizes.norm,
           op: (on ? 1 : 0.4) * dim,
-          glowPx: hot ? (kind === 'a' ? 18 : 16) : isSel ? (kind === 'a' ? 8 : 6) : 0,
+          glowPx: hot ? (kind === 'a' ? 18 : 16) : used ? 10 : isSel ? (kind === 'a' ? 8 : 6) : 0,
           label: (kind === 'a' ? 'Agent ' : 'Skill ') + it.name + ' · ' + r.name
         };
         (kind === 'a' ? agents : skills).push(node);
@@ -206,6 +216,16 @@ export function buildScene(inp: SceneInput): Scene {
         if (pick.kind !== 'w' && rid === pick.repoId) return;
         const to = centers.get('r' + rid);
         if (to) lines.push(mk(from, to, pick.kind === 'w' ? COLOR.workflow : COLOR.white, true, 0.75, 0.05 + Math.min(k, 30) * 0.05));
+      });
+    }
+  }
+
+  if (pickedWf) {
+    const from = centers.get('w' + pickedWf.id);
+    if (from) {
+      [...agents, ...skills].filter((n) => wfUses(n.key.startsWith('a') ? 'a' : 's', n.repoId, n.name)).forEach((n, k) => {
+        const to = centers.get(n.key);
+        if (to) lines.push(mk(from, to, n.key.startsWith('a') ? COLOR.lime : COLOR.violet, false, 0.7, 0.15 + Math.min(k, 30) * 0.03));
       });
     }
   }
@@ -278,7 +298,9 @@ export function buildScene(inp: SceneInput): Scene {
         const ref = w?.repos.find((x) => x.repoId === selRepo?.id) ?? w?.repos[0];
         if (w) pop = { ...base, file: ref ? { repoId: ref.repoId, path: ref.path, kind: t('orbit.kindWorkflow') + ' ' + w.id, color: COLOR.workflow } : null,
           kind: t('orbit.kindWorkflow') + ' ' + w.id, color: COLOR.workflow, title: w.name, desc: w.description,
-          rows: [{ k: t('orbit.rowWhen'), v: w.when || '—' }, { k: t('orbit.rowSteps'), v: w.agents.length ? w.agents.join(' → ') : t('orbit.noAgentsWf') }, { k: t('orbit.rowRepos'), v: usedTxt }] };
+          rows: [{ k: t('orbit.rowWhen'), v: w.when || '—' }, { k: t('orbit.rowSteps'), v: w.agents.length ? w.agents.join(' → ') : t('orbit.noAgentsWf') },
+            ...(w.skills?.length ? [{ k: t('orbit.rowSkills'), v: w.skills.join(' · ') }] : []),
+            { k: t('orbit.rowRepos'), v: usedTxt }] };
       }
     }
   }

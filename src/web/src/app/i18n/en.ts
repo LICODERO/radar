@@ -111,6 +111,7 @@ export const EN: Record<MsgKey, Message> = {
   'orbit.rowUsedIn': 'USED IN',
   'orbit.rowWhen': 'WHEN',
   'orbit.rowSteps': 'STEPS',
+  'orbit.rowSkills': 'SKILLS',
   'orbit.rowRepos': 'REPOSITORIES',
   'orbit.noAgentsWf': 'no agents (procedure only)',
   'orbit.usedIn': '{n} repo · {list}',

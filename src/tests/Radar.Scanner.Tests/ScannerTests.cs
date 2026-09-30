@@ -16,7 +16,7 @@ public class ScannerTests
         t.Repo("orders-api"); t.File("orders-api/CLAUDE.md", "x"); t.File("orders-api/App.csproj");
         t.File("orders-api/.claude/agents/code-reviewer.md", "---\nname: code-reviewer\n---\n");
         t.File("orders-api/.claude/skills/ef/SKILL.md", "---\nname: ef\n---\n");
-        t.File("orders-api/.claude/workflows/commit.md", "---\nname: commit\ndescription: Commit\nagents: [code-reviewer, ghost]\n---\n");
+        t.File("orders-api/.claude/workflows/commit.md", "---\nname: commit\ndescription: Commit\nagents: [code-reviewer, ghost]\nskills: [ef, phantom]\n---\n");
         t.Repo("orders-front"); t.File("orders-front/CLAUDE.md", "See .claude/workflows/commit.md"); t.File("orders-front/angular.json");
         t.File("orders-front/.claude/workflows/commit.md", "---\nname: commit\n---\n");
         t.Repo("billing-api");
@@ -57,6 +57,9 @@ public class ScannerTests
         Assert.Equal("Commit", wf.Description);
         Assert.Equal(["code-reviewer", "ghost"], wf.Agents);
         Assert.Contains(wf.Issues, i => i.Contains("ghost"));
+        Assert.Equal(["ef", "phantom"], wf.Skills);
+        Assert.Contains(wf.Issues, i => i.Contains("phantom"));
+        Assert.DoesNotContain(wf.Issues, i => i.Contains("'ef'"));
         Assert.False(wf.Repos.Single(x => x.RepoId == "orders-api").Linked);
         Assert.True(wf.Repos.Single(x => x.RepoId == "orders-front").Linked);
     }

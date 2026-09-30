@@ -1,7 +1,7 @@
 namespace Radar.Scanner;
 
 /// <summary>A workflow file as found in one repo, before aggregation across repos.</summary>
-public sealed record RawWorkflow(string RepoId, string Name, string Description, string When, IReadOnlyList<string> Agents, string Path, bool Linked);
+public sealed record RawWorkflow(string RepoId, string Name, string Description, string When, IReadOnlyList<string> Agents, IReadOnlyList<string> Skills, string Path, bool Linked);
 
 public sealed record RepoAnalysis(RepoInfo Repo, IReadOnlyList<RawWorkflow> Workflows, IReadOnlyList<WarningInfo> Warnings);
 
@@ -82,6 +82,7 @@ public static class RepoAnalyzer
                 fm.Get("description") ?? string.Empty,
                 fm.Get("when") ?? fm.Get("trigger") ?? string.Empty,
                 fm.GetList("agents"),
+                fm.GetList("skills"),
                 rel,
                 linked));
         }

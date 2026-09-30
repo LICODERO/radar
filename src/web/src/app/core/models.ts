@@ -35,6 +35,8 @@ export interface WorkflowInfo {
   description: string;
   when: string;
   agents: string[];
+  /** skills the workflow uses (optional `skills:` frontmatter; absent in older scans) */
+  skills?: string[];
   repos: { repoId: string; path: string; linked: boolean }[];
   issues: string[];
 }

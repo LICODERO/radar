@@ -113,6 +113,7 @@ export const PL = {
   'orbit.rowUsedIn': 'UŻYWANY W',
   'orbit.rowWhen': 'KIEDY',
   'orbit.rowSteps': 'KROKI',
+  'orbit.rowSkills': 'SKILLE',
   'orbit.rowRepos': 'REPOZYTORIA',
   'orbit.noAgentsWf': 'bez agentów (sama procedura)',
   'orbit.usedIn': '{n} repo · {list}',
