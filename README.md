@@ -1,4 +1,4 @@
-# R.A.D.A.R
+# R.A.D.A.R.
 
 **Repo AI Discovery And Review** – a local-first dashboard that scans a directory of repositories for their AI setup (`CLAUDE.md`, agents, skills, workflows, memory), shows coverage and gaps, and generates Claude Code / Codex CLI commands to fill them.
 

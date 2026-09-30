@@ -1,4 +1,4 @@
-# R.A.D.A.R
+# R.A.D.A.R.
 
 Repo AI Discovery And Review: local tool that scans a directory of repositories, shows their AI setup
 (CLAUDE.md, agents, skills, workflows, memory), computes coverage and gaps, and generates Claude Code / Codex CLI
@@ -43,6 +43,7 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 ## Conventions
 
 - Version: one place, `Directory.Build.props` (`<Version>`); the server returns it in `GET session` and the UI shows it in the bottom-right About line/dialog. Bump it there for a release.
+- The project name is written **R.A.D.A.R.** with the trailing dot everywhere (UI, README, scripts, docs, messages). Identifiers and paths (`Radar.*`, the `RADAR` data folder) are unaffected.
 - Talk to the user in Polish; code, identifiers, commit messages and README are in English.
 - i18n: the UI is bilingual (PL/EN, switch in the header, choice kept in localStorage `radar.lang`, default from the browser language, Polish fallback).
   Every UI string lives in `src/web/src/app/i18n/pl.ts` (source, defines the keys) and `en.ts` (must match; a spec checks keys and `{placeholders}`);

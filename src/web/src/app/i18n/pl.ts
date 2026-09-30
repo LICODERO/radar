@@ -120,7 +120,7 @@ export const PL = {
 
   // about
   'about.open': 'O projekcie',
-  'about.title': 'O projekcie R.A.D.A.R',
+  'about.title': 'O projekcie R.A.D.A.R.',
   'about.eyebrow': 'O PROJEKCIE',
   'about.close': 'Zamknij',
   'about.tagline': 'Repo AI Discovery And Review',
@@ -131,7 +131,7 @@ export const PL = {
   'about.license': 'LICENCJA',
   'about.source': 'KOD ŹRÓDŁOWY',
   'about.privacy': 'Działa lokalnie: skan jest tylko do odczytu, a nic nie opuszcza Twojego komputera.',
-  'about.footer': 'R.A.D.A.R {version} · © {author}',
+  'about.footer': 'R.A.D.A.R. {version} · © {author}',
 
   // coverage info
   'info.open': 'Jak liczymy pokrycie AI?',
@@ -161,7 +161,7 @@ export const PL = {
   'info.footAvg': 'ŚREDNIA WSZYSTKICH REPO: {n}%',
 
   // scan overlay
-  'scan.eyebrow': 'R.A.D.A.R · REPO AI DISCOVERY AND REVIEW',
+  'scan.eyebrow': 'R.A.D.A.R. · REPO AI DISCOVERY AND REVIEW',
   'scan.titleError': 'BŁĄD SKANU',
   'scan.titleDone': 'SKAN ZAKOŃCZONY',
   'scan.titleRunning': 'SKANOWANIE KATALOGU',

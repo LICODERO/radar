@@ -45,7 +45,7 @@ public static class GapEndpoints
 
             try
             {
-                await launcher.LaunchAsync(new LaunchRequest(item.Dir, req.Tool!, item.Prompt, $"R.A.D.A.R · {repo.Name} · {req.Type}"), ct);
+                await launcher.LaunchAsync(new LaunchRequest(item.Dir, req.Tool!, item.Prompt, $"R.A.D.A.R. · {repo.Name} · {req.Type}"), ct);
             }
             catch (Exception e) when (e is InvalidOperationException or System.ComponentModel.Win32Exception or OperationCanceledException)
             {

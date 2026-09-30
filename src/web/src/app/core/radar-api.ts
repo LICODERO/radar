@@ -11,7 +11,7 @@ export class ApiError extends Error {
   }
 }
 
-/** Thin client for the local R.A.D.A.R server. Every call carries the per-run session token. */
+/** Thin client for the local R.A.D.A.R. server. Every call carries the per-run session token. */
 @Injectable({ providedIn: 'root' })
 export class RadarApi {
   private readonly http = inject(HttpClient);

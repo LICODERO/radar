@@ -118,7 +118,7 @@ export const EN: Record<MsgKey, Message> = {
 
   // about
   'about.open': 'About the project',
-  'about.title': 'About R.A.D.A.R',
+  'about.title': 'About R.A.D.A.R.',
   'about.eyebrow': 'ABOUT',
   'about.close': 'Close',
   'about.tagline': 'Repo AI Discovery And Review',
@@ -129,7 +129,7 @@ export const EN: Record<MsgKey, Message> = {
   'about.license': 'LICENSE',
   'about.source': 'SOURCE CODE',
   'about.privacy': 'Runs locally: scanning is read-only and nothing leaves your computer.',
-  'about.footer': 'R.A.D.A.R {version} · © {author}',
+  'about.footer': 'R.A.D.A.R. {version} · © {author}',
 
   // coverage info
   'info.open': 'How is AI coverage calculated?',
@@ -159,7 +159,7 @@ export const EN: Record<MsgKey, Message> = {
   'info.footAvg': 'AVERAGE OF ALL REPOS: {n}%',
 
   // scan overlay
-  'scan.eyebrow': 'R.A.D.A.R · REPO AI DISCOVERY AND REVIEW',
+  'scan.eyebrow': 'R.A.D.A.R. · REPO AI DISCOVERY AND REVIEW',
   'scan.titleError': 'SCAN ERROR',
   'scan.titleDone': 'SCAN COMPLETE',
   'scan.titleRunning': 'SCANNING DIRECTORY',
@@ -273,7 +273,7 @@ export const EN: Record<MsgKey, Message> = {
   'agent.err.body': 'No instructions after the frontmatter.',
 
   // store / api
-  'store.connect': 'Cannot reach the R.A.D.A.R server. Start it with ./run.sh.',
+  'store.connect': 'Cannot reach the R.A.D.A.R. server. Start it with ./run.sh.',
   'store.pickFailed': 'Could not open the folder dialog.',
   'store.saveFailed': 'Could not save the path.',
   'store.scanFailed': 'Could not start the scan.',
