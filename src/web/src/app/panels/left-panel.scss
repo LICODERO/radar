@@ -8,6 +8,9 @@
 .head.sec2 { margin-top: 14px; }
 .h { font-size: fs(10); letter-spacing: .18em; color: $lime; }
 .hint { font-size: fs(9); color: $muted; }
+.hint-group { display: flex; align-items: center; gap: 8px; }
+.info-btn { width: 16px; height: 16px; padding: 0; border-radius: 50%; border: 1px solid #c6ff3dcc; background: #c6ff3d14; color: $lime; font-size: fs(9); line-height: 1; cursor: pointer; }
+.info-btn:hover, .info-btn:focus-visible { background: #c6ff3d26; border-color: $lime; }
 .sel { color: #fff; }
 
 .search { display: block; margin: 10px 0 4px; }

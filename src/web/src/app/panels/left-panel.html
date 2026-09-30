@@ -1,6 +1,9 @@
 <div class="head">
   <div class="m h">{{ t('left.repos', { n: total() }) }}</div>
-  <div class="m hint">{{ t('left.reposHint') }}</div>
+  <div class="hint-group">
+    <span class="m hint">{{ t('left.reposHint') }}</span>
+    <button class="m info-btn tip tip-b tip-r" type="button" [attr.aria-label]="t('info.open')" [attr.data-tip]="t('info.open')" (click)="store.openCoverageInfo()">i</button>
+  </div>
 </div>
 <label class="search">
   <span class="sr">{{ t('left.searchAria') }}</span>
