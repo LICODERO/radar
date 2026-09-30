@@ -27,6 +27,7 @@
         @if (store.file()) { <app-file-pane /> }
         @if (store.composerRepoId()) { <app-agent-composer /> }
         @if (store.gapsOpen()) { <app-gap-panel /> }
+        @if (store.coverageInfoOpen()) { <app-coverage-info /> }
         @if (store.scan()) { <app-scan-overlay /> }
       }
     </div>

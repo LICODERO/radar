@@ -1,0 +1,52 @@
+<div class="backdrop" (click)="store.closeCoverageInfo()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('info.aria')">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">{{ t('info.eyebrow') }}</div>
+      <div class="ttl">{{ t('info.title') }}</div>
+    </div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('info.close')" (click)="store.closeCoverageInfo()">✕</button>
+  </div>
+
+  <div class="body">
+    <p class="intro">{{ t('info.intro') }}</p>
+
+    <div class="parts">
+      @for (r of rows(); track r.key) {
+        <div class="part" [class.miss]="r.earned === 0">
+          <div class="m pts">+{{ r.weight }}</div>
+          <div>
+            <div class="m pt">{{ r.title }}</div>
+            <div class="pd">{{ r.text }}</div>
+          </div>
+          @if (r.earned !== null) {
+            <div class="m earned" [class.ok]="r.earned > 0">{{ r.earned > 0 ? '✓ ' + r.earned : '✕ 0' }}</div>
+          }
+        </div>
+      }
+      <div class="m sum"><span>{{ t('info.total') }}</span><span>100</span></div>
+    </div>
+
+    <ul class="notes">
+      <li>{{ t('info.note.presence') }}</li>
+      <li>{{ t('info.note.average') }}</li>
+      <li>{{ t('info.note.workflows') }}</li>
+    </ul>
+
+    <div class="m sec">{{ t('info.colors') }}</div>
+    <div class="colors">
+      <span class="m sw"><i [style.background]="'#ffffff'"></i>{{ t('info.colorHigh', { n: high }) }}</span>
+      <span class="m sw"><i [style.background]="colors.amber"></i>{{ t('info.colorMid', { from: mid, to: midTop }) }}</span>
+      <span class="m sw"><i [style.background]="colors.magenta"></i>{{ t('info.colorLow', { n: mid }) }}</span>
+    </div>
+  </div>
+
+  <div class="m foot">
+    @if (repo(); as r) {
+      <span>{{ t('info.footRepo', { name: r.name, score: r.coverage.score }) }}</span>
+    } @else {
+      <span>{{ t('info.footPick') }}</span>
+    }
+    <span>{{ t('info.footAvg', { n: avg() }) }}</span>
+  </div>
+</div>

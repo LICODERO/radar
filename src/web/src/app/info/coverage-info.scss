@@ -1,0 +1,36 @@
+@use 'tokens' as *;
+
+:host { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; z-index: 60; display: block; animation: fadeIn .25s ease-out both; }
+.backdrop { position: absolute; inset: 0; background: rgba(4, 5, 10, .8); }
+
+.dlg {
+  position: absolute; left: 430px; top: 110px; width: 580px; box-sizing: border-box; display: flex; flex-direction: column;
+  background: #070a10; border: 1px solid #c6ff3d66; box-shadow: 0 30px 80px rgba(0, 0, 0, .8);
+}
+.head { display: flex; justify-content: space-between; align-items: flex-start; padding: 18px 24px 14px; border-bottom: 1px solid #c6ff3d33; }
+.eyebrow { font-size: fs(9); letter-spacing: .2em; color: $lime; }
+.ttl { font-size: fs(24); font-weight: 600; color: #fff; margin-top: 2px; }
+.x { background: transparent; border: 1px solid #ffffff33; color: $white; width: 28px; height: 28px; font-size: fs(12); cursor: pointer; padding: 0; }
+
+.body { padding: 16px 24px 6px; }
+.intro { margin: 0 0 12px; font-size: fs(13); line-height: 1.5; color: #c3c8db; }
+
+.parts { border: 1px solid #c6ff3d33; }
+.part { display: grid; grid-template-columns: 54px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 10px 14px; border-bottom: 1px solid #c6ff3d1f; }
+.part.miss { opacity: .75; }
+.pts { font-size: fs(20); font-weight: 600; color: $lime; }
+.pt { font-size: fs(11); letter-spacing: .12em; color: #fff; }
+.pd { font-size: fs(12); line-height: 1.4; color: $muted; margin-top: 2px; }
+.earned { font-size: fs(12); color: $magenta; min-width: 44px; text-align: right; }
+.earned.ok { color: $lime; }
+.sum { display: flex; justify-content: space-between; padding: 9px 14px; font-size: fs(12); letter-spacing: .14em; color: #fff; background: #c6ff3d0d; }
+
+.notes { margin: 14px 0 0; padding-left: 18px; font-size: fs(12); line-height: 1.55; color: #c3c8db; }
+.notes li + li { margin-top: 4px; }
+
+.sec { margin-top: 16px; font-size: fs(9); letter-spacing: .18em; color: $muted; }
+.colors { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 8px; }
+.sw { display: inline-flex; align-items: center; gap: 7px; font-size: fs(11); color: $text; }
+.sw i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+.foot { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; padding: 12px 24px 16px; border-top: 1px solid #c6ff3d22; font-size: fs(10); letter-spacing: .1em; color: $muted; }

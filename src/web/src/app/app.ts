@@ -6,6 +6,7 @@ import { Orbit } from './orbit/orbit';
 import { AgentComposer } from './agent/agent-composer';
 import { FilePane } from './file/file-pane';
 import { GapPanel } from './gaps/gap-panel';
+import { CoverageInfo } from './info/coverage-info';
 import { ScanOverlay } from './scan/scan-overlay';
 import { Header } from './panels/header';
 import { LeftPanel } from './panels/left-panel';
@@ -14,7 +15,7 @@ import { RightPanel } from './panels/right-panel';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer],
+  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -38,6 +39,7 @@ export class App {
   @HostListener('document:keydown.escape')
   protected onEscape(): void {
     if (this.store.scan()) return;
+    if (this.store.coverageInfoOpen()) { this.store.closeCoverageInfo(); return; }
     if (this.store.composerRepoId()) { this.store.closeComposer(); return; }
     if (this.store.pendingRun()) this.store.pendingRun.set(null);
     else if (this.store.gapsOpen()) this.store.closeGaps();

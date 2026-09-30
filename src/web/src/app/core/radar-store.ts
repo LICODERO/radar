@@ -56,6 +56,8 @@ export class RadarStore {
   readonly scan = signal<ScanUiState | null>(null);
   readonly file = signal<FileView | null>(null);
   readonly gapsOpen = signal(false);
+  /** the "how is coverage calculated" dialog */
+  readonly coverageInfoOpen = signal(false);
   /** the "new agent from a description" panel; the id of the repo it works on */
   readonly composerRepoId = signal<string | null>(null);
   readonly tools = signal<ToolsInfo | null>(null);
@@ -200,6 +202,9 @@ export class RadarStore {
     this.closeFile();
     this.composerRepoId.set(id);
   }
+
+  openCoverageInfo(): void { this.coverageInfoOpen.set(true); }
+  closeCoverageInfo(): void { this.coverageInfoOpen.set(false); }
 
   closeComposer(): void { this.composerRepoId.set(null); }
 
