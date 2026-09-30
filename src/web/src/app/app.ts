@@ -7,7 +7,6 @@ import { AgentComposer } from './agent/agent-composer';
 import { FilePane } from './file/file-pane';
 import { GapPanel } from './gaps/gap-panel';
 import { AboutDialog } from './about/about-dialog';
-import { ABOUT } from './core/about';
 import { CoverageInfo } from './info/coverage-info';
 import { ScanOverlay } from './scan/scan-overlay';
 import { Header } from './panels/header';
@@ -24,7 +23,7 @@ import { RightPanel } from './panels/right-panel';
 export class App {
   protected readonly store = inject(RadarStore);
   protected readonly t = inject(I18n).t;
-  protected readonly footer = computed(() => this.t('about.footer', { version: this.store.version() ? 'v' + this.store.version() : '', author: ABOUT.author }).replace(/\s+/g, ' '));
+  protected readonly footer = computed(() => this.t('about.footer', { version: this.store.version() ? 'v' + this.store.version() : '' }).trim());
   private readonly size = signal({ w: window.innerWidth, h: window.innerHeight });
 
   protected readonly fit = computed(() => computeFit(this.size().w, this.size().h));
