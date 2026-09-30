@@ -6,12 +6,12 @@ commands to fill them. The MVP is read-only, except that the user can create a n
 
 ## Stack
 
-- `src/Radar.Scanner` – .NET class library: repo discovery, detectors, coverage, gaps, progress events (`ScanEvent`).
-- `src/Radar.Server` – ASP.NET Core minimal API, SSE, JSON state files, static hosting of the Angular build. Loopback only.
+- `src/api/Radar.Scanner` – .NET class library: repo discovery, detectors, coverage, gaps, progress events (`ScanEvent`).
+- `src/api/Radar.Server` – ASP.NET Core minimal API, SSE, JSON state files, static hosting of the Angular build. Loopback only.
   Vertical slices: `Features/<Name>/` (Session, Settings, Scans, Files, Gaps, Agents) each hold their endpoints (`<Name>Endpoints.cs`,
   a `Map<Name>()` extension called from `Program.cs`), request records and logic; `Infrastructure/` holds Security and Storage. Namespaces follow folders (`Radar.Server.Features.Scans`, `Radar.Server.Infrastructure.Storage`...).
-- `tests/Radar.Scanner.Tests`, `tests/Radar.Server.Tests` – xUnit; fixtures are built in temp dirs (repos cannot be committed inside a repo).
-- `web/` – Angular (standalone components, signals, zoneless, Vitest). UI lives here.
+- `src/api/Radar.Scanner.Tests`, `src/api/Radar.Server.Tests` – xUnit; fixtures are built in temp dirs (repos cannot be committed inside a repo).
+- `src/web/` – Angular (standalone components, signals, zoneless, Vitest). UI lives here.
 - Storage: JSON files behind `IScanStore` (SQLite only if scan history is added later).
 
 ## Commands
@@ -22,11 +22,11 @@ commands to fill them. The MVP is read-only, except that the user can create a n
 dotnet build
 dotnet test                        # scanner + server tests
 
-# UI (from web/)
+# UI (from src/web/)
 npm start                          # ng serve; add ?mock (or ?mock=150 / ?mock=400) to use sample data without the server
 npm test -- --watch=false          # Vitest
 npm run build
-node scripts/gen-mock.mjs          # regenerate web/public/mock/*.json
+node scripts/gen-mock.mjs          # regenerate src/web/public/mock/*.json
 ```
 
 State lives in the data dir (`~/Library/Application Support/RADAR`): `settings.json`, `scan-result.json`.
@@ -50,11 +50,11 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 - Cross-platform: macOS and Windows are supported (Linux: everything except opening a terminal). Windows code paths (PowerShell launcher, folder dialog, `run.ps1`) are covered by unit tests of the builders but were not run on a real Windows machine yet.
 - Drafting an agent from a description (`POST agents/generate`) runs `claude -p` with no tools, `--strict-mcp-config --setting-sources project`, in an empty temp dir, and sends only the description, the stack name and existing agent names. Measured on the real CLI: ~0.06 cent per call with these flags vs ~5 cents without. `POST agents` is the only place the app writes into a repo: one new `.claude/agents/<name>.md`, only after the user confirms, never overwriting.
 - Server listens on `127.0.0.1` only; the only write into a repo is the confirmed creation of a new agent file (see above), everything else is read-only (plus the app's own settings/cache).
-- Layout: fixed 1440x900 stage scaled proportionally (`web/src/app/core/fit-scale.ts`, minimum scale 0.85, smaller windows scroll); use `fs(px)` from
-  `web/src/styles/_tokens.scss` for every font size so fonts stay within 0.85x-1.2x.
+- Layout: fixed 1440x900 stage scaled proportionally (`src/web/src/app/core/fit-scale.ts`, minimum scale 0.85, smaller windows scroll); use `fs(px)` from
+  `src/web/src/styles/_tokens.scss` for every font size so fonts stay within 0.85x-1.2x.
 - Palette: lime `#c6ff3d` (agents), violet `#a99bff` (skills), white `#e6e9f2` (repos, workflows),
   magenta `#ff4fa3` (gaps), amber `#ffb84d` (memory). Repo colour by coverage: >=70 white, 40-69 amber, <40 magenta.
-- Orbit geometry is pure functions in `web/src/app/orbit/` with unit tests; keep DOM code thin.
+- Orbit geometry is pure functions in `src/web/src/app/orbit/` with unit tests; keep DOM code thin.
 - Respect `prefers-reduced-motion`.
 
 ## Domain
@@ -72,7 +72,7 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 1. Skeleton + Orbit layout on mock data (done).
 2. Scanner + JSON result + tests on fixtures (done).
 3. Scan from the UI: SSE progress overlay, saved result, "last scan", folder picker (done).
-4. Read-only markdown preview + command generator for gaps (done), plus URUCHOM: opens a terminal after an explicit confirmation. Prompts live in `src/Radar.Server/GapCommands.cs`; the UI formats commands per shell in `web/src/app/core/commands.ts`.
+4. Read-only markdown preview + command generator for gaps (done), plus URUCHOM: opens a terminal after an explicit confirmation. Prompts live in `src/api/Radar.Server/Features/Gaps/GapCommands.cs`; the UI formats commands per shell in `src/web/src/app/core/commands.ts`.
 5. Distribution (GitHub Actions release binaries).
 
 Requirements, mockup and the MVP spec live outside the repo (see `CLAUDE.local.md` if present).

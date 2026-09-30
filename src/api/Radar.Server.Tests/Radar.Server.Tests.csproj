@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Radar.Server\Radar.Server.csproj" />
-    <ProjectReference Include="..\..\src\Radar.Scanner\Radar.Scanner.csproj" />
+    <ProjectReference Include="..\Radar.Server\Radar.Server.csproj" />
+    <ProjectReference Include="..\Radar.Scanner\Radar.Scanner.csproj" />
   </ItemGroup>
 
 </Project>

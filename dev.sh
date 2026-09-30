@@ -3,13 +3,13 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-[[ -d web/node_modules ]] || (cd web && npm ci)
+[[ -d src/web/node_modules ]] || (cd src/web && npm ci)
 
 export Radar__AllowedOrigins__0="http://localhost:4200"
 export Radar__OpenBrowser=false
 
-(cd web && npm start) &
+(cd src/web && npm start) &
 WEB_PID=$!
 trap 'kill $WEB_PID 2>/dev/null || true' EXIT INT TERM
 
-dotnet watch run --project src/Radar.Server
+dotnet watch run --project src/api/Radar.Server

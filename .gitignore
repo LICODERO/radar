@@ -26,11 +26,11 @@ coverage/
 
 # Angular / Node
 node_modules/
-web/dist/
-web/.angular/
-web/out-tsc/
-web/coverage/
-web/.cache/
+src/web/dist/
+src/web/.angular/
+src/web/out-tsc/
+src/web/coverage/
+src/web/.cache/
 npm-debug.log*
 yarn-error.log*
 pnpm-debug.log*
@@ -57,4 +57,4 @@ tmp/
 scratch/
 
 # Angular build copied next to the server
-src/Radar.Server/wwwroot/
+src/api/Radar.Server/wwwroot/

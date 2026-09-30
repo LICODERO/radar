@@ -4,7 +4,7 @@ param([switch]$Rebuild)
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 
-$www = 'src/Radar.Server/wwwroot'
+$www = 'src/api/Radar.Server/wwwroot'
 if ($Rebuild -or -not (Test-Path "$www/index.html")) {
     Write-Host '==> Building the UI'
     Push-Location web
@@ -13,8 +13,8 @@ if ($Rebuild -or -not (Test-Path "$www/index.html")) {
     Pop-Location
     if (Test-Path $www) { Remove-Item $www -Recurse -Force }
     New-Item -ItemType Directory -Path $www | Out-Null
-    Copy-Item 'web/dist/web/browser/*' $www -Recurse
+    Copy-Item 'src/web/dist/web/browser/*' $www -Recurse
 }
 
 Write-Host '==> Starting R.A.D.A.R (Ctrl+C to stop)'
-dotnet run --project src/Radar.Server -c Release
+dotnet run --project src/api/Radar.Server -c Release

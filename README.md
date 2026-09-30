@@ -65,9 +65,9 @@ cd radar
 
 The last scan and your settings are saved in `~/Library/Application Support/RADAR` (`%APPDATA%\RADAR` on Windows, `~/.local/share/radar` on Linux), so the next start shows the previous result immediately.
 
-**Development:** `./dev.sh` runs the .NET server with hot reload and the Angular dev server (`http://localhost:4200`). The UI can also run on sample data without the server: `cd web && npm start`, then open `http://localhost:4200/?mock` (or `?mock=150` / `?mock=400` for large data sets).
+**Development:** `./dev.sh` runs the .NET server with hot reload and the Angular dev server (`http://localhost:4200`). The UI can also run on sample data without the server: `cd src/web && npm start`, then open `http://localhost:4200/?mock` (or `?mock=150` / `?mock=400` for large data sets).
 
-**Tests:** `dotnet test` (scanner and server) and `cd web && npm test -- --watch=false` (UI).
+**Tests:** `dotnet test` (scanner and server) and `cd src/web && npm test -- --watch=false` (UI).
 
 **Release binaries** (planned): download the archive for your platform from GitHub Releases and run `radar`.
 
