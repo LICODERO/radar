@@ -125,7 +125,6 @@ export const EN: Record<MsgKey, Message> = {
   'about.description': 'A local tool that scans a directory of repositories, shows their AI setup (CLAUDE.md, agents, skills, workflows, memory), computes coverage and gaps, and generates Claude Code and Codex CLI commands to fill them.',
   'about.version': 'VERSION',
   'about.versionUnknown': 'sample data',
-  'about.author': 'AUTHOR',
   'about.license': 'LICENSE',
   'about.source': 'SOURCE CODE',
   'about.privacy': 'Runs locally: scanning is read-only and nothing leaves your computer.',

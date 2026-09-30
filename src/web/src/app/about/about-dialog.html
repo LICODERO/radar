@@ -14,8 +14,7 @@
 
     <div class="rows">
       <div class="m row"><span class="k">{{ t('about.version') }}</span><span class="v">{{ store.version() ?? t('about.versionUnknown') }}</span></div>
-      <div class="m row"><span class="k">{{ t('about.author') }}</span><span class="v">{{ about.author }}</span></div>
-      <div class="m row"><span class="k">{{ t('about.license') }}</span><span class="v">{{ about.license }} · © {{ about.year }}</span></div>
+      <div class="m row"><span class="k">{{ t('about.license') }}</span><span class="v">{{ about.license }}</span></div>
       <div class="m row"><span class="k">{{ t('about.source') }}</span>
         <a class="v link" [href]="about.repoUrl" target="_blank" rel="noopener noreferrer">{{ about.repoUrl.replace('https://', '') }}</a>
       </div>

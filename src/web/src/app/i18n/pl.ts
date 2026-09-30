@@ -127,7 +127,6 @@ export const PL = {
   'about.description': 'Lokalne narzędzie, które skanuje katalog z repozytoriami, pokazuje ich konfigurację AI (CLAUDE.md, agenci, skille, workflowy, pamięć), liczy pokrycie i luki oraz generuje polecenia Claude Code i Codex CLI do ich uzupełnienia.',
   'about.version': 'WERSJA',
   'about.versionUnknown': 'przykładowe dane',
-  'about.author': 'AUTOR',
   'about.license': 'LICENCJA',
   'about.source': 'KOD ŹRÓDŁOWY',
   'about.privacy': 'Działa lokalnie: skan jest tylko do odczytu, a nic nie opuszcza Twojego komputera.',
