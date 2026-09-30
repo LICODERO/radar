@@ -19,12 +19,7 @@
   padding: 6px 10px; cursor: pointer;
 }
 .path-row button:disabled { opacity: .5; }
-.ruler {
-  height: 14px; margin-top: 14px;
-  background-image: repeating-linear-gradient(90deg, #c6ff3d66 0 1px, transparent 1px 8px), repeating-linear-gradient(90deg, $lime 0 1px, transparent 1px 40px);
-  background-size: 100% 7px, 100% 14px; background-repeat: no-repeat; background-position: 0 7px, 0 0;
-}
-.info { display: flex; justify-content: space-between; font-size: fs(9); color: $muted; margin-top: 10px; letter-spacing: .14em; }
+.info { font-size: fs(9); margin-top: 8px; letter-spacing: .14em; }
 
 .clock-block { position: absolute; right: 36px; top: 14px; display: flex; align-items: center; gap: 20px; }
 .clock-text { text-align: right; }
@@ -35,5 +30,5 @@
   padding: 14px 16px; cursor: pointer;
 }
 .clock-block button:disabled { opacity: .5; }
-.notice { color: $magenta; max-width: 260px; text-align: right; }
+.notice { color: $magenta; }
 .warn { color: $amber; }

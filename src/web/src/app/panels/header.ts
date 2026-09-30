@@ -33,15 +33,8 @@ export class Header {
     if (this.isMock()) return this.store.result()?.scanRoot ?? '—';
     return this.store.settings()?.scanPathDisplay || 'Nie wybrano katalogu';
   });
-  protected readonly reposCount = computed(() => this.store.result()?.summary.repos ?? 0);
-  protected readonly stacksCount = computed(() => this.store.result()?.summary.stacks.length ?? 0);
   protected readonly lastScan = computed(() => formatScanTime(this.store.result()?.scannedAt));
   protected readonly hasResult = computed(() => !!this.store.result());
-  protected readonly stateText = computed(() => {
-    if (this.store.scanning()) return 'SKANOWANIE…';
-    if (!this.store.result()) return 'BRAK SKANU';
-    return this.store.staleRoot() ? 'WYNIKI Z INNEGO KATALOGU' : 'SKAN ZAKOŃCZONY';
-  });
   protected readonly scanTip = computed(() => {
     if (this.isMock()) return 'Tryb danych przykładowych';
     if (this.store.scanning()) return 'Skan trwa';

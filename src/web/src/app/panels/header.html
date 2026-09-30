@@ -17,12 +17,11 @@
               [disabled]="isMock() || store.scanning()" (click)="change()">ZMIEŃ</button>
     }
   </div>
-  <div class="ruler"></div>
-  <div class="m info">
-    <span>KATALOG</span>
-    <span>{{ reposCount() }} REPO · {{ stacksCount() }} STOSY</span>
-    @if (store.notice(); as n) { <span class="notice" role="alert">{{ n }}</span> } @else { <span [class.warn]="store.staleRoot()">{{ stateText() }}</span> }
-  </div>
+  @if (store.notice(); as n) {
+    <div class="m info notice" role="alert">{{ n }}</div>
+  } @else if (store.staleRoot()) {
+    <div class="m info warn">WYNIKI Z INNEGO KATALOGU</div>
+  }
 </div>
 
 <div class="clock-block">
