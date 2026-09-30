@@ -70,7 +70,7 @@
 }
 
 @for (n of scene().repos; track n.id) {
-  <button class="m node repo" type="button" [attr.aria-label]="n.label" (click)="store.selectRepo(n.id)"
+  <button class="m node repo" type="button" [attr.aria-label]="n.label" (click)="store.toggleRepo(n.id)"
           (mouseenter)="hoverRepo(n.id)" (mouseleave)="leave()" (focus)="hoverRepo(n.id)" (blur)="leave()"
           [style.left.px]="n.left" [style.top.px]="n.top" [style.width.px]="n.size" [style.height.px]="n.size"
           [style.border]="'1px ' + (n.dashed ? 'dashed ' : 'solid ') + n.color" [style.color]="n.color"

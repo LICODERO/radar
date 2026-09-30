@@ -102,7 +102,7 @@ export function buildScene(inp: SceneInput): Scene {
   const { repos, workflows, pick, hover, matches, tick } = inp;
   const n = repos.length;
   const idx = new Map(repos.map((r, i) => [r.id, i] as const));
-  const sel = inp.selId !== null && idx.has(inp.selId) ? (idx.get(inp.selId) as number) : 0;
+  const sel = inp.selId !== null && idx.has(inp.selId) ? (idx.get(inp.selId) as number) : -1; // -1: nothing selected
   const empty = n === 0;
 
   const rl = ringLayout(n, R1, REPO_START_DEG, 28, 5, 4);

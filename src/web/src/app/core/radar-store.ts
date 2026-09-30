@@ -77,7 +77,7 @@ export class RadarStore {
   readonly selected = computed<RepoInfo | null>(() => {
     const repos = this.repos();
     const id = this.selId();
-    return repos.find((r) => r.id === id) ?? repos[0] ?? null;
+    return repos.find((r) => r.id === id) ?? null; // nothing is selected until the user picks a repo
   });
 
   /** repos matching the search box (name, stack, agent name); null when the box is empty */
@@ -153,7 +153,7 @@ export class RadarStore {
 
   private applyResult(r: ScanResult | null): void {
     this.result.set(r);
-    if (r && !r.repos.some((x) => x.id === this.selId())) this.selId.set(r.repos[0]?.id ?? null);
+    if (!r || !r.repos.some((x) => x.id === this.selId())) this.selId.set(null);
     this.pick.set(null);
     this.repoPage.set(0);
     this.wfPage.set(0);
@@ -366,6 +366,18 @@ export class RadarStore {
 
   selectRepo(id: string): void {
     this.selId.set(id);
+    this.pick.set(null);
+    this.tick.update((t) => t + 1);
+  }
+
+  /** Selects the repo, or clears the selection when it is already the selected one. */
+  toggleRepo(id: string): void {
+    if (this.selId() === id) this.clearSelection();
+    else this.selectRepo(id);
+  }
+
+  clearSelection(): void {
+    this.selId.set(null);
     this.pick.set(null);
     this.tick.update((t) => t + 1);
   }

@@ -43,6 +43,13 @@ describe('buildScene', () => {
     expect(s.lines).toHaveLength(2 + 1 + 1);
   });
 
+  it('highlights nothing while no repo is selected', () => {
+    const s = buildScene({ ...base, selId: null });
+    expect(s.lines).toHaveLength(0);
+    expect(s.halo).toBeNull();
+    expect(s.rip).toBeNull();
+  });
+
   it('adds empty slots for missing agents and skills', () => {
     expect(buildScene(base).slots).toHaveLength(1 + 2 + 1 - 1); // beta: skills; gamma: agents + skills
   });

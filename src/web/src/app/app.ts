@@ -32,7 +32,7 @@ export class App {
     void this.store.init(new URLSearchParams(location.search).get('mock'));
   }
 
-  /** Esc closes the top-most layer: generator, then file preview, then the popover. */
+  /** Esc closes the top-most layer: generator, then file preview, then the popover, then the repo selection. */
   @HostListener('document:keydown.escape')
   protected onEscape(): void {
     if (this.store.scan()) return;
@@ -41,6 +41,7 @@ export class App {
     else if (this.store.gapsOpen()) this.store.closeGaps();
     else if (this.store.file()) this.store.closeFile();
     else if (this.store.pick()) this.store.closePop();
+    else if (this.store.selected()) this.store.clearSelection();
   }
 
   @HostListener('window:resize')

@@ -17,7 +17,9 @@ export class LeftPanel {
   protected readonly canCompose = computed(() => this.store.mode() === 'api' && !!this.store.selected() && !this.store.scanning());
   protected readonly agentTip = computed(() => this.store.mode() === 'mock'
     ? 'Wymaga działającego serwera'
-    : `Nowy agent w ${this.selName()} z opisu własnymi słowami`);
+    : !this.store.selected()
+      ? 'Najpierw wybierz repozytorium'
+      : `Nowy agent w ${this.selName()} z opisu własnymi słowami`);
   protected readonly vault = computed(() => this.store.selected()?.outputs.exists ?? false);
 
   protected onQuery(e: Event): void {

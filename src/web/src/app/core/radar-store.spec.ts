@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiError, RadarApi } from './radar-api';
 import { RadarStore } from './radar-store';
-import { Settings } from './models';
+import { ScanResult, Settings } from './models';
 
 const settings = (path: string): Settings => ({ scanPath: path, scanPathDisplay: path, exists: true, maxDepth: 4, canPickFolder: true });
 
@@ -132,5 +132,35 @@ describe('gap commands', () => {
     store.closeGaps();
     expect(store.pendingRun()).toBeNull();
     expect(store.gapsOpen()).toBe(false);
+  });
+});
+
+describe('repo selection', () => {
+  const repo = (id: string) => ({ id, name: id, agents: [], skills: [], coverage: { score: 50 }, gaps: [] });
+  const load = (store: RadarStore) =>
+    store.result.set({ repos: [repo('a'), repo('b')], workflows: [], gaps: [] } as unknown as ScanResult);
+
+  it('selects no repo by default', () => {
+    const { store } = setup(async (p) => settings(p));
+    load(store);
+    expect(store.selected()).toBeNull();
+    expect(store.selectedWorkflows()).toEqual([]);
+  });
+
+  it('selects a repo on click and clears it on a second click', () => {
+    const { store } = setup(async (p) => settings(p));
+    load(store);
+    store.toggleRepo('b');
+    expect(store.selected()?.id).toBe('b');
+    store.toggleRepo('b');
+    expect(store.selected()).toBeNull();
+  });
+
+  it('cannot open the agent composer without a selected repo', () => {
+    const { store } = setup(async (p) => settings(p));
+    load(store);
+    store.mode.set('api');
+    store.openComposer();
+    expect(store.composerRepoId()).toBeNull();
   });
 });
