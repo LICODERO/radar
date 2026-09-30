@@ -7,7 +7,6 @@ export const EN: Record<MsgKey, Message> = {
   'app.legend.skill': 'SKILL',
   'app.legend.workflow': 'WORKFLOW',
   'app.legend.slot': 'EMPTY SLOT (MISSING)',
-  'app.hint': 'HOVER = FULL NAME · CLICK REPO = RELATIONS · CLICK ITEM = DETAILS AND WHERE IT IS USED',
   'app.sample': 'SAMPLE DATA',
   'app.empty.title': 'NO DATA',
   'app.empty.text': 'Choose a directory with repositories (CHANGE) and click SCAN.',

@@ -9,7 +9,6 @@ export const PL = {
   'app.legend.skill': 'SKILL',
   'app.legend.workflow': 'WORKFLOW',
   'app.legend.slot': 'PUSTY SLOT (BRAK)',
-  'app.hint': 'NAJEDŹ = PEŁNA NAZWA · KLIKNIJ REPO = POWIĄZANIA · KLIKNIJ ELEMENT = SZCZEGÓŁY I MIEJSCA UŻYCIA',
   'app.sample': 'DANE PRZYKŁADOWE',
   'app.empty.title': 'BRAK DANYCH',
   'app.empty.text': 'Wybierz katalog z repozytoriami (ZMIEŃ) i kliknij SKANUJ.',

@@ -17,7 +17,6 @@
           <span style="color:#a99bff">●</span> {{ t('app.legend.skill') }} &nbsp; <span style="color:#4dd6ff">▢</span> {{ t('app.legend.workflow') }} &nbsp;
           <span style="color:#ff4fa3">◌</span> {{ t('app.legend.slot') }}
         </div>
-        <div class="m hint">{{ t('app.hint') }}</div>
         @if (sample()) { <div class="m sample">{{ t('app.sample') }}</div> }
         @if (!store.loading() && !store.result()) {
           <div class="empty">
