@@ -98,6 +98,7 @@ export const EN: Record<MsgKey, Message> = {
   'orbit.coverage': 'AI COVERAGE',
   'orbit.close': 'Close',
   'orbit.openFile': 'OPEN FILE',
+  'orbit.drag': 'Drag to move the window',
   'orbit.repoLabel': '{name} · coverage {score}%',
   'orbit.workflowLabel': 'Workflow {name}',
   'orbit.tipRepo': '{stack} · {score}% · {agents} AGENTS · {skills} SKILLS',

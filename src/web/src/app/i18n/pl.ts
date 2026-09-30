@@ -100,6 +100,7 @@ export const PL = {
   'orbit.coverage': 'POKRYCIE AI',
   'orbit.close': 'Zamknij',
   'orbit.openFile': 'OTWÓRZ PLIK',
+  'orbit.drag': 'Przeciągnij, aby przesunąć okno',
   'orbit.repoLabel': '{name} · pokrycie {score}%',
   'orbit.workflowLabel': 'Workflow {name}',
   'orbit.tipRepo': '{stack} · {score}% · {agents} AGENCI · {skills} SKILLE',
