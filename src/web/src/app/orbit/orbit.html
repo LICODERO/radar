@@ -23,7 +23,7 @@
   <text class="avg-l" x="360" y="384" text-anchor="middle" letter-spacing="1.6" fill="#8a90a8" font-family="IBM Plex Mono, monospace">{{ t('orbit.coverage') }}</text>
 </svg>
 
-<button class="m info-btn tip tip-b" type="button" [attr.aria-label]="t('info.open')" [attr.data-tip]="t('info.open')" (click)="store.openCoverageInfo()">i</button>
+<button class="center-btn" type="button" [attr.aria-label]="t('info.open')" [title]="t('info.open')" (click)="store.openCoverageInfo()"></button>
 
 @for (l of scene().spokes; track $index) {
   <div class="spoke" [style.left.px]="l.left" [style.top.px]="l.top" [style.width.px]="l.len" [style.transform]="'rotate(' + l.ang + 'deg)'"></div>

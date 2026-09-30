@@ -5,8 +5,9 @@
 
 .legend-rings { position: absolute; right: 0; top: 0; text-align: right; font-size: fs(9); letter-spacing: .14em; line-height: 16px; color: $muted; z-index: 5; }
 .avg { font-size: fs(30); }
-.info-btn { position: absolute; left: 351px; top: 398px; width: 18px; height: 18px; padding: 0; border-radius: 50%; border: 1px solid #c6ff3dcc; background: #c6ff3d14; color: $lime; font-size: fs(10); line-height: 1; cursor: pointer; z-index: 6; }
-.info-btn:hover, .info-btn:focus-visible { background: #c6ff3d26; border-color: $lime; }
+// the coverage figure in the middle opens the "how is coverage calculated" dialog
+.center-btn { position: absolute; left: 290px; top: 290px; width: 140px; height: 140px; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; z-index: 6; }
+.center-btn:hover, .center-btn:focus-visible { background: #c6ff3d0d; box-shadow: 0 0 0 1px #c6ff3d44; outline: none; }
 .avg-l { font-size: fs(8); }
 
 .spoke { position: absolute; height: 1px; background: $lime; opacity: .09; transform-origin: 0 0; pointer-events: none; }
