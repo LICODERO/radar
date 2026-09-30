@@ -19,7 +19,10 @@
 .about-btn { position: absolute; right: 36px; top: 864px; background: transparent; border: 0; padding: 2px 0; font-size: fs(9); letter-spacing: .12em; color: $muted; cursor: pointer; }
 .about-btn:hover, .about-btn:focus-visible { color: $lime; }
 .legend { position: absolute; left: 0; top: 842px; width: 1440px; height: 26px; padding: 0; border: 0; background: transparent; text-align: center; font-size: fs(10); letter-spacing: .08em; color: $muted; cursor: pointer; }
-.legend:hover, .legend:focus-visible { background: #c6ff3d0a; color: $text; outline: none; }
+// the whole row is clickable, but only the text gets the hover highlight
+.legend-in { display: inline-block; padding: 5px 16px; border: 1px solid transparent; transition: background .15s, border-color .15s; }
+.legend:hover, .legend:focus-visible { color: $text; outline: none; }
+.legend:hover .legend-in, .legend:focus-visible .legend-in { background: #c6ff3d0d; border-color: #c6ff3d33; }
 .sample { position: absolute; right: 36px; top: 872px; font-size: fs(9); letter-spacing: .14em; color: #7b819a; }
 .err { position: absolute; left: 0; top: 420px; width: 1440px; text-align: center; color: $magenta; font-size: fs(14); }
 .empty { position: absolute; left: 360px; top: 600px; width: 720px; text-align: center; pointer-events: none; z-index: 6; }
