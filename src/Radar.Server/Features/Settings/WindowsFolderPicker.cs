@@ -1,6 +1,7 @@
 using System.Diagnostics;
+using Radar.Server.Features.Gaps;
 
-namespace Radar.Server;
+namespace Radar.Server.Features.Settings;
 
 /// <summary>Native folder dialog on Windows (System.Windows.Forms through PowerShell).</summary>
 public sealed class WindowsFolderPicker : IFolderPicker

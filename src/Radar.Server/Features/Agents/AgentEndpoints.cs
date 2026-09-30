@@ -1,4 +1,5 @@
-namespace Radar.Server;
+using Radar.Server.Features.Scans;
+namespace Radar.Server.Features.Agents;
 
 public sealed record GenerateAgentRequest(string? RepoId, string? Description);
 

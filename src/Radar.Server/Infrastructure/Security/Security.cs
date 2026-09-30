@@ -1,4 +1,4 @@
-namespace Radar.Server;
+namespace Radar.Server.Infrastructure.Security;
 
 /// <summary>
 /// Protects the local API from other web pages in the user's browser:

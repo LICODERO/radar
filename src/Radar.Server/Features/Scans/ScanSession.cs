@@ -1,7 +1,8 @@
 using System.Runtime.CompilerServices;
 using Radar.Scanner;
+using Radar.Server.Infrastructure.Storage;
 
-namespace Radar.Server;
+namespace Radar.Server.Features.Scans;
 
 /// <summary>One scan run. Keeps the full event history so a late SSE subscriber still gets every event.</summary>
 public sealed class ScanSession

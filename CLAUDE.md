@@ -9,7 +9,7 @@ commands to fill them. The MVP is read-only, except that the user can create a n
 - `src/Radar.Scanner` – .NET class library: repo discovery, detectors, coverage, gaps, progress events (`ScanEvent`).
 - `src/Radar.Server` – ASP.NET Core minimal API, SSE, JSON state files, static hosting of the Angular build. Loopback only.
   Vertical slices: `Features/<Name>/` (Session, Settings, Scans, Files, Gaps, Agents) each hold their endpoints (`<Name>Endpoints.cs`,
-  a `Map<Name>()` extension called from `Program.cs`), request records and logic; `Infrastructure/` holds Security and Storage. One namespace, `Radar.Server`.
+  a `Map<Name>()` extension called from `Program.cs`), request records and logic; `Infrastructure/` holds Security and Storage. Namespaces follow folders (`Radar.Server.Features.Scans`, `Radar.Server.Infrastructure.Storage`...).
 - `tests/Radar.Scanner.Tests`, `tests/Radar.Server.Tests` – xUnit; fixtures are built in temp dirs (repos cannot be committed inside a repo).
 - `web/` – Angular (standalone components, signals, zoneless, Vitest). UI lives here.
 - Storage: JSON files behind `IScanStore` (SQLite only if scan history is added later).

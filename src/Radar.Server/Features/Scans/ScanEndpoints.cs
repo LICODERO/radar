@@ -1,7 +1,9 @@
 using System.Text.Json;
 using Radar.Scanner;
+using Radar.Server.Features.Settings;
+using Radar.Server.Infrastructure.Storage;
 
-namespace Radar.Server;
+namespace Radar.Server.Features.Scans;
 
 public static class ScanEndpoints
 {

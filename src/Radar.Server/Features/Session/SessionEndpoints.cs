@@ -1,4 +1,5 @@
-namespace Radar.Server;
+using Radar.Server.Infrastructure.Security;
+namespace Radar.Server.Features.Session;
 
 public static class SessionEndpoints
 {

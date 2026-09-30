@@ -1,7 +1,8 @@
 using System.Text.Json;
 using Radar.Scanner;
+using Radar.Server.Infrastructure.Storage;
 
-namespace Radar.Server;
+namespace Radar.Server.Features.Scans;
 
 /// <summary>In-memory copy of the latest saved scan; used to validate which files may be read.</summary>
 public sealed class LatestScanCache(IScanStore store)

@@ -1,6 +1,6 @@
 using Radar.Scanner;
 
-namespace Radar.Server;
+namespace Radar.Server.Features.Gaps;
 
 public sealed record GapItem(string RepoId, string RepoName, string Initials, string Type, string Dir, string Prompt);
 

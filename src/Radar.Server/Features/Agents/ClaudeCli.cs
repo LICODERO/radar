@@ -1,8 +1,9 @@
 using System.Diagnostics;
-using System.Text;
 using System.Text.Json;
+using System.Text;
+using Radar.Server.Features.Gaps;
 
-namespace Radar.Server;
+namespace Radar.Server.Features.Agents;
 
 public sealed record AgentGenerationRequest(string Description, string Stack, IReadOnlyList<string> ExistingAgents);
 

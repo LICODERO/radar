@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Radar.Scanner;
 
-namespace Radar.Server;
+namespace Radar.Server.Infrastructure.Storage;
 
 public sealed record AppSettings(string? ScanPath, int MaxDepth = 4);
 

@@ -1,4 +1,5 @@
-namespace Radar.Server;
+using Radar.Server.Infrastructure.Storage;
+namespace Radar.Server.Features.Gaps;
 
 public interface IToolLocator
 {

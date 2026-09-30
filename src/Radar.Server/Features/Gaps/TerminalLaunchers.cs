@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 
-namespace Radar.Server;
+namespace Radar.Server.Features.Gaps;
 
 public sealed record LaunchRequest(string Dir, string Tool, string Prompt, string Title);
 

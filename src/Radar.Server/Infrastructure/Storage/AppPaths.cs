@@ -1,4 +1,4 @@
-namespace Radar.Server;
+namespace Radar.Server.Infrastructure.Storage;
 
 public static class AppPaths
 {

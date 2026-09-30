@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Radar.Server;
+namespace Radar.Server.Features.Settings;
 
 public interface IFolderPicker
 {

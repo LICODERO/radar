@@ -1,6 +1,7 @@
 using Radar.Scanner;
+using Radar.Server.Features.Scans;
 
-namespace Radar.Server;
+namespace Radar.Server.Features.Gaps;
 
 public sealed record RunRequest(string? RepoId, string? Type, string? Tool);
 

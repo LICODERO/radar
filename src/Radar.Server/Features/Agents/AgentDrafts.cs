@@ -1,8 +1,9 @@
-using System.Text;
 using System.Text.RegularExpressions;
+using System.Text;
 using Radar.Scanner;
+using Radar.Server.Features.Gaps;
 
-namespace Radar.Server;
+namespace Radar.Server.Features.Agents;
 
 public sealed record AgentValidation(string? Name, IReadOnlyList<string> Errors)
 {

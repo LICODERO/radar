@@ -1,6 +1,6 @@
 using Radar.Scanner;
 
-namespace Radar.Server;
+namespace Radar.Server.Features.Files;
 
 public sealed record FileContent(string Path, string Content, bool Truncated, long Bytes);
 
