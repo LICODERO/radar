@@ -3,11 +3,13 @@
 :host { position: absolute; left: 0; top: 0; width: 1440px; height: 100px; pointer-events: none; }
 :host > * { pointer-events: auto; }
 
-.brand { position: absolute; left: 36px; top: 16px; }
+// the three blocks share one row: same top and height, contents centred vertically
+$row-h: 64px;
+.brand { position: absolute; left: 36px; top: 14px; height: $row-h; display: flex; flex-direction: column; justify-content: center; }
 .title { font-size: fs(26); font-weight: 700; letter-spacing: .34em; color: $lime; line-height: 1.1; }
 .sub { font-size: fs(10); letter-spacing: .26em; color: $muted; margin-top: 3px; }
 
-.path { position: absolute; left: 380px; top: 14px; width: 560px; }
+.path { position: absolute; left: 380px; top: 14px; width: 560px; height: $row-h; display: flex; flex-direction: column; justify-content: center; }
 .path-row { display: flex; align-items: center; gap: 10px; }
 .label { font-size: fs(9); letter-spacing: .2em; color: $muted; white-space: nowrap; }
 .path-box { flex-grow: 1; font-size: fs(12); color: $text; border: 1px solid #c6ff3d55; background: #c6ff3d0d; padding: 5px 10px; }
@@ -19,9 +21,9 @@
   padding: 6px 10px; cursor: pointer;
 }
 .path-row button:disabled { opacity: .5; }
-.info { font-size: fs(9); margin-top: 8px; letter-spacing: .14em; }
+.info { position: absolute; top: 100%; left: 0; font-size: fs(9); margin-top: -8px; letter-spacing: .14em; white-space: nowrap; }
 
-.clock-block { position: absolute; right: 36px; top: 14px; display: flex; align-items: center; gap: 20px; }
+.clock-block { position: absolute; right: 36px; top: 14px; height: $row-h; display: flex; align-items: center; gap: 20px; }
 .clock-text { text-align: right; }
 .clock { font-size: fs(24); font-weight: 500; color: $lime; line-height: 1.2; }
 .last { font-size: fs(9); letter-spacing: .14em; color: $muted; margin-top: 6px; white-space: nowrap; }
