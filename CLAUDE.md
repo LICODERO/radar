@@ -56,7 +56,7 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 - Server listens on `127.0.0.1` only; the only write into a repo is the confirmed creation of a new agent file (see above), everything else is read-only (plus the app's own settings/cache).
 - Layout: fixed 1440x900 stage scaled proportionally (`src/web/src/app/core/fit-scale.ts`, minimum scale 0.85, smaller windows scroll); use `fs(px)` from
   `src/web/src/styles/_tokens.scss` for every font size so fonts stay within 0.85x-1.2x.
-- Palette: lime `#c6ff3d` (agents), violet `#a99bff` (skills), white `#e6e9f2` (repos, workflows),
+- Palette: lime `#c6ff3d` (agents), violet `#a99bff` (skills), white `#e6e9f2` (repos), cyan `#4dd6ff` (workflows),
   magenta `#ff4fa3` (gaps), amber `#ffb84d` (memory). Repo colour by coverage: >=70 white, 40-69 amber, <40 magenta.
 - Orbit geometry is pure functions in `src/web/src/app/orbit/` with unit tests; keep DOM code thin.
 - Respect `prefers-reduced-motion`.

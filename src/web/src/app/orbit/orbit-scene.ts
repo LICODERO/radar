@@ -1,4 +1,4 @@
-import { coverageColor } from '../core/palette';
+import { COLOR, coverageColor } from '../core/palette';
 import { Hover, Pick, RepoInfo, WorkflowInfo } from '../core/models';
 import { Lang, translate } from '../i18n/i18n';
 import {
@@ -183,7 +183,7 @@ export function buildScene(inp: SceneInput): Scene {
     const hot = isP('w', undefined, w.id) || isH('w', undefined, w.id);
     return {
       id: w.id, left: q[0] - wl.size / 2, top: q[1] - wl.size / 2, size: wl.size,
-      color: lit ? '#ffffff' : '#8a90a8', glowPx: hot ? 16 : lit ? 8 : 0, label: t('orbit.workflowLabel', { name: w.name })
+      color: lit ? COLOR.workflow : '#8a90a8', glowPx: hot ? 16 : lit ? 8 : 0, label: t('orbit.workflowLabel', { name: w.name })
     };
   });
 
@@ -197,7 +197,7 @@ export function buildScene(inp: SceneInput): Scene {
     selRepo.agents.forEach((a, j) => lines.push(mk(sp, centers.get('a' + selRepo.id + a.name)!, '#c6ff3d', false, 0.8, 0.05 + j * 0.06)));
     selRepo.skills.forEach((s, j) => lines.push(mk(sp, centers.get('s' + selRepo.id + s.name)!, '#a99bff', false, 0.65, 0.2 + j * 0.05)));
     workflows.filter((w) => w.repos.some((x) => x.repoId === selRepo.id))
-      .forEach((w, j) => lines.push(mk(sp, centers.get('w' + w.id)!, '#e6e9f2', true, 0.6, 0.4 + j * 0.08)));
+      .forEach((w, j) => lines.push(mk(sp, centers.get('w' + w.id)!, COLOR.workflow, true, 0.6, 0.4 + j * 0.08)));
   }
   if (pick) {
     const from = pick.kind === 'w' ? centers.get('w' + pick.name) : centers.get(pick.kind + pick.repoId + pick.name);
@@ -205,7 +205,7 @@ export function buildScene(inp: SceneInput): Scene {
       usedIn.forEach((rid, k) => {
         if (pick.kind !== 'w' && rid === pick.repoId) return;
         const to = centers.get('r' + rid);
-        if (to) lines.push(mk(from, to, '#e6e9f2', true, 0.75, 0.05 + Math.min(k, 30) * 0.05));
+        if (to) lines.push(mk(from, to, pick.kind === 'w' ? COLOR.workflow : COLOR.white, true, 0.75, 0.05 + Math.min(k, 30) * 0.05));
       });
     }
   }
@@ -276,8 +276,8 @@ export function buildScene(inp: SceneInput): Scene {
         const w = workflows.find((x) => x.id === pick.name);
         // open the copy from the selected repo when it has one, otherwise the first repo that does
         const ref = w?.repos.find((x) => x.repoId === selRepo?.id) ?? w?.repos[0];
-        if (w) pop = { ...base, file: ref ? { repoId: ref.repoId, path: ref.path, kind: t('orbit.kindWorkflow') + ' ' + w.id, color: '#e6e9f2' } : null,
-          kind: t('orbit.kindWorkflow') + ' ' + w.id, color: '#e6e9f2', title: w.name, desc: w.description,
+        if (w) pop = { ...base, file: ref ? { repoId: ref.repoId, path: ref.path, kind: t('orbit.kindWorkflow') + ' ' + w.id, color: COLOR.workflow } : null,
+          kind: t('orbit.kindWorkflow') + ' ' + w.id, color: COLOR.workflow, title: w.name, desc: w.description,
           rows: [{ k: t('orbit.rowWhen'), v: w.when || '—' }, { k: t('orbit.rowSteps'), v: w.agents.length ? w.agents.join(' → ') : t('orbit.noAgentsWf') }, { k: t('orbit.rowRepos'), v: usedTxt }] };
       }
     }

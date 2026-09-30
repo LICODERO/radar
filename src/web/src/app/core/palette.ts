@@ -3,6 +3,7 @@ export const COLOR = {
   lime: '#c6ff3d',
   violet: '#a99bff',
   white: '#e6e9f2',
+  workflow: '#4dd6ff',
   magenta: '#ff4fa3',
   amber: '#ffb84d'
 } as const;

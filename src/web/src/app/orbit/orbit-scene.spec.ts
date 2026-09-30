@@ -56,7 +56,7 @@ describe('buildScene', () => {
 
   it('lights up workflows of the selected repo', () => {
     const s = buildScene(base);
-    expect(s.wfs.find((w) => w.id === 'W1')!.color).toBe('#ffffff');
+    expect(s.wfs.find((w) => w.id === 'W1')!.color).toBe('#4dd6ff');
     expect(s.wfs.find((w) => w.id === 'W2')!.color).toBe('#8a90a8');
   });
 
