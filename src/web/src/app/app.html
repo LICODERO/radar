@@ -12,11 +12,11 @@
         <app-left-panel />
         <app-right-panel />
 
-        <div class="m legend">
+        <button class="m legend" type="button" [title]="t('legend.open')" [attr.aria-label]="t('legend.open')" (click)="store.openLegend()">
           <span style="color:#ffffff">◯</span> {{ t('app.legend.repo') }} &nbsp; <span style="color:#c6ff3d">◆</span> {{ t('app.legend.agent') }} &nbsp;
           <span style="color:#a99bff">●</span> {{ t('app.legend.skill') }} &nbsp; <span style="color:#4dd6ff">▢</span> {{ t('app.legend.workflow') }} &nbsp;
           <span style="color:#ff4fa3">◌</span> {{ t('app.legend.slot') }}
-        </div>
+        </button>
         @if (sample()) { <div class="m sample">{{ t('app.sample') }}</div> }
         @if (!store.loading() && !store.result()) {
           <div class="empty">
@@ -30,6 +30,7 @@
         @if (store.gapsOpen()) { <app-gap-panel /> }
         @if (store.coverageInfoOpen()) { <app-coverage-info /> }
         @if (store.aboutOpen()) { <app-about-dialog /> }
+        @if (store.legendOpen()) { <app-legend-dialog /> }
         @if (store.scan()) { <app-scan-overlay /> }
       }
     </div>

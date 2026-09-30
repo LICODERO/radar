@@ -1,0 +1,67 @@
+<div class="backdrop" (click)="store.closeLegend()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('legend.aria')">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">{{ t('legend.eyebrow') }}</div>
+      <div class="ttl">{{ t('legend.title') }}</div>
+    </div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('legend.close')" (click)="store.closeLegend()">✕</button>
+  </div>
+
+  <div class="body">
+    <div class="cols">
+      <section>
+        <div class="m sec">{{ t('legend.elements') }}</div>
+        <div class="item">
+          <span class="sym" style="color:#ffffff">◯</span>
+          <div><div class="m nm">{{ t('legend.repo') }}</div><div class="ds">{{ t('legend.repo.text') }}</div></div>
+        </div>
+        <div class="item">
+          <span class="sym" [style.color]="c.lime">◆</span>
+          <div><div class="m nm">{{ t('legend.agent') }}</div><div class="ds">{{ t('legend.agent.text') }}</div></div>
+        </div>
+        <div class="item">
+          <span class="sym" [style.color]="c.violet">●</span>
+          <div><div class="m nm">{{ t('legend.skill') }}</div><div class="ds">{{ t('legend.skill.text') }}</div></div>
+        </div>
+        <div class="item">
+          <span class="sym" [style.color]="c.workflow">▢</span>
+          <div><div class="m nm">{{ t('legend.workflow') }}</div><div class="ds">{{ t('legend.workflow.text') }}</div></div>
+        </div>
+        <div class="item">
+          <span class="sym" [style.color]="c.magenta">◌</span>
+          <div><div class="m nm">{{ t('legend.slot') }}</div><div class="ds">{{ t('legend.slot.text') }}</div></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="m sec">{{ t('legend.rings') }}</div>
+        <div class="ds lead">{{ t('legend.rings.text') }}</div>
+        <div class="rings">
+          <div class="m ring"><b style="color:#ffffff">R1</b> {{ t('orbit.r1') }}</div>
+          <div class="m ring"><b [style.color]="c.lime">R2</b> {{ t('orbit.r2') }}</div>
+          <div class="m ring"><b [style.color]="c.violet">R3</b> {{ t('orbit.r3') }}</div>
+          <div class="m ring"><b [style.color]="c.workflow">R4</b> {{ t('orbit.r4') }}</div>
+        </div>
+
+        <div class="m sec">{{ t('legend.lines') }}</div>
+        <div class="line"><i class="ln" [style.border-color]="c.lime"></i><span class="ds">{{ t('legend.line.agent') }}</span></div>
+        <div class="line"><i class="ln" [style.border-color]="c.violet"></i><span class="ds">{{ t('legend.line.skill') }}</span></div>
+        <div class="line"><i class="ln dashed" [style.border-color]="c.workflow"></i><span class="ds">{{ t('legend.line.workflow') }}</span></div>
+        <div class="line"><i class="ln dashed" style="border-color:#e6e9f2"></i><span class="ds">{{ t('legend.line.used') }}</span></div>
+      </section>
+    </div>
+
+    <div class="m sec">{{ t('legend.colors') }}</div>
+    <div class="ds">{{ t('legend.colors.text') }}</div>
+
+    <div class="m sec">{{ t('legend.how') }}</div>
+    <ul class="how">
+      <li>{{ t('legend.how.hover') }}</li>
+      <li>{{ t('legend.how.repo') }}</li>
+      <li>{{ t('legend.how.element') }}</li>
+      <li>{{ t('legend.how.center') }}</li>
+      <li>{{ t('legend.how.esc') }}</li>
+    </ul>
+  </div>
+</div>

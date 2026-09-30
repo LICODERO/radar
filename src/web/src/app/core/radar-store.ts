@@ -59,6 +59,7 @@ export class RadarStore {
   /** app version from the server; null until known (and in sample-data mode) */
   readonly version = signal<string | null>(null);
   readonly aboutOpen = signal(false);
+  readonly legendOpen = signal(false);
   /** the "how is coverage calculated" dialog */
   readonly coverageInfoOpen = signal(false);
   /** the "new agent from a description" panel; the id of the repo it works on */
@@ -206,6 +207,9 @@ export class RadarStore {
     this.closeFile();
     this.composerRepoId.set(id);
   }
+
+  openLegend(): void { this.legendOpen.set(true); }
+  closeLegend(): void { this.legendOpen.set(false); }
 
   openAbout(): void { this.aboutOpen.set(true); }
   closeAbout(): void { this.aboutOpen.set(false); }

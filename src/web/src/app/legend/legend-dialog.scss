@@ -1,0 +1,35 @@
+@use 'tokens' as *;
+
+:host { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; z-index: 60; display: block; animation: fadeIn .25s ease-out both; }
+.backdrop { position: absolute; inset: 0; background: rgba(4, 5, 10, .8); }
+
+.dlg {
+  position: absolute; left: 330px; top: 90px; width: 780px; box-sizing: border-box;
+  background: #070a10; border: 1px solid #c6ff3d66; box-shadow: 0 30px 80px rgba(0, 0, 0, .8);
+}
+.head { display: flex; justify-content: space-between; align-items: flex-start; padding: 18px 24px 14px; border-bottom: 1px solid #c6ff3d33; }
+.eyebrow { font-size: fs(9); letter-spacing: .2em; color: $lime; }
+.ttl { font-size: fs(24); font-weight: 600; color: #fff; margin-top: 2px; }
+.x { background: transparent; border: 1px solid #ffffff33; color: $white; width: 28px; height: 28px; font-size: fs(12); cursor: pointer; padding: 0; }
+
+.body { padding: 6px 24px 22px; }
+.cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 34px; }
+.sec { margin: 16px 0 8px; font-size: fs(9); letter-spacing: .18em; color: $muted; }
+.ds { font-size: fs(12); line-height: 1.45; color: #c3c8db; }
+.lead { margin-bottom: 8px; }
+
+.item { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: start; padding: 7px 0; border-bottom: 1px solid #c6ff3d14; }
+.item:last-child { border-bottom: 0; }
+.sym { font-size: fs(22); line-height: 1; text-align: center; padding-top: 2px; }
+.nm { font-size: fs(11); letter-spacing: .12em; color: #fff; margin-bottom: 2px; }
+
+.rings { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-bottom: 4px; }
+.ring { font-size: fs(11); letter-spacing: .1em; color: $text; border: 1px solid #c6ff3d22; padding: 6px 10px; }
+.ring b { margin-right: 6px; }
+
+.line { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: center; padding: 5px 0; }
+.ln { display: block; height: 0; border-top: 2px solid; }
+.ln.dashed { border-top-style: dashed; }
+
+.how { margin: 0; padding-left: 18px; font-size: fs(12); line-height: 1.6; color: #c3c8db; }
+.how li + li { margin-top: 2px; }
