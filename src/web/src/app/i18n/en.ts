@@ -116,6 +116,21 @@ export const EN: Record<MsgKey, Message> = {
   'orbit.noAgentsWf': 'no agents (procedure only)',
   'orbit.usedIn': '{n} repo · {list}',
 
+  // about
+  'about.open': 'About the project',
+  'about.title': 'About R.A.D.A.R',
+  'about.eyebrow': 'ABOUT',
+  'about.close': 'Close',
+  'about.tagline': 'Repo AI Discovery And Review',
+  'about.description': 'A local tool that scans a directory of repositories, shows their AI setup (CLAUDE.md, agents, skills, workflows, memory), computes coverage and gaps, and generates Claude Code and Codex CLI commands to fill them.',
+  'about.version': 'VERSION',
+  'about.versionUnknown': 'sample data',
+  'about.author': 'AUTHOR',
+  'about.license': 'LICENSE',
+  'about.source': 'SOURCE CODE',
+  'about.privacy': 'Runs locally: scanning is read-only and nothing leaves your computer.',
+  'about.footer': 'R.A.D.A.R {version} · © {author}',
+
   // coverage info
   'info.open': 'How is AI coverage calculated?',
   'info.aria': 'How AI coverage is calculated',

@@ -16,11 +16,20 @@ export class ApiError extends Error {
 export class RadarApi {
   private readonly http = inject(HttpClient);
   private readonly i18n = inject(I18n);
-  private token: Promise<string> | null = null;
+  private session: Promise<{ token: string; version?: string }> | null = null;
 
-  private ensureToken(): Promise<string> {
-    this.token ??= firstValueFrom(this.http.get<{ token: string }>('/api/session')).then((r) => r.token);
-    return this.token;
+  private ensureSession(): Promise<{ token: string; version?: string }> {
+    this.session ??= firstValueFrom(this.http.get<{ token: string; version?: string }>('/api/session'));
+    return this.session;
+  }
+
+  private async ensureToken(): Promise<string> {
+    return (await this.ensureSession()).token;
+  }
+
+  /** The app version reported by the server (null when it does not say). */
+  async version(): Promise<string | null> {
+    return (await this.ensureSession()).version ?? null;
   }
 
   /** Token plus the UI language, so the server answers with messages in the language the user sees. */

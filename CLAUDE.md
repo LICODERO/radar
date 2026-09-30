@@ -42,6 +42,7 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 
 ## Conventions
 
+- Version: one place, `Directory.Build.props` (`<Version>`); the server returns it in `GET session` and the UI shows it in the bottom-right About line/dialog. Bump it there for a release.
 - Talk to the user in Polish; code, identifiers, commit messages and README are in English.
 - i18n: the UI is bilingual (PL/EN, switch in the header, choice kept in localStorage `radar.lang`, default from the browser language, Polish fallback).
   Every UI string lives in `src/web/src/app/i18n/pl.ts` (source, defines the keys) and `en.ts` (must match; a spec checks keys and `{placeholders}`);

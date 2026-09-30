@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <!-- the single source of the app version; the server reports it and the UI shows it in the About dialog -->
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+</Project>

@@ -118,6 +118,21 @@ export const PL = {
   'orbit.noAgentsWf': 'bez agentów (sama procedura)',
   'orbit.usedIn': '{n} repo · {list}',
 
+  // about
+  'about.open': 'O projekcie',
+  'about.title': 'O projekcie R.A.D.A.R',
+  'about.eyebrow': 'O PROJEKCIE',
+  'about.close': 'Zamknij',
+  'about.tagline': 'Repo AI Discovery And Review',
+  'about.description': 'Lokalne narzędzie, które skanuje katalog z repozytoriami, pokazuje ich konfigurację AI (CLAUDE.md, agenci, skille, workflowy, pamięć), liczy pokrycie i luki oraz generuje polecenia Claude Code i Codex CLI do ich uzupełnienia.',
+  'about.version': 'WERSJA',
+  'about.versionUnknown': 'przykładowe dane',
+  'about.author': 'AUTOR',
+  'about.license': 'LICENCJA',
+  'about.source': 'KOD ŹRÓDŁOWY',
+  'about.privacy': 'Działa lokalnie: skan jest tylko do odczytu, a nic nie opuszcza Twojego komputera.',
+  'about.footer': 'R.A.D.A.R {version} · © {author}',
+
   // coverage info
   'info.open': 'Jak liczymy pokrycie AI?',
   'info.aria': 'Jak liczymy pokrycie AI',

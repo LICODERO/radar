@@ -56,6 +56,9 @@ export class RadarStore {
   readonly scan = signal<ScanUiState | null>(null);
   readonly file = signal<FileView | null>(null);
   readonly gapsOpen = signal(false);
+  /** app version from the server; null until known (and in sample-data mode) */
+  readonly version = signal<string | null>(null);
+  readonly aboutOpen = signal(false);
   /** the "how is coverage calculated" dialog */
   readonly coverageInfoOpen = signal(false);
   /** the "new agent from a description" panel; the id of the repo it works on */
@@ -142,6 +145,7 @@ export class RadarStore {
         this.result.set(await firstValueFrom(this.http.get<ScanResult>(url)));
         return;
       }
+      this.version.set(await this.api.version());
       this.settings.set(await this.api.settings());
       this.tools.set(await this.api.toolsInfo());
       this.applyResult(await this.api.latest());
@@ -202,6 +206,9 @@ export class RadarStore {
     this.closeFile();
     this.composerRepoId.set(id);
   }
+
+  openAbout(): void { this.aboutOpen.set(true); }
+  closeAbout(): void { this.aboutOpen.set(false); }
 
   openCoverageInfo(): void { this.coverageInfoOpen.set(true); }
   closeCoverageInfo(): void { this.coverageInfoOpen.set(false); }

@@ -16,6 +16,8 @@
     radial-gradient(1px 1px at 84% 92%, #fff6, transparent), radial-gradient(1px 1px at 3% 55%, #fff6, transparent),
     radial-gradient(1px 1px at 91% 12%, #fff7, transparent), radial-gradient(1px 1px at 27% 48%, #fff4, transparent);
 }
+.about-btn { position: absolute; right: 36px; top: 864px; background: transparent; border: 0; padding: 2px 0; font-size: fs(9); letter-spacing: .12em; color: $muted; cursor: pointer; }
+.about-btn:hover, .about-btn:focus-visible { color: $lime; }
 .legend { position: absolute; left: 0; top: 846px; width: 1440px; text-align: center; font-size: fs(10); letter-spacing: .08em; color: $muted; }
 .sample { position: absolute; right: 36px; top: 872px; font-size: fs(9); letter-spacing: .14em; color: #7b819a; }
 .err { position: absolute; left: 0; top: 420px; width: 1440px; text-align: center; color: $magenta; font-size: fs(14); }

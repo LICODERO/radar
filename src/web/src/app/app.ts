@@ -6,6 +6,8 @@ import { Orbit } from './orbit/orbit';
 import { AgentComposer } from './agent/agent-composer';
 import { FilePane } from './file/file-pane';
 import { GapPanel } from './gaps/gap-panel';
+import { AboutDialog } from './about/about-dialog';
+import { ABOUT } from './core/about';
 import { CoverageInfo } from './info/coverage-info';
 import { ScanOverlay } from './scan/scan-overlay';
 import { Header } from './panels/header';
@@ -15,13 +17,14 @@ import { RightPanel } from './panels/right-panel';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo],
+  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
   protected readonly store = inject(RadarStore);
   protected readonly t = inject(I18n).t;
+  protected readonly footer = computed(() => this.t('about.footer', { version: this.store.version() ? 'v' + this.store.version() : '', author: ABOUT.author }).replace(/\s+/g, ' '));
   private readonly size = signal({ w: window.innerWidth, h: window.innerHeight });
 
   protected readonly fit = computed(() => computeFit(this.size().w, this.size().h));
@@ -39,6 +42,7 @@ export class App {
   @HostListener('document:keydown.escape')
   protected onEscape(): void {
     if (this.store.scan()) return;
+    if (this.store.aboutOpen()) { this.store.closeAbout(); return; }
     if (this.store.coverageInfoOpen()) { this.store.closeCoverageInfo(); return; }
     if (this.store.composerRepoId()) { this.store.closeComposer(); return; }
     if (this.store.pendingRun()) this.store.pendingRun.set(null);
