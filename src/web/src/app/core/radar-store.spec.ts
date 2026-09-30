@@ -168,6 +168,24 @@ describe('repo selection', () => {
     expect(store.selected()).toBeNull();
   });
 
+  it('drops the repo selection when a workflow is picked, unless asked to keep it', () => {
+    const { store } = setup(async (p) => settings(p));
+    load(store);
+    store.toggleRepo('a');
+    store.pickItem({ kind: 'w', name: 'W1' }, true);
+    expect(store.selected()?.id).toBe('a');
+    store.pickItem({ kind: 'w', name: 'W1' });
+    expect(store.selected()).toBeNull();
+    expect(store.pick()).toEqual({ kind: 'w', name: 'W1' });
+  });
+
+  it('selects the repo of a picked agent', () => {
+    const { store } = setup(async (p) => settings(p));
+    load(store);
+    store.pickItem({ kind: 'a', repoId: 'b', name: 'x' });
+    expect(store.selected()?.id).toBe('b');
+  });
+
   it('cannot open the agent composer without a selected repo', () => {
     const { store } = setup(async (p) => settings(p));
     load(store);

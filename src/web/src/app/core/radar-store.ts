@@ -385,8 +385,14 @@ export class RadarStore {
     this.tick.update((t) => t + 1);
   }
 
-  pickItem(p: Pick): void {
+  /**
+   * Opens the detail popover of an agent, skill or workflow. An agent or skill selects its repo. A workflow belongs to
+   * several repos, so picking one from the orbit or the list drops the repo selection (otherwise the old repo would
+   * stay selected next to the repos the workflow is used in); `keepRepo` is for the chips on the selected repo's card.
+   */
+  pickItem(p: Pick, keepRepo = false): void {
     if (p.kind !== 'w' && p.repoId) this.selId.set(p.repoId);
+    else if (p.kind === 'w' && !keepRepo) this.selId.set(null);
     this.pick.set(p);
     this.tick.update((t) => t + 1);
   }

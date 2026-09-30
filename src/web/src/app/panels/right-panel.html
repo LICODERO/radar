@@ -34,7 +34,7 @@
     <div class="m sec">{{ t('right.workflows', { n: store.selectedWorkflows().length }) }}</div>
     <div class="chips">
       @for (w of store.selectedWorkflows(); track w.id) {
-        <button class="m chipx" type="button" style="color:#4dd6ff;border:1px solid #4dd6ff" (click)="store.pickItem({ kind: 'w', name: w.id })">{{ w.name }}</button>
+        <button class="m chipx" type="button" style="color:#4dd6ff;border:1px solid #4dd6ff" (click)="store.pickItem({ kind: 'w', name: w.id }, true)">{{ w.name }}</button>
       } @empty {
         <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">{{ t('right.noWorkflows') }}</span>
       }
