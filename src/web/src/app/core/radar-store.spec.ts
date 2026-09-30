@@ -156,6 +156,18 @@ describe('repo selection', () => {
     expect(store.selected()).toBeNull();
   });
 
+  it('goes back to no selection after a new scan, but keeps it on a quiet refresh', () => {
+    const { store } = setup(async (p) => settings(p));
+    load(store);
+    const apply = (keep: boolean) => (store as unknown as { applyResult(r: ScanResult, keep: boolean): void })
+      .applyResult(store.result()!, keep);
+    store.toggleRepo('b');
+    apply(true);
+    expect(store.selected()?.id).toBe('b');
+    apply(false);
+    expect(store.selected()).toBeNull();
+  });
+
   it('cannot open the agent composer without a selected repo', () => {
     const { store } = setup(async (p) => settings(p));
     load(store);

@@ -153,9 +153,10 @@ export class RadarStore {
     }
   }
 
-  private applyResult(r: ScanResult | null): void {
+  /** A fresh result starts from the default view (no repo selected); `keepSelection` is for quiet refreshes of the same view. */
+  private applyResult(r: ScanResult | null, keepSelection = false): void {
     this.result.set(r);
-    if (!r || !r.repos.some((x) => x.id === this.selId())) this.selId.set(null);
+    if (!keepSelection || !r || !r.repos.some((x) => x.id === this.selId())) this.selId.set(null);
     this.pick.set(null);
     this.repoPage.set(0);
     this.wfPage.set(0);
@@ -214,7 +215,7 @@ export class RadarStore {
         const done = async () => {
           es.close();
           try {
-            this.applyResult(await this.api.latest());
+            this.applyResult(await this.api.latest(), true);
             this.settings.set(await this.api.settings());
             await this.loadGaps();
           } catch { /* the next full scan will catch up */ }
