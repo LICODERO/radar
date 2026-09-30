@@ -10,7 +10,7 @@ commands to fill them. The MVP is read-only, except that the user can create a n
 - `src/api/Radar.Server` – ASP.NET Core minimal API, SSE, JSON state files, static hosting of the Angular build. Loopback only.
   Vertical slices: `Features/<Name>/` (Session, Settings, Scans, Files, Gaps, Agents) each hold their endpoints (`<Name>Endpoints.cs`,
   a `Map<Name>()` extension called from `Program.cs`), request records and logic; `Infrastructure/` holds Security and Storage. Namespaces follow folders (`Radar.Server.Features.Scans`, `Radar.Server.Infrastructure.Storage`...).
-- `src/api/Radar.Scanner.Tests`, `src/api/Radar.Server.Tests` – xUnit; fixtures are built in temp dirs (repos cannot be committed inside a repo).
+- `src/tests/Radar.Scanner.Tests`, `src/tests/Radar.Server.Tests` – xUnit; fixtures are built in temp dirs (repos cannot be committed inside a repo).
 - `src/web/` – Angular (standalone components, signals, zoneless, Vitest). UI lives here.
 - Storage: JSON files behind `IScanStore` (SQLite only if scan history is added later).
 

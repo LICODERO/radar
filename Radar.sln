@@ -11,9 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.Server", "src\api\Rad
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.Scanner.Tests", "src\api\Radar.Scanner.Tests\Radar.Scanner.Tests.csproj", "{02B64633-0D85-4E54-AAF9-A00D24357623}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.Scanner.Tests", "src\tests\Radar.Scanner.Tests\Radar.Scanner.Tests.csproj", "{02B64633-0D85-4E54-AAF9-A00D24357623}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.Server.Tests", "src\api\Radar.Server.Tests\Radar.Server.Tests.csproj", "{3515DD93-BD65-41FB-AE51-5A874B907495}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Radar.Server.Tests", "src\tests\Radar.Server.Tests\Radar.Server.Tests.csproj", "{3515DD93-BD65-41FB-AE51-5A874B907495}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
