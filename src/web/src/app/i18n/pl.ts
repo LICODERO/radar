@@ -131,7 +131,7 @@ export const PL = {
   'about.license': 'LICENCJA',
   'about.source': 'KOD ŹRÓDŁOWY',
   'about.privacy': 'Działa lokalnie: skan jest tylko do odczytu, a nic nie opuszcza Twojego komputera.',
-  'about.footer': 'R.A.D.A.R. {version} · © {author}',
+  'about.footer': 'R.A.D.A.R. {version} · by {author}',
 
   // coverage info
   'info.open': 'Jak liczymy pokrycie AI?',

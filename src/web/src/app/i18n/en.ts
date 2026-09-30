@@ -129,7 +129,7 @@ export const EN: Record<MsgKey, Message> = {
   'about.license': 'LICENSE',
   'about.source': 'SOURCE CODE',
   'about.privacy': 'Runs locally: scanning is read-only and nothing leaves your computer.',
-  'about.footer': 'R.A.D.A.R. {version} · © {author}',
+  'about.footer': 'R.A.D.A.R. {version} · by {author}',
 
   // coverage info
   'info.open': 'How is AI coverage calculated?',
