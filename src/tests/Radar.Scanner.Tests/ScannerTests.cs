@@ -58,6 +58,10 @@ public class ScannerTests
         Assert.Equal(["code-reviewer", "ghost"], wf.Agents);
         Assert.Contains(wf.Issues, i => i.Contains("ghost"));
         Assert.Equal(["ef", "phantom"], wf.Skills);
+        // every repo keeps what its own copy names: the workflow only relates to that repo's elements
+        Assert.Equal(["code-reviewer", "ghost"], wf.Repos.Single(r => r.RepoId == "orders-api").Agents);
+        Assert.Empty(wf.Repos.Single(r => r.RepoId == "orders-front").Agents);
+        Assert.Equal(["ef", "phantom"], wf.Repos.Single(r => r.RepoId == "orders-api").Skills);
         Assert.Contains(wf.Issues, i => i.Contains("phantom"));
         Assert.DoesNotContain(wf.Issues, i => i.Contains("'ef'"));
         Assert.False(wf.Repos.Single(x => x.RepoId == "orders-api").Linked);

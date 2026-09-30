@@ -66,7 +66,7 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 - Repo = directory with `.git` under the scan path (recursive, default depth 4, skip `node_modules`, `bin`, `obj`, `.git`, `dist`...).
 - Detected per repo: `CLAUDE.md`, `.claude/agents/*.md`, `.claude/skills/*/SKILL.md`, `.claude/workflows/*.md`,
   `.claude/memory/OUTPUTS.md` (+ notes in `.claude/memory/`).
-- Workflow = per-project procedure for agents (how to code an API, check UI, commit...). Frontmatter: `name`,
+- Workflow = per-project procedure for agents (how to code an API, check UI, commit...). Repo-scoped for now: it only relates to the agents/skills of the repo it lives in (orchestrator-level workflows are a later stage). Frontmatter: `name`,
   `description`, `when`, optional `agents` and `skills` (names of the agents/skills the procedure uses; picking a workflow in the UI lights them up). Same `name` across repos aggregates into one node (W1...).
 - Coverage: CLAUDE.md 40 + agents(>=1) 25 + skills(>=1) 25 + OUTPUTS 10.
 - Gaps: `no-claude-md` (counted in the KPI), `no-agents`, `no-skills`, `no-outputs`, `workflow-not-linked`.

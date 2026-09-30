@@ -35,7 +35,9 @@ public sealed record RepoInfo(
     CoverageInfo Coverage,
     IReadOnlyList<string> Gaps);
 
-public sealed record WorkflowRepoRef(string RepoId, string Path, bool Linked);
+/// <param name="Agents">agents this repo's copy of the workflow names (they are elements of that same repo)</param>
+/// <param name="Skills">skills this repo's copy of the workflow names</param>
+public sealed record WorkflowRepoRef(string RepoId, string Path, bool Linked, IReadOnlyList<string> Agents, IReadOnlyList<string> Skills);
 
 public sealed record WorkflowInfo(
     string Id,

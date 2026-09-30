@@ -74,27 +74,36 @@ describe('buildScene', () => {
   });
 
   describe('a picked workflow', () => {
+    const ref = (repoId: string, agents: string[], skills: string[]) => ({ repoId, path: 'p', linked: true, agents, skills });
     const wf: WorkflowInfo = {
       id: 'W9', name: 'ship', description: 'd', when: 'w', agents: ['A1'], skills: ['s1'],
-      repos: [{ repoId: 'alpha', path: 'p', linked: true }, { repoId: 'beta', path: 'p', linked: true }], issues: []
+      repos: [ref('alpha', ['A1'], ['s1']), ref('beta', [], [])], issues: []
     };
-    const pickWf = () => buildScene({ ...base, workflows: [...wfs, wf], selId: null, pick: { kind: 'w', name: 'W9' } });
+    const pickWf = (w: WorkflowInfo = wf) => buildScene({ ...base, workflows: [...wfs, w], selId: null, pick: { kind: 'w', name: 'W9' } });
+    const lit = (nodes: { op: number; repoId: string; name: string }[]) => nodes.filter((n) => n.op === 1).map((n) => n.repoId + '/' + n.name);
 
-    it('draws lines to its repos and to the agents and skills it names (in those repos only)', () => {
+    it('draws lines to its repos and to the agents and skills each repo copy names', () => {
       const s = pickWf();
-      const used = (nodes: { op: number; repoId: string; name: string }[]) => nodes.filter((n) => n.op === 1).map((n) => n.repoId + '/' + n.name);
-      expect(used(s.agents)).toEqual(['alpha/a1', 'beta/a1']); // name match ignores case; a2 is not named
-      expect(used(s.skills)).toEqual(['alpha/s1']);
-      // 2 repos + 2 agents + 1 skill
-      expect(s.lines).toHaveLength(5);
-      expect(s.lines.filter((l) => l.color === '#c6ff3d')).toHaveLength(2);
+      expect(lit(s.agents)).toEqual(['alpha/a1']); // case-insensitive; a2 is not named, beta names nothing
+      expect(lit(s.skills)).toEqual(['alpha/s1']);
+      expect(s.lines).toHaveLength(4); // 2 repos + 1 agent + 1 skill
+      expect(s.lines.filter((l) => l.color === '#c6ff3d')).toHaveLength(1);
       expect(s.lines.filter((l) => l.color === '#a99bff')).toHaveLength(1);
     });
 
-    it('lists the skills in the popover and skips agents of repos without the workflow', () => {
-      const s = buildScene({ ...base, workflows: [...wfs, { ...wf, repos: [wf.repos[1]] }], selId: null, pick: { kind: 'w', name: 'W9' } });
-      expect(s.pop?.rows.find((r) => r.k === 'SKILLE')!.v).toBe('s1');
-      expect(s.agents.filter((n) => n.op === 1).map((n) => n.repoId)).toEqual(['beta']);
+    it('never reaches into another repo: a name listed by one repo does not light the same name in a repo that did not list it', () => {
+      // both repos have an agent a1, but only beta's copy of the workflow names it
+      const s = pickWf({ ...wf, agents: [], skills: [], repos: [ref('alpha', [], []), ref('beta', ['a1'], [])] });
+      expect(lit(s.agents)).toEqual(['beta/a1']);
+    });
+
+    it('falls back to the merged lists for scans without per-repo names', () => {
+      const s = pickWf({ ...wf, repos: [{ repoId: 'alpha', path: 'p', linked: true }, { repoId: 'beta', path: 'p', linked: true }] });
+      expect(lit(s.agents)).toEqual(['alpha/a1', 'beta/a1']);
+    });
+
+    it('lists the skills in the popover', () => {
+      expect(pickWf().pop?.rows.find((r) => r.k === 'SKILLE')!.v).toBe('s1');
     });
 
     it('does nothing extra for workflows without skills', () => {

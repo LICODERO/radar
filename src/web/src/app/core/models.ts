@@ -37,7 +37,8 @@ export interface WorkflowInfo {
   agents: string[];
   /** skills the workflow uses (optional `skills:` frontmatter; absent in older scans) */
   skills?: string[];
-  repos: { repoId: string; path: string; linked: boolean }[];
+  /** `agents`/`skills`: what this repo's copy of the workflow names; they are elements of that same repo (absent in older scans) */
+  repos: { repoId: string; path: string; linked: boolean; agents?: string[]; skills?: string[] }[];
   issues: string[];
 }
 

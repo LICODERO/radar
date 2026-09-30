@@ -32,7 +32,7 @@ public static class WorkflowAggregator
                     items.FirstOrDefault(w => w.When.Length > 0)?.When ?? string.Empty,
                     agents,
                     skills,
-                    items.Select(w => new WorkflowRepoRef(w.RepoId, w.Path, w.Linked)).ToList(),
+                    items.Select(w => new WorkflowRepoRef(w.RepoId, w.Path, w.Linked, w.Agents, w.Skills)).ToList(),
                     issues);
             })
             .ToList();

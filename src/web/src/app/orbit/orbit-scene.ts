@@ -129,12 +129,13 @@ export function buildScene(inp: SceneInput): Scene {
     else usedIn = workflows.find((w) => w.id === pick.name)?.repos.map((x) => x.repoId) ?? [];
   }
 
-  // a picked workflow also lights up the agents and skills it names, in the repos that have the workflow
+  // A workflow lives in a repo and only works with that repo's own elements: a picked workflow lights up the agents and
+  // skills named by each repo's copy of it, never those of another repo. (Older scans only have the merged lists.)
   const pickedWf = pick?.kind === 'w' ? workflows.find((w) => w.id === pick.name) : undefined;
-  const wfRepoIds = new Set(pickedWf?.repos.map((x) => x.repoId) ?? []);
   const wfUses = (kind: 'a' | 's', repoId: string, name: string): boolean => {
-    if (!pickedWf || !wfRepoIds.has(repoId)) return false;
-    const names = kind === 'a' ? pickedWf.agents : pickedWf.skills ?? [];
+    const ref = pickedWf?.repos.find((x) => x.repoId === repoId);
+    if (!pickedWf || !ref) return false;
+    const names = kind === 'a' ? ref.agents ?? pickedWf.agents : ref.skills ?? pickedWf.skills ?? [];
     return names.some((x) => x.toLowerCase() === name.toLowerCase());
   };
 
