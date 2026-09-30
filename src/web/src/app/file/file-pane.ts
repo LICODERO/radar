@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, computed, effect, inject, viewChild } from '@angular/core';
 import { RadarStore } from '../core/radar-store';
+import { I18n } from '../i18n/i18n';
 import { MdView } from '../shared/md-view';
 
 @Component({
@@ -11,6 +12,7 @@ import { MdView } from '../shared/md-view';
 })
 export class FilePane {
   protected readonly store = inject(RadarStore);
+  protected readonly t = inject(I18n).t;
   protected readonly f = computed(() => this.store.file()!);
   protected readonly lines = computed(() => (this.f().text ? this.f().text.split('\n').length : 0));
   protected readonly closeBtn = viewChild<ElementRef<HTMLButtonElement>>('closeBtn');

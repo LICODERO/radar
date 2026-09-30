@@ -13,16 +13,16 @@
         <app-right-panel />
 
         <div class="m legend">
-          <span style="color:#ffffff">◯</span> REPO (KOLOR = POKRYCIE) &nbsp; <span style="color:#c6ff3d">◆</span> AGENT &nbsp;
-          <span style="color:#a99bff">●</span> SKILL &nbsp; <span style="color:#e6e9f2">▢</span> WORKFLOW &nbsp;
-          <span style="color:#ff4fa3">◌</span> PUSTY SLOT (BRAK)
+          <span style="color:#ffffff">◯</span> {{ t('app.legend.repo') }} &nbsp; <span style="color:#c6ff3d">◆</span> {{ t('app.legend.agent') }} &nbsp;
+          <span style="color:#a99bff">●</span> {{ t('app.legend.skill') }} &nbsp; <span style="color:#e6e9f2">▢</span> {{ t('app.legend.workflow') }} &nbsp;
+          <span style="color:#ff4fa3">◌</span> {{ t('app.legend.slot') }}
         </div>
-        <div class="m hint">NAJEDŹ = PEŁNA NAZWA · KLIKNIJ REPO = POWIĄZANIA · KLIKNIJ ELEMENT = SZCZEGÓŁY I MIEJSCA UŻYCIA</div>
-        @if (sample()) { <div class="m sample">DANE PRZYKŁADOWE</div> }
+        <div class="m hint">{{ t('app.hint') }}</div>
+        @if (sample()) { <div class="m sample">{{ t('app.sample') }}</div> }
         @if (!store.loading() && !store.result()) {
           <div class="empty">
-            <div class="ed">BRAK DANYCH</div>
-            <div class="m et">Wybierz katalog z repozytoriami (ZMIEŃ) i kliknij SKANUJ.</div>
+            <div class="ed">{{ t('app.empty.title') }}</div>
+            <div class="m et">{{ t('app.empty.text') }}</div>
           </div>
         }
         @if (store.file()) { <app-file-pane /> }

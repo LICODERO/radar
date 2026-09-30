@@ -5,32 +5,38 @@
 
 <div class="path">
   <div class="path-row">
-    <div class="m label">ŚCIEŻKA SKANU</div>
+    <div class="m label">{{ t('header.scanPath') }}</div>
     @if (editing()) {
-      <input class="m path-box path-input" type="text" aria-label="Ścieżka katalogu skanu" placeholder="~/projects"
+      <input class="m path-box path-input" type="text" [attr.aria-label]="t('header.scanPathAria')" placeholder="~/projects"
              [value]="draft()" (input)="onDraft($event)" (keydown.enter)="confirm()" (keydown.escape)="cancelEdit()" />
       <button class="m btn-ghost ok" type="button" (click)="confirm()">OK</button>
-      <button class="m btn-ghost" type="button" (click)="cancelEdit()">ANULUJ</button>
+      <button class="m btn-ghost" type="button" (click)="cancelEdit()">{{ t('header.cancel') }}</button>
     } @else {
       <div class="m path-box" [title]="pathText()">{{ pathText() }}</div>
-      <button class="m btn-ghost tip tip-b" type="button" [attr.data-tip]="isMock() ? 'Tryb danych przykładowych' : 'Zmień katalog i od razu skanuj'"
-              [disabled]="isMock() || store.scanning()" (click)="change()">ZMIEŃ</button>
+      <button class="m btn-ghost tip tip-b" type="button" [attr.data-tip]="isMock() ? t('header.mockTip') : t('header.changeTip')"
+              [disabled]="isMock() || store.scanning()" (click)="change()">{{ t('header.change') }}</button>
     }
   </div>
   @if (store.notice(); as n) {
     <div class="m info notice" role="alert">{{ n }}</div>
   } @else if (store.staleRoot()) {
-    <div class="m info warn">WYNIKI Z INNEGO KATALOGU</div>
+    <div class="m info warn">{{ t('header.staleRoot') }}</div>
+  }
+</div>
+
+<div class="lang m" role="group" [attr.aria-label]="t('lang.label')">
+  @for (l of langs; track l) {
+    <button type="button" [class.on]="i18n.lang() === l" [attr.aria-pressed]="i18n.lang() === l" (click)="i18n.setLang(l)">{{ l.toUpperCase() }}</button>
   }
 </div>
 
 <div class="clock-block">
   <div class="clock-text">
-    <div class="m label">TERAZ</div>
+    <div class="m label">{{ t('header.now') }}</div>
     <div class="m clock">{{ clock() }}</div>
-    <div class="m last">OSTATNI SKAN {{ lastScan() }}</div>
+    <div class="m last">{{ t('header.lastScan', { when: lastScan() }) }}</div>
   </div>
   <button class="m btn-solid tip tip-b tip-r" type="button" [attr.data-tip]="scanTip()" [disabled]="!store.canScan()" (click)="store.startScan()">
-    {{ hasResult() ? 'SKANUJ PONOWNIE' : 'SKANUJ' }}
+    {{ hasResult() ? t('header.rescan') : t('header.scan') }}
   </button>
 </div>

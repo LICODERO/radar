@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { translate } from '../i18n/i18n';
 import { isValidAgentName, parseAgent, setAgentName, validateAgent } from './agent-file';
 
+const t = (key: Parameters<typeof translate>[1]) => translate('pl', key);
 const GOOD = '---\nname: migration-reviewer\ndescription: Use when reviewing EF Core migrations.\ntools: Read, Grep\n---\n\nYou review migrations carefully and report risks.\n';
 
 describe('parseAgent', () => {
@@ -25,12 +27,12 @@ describe('parseAgent', () => {
 
 describe('validateAgent', () => {
   it('accepts a good file', () => {
-    expect(validateAgent(GOOD)).toEqual([]);
+    expect(validateAgent(GOOD, t)).toEqual([]);
   });
 
   it('flags every problem it can see', () => {
-    expect(validateAgent('text')).toHaveLength(1);
-    expect(validateAgent('---\nname: Bad Name\ndescription: short\n---\nx').length).toBe(3);
+    expect(validateAgent('text', t)).toHaveLength(1);
+    expect(validateAgent('---\nname: Bad Name\ndescription: short\n---\nx', t).length).toBe(3);
   });
 });
 

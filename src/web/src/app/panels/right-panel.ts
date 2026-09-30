@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RadarStore } from '../core/radar-store';
-
-export function plural(n: number): string {
-  return n + (n === 1 ? ' notatka' : n % 10 >= 2 && n % 10 <= 4 && (n < 10 || n > 20) ? ' notatki' : ' notatek');
-}
+import { I18n } from '../i18n/i18n';
 
 @Component({
   selector: 'app-right-panel',
@@ -13,25 +10,32 @@ export function plural(n: number): string {
 })
 export class RightPanel {
   protected readonly store = inject(RadarStore);
+  protected readonly t = inject(I18n).t;
   protected readonly sum = computed(() => this.store.result()?.summary);
   protected readonly sel = this.store.selected;
   protected readonly selName = computed(() => this.store.selected()?.name ?? '—');
   protected readonly canCompose = computed(() => this.store.mode() === 'api' && !!this.store.selected() && !this.store.scanning());
   protected readonly agentTip = computed(() => this.store.mode() === 'mock'
-    ? 'Wymaga działającego serwera'
+    ? this.t('right.needServer')
     : !this.store.selected()
-      ? 'Najpierw wybierz repozytorium'
-      : `Nowy agent w ${this.selName()} z opisu własnymi słowami`);
+      ? this.t('right.pickRepoFirst')
+      : this.t('right.newAgentTip', { name: this.selName() }));
   protected readonly vault = computed(() => this.store.selected()?.outputs.exists ?? false);
 
   protected readonly vaultText = computed(() => {
     const s = this.sel();
     if (!s) return '';
-    return s.outputs.exists ? `OUTPUTS.md ✓ · ${plural(s.outputs.notes)}` : 'OUTPUTS.md ✕ BRAK';
+    return s.outputs.exists
+      ? this.t('right.outputsOk', { notes: this.t('right.notes', { n: s.outputs.notes }) })
+      : this.t('right.outputsMissing');
   });
   protected readonly flags = computed(() => {
     const s = this.sel();
     if (!s) return '';
-    return `CLAUDE.md ${s.claudeMd.exists ? '✓' : '✕ BRAK'} · ${s.agents.length} agentów · ${s.skills.length} skilli`;
+    return this.t('right.flags', {
+      claude: s.claudeMd.exists ? '✓' : this.t('right.missing'),
+      agents: this.t('right.agentsCount', { n: s.agents.length }),
+      skills: this.t('right.skillsCount', { n: s.skills.length })
+    });
   });
 }

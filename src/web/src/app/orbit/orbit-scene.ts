@@ -1,5 +1,6 @@
 import { coverageColor } from '../core/palette';
 import { Hover, Pick, RepoInfo, WorkflowInfo } from '../core/models';
+import { Lang, translate } from '../i18n/i18n';
 import {
   LineGeom, Pt, R1, R2, R3, R4, REPO_START_DEG, WF_START_DEG,
   chooseSpread, lineBetween, polar, ringLayout
@@ -14,6 +15,7 @@ export interface SceneInput {
   /** repo ids matching the search box; null = no filter */
   matches: ReadonlySet<string> | null;
   tick: number;
+  lang: Lang;
 }
 
 export interface RepoNode {
@@ -100,6 +102,7 @@ const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
 export function buildScene(inp: SceneInput): Scene {
   const { repos, workflows, pick, hover, matches, tick } = inp;
+  const t = (key: Parameters<typeof translate>[1], params?: Parameters<typeof translate>[2]) => translate(inp.lang, key, params);
   const n = repos.length;
   const idx = new Map(repos.map((r, i) => [r.id, i] as const));
   const sel = inp.selId !== null && idx.has(inp.selId) ? (idx.get(inp.selId) as number) : -1; // -1: nothing selected
@@ -180,7 +183,7 @@ export function buildScene(inp: SceneInput): Scene {
     const hot = isP('w', undefined, w.id) || isH('w', undefined, w.id);
     return {
       id: w.id, left: q[0] - wl.size / 2, top: q[1] - wl.size / 2, size: wl.size,
-      color: lit ? '#ffffff' : '#8a90a8', glowPx: hot ? 16 : lit ? 8 : 0, label: 'Workflow ' + w.name
+      color: lit ? '#ffffff' : '#8a90a8', glowPx: hot ? 16 : lit ? 8 : 0, label: t('orbit.workflowLabel', { name: w.name })
     };
   });
 
@@ -220,7 +223,7 @@ export function buildScene(inp: SceneInput): Scene {
       glow: r.claudeMd.exists ? 'rgba(198,255,61,.6)' : 'rgba(255,79,163,.7)',
       glowPx: isSel || hov ? 16 : pick && rel.has(r.id) ? 14 : 3,
       op: lit ? 1 : matched ? 0.3 : 0.15,
-      label: r.name + ' · pokrycie ' + r.coverage.score + '%'
+      label: t('orbit.repoLabel', { name: r.name, score: r.coverage.score })
     };
   });
 
@@ -238,14 +241,14 @@ export function buildScene(inp: SceneInput): Scene {
       const r = repos[idx.get(hover.name) ?? -1];
       if (r) {
         q = centers.get('r' + r.id); l1 = r.name; color = coverageColor(r.coverage.score);
-        l2 = `${r.stack} · ${r.coverage.score}% · ${r.agents.length} AGENCI · ${r.skills.length} SKILLE`;
+        l2 = t('orbit.tipRepo', { stack: r.stack, score: r.coverage.score, agents: r.agents.length, skills: r.skills.length });
       }
     } else if (hover.kind === 'a' || hover.kind === 's') {
       q = centers.get(hover.kind + hover.repoId + hover.name); l1 = hover.name;
-      l2 = (hover.kind === 'a' ? 'AGENT · ' : 'SKILL · ') + (repos[idx.get(hover.repoId ?? '') ?? -1]?.name ?? '');
+      l2 = (hover.kind === 'a' ? t('orbit.kindAgent') : t('orbit.kindSkill')) + ' · ' + (repos[idx.get(hover.repoId ?? '') ?? -1]?.name ?? '');
     } else {
       const w = workflows.find((x) => x.id === hover.name);
-      if (w) { q = centers.get('w' + w.id); l1 = w.name; l2 = `WORKFLOW · ${w.agents.length} KROKI · ${w.repos.length} REPO`; }
+      if (w) { q = centers.get('w' + w.id); l1 = w.name; l2 = t('orbit.tipWorkflow', { steps: w.agents.length, repos: w.repos.length }); }
     }
     if (q) tip = { left: clamp(q[0], 120, 600), top: q[1] - 22, color, l1, l2 };
   }
@@ -256,26 +259,26 @@ export function buildScene(inp: SceneInput): Scene {
     const q = pick.kind === 'w' ? centers.get('w' + pick.name) : centers.get(pick.kind + pick.repoId + pick.name);
     if (q) {
       const inis = usedIn.map((id) => repos[idx.get(id) ?? -1]?.initials).filter(Boolean);
-      const usedTxt = `${inis.length} repo · ${inis.slice(0, 10).join(', ')}${inis.length > 10 ? '…' : ''}`;
+      const usedTxt = t('orbit.usedIn', { n: inis.length, list: inis.slice(0, 10).join(', ') + (inis.length > 10 ? '…' : '') });
       const base = { left: q[0] > 400 ? q[0] - 258 : q[0] + 20, top: clamp(q[1] - 40, 30, 470) };
       const repo = repos[idx.get(pick.repoId ?? '') ?? -1];
       if (pick.kind === 'a') {
         const a = repo?.agents.find((x) => x.name === pick.name);
-        pop = { ...base, file: a && repo ? { repoId: repo.id, path: a.path, kind: 'AGENT', color: '#c6ff3d' } : null,
-          kind: 'AGENT', color: '#c6ff3d', title: pick.name, desc: a?.description ?? '',
-          rows: [{ k: 'ŚCIEŻKA', v: `${repo?.path}/${a?.path}` }, { k: 'NARZĘDZIA', v: a?.tools.join(' · ') || '—' }, { k: 'UŻYWANY W', v: usedTxt }] };
+        pop = { ...base, file: a && repo ? { repoId: repo.id, path: a.path, kind: t('orbit.kindAgent'), color: '#c6ff3d' } : null,
+          kind: t('orbit.kindAgent'), color: '#c6ff3d', title: pick.name, desc: a?.description ?? '',
+          rows: [{ k: t('orbit.rowPath'), v: `${repo?.path}/${a?.path}` }, { k: t('orbit.rowTools'), v: a?.tools.join(' · ') || '—' }, { k: t('orbit.rowUsedIn'), v: usedTxt }] };
       } else if (pick.kind === 's') {
         const s = repo?.skills.find((x) => x.name === pick.name);
-        pop = { ...base, file: s && repo ? { repoId: repo.id, path: s.path, kind: 'SKILL', color: '#a99bff' } : null,
-          kind: 'SKILL', color: '#a99bff', title: pick.name, desc: s?.description ?? '',
-          rows: [{ k: 'ŚCIEŻKA', v: `${repo?.path}/${s?.path}` }, { k: 'UŻYWANY W', v: usedTxt }] };
+        pop = { ...base, file: s && repo ? { repoId: repo.id, path: s.path, kind: t('orbit.kindSkill'), color: '#a99bff' } : null,
+          kind: t('orbit.kindSkill'), color: '#a99bff', title: pick.name, desc: s?.description ?? '',
+          rows: [{ k: t('orbit.rowPath'), v: `${repo?.path}/${s?.path}` }, { k: t('orbit.rowUsedIn'), v: usedTxt }] };
       } else {
         const w = workflows.find((x) => x.id === pick.name);
         // open the copy from the selected repo when it has one, otherwise the first repo that does
         const ref = w?.repos.find((x) => x.repoId === selRepo?.id) ?? w?.repos[0];
-        if (w) pop = { ...base, file: ref ? { repoId: ref.repoId, path: ref.path, kind: 'WORKFLOW ' + w.id, color: '#e6e9f2' } : null,
-          kind: 'WORKFLOW ' + w.id, color: '#e6e9f2', title: w.name, desc: w.description,
-          rows: [{ k: 'KIEDY', v: w.when || '—' }, { k: 'KROKI', v: w.agents.length ? w.agents.join(' → ') : 'bez agentów (sama procedura)' }, { k: 'REPOZYTORIA', v: usedTxt }] };
+        if (w) pop = { ...base, file: ref ? { repoId: ref.repoId, path: ref.path, kind: t('orbit.kindWorkflow') + ' ' + w.id, color: '#e6e9f2' } : null,
+          kind: t('orbit.kindWorkflow') + ' ' + w.id, color: '#e6e9f2', title: w.name, desc: w.description,
+          rows: [{ k: t('orbit.rowWhen'), v: w.when || '—' }, { k: t('orbit.rowSteps'), v: w.agents.length ? w.agents.join(' → ') : t('orbit.noAgentsWf') }, { k: t('orbit.rowRepos'), v: usedTxt }] };
       }
     }
   }

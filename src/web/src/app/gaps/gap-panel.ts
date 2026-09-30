@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { GapType } from '../core/models';
 import { ApiError } from '../core/radar-api';
-import { GAP_LABELS, GAP_ORDER, GapItem, Shell, Tool, buildCommand, filterItems, toScript } from '../core/commands';
+import { GAP_ORDER, GapItem, Shell, Tool, buildCommand, filterItems, toScript } from '../core/commands';
 import { RadarStore } from '../core/radar-store';
+import { I18n } from '../i18n/i18n';
+import { MsgKey } from '../i18n/pl';
 
 const MAX_SHOWN = 100;
 
@@ -14,8 +16,9 @@ const MAX_SHOWN = 100;
 })
 export class GapPanel {
   protected readonly store = inject(RadarStore);
+  protected readonly t = inject(I18n).t;
   protected readonly tool = signal<Tool>('claude');
-  protected readonly labels = GAP_LABELS;
+  protected readonly label = (g: GapType): string => this.t(('gap.' + g) as MsgKey);
   protected readonly order = GAP_ORDER;
   protected readonly copied = signal<string | null>(null);
   protected readonly pending = this.store.pendingRun;
@@ -29,7 +32,7 @@ export class GapPanel {
     switch (this.store.tools()?.platform) {
       case 'macos': return 'Terminal.app';
       case 'windows': return 'PowerShell';
-      default: return 'terminalu';
+      default: return this.t('gaps.terminal.generic');
     }
   });
 
@@ -61,7 +64,7 @@ export class GapPanel {
   }
 
   protected copyAll(): Promise<void> {
-    return this.copy('all', toScript(this.shell(), this.tool(), this.items()));
+    return this.copy('all', toScript(this.shell(), this.tool(), this.items(), (i) => this.t('gaps.scriptLine', { repo: i.repoName, gap: this.label(i.type) })));
   }
 
   protected askRun(item: GapItem): void {
@@ -89,7 +92,7 @@ export class GapPanel {
       setTimeout(() => { if (this.launched() === key) this.launched.set(null); }, 4000);
       this.pending.set(null);
     } catch (e) {
-      this.runError.set(e instanceof ApiError ? e.message : 'Nie udało się otworzyć terminala.');
+      this.runError.set(e instanceof ApiError ? e.message : this.t('gaps.runFailed'));
     } finally {
       this.running.set(false);
     }

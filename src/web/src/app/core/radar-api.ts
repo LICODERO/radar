@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
+import { I18n } from '../i18n/i18n';
 import { GapItem, Tool } from './commands';
 import { AgentDraft, FileContent, ScanResult, Settings, ToolsInfo } from './models';
 
@@ -14,6 +15,7 @@ export class ApiError extends Error {
 @Injectable({ providedIn: 'root' })
 export class RadarApi {
   private readonly http = inject(HttpClient);
+  private readonly i18n = inject(I18n);
   private token: Promise<string> | null = null;
 
   private ensureToken(): Promise<string> {
@@ -21,13 +23,18 @@ export class RadarApi {
     return this.token;
   }
 
+  /** Token plus the UI language, so the server answers with messages in the language the user sees. */
+  private headers(token: string): Record<string, string> {
+    return { 'X-Radar-Token': token, 'Accept-Language': this.i18n.lang() };
+  }
+
   private async call<T>(method: string, url: string, body?: unknown): Promise<T> {
     const token = await this.ensureToken();
     try {
-      return await firstValueFrom(this.http.request<T>(method, url, { body, headers: { 'X-Radar-Token': token } }));
+      return await firstValueFrom(this.http.request<T>(method, url, { body, headers: this.headers(token) }));
     } catch (e) {
       if (e instanceof HttpErrorResponse) {
-        throw new ApiError(e.error?.error ?? `Błąd serwera (${e.status})`, e.status, e.error);
+        throw new ApiError(e.error?.error ?? this.i18n.t('api.serverError', { status: e.status }), e.status, e.error);
       }
       throw e;
     }
@@ -62,7 +69,7 @@ export class RadarApi {
   /** Drafts an agent file from a description. Nothing is written; aborting the signal stops the claude call. */
   async generateAgent(repoId: string, description: string, signal: AbortSignal): Promise<AgentDraft> {
     const token = await this.ensureToken();
-    return this.abortable(this.http.post<AgentDraft>('/api/agents/generate', { repoId, description }, { headers: { 'X-Radar-Token': token } }), signal);
+    return this.abortable(this.http.post<AgentDraft>('/api/agents/generate', { repoId, description }, { headers: this.headers(token) }), signal);
   }
 
   /** Writes the reviewed file as a brand-new .claude/agents/<name>.md (the server never overwrites). */
@@ -74,9 +81,9 @@ export class RadarApi {
     return new Promise<T>((resolve, reject) => {
       const sub = source.subscribe({
         next: resolve,
-        error: (e) => reject(e instanceof HttpErrorResponse ? new ApiError(e.error?.error ?? `Błąd serwera (${e.status})`, e.status, e.error) : e)
+        error: (e) => reject(e instanceof HttpErrorResponse ? new ApiError(e.error?.error ?? this.i18n.t('api.serverError', { status: e.status }), e.status, e.error) : e)
       });
-      signal.addEventListener('abort', () => { sub.unsubscribe(); reject(new DOMException('Przerwano', 'AbortError')); }, { once: true });
+      signal.addEventListener('abort', () => { sub.unsubscribe(); reject(new DOMException(this.i18n.t('api.aborted'), 'AbortError')); }, { once: true });
     });
   }
 

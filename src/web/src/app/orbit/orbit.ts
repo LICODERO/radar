@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RadarStore } from '../core/radar-store';
+import { I18n } from '../i18n/i18n';
 import { Pick } from '../core/models';
 import { PopFile } from './orbit-scene';
 
@@ -11,6 +12,7 @@ import { PopFile } from './orbit-scene';
 })
 export class Orbit {
   protected readonly store = inject(RadarStore);
+  protected readonly t = inject(I18n).t;
   protected readonly scene = this.store.scene;
   protected readonly hasData = computed(() => this.store.repos().length > 0);
   protected readonly avg = computed(() => this.store.result()?.summary.avgCoverage ?? 0);

@@ -1,3 +1,5 @@
+import { MsgKey } from '../i18n/pl';
+
 /** Helpers for the agent file the user reviews before saving (mirrors the server rules; the server has the last word). */
 const NAME_RE = /^[a-z][a-z0-9-]{1,63}$/;
 
@@ -32,14 +34,14 @@ export function isValidAgentName(name: string): boolean {
   return NAME_RE.test(name);
 }
 
-export function validateAgent(content: string): string[] {
+export function validateAgent(content: string, t: (key: MsgKey) => string): string[] {
   const errors: string[] = [];
   const a = parseAgent(content);
-  if (!a.hasFrontmatter) return ['Brak poprawnego frontmattera: plik ma zaczynać się od bloku --- ... ---.'];
-  if (!isValidAgentName(a.name)) errors.push('Pole name: małe litery, cyfry i myślniki (np. migration-reviewer), 2–64 znaki.');
-  if (a.description.length < 10) errors.push('Pole description jest wymagane (min. 10 znaków): kiedy używać agenta.');
-  else if (a.description.length > 1024) errors.push('Pole description jest za długie (max 1024 znaki).');
-  if (a.body.trim().length < 20) errors.push('Brak treści instrukcji po frontmatterze.');
+  if (!a.hasFrontmatter) return [t('agent.err.frontmatter')];
+  if (!isValidAgentName(a.name)) errors.push(t('agent.err.name'));
+  if (a.description.length < 10) errors.push(t('agent.err.descRequired'));
+  else if (a.description.length > 1024) errors.push(t('agent.err.descLong'));
+  if (a.body.trim().length < 20) errors.push(t('agent.err.body'));
   return errors;
 }
 

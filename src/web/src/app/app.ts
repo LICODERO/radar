@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, computed, inject, signal } from '@angular/core';
 import { BASE_H, BASE_W, computeFit } from './core/fit-scale';
 import { RadarStore } from './core/radar-store';
+import { I18n } from './i18n/i18n';
 import { Orbit } from './orbit/orbit';
 import { AgentComposer } from './agent/agent-composer';
 import { FilePane } from './file/file-pane';
@@ -19,6 +20,7 @@ import { RightPanel } from './panels/right-panel';
 })
 export class App {
   protected readonly store = inject(RadarStore);
+  protected readonly t = inject(I18n).t;
   private readonly size = signal({ w: window.innerWidth, h: window.innerHeight });
 
   protected readonly fit = computed(() => computeFit(this.size().w, this.size().h));

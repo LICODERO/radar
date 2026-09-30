@@ -34,3 +34,13 @@ $row-h: 64px;
 .clock-block button:disabled { opacity: .5; }
 .notice { color: $magenta; }
 .warn { color: $amber; }
+
+// PL / EN switch, between the path bar and the clock
+.lang { position: absolute; left: 968px; top: 14px; height: $row-h; display: flex; align-items: center; }
+.lang button {
+  background: transparent; border: 1px solid #c6ff3d55; color: $muted; font-family: inherit; font-size: fs(10); letter-spacing: .12em;
+  padding: 6px 9px; cursor: pointer;
+}
+.lang button + button { border-left: 0; }
+.lang button.on { background: #c6ff3d1f; color: $lime; border-color: #c6ff3d; }
+.lang button.on + button, .lang button:has(+ button.on) { border-color: #c6ff3d; }

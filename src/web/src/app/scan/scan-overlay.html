@@ -1,11 +1,11 @@
 <div class="head">
-  <div class="m eyebrow">R.A.D.A.R · REPO AI DISCOVERY AND REVIEW</div>
+  <div class="m eyebrow">{{ t('scan.eyebrow') }}</div>
   <div class="ttl" [style.color]="titleColor()">{{ title() }}</div>
   <div class="m root">{{ root() }}</div>
 </div>
 
 <div class="logcol">
-  <div class="m sec">DZIENNIK SKANU</div>
+  <div class="m sec">{{ t('scan.log') }}</div>
   @for (l of log(); track $index) {
     <div class="m logrow">
       <div class="lt" [style.color]="l.color">{{ l.t }}</div>
@@ -15,7 +15,7 @@
   @if (running() && s().current && s().phase === 'analysis') {
     <div class="m logrow">
       <div class="lt" style="color:#c6ff3d">{{ root() }}/{{ s().current }}</div>
-      <div class="ld">skanowanie…</div>
+      <div class="ld">{{ t('scan.scanning') }}</div>
     </div>
   }
 </div>
@@ -39,18 +39,18 @@
 </div>
 
 <div class="live">
-  <div class="m sec">WYNIKI NA ŻYWO</div>
+  <div class="m sec">{{ t('scan.live') }}</div>
   <div class="grid">
-    <div class="kpi"><div class="m kl">REPO</div><div class="kv" style="color:#fff">{{ s().total !== null ? s().counters.repos : s().found }}<span class="of"> / {{ s().total ?? '?' }}</span></div></div>
-    <div class="kpi"><div class="m kl">AGENCI</div><div class="kv" style="color:#c6ff3d">{{ s().counters.agents }}</div></div>
-    <div class="kpi"><div class="m kl">SKILLE</div><div class="kv" style="color:#a99bff">{{ s().counters.skills }}</div></div>
-    <div class="kpi"><div class="m kl">WORKFLOWS</div><div class="kv" style="color:#e6e9f2">{{ s().workflows }}</div></div>
+    <div class="kpi"><div class="m kl">{{ t('scan.kpiRepos') }}</div><div class="kv" style="color:#fff">{{ s().total !== null ? s().counters.repos : s().found }}<span class="of"> / {{ s().total ?? '?' }}</span></div></div>
+    <div class="kpi"><div class="m kl">{{ t('scan.kpiAgents') }}</div><div class="kv" style="color:#c6ff3d">{{ s().counters.agents }}</div></div>
+    <div class="kpi"><div class="m kl">{{ t('scan.kpiSkills') }}</div><div class="kv" style="color:#a99bff">{{ s().counters.skills }}</div></div>
+    <div class="kpi"><div class="m kl">{{ t('scan.kpiWorkflows') }}</div><div class="kv" style="color:#e6e9f2">{{ s().workflows }}</div></div>
   </div>
-  <div class="gaps"><div class="m kl" style="color:#ff9cc9">LUKI · BRAK CLAUDE.md</div><div class="kv" style="color:#ff4fa3">{{ s().counters.gaps }}</div></div>
+  <div class="gaps"><div class="m kl" style="color:#ff9cc9">{{ t('scan.kpiGaps') }}</div><div class="kv" style="color:#ff4fa3">{{ s().counters.gaps }}</div></div>
 </div>
 
 <div class="progress">
-  <div class="m prow"><span style="color:#c6ff3d">{{ s().label }}</span><span>{{ pct() === null ? '—' : pct() + '%' }}</span></div>
+  <div class="m prow"><span style="color:#c6ff3d">{{ phaseLabel() }}</span><span>{{ pct() === null ? '—' : pct() + '%' }}</span></div>
   <div class="bar">
     @if (pct() === null) { <div class="fill indeterminate"></div> } @else { <div class="fill" [style.width.%]="pct()"></div> }
   </div>
@@ -59,8 +59,8 @@
 
 <div class="actions">
   @if (running()) {
-    <button class="m btn-ghost cancel" type="button" (click)="store.cancelScan()">PRZERWIJ</button>
+    <button class="m btn-ghost cancel" type="button" (click)="store.cancelScan()">{{ t('scan.cancel') }}</button>
   } @else {
-    <button class="m btn-solid close" type="button" (click)="store.closeScan()">{{ failed() ? 'ZAMKNIJ' : 'ZAMKNIJ I ZOBACZ WYNIKI' }}</button>
+    <button class="m btn-solid close" type="button" (click)="store.closeScan()">{{ failed() ? t('scan.close') : t('scan.closeResults') }}</button>
   }
 </div>

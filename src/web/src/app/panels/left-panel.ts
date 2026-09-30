@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RadarStore } from '../core/radar-store';
+import { I18n } from '../i18n/i18n';
 import { coverageColor } from '../core/palette';
 
 @Component({
@@ -10,6 +11,7 @@ import { coverageColor } from '../core/palette';
 })
 export class LeftPanel {
   protected readonly store = inject(RadarStore);
+  protected readonly t = inject(I18n).t;
   protected readonly color = coverageColor;
   protected readonly total = computed(() => this.store.repos().length);
   protected readonly wfTotal = computed(() => this.store.workflows().length);
@@ -20,11 +22,11 @@ export class LeftPanel {
     const rest = this.restGaps();
     if (!rest.length) return '';
     const names = rest.slice(0, 2).map((r) => `${r.initials} ${r.name}`).join(', ');
-    return `+ ${rest.length} kolejne · ${names}${rest.length > 2 ? '…' : ''}`;
+    return this.t('left.gapsRest', { n: rest.length, names: names + (rest.length > 2 ? '…' : '') });
   });
   protected readonly genTip = computed(() => {
     const t = this.store.gapTotals();
-    return this.store.anyGaps() ? `Polecenia dla luk: ${t['no-claude-md']} bez CLAUDE.md, pozostałe w filtrach` : 'Brak luk do uzupełnienia';
+    return this.store.anyGaps() ? this.t('left.generateTip', { n: t['no-claude-md'] }) : this.t('left.noGaps');
   });
   protected onQuery(e: Event): void {
     this.store.setQuery((e.target as HTMLInputElement).value);

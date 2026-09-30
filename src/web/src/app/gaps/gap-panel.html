@@ -1,23 +1,23 @@
 <div class="backdrop" (click)="store.closeGaps()"></div>
-<div class="dlg" role="dialog" aria-modal="true" aria-label="Polecenia dla luk">
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('gaps.dialogAria')">
   <div class="head">
     <div>
-      <div class="m eyebrow">GENERATOR POLECEŃ</div>
-      <div class="ttl">Uzupełnianie luk</div>
+      <div class="m eyebrow">{{ t('gaps.eyebrow') }}</div>
+      <div class="ttl">{{ t('gaps.title') }}</div>
     </div>
-    <button class="m btn-ghost x" type="button" aria-label="Zamknij" (click)="store.closeGaps()">✕</button>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('gaps.close')" (click)="store.closeGaps()">✕</button>
   </div>
 
   <div class="bar">
-    <div class="seg" role="group" aria-label="Narzędzie">
+    <div class="seg" role="group" [attr.aria-label]="t('gaps.toolAria')">
       <button class="m" type="button" [class.on]="tool() === 'claude'" (click)="tool.set('claude')">CLAUDE CODE</button>
       <button class="m" type="button" [class.on]="tool() === 'codex'" (click)="tool.set('codex')">CODEX CLI</button>
     </div>
-    <div class="chips" role="group" aria-label="Typy luk">
+    <div class="chips" role="group" [attr.aria-label]="t('gaps.typesAria')">
       @for (g of order; track g) {
         @if (store.gapTotals()[g] > 0) {
           <button class="m chip" type="button" [class.on]="selected().has(g)" [attr.aria-pressed]="selected().has(g)" (click)="toggle(g)">
-            {{ labels[g] }} · {{ store.gapTotals()[g] }}
+            {{ label(g) }} · {{ store.gapTotals()[g] }}
           </button>
         }
       }
@@ -29,52 +29,52 @@
       <div class="card">
         <div class="m row">
           <span><span class="ini">{{ i.initials }}</span> {{ i.repoName }}</span>
-          <span class="gap">{{ labels[i.type] }}</span>
+          <span class="gap">{{ label(i.type) }}</span>
         </div>
         <pre class="m cmd">{{ i.cmd }}</pre>
         <div class="btns">
           @if (canLaunch()) {
-            <button class="m btn-solid run" type="button" (click)="askRun(i)">{{ launched() === i.key ? 'OTWARTO ✓' : 'URUCHOM' }}</button>
+            <button class="m btn-solid run" type="button" (click)="askRun(i)">{{ launched() === i.key ? t('gaps.opened') : t('gaps.run') }}</button>
           }
-          <button class="m btn-ghost cp" type="button" (click)="copy(i.key, i.cmd)">{{ copied() === i.key ? 'SKOPIOWANO ✓' : 'KOPIUJ' }}</button>
+          <button class="m btn-ghost cp" type="button" (click)="copy(i.key, i.cmd)">{{ copied() === i.key ? t('gaps.copied') : t('gaps.copy') }}</button>
         </div>
       </div>
     } @empty {
       <div class="m none">
         @if (store.gapsError(); as e) { {{ e }} }
-        @else if (store.mode() === 'mock') { Generator wymaga działającego serwera (teraz dane przykładowe). }
-        @else { Zaznacz co najmniej jeden typ luki. }
+        @else if (store.mode() === 'mock') { {{ t('gaps.needServer') }} }
+        @else { {{ t('gaps.pickType') }} }
       </div>
     }
     @if (items().length > shown().length) {
-      <div class="m more">Pokazano {{ shown().length }} z {{ items().length }} poleceń. „KOPIUJ WSZYSTKIE” zawiera komplet.</div>
+      <div class="m more">{{ t('gaps.more', { shown: shown().length, total: items().length }) }}</div>
     }
   </div>
 
   <div class="foot">
     <div class="m note">
-      {{ toolName() }}: KOPIUJ tylko kopiuje polecenie. @if (canLaunch()) { URUCHOM otwiera {{ terminalName() }} w katalogu repo i startuje tam sesję interaktywną, więc zmiany zatwierdzasz sam. } Sprawdź efekt w repo (git diff).
+      {{ t('gaps.noteCopy', { tool: toolName() }) }} @if (canLaunch()) { {{ t('gaps.noteRun', { terminal: terminalName() }) }} } {{ t('gaps.noteCheck') }}
     </div>
     <button class="m btn-solid all" type="button" [disabled]="!items().length" (click)="copyAll()">
-      {{ copied() === 'all' ? 'SKOPIOWANO ✓' : 'KOPIUJ WSZYSTKIE · ' + items().length }}
+      {{ copied() === 'all' ? t('gaps.copied') : t('gaps.copyAll', { n: items().length }) }}
     </button>
   </div>
 
   @if (pending(); as p) {
     <div class="confirm-back">
-      <div class="confirm" role="alertdialog" aria-modal="true" aria-label="Potwierdź uruchomienie">
-        <div class="m eyebrow">URUCHOMIĆ W {{ terminalName().toUpperCase() }}?</div>
-        <div class="cttl">{{ toolName() }} w {{ p.item.repoName }}</div>
-        <div class="m cgap">{{ labels[p.item.type] }}</div>
+      <div class="confirm" role="alertdialog" aria-modal="true" [attr.aria-label]="t('gaps.confirmAria')">
+        <div class="m eyebrow">{{ t('gaps.confirmEyebrow', { terminal: terminalName().toUpperCase() }) }}</div>
+        <div class="cttl">{{ t('gaps.confirmTitle', { tool: toolName(), repo: p.item.repoName }) }}</div>
+        <div class="m cgap">{{ label(p.item.type) }}</div>
         <pre class="m cmd">{{ p.command }}</pre>
-        <div class="m cnote">Otworzy się nowe okno {{ terminalName() }} w katalogu repo. Sesja jest interaktywna: {{ toolName() }} zapyta o zgodę przed zmianami. Aplikacja niczego nie zapisuje sama.</div>
+        <div class="m cnote">{{ t('gaps.confirmNote', { terminal: terminalName(), tool: toolName() }) }}</div>
         @if (!p.toolFound) {
-          <div class="m cwarn">Nie znaleziono „{{ tool() }}” w PATH serwera. Jeśli jest zainstalowany, terminal go znajdzie; w przeciwnym razie zobaczysz błąd w oknie terminala.</div>
+          <div class="m cwarn">{{ t('gaps.notInPath', { tool: tool() }) }}</div>
         }
         @if (runError(); as e) { <div class="m cerr" role="alert">{{ e }}</div> }
         <div class="cbtns">
-          <button class="m btn-ghost" type="button" [disabled]="running()" (click)="cancelRun()">ANULUJ</button>
-          <button class="m btn-solid go" type="button" [disabled]="running()" (click)="confirmRun()">{{ running() ? 'OTWIERAM…' : 'URUCHOM' }}</button>
+          <button class="m btn-ghost" type="button" [disabled]="running()" (click)="cancelRun()">{{ t('gaps.cancel') }}</button>
+          <button class="m btn-solid go" type="button" [disabled]="running()" (click)="confirmRun()">{{ running() ? t('gaps.opening') : t('gaps.run') }}</button>
         </div>
       </div>
     </div>

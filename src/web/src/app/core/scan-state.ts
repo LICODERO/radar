@@ -21,7 +21,6 @@ export interface ScanBlip {
 export interface ScanUiState {
   status: 'running' | 'done' | 'error' | 'cancelled';
   phase: string;
-  label: string;
   /** null while the total is unknown (directory walk) */
   percent: number | null;
   found: number;
@@ -38,7 +37,7 @@ export interface ScanUiState {
 export const LOG_LINES = 9;
 
 export const initialScan = (): ScanUiState => ({
-  status: 'running', phase: 'init', label: 'INICJALIZACJA', percent: 0, found: 0, total: null, current: '',
+  status: 'running', phase: 'init', percent: 0, found: 0, total: null, current: '',
   log: [], blips: [], counters: { repos: 0, agents: 0, skills: 0, gaps: 0 }, workflows: 0, durationMs: null, message: null
 });
 
@@ -49,7 +48,7 @@ export function applyScanEvent(s: ScanUiState, name: string, data: any): ScanUiS
       return { ...initialScan() };
     case 'phase':
       return {
-        ...s, phase: data.phase, label: data.label, percent: data.percent ?? null,
+        ...s, phase: data.phase, percent: data.percent ?? null,
         workflows: data.workflows ?? s.workflows
       };
     case 'repo-found':
@@ -65,11 +64,11 @@ export function applyScanEvent(s: ScanUiState, name: string, data: any): ScanUiS
         blips: [...s.blips, { index: data.index - 1, coverage: data.coverage }]
       };
     case 'completed':
-      return { ...s, status: 'done', phase: 'done', label: 'ZAKOŃCZONO', percent: 100, durationMs: data.durationMs, workflows: data.summary?.workflows ?? s.workflows };
+      return { ...s, status: 'done', phase: 'done', percent: 100, durationMs: data.durationMs, workflows: data.summary?.workflows ?? s.workflows };
     case 'cancelled':
       return { ...s, status: 'cancelled' };
     case 'error':
-      return { ...s, status: 'error', message: data.message ?? 'Nieznany błąd skanu.' };
+      return { ...s, status: 'error', message: data.message ?? null };
     default:
       return s;
   }

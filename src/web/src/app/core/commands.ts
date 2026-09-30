@@ -6,14 +6,6 @@ export type Shell = 'posix' | 'powershell';
 
 export const GAP_ORDER: GapType[] = ['no-claude-md', 'no-agents', 'no-skills', 'no-outputs', 'workflow-not-linked'];
 
-export const GAP_LABELS: Record<GapType, string> = {
-  'no-claude-md': 'BRAK CLAUDE.md',
-  'no-agents': 'BRAK AGENTÓW',
-  'no-skills': 'BRAK SKILLI',
-  'no-outputs': 'BRAK OUTPUTS',
-  'workflow-not-linked': 'WORKFLOW BEZ ODSYŁACZA'
-};
-
 /** One command to fill one gap. Prompts and directories come from the server (single source of truth). */
 export interface GapItem {
   repoId: string;
@@ -41,9 +33,9 @@ export function filterItems(items: readonly GapItem[], types: ReadonlySet<GapTyp
   return items.filter((i) => types.has(i.type));
 }
 
-/** All commands as one script (each preceded by a comment), for the "copy all" button. */
-export function toScript(shell: Shell, tool: Tool, items: readonly GapItem[]): string {
-  return items.map((i) => `# ${i.repoName} · ${GAP_LABELS[i.type]}\n${buildCommand(shell, tool, i.dir, i.prompt)}`).join('\n\n');
+/** All commands as one script (each preceded by a comment), for the "copy all" button. `comment` renders the heading of one item. */
+export function toScript(shell: Shell, tool: Tool, items: readonly GapItem[], comment: (i: GapItem) => string): string {
+  return items.map((i) => `${comment(i)}\n${buildCommand(shell, tool, i.dir, i.prompt)}`).join('\n\n');
 }
 
 export function countByType(items: readonly GapItem[]): Record<GapType, number> {

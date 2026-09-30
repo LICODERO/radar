@@ -7,6 +7,7 @@ import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, countByType } from './commands';
 import { ScanPlayback } from './scan-playback';
 import { ScanUiState, applyScanEvent, initialScan } from './scan-state';
+import { I18n } from '../i18n/i18n';
 import { buildScene } from '../orbit/orbit-scene';
 
 export interface FileView {
@@ -31,6 +32,7 @@ export const WF_PAGE_SIZE = 3;
 export class RadarStore {
   private readonly http = inject(HttpClient);
   private readonly api = inject(RadarApi);
+  private readonly i18n = inject(I18n);
   private events: EventSource | null = null;
   private scanId: string | null = null;
   private fileSeq = 0;
@@ -125,7 +127,7 @@ export class RadarStore {
   readonly scene = computed(() =>
     buildScene({
       repos: this.repos(), workflows: this.workflows(), selId: this.selected()?.id ?? null,
-      pick: this.pick(), hover: this.hover(), matches: this.matches(), tick: this.tick()
+      pick: this.pick(), hover: this.hover(), matches: this.matches(), tick: this.tick(), lang: this.i18n.lang()
     })
   );
 
@@ -145,7 +147,7 @@ export class RadarStore {
       const running = await this.api.currentScan();
       if (running) await this.attach(running);
     } catch (e) {
-      this.error.set(this.messageOf(e, 'Nie można połączyć się z serwerem R.A.D.A.R. Uruchom go poleceniem ./run.sh.'));
+      this.error.set(this.messageOf(e, this.i18n.t('store.connect')));
     } finally {
       this.loading.set(false);
     }
@@ -170,14 +172,14 @@ export class RadarStore {
     };
     this.file.set(base);
     if (this.mode() === 'mock') {
-      this.file.set({ ...base, status: 'error', error: 'Podgląd plików wymaga działającego serwera (teraz dane przykładowe).' });
+      this.file.set({ ...base, status: 'error', error: this.i18n.t('store.fileNeedsServer') });
       return;
     }
     try {
       const f = await this.api.readFile(repoId, path);
       if (seq === this.fileSeq) this.file.set({ ...base, status: 'ready', text: f.content, truncated: f.truncated, bytes: f.bytes });
     } catch (e) {
-      if (seq === this.fileSeq) this.file.set({ ...base, status: 'error', error: this.messageOf(e, 'Nie udało się wczytać pliku.') });
+      if (seq === this.fileSeq) this.file.set({ ...base, status: 'error', error: this.messageOf(e, this.i18n.t('store.fileFailed')) });
     }
   }
 
@@ -233,7 +235,7 @@ export class RadarStore {
       this.gapsError.set(null);
     } catch (e) {
       this.gapItems.set([]);
-      this.gapsError.set(this.messageOf(e, 'Nie udało się pobrać poleceń.'));
+      this.gapsError.set(this.messageOf(e, this.i18n.t('gaps.fetchFailed')));
     }
   }
 
@@ -261,7 +263,7 @@ export class RadarStore {
       return true;
     } catch (e) {
       if (e instanceof ApiError && e.status === 501) return false;
-      this.notice.set(this.messageOf(e, 'Nie udało się otworzyć okna wyboru katalogu.'));
+      this.notice.set(this.messageOf(e, this.i18n.t('store.pickFailed')));
       return false;
     }
   }
@@ -272,7 +274,7 @@ export class RadarStore {
     try {
       this.settings.set(await this.api.saveScanPath(path));
     } catch (e) {
-      this.notice.set(this.messageOf(e, 'Nie udało się zapisać ścieżki.'));
+      this.notice.set(this.messageOf(e, this.i18n.t('store.saveFailed')));
       return false;
     }
     await this.startScan();
@@ -286,7 +288,7 @@ export class RadarStore {
     try {
       await this.attach(await this.api.startScan());
     } catch (e) {
-      this.notice.set(this.messageOf(e, 'Nie udało się uruchomić skanu.'));
+      this.notice.set(this.messageOf(e, this.i18n.t('store.scanFailed')));
     }
   }
 
@@ -305,7 +307,7 @@ export class RadarStore {
     es.onerror = () => {
       if (this.scan()?.status === 'running' && es.readyState === EventSource.CLOSED) {
         this.playback.clear();
-        this.scan.update((s) => (s ? applyScanEvent(s, 'error', { message: 'Utracono połączenie z serwerem.' }) : s));
+        this.scan.update((s) => (s ? applyScanEvent(s, 'error', { message: this.i18n.t('scan.connectionLost') }) : s));
         this.closeStream();
       }
     };
@@ -323,7 +325,7 @@ export class RadarStore {
         this.settings.set(await this.api.settings());
         await this.loadGaps();
       } catch (e) {
-        this.notice.set(this.messageOf(e, 'Skan się zakończył, ale nie udało się wczytać wyniku.'));
+        this.notice.set(this.messageOf(e, this.i18n.t('store.loadResultFailed')));
       }
     } else if (name === 'cancelled') {
       this.closeStream();

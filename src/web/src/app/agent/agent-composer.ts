@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, computed, effect, injec
 import { parseAgent, setAgentName, validateAgent } from '../core/agent-file';
 import { ApiError, RadarApi } from '../core/radar-api';
 import { RadarStore } from '../core/radar-store';
+import { I18n } from '../i18n/i18n';
 import { MdView } from '../shared/md-view';
 
 type Phase = 'input' | 'generating' | 'draft' | 'saving' | 'saved';
@@ -17,6 +18,7 @@ const MAX_DESCRIPTION = 2000;
 })
 export class AgentComposer {
   protected readonly store = inject(RadarStore);
+  protected readonly t = inject(I18n).t;
   private readonly api = inject(RadarApi);
   private abort: AbortController | null = null;
 
@@ -33,8 +35,8 @@ export class AgentComposer {
 
   protected readonly repo = computed(() => this.store.repos().find((r) => r.id === this.store.composerRepoId()) ?? null);
   protected readonly name = computed(() => parseAgent(this.content()).name);
-  protected readonly targetPath = computed(() => `.claude/agents/${this.name() || '<nazwa>'}.md`);
-  protected readonly clientErrors = computed(() => validateAgent(this.content()));
+  protected readonly targetPath = computed(() => `.claude/agents/${this.name() || this.t('agent.namePlaceholder')}.md`);
+  protected readonly clientErrors = computed(() => validateAgent(this.content(), this.t));
   protected readonly problems = computed(() => [...this.clientErrors(), ...this.serverErrors().filter((e) => !this.clientErrors().includes(e))]);
   protected readonly claudeMissing = computed(() => this.store.tools()?.tools['claude'] === false);
   protected readonly canGenerate = computed(() => this.description().trim().length > 0 && this.description().length <= MAX_DESCRIPTION);
@@ -72,7 +74,7 @@ export class AgentComposer {
     } catch (e) {
       this.phase.set(this.content() ? 'draft' : 'input');
       if (!(e instanceof DOMException && e.name === 'AbortError')) {
-        this.error.set(e instanceof ApiError ? e.message : 'Nie udało się wygenerować agenta.');
+        this.error.set(e instanceof ApiError ? e.message : this.t('agent.generateFailed'));
       }
     } finally {
       this.abort = null;
@@ -96,7 +98,7 @@ export class AgentComposer {
     } catch (e) {
       this.rescanning.set(false);
       if (this.phase() === 'saving') this.phase.set('draft');
-      this.error.set(e instanceof ApiError ? e.message : 'Nie udało się zapisać pliku.');
+      this.error.set(e instanceof ApiError ? e.message : this.t('agent.saveFailed'));
     }
   }
 

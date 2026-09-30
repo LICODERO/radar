@@ -20,7 +20,7 @@ const wfs: WorkflowInfo[] = [
   { id: 'W1', name: 'commit', description: 'd', when: 'w', agents: [], repos: [{ repoId: 'alpha', path: 'p', linked: true }], issues: [] },
   { id: 'W2', name: 'release', description: 'd', when: 'w', agents: ['a1'], repos: [{ repoId: 'beta', path: 'p', linked: false }], issues: [] }
 ];
-const base = { repos, workflows: wfs, selId: 'alpha', pick: null, hover: null, matches: null, tick: 0 };
+const base = { repos, workflows: wfs, selId: 'alpha', pick: null, hover: null, matches: null, tick: 0, lang: 'pl' as const };
 
 describe('buildScene', () => {
   it('creates one node per repo, agent, skill and workflow', () => {

@@ -9,9 +9,9 @@ describe('pager', () => {
   });
 
   it('labels the first and the last page', () => {
-    expect(buildPager(24, 10, 0).label).toBe('1–10 z 24');
-    expect(buildPager(24, 10, 2).label).toBe('21–24 z 24');
-    expect(buildPager(9, 3, 1).label).toBe('4–6 z 9');
+    expect(buildPager(24, 10, 0)).toMatchObject({ from: 1, to: 10, total: 24 });
+    expect(buildPager(24, 10, 2)).toMatchObject({ from: 21, to: 24, total: 24 });
+    expect(buildPager(9, 3, 1)).toMatchObject({ from: 4, to: 6, total: 9 });
   });
 
   it('disables prev/next at the edges', () => {
@@ -25,6 +25,6 @@ describe('pager', () => {
   it('clamps out-of-range pages and handles empty lists', () => {
     expect(clampPage(99, 24, 10)).toBe(2);
     expect(clampPage(-3, 24, 10)).toBe(0);
-    expect(buildPager(0, 10, 0).label).toBe('0–0 z 0');
+    expect(buildPager(0, 10, 0)).toMatchObject({ from: 0, to: 0, total: 0 });
   });
 });

@@ -1,64 +1,64 @@
 <div class="kpis">
-  <div class="kpi"><div class="m kl">REPO</div><div class="kv" style="color:#c6ff3d">{{ sum()?.repos ?? 0 }}</div></div>
-  <div class="kpi"><div class="m kl">AGENCI</div><div class="kv" style="color:#c6ff3d">{{ sum()?.agents ?? 0 }}</div></div>
-  <div class="kpi"><div class="m kl">SKILLE</div><div class="kv" style="color:#a99bff">{{ sum()?.skills ?? 0 }}</div></div>
-  <div class="kpi bad"><div class="m kl" style="color:#ff9cc9">LUKI</div><div class="kv" style="color:#ff4fa3">{{ sum()?.gaps ?? 0 }}</div></div>
+  <div class="kpi"><div class="m kl">{{ t('right.kpi.repos') }}</div><div class="kv" style="color:#c6ff3d">{{ sum()?.repos ?? 0 }}</div></div>
+  <div class="kpi"><div class="m kl">{{ t('right.kpi.agents') }}</div><div class="kv" style="color:#c6ff3d">{{ sum()?.agents ?? 0 }}</div></div>
+  <div class="kpi"><div class="m kl">{{ t('right.kpi.skills') }}</div><div class="kv" style="color:#a99bff">{{ sum()?.skills ?? 0 }}</div></div>
+  <div class="kpi bad"><div class="m kl" style="color:#ff9cc9">{{ t('right.kpi.gaps') }}</div><div class="kv" style="color:#ff4fa3">{{ sum()?.gaps ?? 0 }}</div></div>
 </div>
 
 @if (sel(); as s) {
   <div class="card">
-    <div class="ch"><div class="m cl">WYBRANE · {{ s.initials }}</div><div class="m cm">{{ s.stack }} · {{ s.coverage.score }}%</div></div>
+    <div class="ch"><div class="m cl">{{ t('right.selected', { initials: s.initials }) }}</div><div class="m cm">{{ s.stack }} · {{ s.coverage.score }}%</div></div>
     <div class="cname">{{ s.name }}</div>
     <div class="m flags" [style.color]="s.claudeMd.exists ? '#a99bff' : '#ff4fa3'">{{ flags() }}</div>
     <div class="m outs">{{ vaultText() }}</div>
     @if (s.claudeMd.exists) {
-      <button class="m btn-ghost open" type="button" (click)="store.openFile(s.id, s.claudeMd.path, 'CLAUDE.md', '#c6ff3d')">OTWÓRZ CLAUDE.md</button>
+      <button class="m btn-ghost open" type="button" (click)="store.openFile(s.id, s.claudeMd.path, 'CLAUDE.md', '#c6ff3d')">{{ t('right.openClaude') }}</button>
     }
 
-    <div class="m sec">AGENCI · {{ s.agents.length }}</div>
+    <div class="m sec">{{ t('right.agents', { n: s.agents.length }) }}</div>
     <div class="chips">
       @for (a of s.agents; track a.name) {
         <button class="m chipx" type="button" style="color:#c6ff3d;border:1px solid #c6ff3d" (click)="store.pickItem({ kind: 'a', repoId: s.id, name: a.name })">{{ a.name }}</button>
       } @empty {
-        <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">brak agentów</span>
+        <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">{{ t('right.noAgents') }}</span>
       }
     </div>
-    <div class="m sec">SKILLE · {{ s.skills.length }}</div>
+    <div class="m sec">{{ t('right.skills', { n: s.skills.length }) }}</div>
     <div class="chips">
       @for (k of s.skills; track k.name) {
         <button class="m chipx" type="button" style="color:#a99bff;border:1px solid #a99bff" (click)="store.pickItem({ kind: 's', repoId: s.id, name: k.name })">{{ k.name }}</button>
       } @empty {
-        <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">brak skilli</span>
+        <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">{{ t('right.noSkills') }}</span>
       }
     </div>
-    <div class="m sec">WORKFLOWS · {{ store.selectedWorkflows().length }}</div>
+    <div class="m sec">{{ t('right.workflows', { n: store.selectedWorkflows().length }) }}</div>
     <div class="chips">
       @for (w of store.selectedWorkflows(); track w.id) {
         <button class="m chipx" type="button" style="color:#e6e9f2;border:1px solid #e6e9f2" (click)="store.pickItem({ kind: 'w', name: w.id })">{{ w.name }}</button>
       } @empty {
-        <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">brak workflowów</span>
+        <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">{{ t('right.noWorkflows') }}</span>
       }
     </div>
   </div>
 } @else {
   <div class="card empty">
-    <div class="m cl">WYBRANE · BRAK</div>
-    <div class="m etitle">Nie wybrano repozytorium</div>
-    <div class="m etext">Wskaż repo na liście, na orbicie lub na liście luk, aby zobaczyć jego agentów, skille i workflowy.</div>
+    <div class="m cl">{{ t('right.none') }}</div>
+    <div class="m etitle">{{ t('right.noneTitle') }}</div>
+    <div class="m etext">{{ t('right.noneText') }}</div>
   </div>
 }
 
 <div class="head sec2">
-  <div class="m h">AKCJE · TWORZENIE</div>
-  <div class="m hint">W REPO: <span class="sel">{{ selName() }}</span></div>
+  <div class="m h">{{ t('right.actions') }}</div>
+  <div class="m hint">{{ t('right.inRepo') }} <span class="sel">{{ selName() }}</span></div>
 </div>
 <div class="acts">
-  <button class="m act tip tip-l" type="button" [disabled]="!canCompose()" [attr.data-tip]="agentTip()" (click)="store.openComposer()" style="color:#c6ff3d;border-color:#c6ff3d66;background:#c6ff3d0d"><span class="plus">+</span><span class="lbl">AGENT</span></button>
-  <button class="m act tip" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji" style="color:#a99bff;border-color:#a99bff66;background:#a99bff0d"><span class="plus">+</span><span class="lbl">SKILL</span></button>
-  <button class="m act tip tip-r" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji" style="color:#e6e9f2;border-color:#e6e9f266;background:#e6e9f20d"><span class="plus">+</span><span class="lbl">WORKFLOW</span></button>
+  <button class="m act tip tip-l" type="button" [disabled]="!canCompose()" [attr.data-tip]="agentTip()" (click)="store.openComposer()" style="color:#c6ff3d;border-color:#c6ff3d66;background:#c6ff3d0d"><span class="plus">+</span><span class="lbl">{{ t('right.addAgent') }}</span></button>
+  <button class="m act tip" type="button" disabled [attr.data-tip]="t('right.nextVersion')" style="color:#a99bff;border-color:#a99bff66;background:#a99bff0d"><span class="plus">+</span><span class="lbl">{{ t('right.addSkill') }}</span></button>
+  <button class="m act tip tip-r" type="button" disabled [attr.data-tip]="t('right.nextVersion')" style="color:#e6e9f2;border-color:#e6e9f266;background:#e6e9f20d"><span class="plus">+</span><span class="lbl">{{ t('right.addWorkflow') }}</span></button>
 </div>
 <div class="acts vault">
-  <button class="m btn-ghost tip tip-l" type="button" disabled data-tip="Prezentacja pamięci w kolejnej wersji">MEMORY</button>
-  <button class="m btn-ghost tip" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji">+ NOTATKA</button>
-  <button class="m btn-ghost tip tip-r small" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji">{{ vault() ? 'OUTPUTS' : '+ OUTPUTS' }}</button>
+  <button class="m btn-ghost tip tip-l" type="button" disabled [attr.data-tip]="t('right.memoryTip')">{{ t('right.memory') }}</button>
+  <button class="m btn-ghost tip" type="button" disabled [attr.data-tip]="t('right.nextVersion')">{{ t('right.addNote') }}</button>
+  <button class="m btn-ghost tip tip-r small" type="button" disabled [attr.data-tip]="t('right.nextVersion')">{{ vault() ? t('right.outputs') : t('right.addOutputs') }}</button>
 </div>

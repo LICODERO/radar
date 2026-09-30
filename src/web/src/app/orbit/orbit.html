@@ -1,8 +1,8 @@
 <div class="legend-rings m">
-  <div><span style="color:#ffffff">R1</span> · REPO</div>
-  <div><span style="color:#c6ff3d">R2</span> · AGENCI</div>
-  <div><span style="color:#a99bff">R3</span> · SKILLE</div>
-  <div><span style="color:#e6e9f2">R4</span> · WORKFLOWS</div>
+  <div><span style="color:#ffffff">R1</span> · {{ t('orbit.r1') }}</div>
+  <div><span style="color:#c6ff3d">R2</span> · {{ t('orbit.r2') }}</div>
+  <div><span style="color:#a99bff">R3</span> · {{ t('orbit.r3') }}</div>
+  <div><span style="color:#e6e9f2">R4</span> · {{ t('orbit.r4') }}</div>
 </div>
 
 <div class="layer spin">
@@ -20,7 +20,7 @@
   <circle cx="360" cy="360" r="66" fill="#0a0d14" stroke="#c6ff3d" stroke-opacity=".18" stroke-width="7" />
   <circle cx="360" cy="360" r="66" fill="none" stroke="#c6ff3d" stroke-width="7" [attr.stroke-dasharray]="arc()" transform="rotate(-90 360 360)" />
   <text class="avg" x="360" y="366" text-anchor="middle" font-weight="600" fill="#ffffff" font-family="Oxanium, sans-serif">{{ hasData() ? avg() + "%" : "—" }}</text>
-  <text class="avg-l" x="360" y="384" text-anchor="middle" letter-spacing="1.6" fill="#8a90a8" font-family="IBM Plex Mono, monospace">POKRYCIE AI</text>
+  <text class="avg-l" x="360" y="384" text-anchor="middle" letter-spacing="1.6" fill="#8a90a8" font-family="IBM Plex Mono, monospace">{{ t('orbit.coverage') }}</text>
 </svg>
 
 @for (l of scene().spokes; track $index) {
@@ -89,7 +89,7 @@
   <div class="pop" [style.left.px]="p.left" [style.top.px]="p.top" [style.border-color]="p.color" [style.animation]="scene().popAnim + ' .35s ease-out both'">
     <div class="pop-head">
       <div class="m kind" [style.color]="p.color">{{ p.kind }}</div>
-      <button class="m btn-ghost close" type="button" aria-label="Zamknij" (click)="store.closePop()">✕</button>
+      <button class="m btn-ghost close" type="button" [attr.aria-label]="t('orbit.close')" (click)="store.closePop()">✕</button>
     </div>
     <div class="pop-title">{{ p.title }}</div>
     <div class="pop-desc">{{ p.desc }}</div>
@@ -100,6 +100,6 @@
       </div>
     }
     <button class="m btn-ghost open" type="button" [disabled]="!p.file" [style.border-color]="p.color" [style.color]="p.color"
-            (click)="openFile(p.file)">OTWÓRZ PLIK</button>
+            (click)="openFile(p.file)">{{ t('orbit.openFile') }}</button>
   </div>
 }

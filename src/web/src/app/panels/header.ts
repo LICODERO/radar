@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { RadarStore } from '../core/radar-store';
+import { I18n, LANGS } from '../i18n/i18n';
 
 const z = (n: number) => String(n).padStart(2, '0');
 
@@ -18,6 +19,9 @@ export function formatScanTime(iso: string | undefined): string {
 })
 export class Header {
   protected readonly store = inject(RadarStore);
+  protected readonly i18n = inject(I18n);
+  protected readonly t = this.i18n.t;
+  protected readonly langs = LANGS;
   private readonly now = signal(new Date());
 
   /** manual path entry (fallback when there is no native folder dialog) */
@@ -31,15 +35,15 @@ export class Header {
   protected readonly isMock = computed(() => this.store.mode() === 'mock');
   protected readonly pathText = computed(() => {
     if (this.isMock()) return this.store.result()?.scanRoot ?? '—';
-    return this.store.settings()?.scanPathDisplay || 'Nie wybrano katalogu';
+    return this.store.settings()?.scanPathDisplay || this.t('header.noPath');
   });
   protected readonly lastScan = computed(() => formatScanTime(this.store.result()?.scannedAt));
   protected readonly hasResult = computed(() => !!this.store.result());
   protected readonly scanTip = computed(() => {
-    if (this.isMock()) return 'Tryb danych przykładowych';
-    if (this.store.scanning()) return 'Skan trwa';
-    if (!this.store.settings()?.exists) return 'Najpierw wybierz katalog';
-    return `Uruchom skan ${this.pathText()}`;
+    if (this.isMock()) return this.t('header.mockTip');
+    if (this.store.scanning()) return this.t('header.scanRunning');
+    if (!this.store.settings()?.exists) return this.t('header.pickFirst');
+    return this.t('header.scanTip', { path: this.pathText() });
   });
 
   constructor() {

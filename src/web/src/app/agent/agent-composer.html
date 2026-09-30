@@ -1,47 +1,45 @@
 <div class="head">
   <div class="m badge">+</div>
   <div class="ttl">
-    <div class="m kind">NOWY AGENT · {{ repo()?.name }}</div>
+    <div class="m kind">{{ t('agent.new', { repo: repo()?.name ?? '' }) }}</div>
     <div class="m path">{{ targetPath() }}</div>
   </div>
-  <button class="m btn-ghost x" type="button" aria-label="Zamknij" (click)="close()">✕</button>
+  <button class="m btn-ghost x" type="button" [attr.aria-label]="t('agent.close')" (click)="close()">✕</button>
 </div>
 
 <div class="body">
   @if (phase() === 'saved') {
     <div class="ok">
-      <div class="okt">✓ ZAPISANO</div>
+      <div class="okt">{{ t('agent.saved') }}</div>
       <div class="m okp">{{ savedPath() }}</div>
-      <div class="m okn">Plik jest nowy i nieśledzony w git (nie dodałem go do commita). {{ rescanning() ? 'Odświeżam wyniki skanu…' : 'Wyniki skanu odświeżone.' }}</div>
+      <div class="m okn">{{ t('agent.savedNote') }} {{ rescanning() ? t('agent.rescanning') : t('agent.rescanned') }}</div>
       <div class="btns">
-        <button class="m btn-solid go" type="button" [disabled]="rescanning()" (click)="openSaved()">OTWÓRZ PLIK</button>
-        <button class="m btn-ghost" type="button" (click)="another()">DODAJ KOLEJNEGO</button>
-        <button class="m btn-ghost" type="button" (click)="close()">ZAMKNIJ</button>
+        <button class="m btn-solid go" type="button" [disabled]="rescanning()" (click)="openSaved()">{{ t('agent.openFile') }}</button>
+        <button class="m btn-ghost" type="button" (click)="another()">{{ t('agent.another') }}</button>
+        <button class="m btn-ghost" type="button" (click)="close()">{{ t('agent.closeBtn') }}</button>
       </div>
     </div>
   } @else {
-    <label class="lbl" for="desc">OPIS AGENTA WŁASNYMI SŁOWAMI</label>
+    <label class="lbl" for="desc">{{ t('agent.descLabel') }}</label>
     <textarea #desc id="desc" class="m desc" rows="5" [value]="description()" [disabled]="busy()" [maxLength]="max"
-              placeholder="np. Agent, który sprawdza migracje EF Core pod kątem bezpieczeństwa i nazewnictwa oraz pilnuje, żeby każda miała skrypt cofający."
+              [placeholder]="t('agent.descPlaceholder')"
               (input)="onDescription($event)"></textarea>
     <div class="m count">{{ description().length }} / {{ max }}</div>
 
     <div class="m privacy">
-      Po kliknięciu GENERUJ do Claude (przez Twoje CLI <b>claude</b>, na Twój koszt) zostaną wysłane: opis, nazwa stosu ({{ repo()?.stack }})
-      i nazwy istniejących agentów ({{ existing().length ? existing().join(', ') : 'brak' }}). Zawartość plików repozytorium nie jest wysyłana,
-      a Claude nie dostaje żadnych narzędzi. Nic nie jest zapisywane, dopóki nie klikniesz ZAPISZ.
+      {{ t('agent.privacy', { claude: 'claude', stack: repo()?.stack ?? '', agents: existing().length ? existing().join(', ') : t('agent.none') }) }}
     </div>
     @if (claudeMissing()) {
-      <div class="m warn">Nie znaleziono „claude” w PATH serwera, więc generowanie się nie powiedzie. Zainstaluj Claude Code i zaloguj się.</div>
+      <div class="m warn">{{ t('agent.claudeMissing') }}</div>
     }
 
     <div class="btns">
       @if (phase() === 'generating') {
-        <button class="m btn-ghost" type="button" (click)="stop()">STOP</button>
-        <span class="m wait">Claude pisze agenta… (zwykle 10–30 s)</span>
+        <button class="m btn-ghost" type="button" (click)="stop()">{{ t('agent.stop') }}</button>
+        <span class="m wait">{{ t('agent.wait') }}</span>
       } @else {
         <button class="m btn-solid go" type="button" [disabled]="!canGenerate() || busy()" (click)="generate()">
-          {{ content() ? 'GENERUJ PONOWNIE' : 'GENERUJ' }}
+          {{ content() ? t('agent.regenerate') : t('agent.generate') }}
         </button>
       }
     </div>
@@ -50,22 +48,22 @@
 
     @if (content()) {
       <div class="sec">
-        <div class="m sh">PROPOZYCJA</div>
-        <div class="m cost">@if (cost() !== null) { KOSZT ≈ {{ cost()!.toFixed(3) }} USD }</div>
+        <div class="m sh">{{ t('agent.proposal') }}</div>
+        <div class="m cost">@if (cost() !== null) { {{ t('agent.cost', { usd: cost()!.toFixed(3) }) }} }</div>
       </div>
 
       <div class="namerow">
-        <label class="m nl" for="aname">NAZWA</label>
+        <label class="m nl" for="aname">{{ t('agent.name') }}</label>
         <input id="aname" class="m nin" type="text" [value]="name()" [disabled]="busy()" (input)="onName($event)" spellcheck="false" />
         <span class="m suf">.md</span>
       </div>
 
       <div class="tabs">
-        <button class="m tab" type="button" [class.on]="mode() === 'preview'" (click)="mode.set('preview')">PODGLĄD</button>
-        <button class="m tab" type="button" [class.on]="mode() === 'edit'" (click)="mode.set('edit')">EDYTOR</button>
+        <button class="m tab" type="button" [class.on]="mode() === 'preview'" (click)="mode.set('preview')">{{ t('agent.preview') }}</button>
+        <button class="m tab" type="button" [class.on]="mode() === 'edit'" (click)="mode.set('edit')">{{ t('agent.editor') }}</button>
       </div>
       @if (mode() === 'edit') {
-        <textarea class="m editor" spellcheck="false" [value]="content()" [disabled]="busy()" (input)="onContent($event)" aria-label="Treść pliku agenta"></textarea>
+        <textarea class="m editor" spellcheck="false" [value]="content()" [disabled]="busy()" (input)="onContent($event)" [attr.aria-label]="t('agent.editorAria')"></textarea>
       } @else {
         <div class="preview"><app-md-view [text]="content()" /></div>
       }
@@ -77,14 +75,14 @@
       }
 
       <div class="btns save">
-        <button class="m btn-solid go" type="button" [disabled]="!canSave()" (click)="save()">{{ phase() === 'saving' ? 'ZAPISUJĘ…' : 'ZAPISZ' }}</button>
-        <button class="m btn-ghost" type="button" [disabled]="busy()" (click)="close()">ANULUJ</button>
+        <button class="m btn-solid go" type="button" [disabled]="!canSave()" (click)="save()">{{ phase() === 'saving' ? t('agent.saving') : t('agent.save') }}</button>
+        <button class="m btn-ghost" type="button" [disabled]="busy()" (click)="close()">{{ t('agent.cancel') }}</button>
       </div>
     }
   }
 </div>
 
 <div class="m foot">
-  <span>UTWORZY NOWY PLIK · NIE NADPISUJE ISTNIEJĄCYCH</span>
+  <span>{{ t('agent.foot') }}</span>
   <span>{{ repo()?.path }}</span>
 </div>

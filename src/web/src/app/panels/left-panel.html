@@ -1,10 +1,10 @@
 <div class="head">
-  <div class="m h">REPOZYTORIA · {{ total() }}</div>
-  <div class="m hint">A = AGENCI · S = SKILLE</div>
+  <div class="m h">{{ t('left.repos', { n: total() }) }}</div>
+  <div class="m hint">{{ t('left.reposHint') }}</div>
 </div>
 <label class="search">
-  <span class="sr">Szukaj repozytorium</span>
-  <input class="m" type="text" placeholder="Szukaj repo…  (nazwa, stos, agent)" [value]="store.query()" (input)="onQuery($event)" />
+  <span class="sr">{{ t('left.searchAria') }}</span>
+  <input class="m" type="text" [placeholder]="t('left.search')" [value]="store.query()" (input)="onQuery($event)" />
 </label>
 
 @for (r of store.pagedRepos(); track r.id) {
@@ -20,58 +20,58 @@
     <div class="m pct" [style.color]="color(r.coverage.score)">{{ r.coverage.score }}%</div>
   </button>
 } @empty {
-  <div class="m none">Brak repozytoriów pasujących do zapytania.</div>
+  <div class="m none">{{ t('left.noMatch') }}</div>
 }
 
 <div class="pager">
-  <div class="m plabel">{{ store.repoPager().label }}</div>
+  <div class="m plabel">{{ t('pager.of', { from: store.repoPager().from, to: store.repoPager().to, total: store.repoPager().total }) }}</div>
   <div class="pbtns">
-    <button class="m pg" type="button" aria-label="Poprzednia strona repozytoriów" [disabled]="store.repoPager().prevDisabled" (click)="store.goRepoPage(store.repoPager().page - 1)">‹</button>
+    <button class="m pg" type="button" [attr.aria-label]="t('left.prevRepos')" [disabled]="store.repoPager().prevDisabled" (click)="store.goRepoPage(store.repoPager().page - 1)">‹</button>
     @if (store.repoPager().pages.length <= 7) {
       @for (p of store.repoPager().pages; track p) {
-        <button class="m pg" type="button" [attr.aria-label]="'Strona ' + (p + 1)" [class.on]="p === store.repoPager().page" (click)="store.goRepoPage(p)">{{ p + 1 }}</button>
+        <button class="m pg" type="button" [attr.aria-label]="t('left.page', { n: p + 1 })" [class.on]="p === store.repoPager().page" (click)="store.goRepoPage(p)">{{ p + 1 }}</button>
       }
     } @else {
       <span class="m pos">{{ store.repoPager().page + 1 }} / {{ store.repoPager().pages.length }}</span>
     }
-    <button class="m pg" type="button" aria-label="Następna strona repozytoriów" [disabled]="store.repoPager().nextDisabled" (click)="store.goRepoPage(store.repoPager().page + 1)">›</button>
+    <button class="m pg" type="button" [attr.aria-label]="t('left.nextRepos')" [disabled]="store.repoPager().nextDisabled" (click)="store.goRepoPage(store.repoPager().page + 1)">›</button>
   </div>
 </div>
 
 <div class="head sec">
-  <div class="m h">WORKFLOWS · {{ wfTotal() }}</div>
-  <div class="m hint">PROCEDURY PRACY</div>
+  <div class="m h">{{ t('left.workflows', { n: wfTotal() }) }}</div>
+  <div class="m hint">{{ t('left.workflowsHint') }}</div>
 </div>
 @for (w of store.pagedWorkflows(); track w.id) {
   <button class="row wf-row" type="button" (click)="store.pickItem({ kind: 'w', name: w.id })"
           (mouseenter)="hoverWf(w.id)" (mouseleave)="leave()" (focus)="hoverWf(w.id)" (blur)="leave()">
     <div class="m wno">{{ w.id }}</div>
     <div>
-      <div class="m wname"><span>{{ w.name }}</span><span class="wn">{{ w.repos.length }} REPO</span></div>
+      <div class="m wname"><span>{{ w.name }}</span><span class="wn">{{ t('left.wfRepos', { n: w.repos.length }) }}</span></div>
       <div class="m chain">{{ chain(w.agents, w.description) }}</div>
     </div>
   </button>
 }
 <div class="pager">
-  <div class="m plabel">{{ store.wfPager().label }}</div>
+  <div class="m plabel">{{ t('pager.of', { from: store.wfPager().from, to: store.wfPager().to, total: store.wfPager().total }) }}</div>
   <div class="pbtns">
-    <button class="m pg" type="button" aria-label="Poprzednia strona workflowów" [disabled]="store.wfPager().prevDisabled" (click)="store.goWfPage(store.wfPager().page - 1)">‹</button>
+    <button class="m pg" type="button" [attr.aria-label]="t('left.prevWf')" [disabled]="store.wfPager().prevDisabled" (click)="store.goWfPage(store.wfPager().page - 1)">‹</button>
     @if (store.wfPager().pages.length <= 7) {
       @for (p of store.wfPager().pages; track p) {
-        <button class="m pg" type="button" [attr.aria-label]="'Strona ' + (p + 1)" [class.on]="p === store.wfPager().page" (click)="store.goWfPage(p)">{{ p + 1 }}</button>
+        <button class="m pg" type="button" [attr.aria-label]="t('left.page', { n: p + 1 })" [class.on]="p === store.wfPager().page" (click)="store.goWfPage(p)">{{ p + 1 }}</button>
       }
     } @else {
       <span class="m pos">{{ store.wfPager().page + 1 }} / {{ store.wfPager().pages.length }}</span>
     }
-    <button class="m pg" type="button" aria-label="Następna strona workflowów" [disabled]="store.wfPager().nextDisabled" (click)="store.goWfPage(store.wfPager().page + 1)">›</button>
+    <button class="m pg" type="button" [attr.aria-label]="t('left.nextWf')" [disabled]="store.wfPager().nextDisabled" (click)="store.goWfPage(store.wfPager().page + 1)">›</button>
   </div>
 </div>
 
-<div class="m gh">LUKI DO UZUPEŁNIENIA · {{ gaps().length }}</div>
+<div class="m gh">{{ t('left.gaps', { n: gaps().length }) }}</div>
 @for (g of firstGaps(); track g.id) {
   <button class="m grow row" type="button" (click)="store.toggleRepo(g.id)">
-    <span><span style="color:#ff4fa3">◌</span> {{ g.initials }} {{ g.name }}</span><span class="gt">brak CLAUDE.md</span>
+    <span><span style="color:#ff4fa3">◌</span> {{ g.initials }} {{ g.name }}</span><span class="gt">{{ t('left.gapNoClaude') }}</span>
   </button>
 }
 @if (restText()) { <div class="m rest">{{ restText() }}</div> }
-<button class="m btn-ghost tip gen" type="button" [disabled]="!store.anyGaps()" [attr.data-tip]="genTip()" (click)="store.openGaps()">GENERUJ POLECENIA</button>
+<button class="m btn-ghost tip gen" type="button" [disabled]="!store.anyGaps()" [attr.data-tip]="genTip()" (click)="store.openGaps()">{{ t('left.generate') }}</button>

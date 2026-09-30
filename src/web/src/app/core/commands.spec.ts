@@ -44,13 +44,14 @@ describe('filterItems / countByType', () => {
 });
 
 describe('toScript', () => {
+  const comment = (i: GapItem) => `# ${i.repoName} · BRAK CLAUDE.md`;
   it('joins commands with descriptive comments', () => {
-    const s = toScript('posix', 'claude', items.slice(0, 1));
+    const s = toScript('posix', 'claude', items.slice(0, 1), comment);
     expect(s.startsWith('# billing · BRAK CLAUDE.md\ncd ')).toBe(true);
     expect(s).toContain(`&& claude '`);
   });
 
   it('uses PowerShell syntax when asked to', () => {
-    expect(toScript('powershell', 'codex', items.slice(0, 1))).toContain('Set-Location -LiteralPath');
+    expect(toScript('powershell', 'codex', items.slice(0, 1), comment)).toContain('Set-Location -LiteralPath');
   });
 });

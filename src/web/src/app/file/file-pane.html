@@ -4,18 +4,18 @@
     <div class="m kind" [style.color]="f().color">{{ f().kind }} · {{ f().repoName }}</div>
     <div class="m path">{{ f().path }}</div>
   </div>
-  <button #closeBtn class="m btn-ghost x" type="button" aria-label="Zamknij podgląd" (click)="store.closeFile()">✕</button>
+  <button #closeBtn class="m btn-ghost x" type="button" [attr.aria-label]="t('file.close')" (click)="store.closeFile()">✕</button>
 </div>
 
 <div class="tabs">
-  <button class="m tab" type="button" [class.on]="f().mode === 'preview'" (click)="store.setFileMode('preview')">PODGLĄD</button>
-  <button class="m tab" type="button" [class.on]="f().mode === 'source'" (click)="store.setFileMode('source')">ŹRÓDŁO</button>
-  <div class="m ro">TYLKO DO ODCZYTU</div>
+  <button class="m tab" type="button" [class.on]="f().mode === 'preview'" (click)="store.setFileMode('preview')">{{ t('file.preview') }}</button>
+  <button class="m tab" type="button" [class.on]="f().mode === 'source'" (click)="store.setFileMode('source')">{{ t('file.source') }}</button>
+  <div class="m ro">{{ t('file.readOnly') }}</div>
 </div>
 
 <div class="body">
   @switch (f().status) {
-    @case ('loading') { <div class="m msg">Wczytywanie…</div> }
+    @case ('loading') { <div class="m msg">{{ t('file.loading') }}</div> }
     @case ('error') { <div class="m msg err" role="alert">{{ f().error }}</div> }
     @default {
       @if (f().mode === 'source') {
@@ -24,13 +24,13 @@
         <app-md-view [text]="f().text" />
       }
       @if (f().truncated) {
-        <div class="m msg warn">Plik jest duży ({{ size(f().bytes) }}) — pokazano początek.</div>
+        <div class="m msg warn">{{ t('file.truncatedNote', { size: size(f().bytes) }) }}</div>
       }
     }
   }
 </div>
 
 <div class="m foot">
-  <span>MARKDOWN · UTF-8 · {{ lines() }} LINII · {{ f().text.length }} ZNAKÓW</span>
-  <span>{{ f().truncated ? 'SKRÓCONO' : 'BEZ ZMIAN' }}</span>
+  <span>{{ t('file.foot', { lines: lines(), chars: f().text.length }) }}</span>
+  <span>{{ f().truncated ? t('file.truncated') : t('file.unchanged') }}</span>
 </div>
