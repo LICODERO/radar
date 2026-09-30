@@ -18,10 +18,11 @@ export class FilePane {
   protected readonly closeBtn = viewChild<ElementRef<HTMLButtonElement>>('closeBtn');
 
   constructor() {
-    // move focus into the pane when it opens so the keyboard user lands in it
+    // move focus into the pane when it opens so the keyboard user lands in it; without preventScroll the browser
+    // scrolls the (still off-screen, sliding in) pane into view and drags the whole stage sideways
     effect(() => {
       const btn = this.closeBtn();
-      if (btn) queueMicrotask(() => btn.nativeElement.focus());
+      if (btn) queueMicrotask(() => btn.nativeElement.focus({ preventScroll: true }));
     });
   }
 

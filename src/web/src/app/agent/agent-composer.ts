@@ -49,7 +49,7 @@ export class AgentComposer {
   constructor() {
     effect(() => {
       const el = this.firstField();
-      if (el) queueMicrotask(() => el.nativeElement.focus());
+      if (el) queueMicrotask(() => el.nativeElement.focus({ preventScroll: true }));
     });
   }
 

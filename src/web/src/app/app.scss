@@ -3,7 +3,7 @@
 .viewport { position: fixed; inset: 0; overflow: auto; background: $bg; }
 .frame { position: relative; }
 .stage {
-  position: absolute; width: 1440px; height: 900px; overflow: hidden; transform-origin: 0 0;
+  position: absolute; width: 1440px; height: 900px; overflow: hidden; overflow: clip; transform-origin: 0 0;
   background: radial-gradient(ellipse at 50% 52%, #10121f 0%, #04050a 62%);
   color: $white; font-family: $display;
 }
