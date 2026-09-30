@@ -8,6 +8,9 @@
 .kv { font-size: fs(38); font-weight: 600; line-height: 1.1; }
 
 .card { margin-top: 18px; border: 1px solid #c6ff3d44; padding: 14px 14px 16px; background: #c6ff3d08; }
+.card.empty { border-style: dashed; border-color: #ffffff33; background: transparent; }
+.etitle { font-size: fs(15); font-weight: 600; color: $text; margin-top: 8px; }
+.etext { font-size: fs(10); line-height: 1.5; color: $muted; margin-top: 6px; }
 .ch { display: flex; justify-content: space-between; align-items: center; }
 .cl { font-size: fs(10); letter-spacing: .18em; color: $lime; }
 .cm { font-size: fs(10); color: $muted; }
