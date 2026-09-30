@@ -1,4 +1,5 @@
 using Radar.Server.Infrastructure.Storage;
+using Radar.Server.Infrastructure.Localization;
 namespace Radar.Server.Features.Settings;
 
 public sealed record SettingsRequest(string? ScanPath);
@@ -9,17 +10,17 @@ public static class SettingsEndpoints
     {
         api.MapGet("/settings", (ISettingsStore settings, IFolderPicker picker) => Results.Ok(View(Load(settings), picker)));
 
-        api.MapPut("/settings", (SettingsRequest req, ISettingsStore settings, IFolderPicker picker) =>
+        api.MapPut("/settings", (SettingsRequest req, ISettingsStore settings, IFolderPicker picker, RequestMessages m) =>
         {
-            if (string.IsNullOrWhiteSpace(req.ScanPath)) return Results.BadRequest(new { error = "Podaj ścieżkę katalogu." });
+            if (string.IsNullOrWhiteSpace(req.ScanPath)) return Results.BadRequest(new { error = m[Msg.PathRequired] });
             string full;
             try { full = AppPaths.Expand(req.ScanPath); }
             catch (Exception e) when (e is ArgumentException or NotSupportedException or PathTooLongException)
             {
-                return Results.BadRequest(new { error = "Nieprawidłowa ścieżka." });
+                return Results.BadRequest(new { error = m[Msg.PathInvalid] });
             }
-            if (Path.GetPathRoot(full) == full) return Results.BadRequest(new { error = "Nie można skanować katalogu głównego dysku." });
-            if (!Directory.Exists(full)) return Results.BadRequest(new { error = "Katalog nie istnieje." });
+            if (Path.GetPathRoot(full) == full) return Results.BadRequest(new { error = m[Msg.PathIsRoot] });
+            if (!Directory.Exists(full)) return Results.BadRequest(new { error = m[Msg.PathMissing] });
             var updated = Load(settings) with { ScanPath = full };
             settings.Save(updated);
             return Results.Ok(View(updated, picker));

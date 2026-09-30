@@ -79,7 +79,7 @@ public sealed class MacTerminalLauncher : ITerminalLauncher
         var psi = new ProcessStartInfo("osascript") { RedirectStandardError = true, RedirectStandardOutput = true, UseShellExecute = false };
         foreach (var a in TerminalCommands.MacOsaArguments(request)) psi.ArgumentList.Add(a);
 
-        using var proc = Process.Start(psi) ?? throw new InvalidOperationException("Nie udało się uruchomić osascript.");
+        using var proc = Process.Start(psi) ?? throw new InvalidOperationException("Could not start osascript.");
         // the first run makes macOS ask the user to allow controlling Terminal, so allow a generous wait
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
         timeout.CancelAfter(TimeSpan.FromSeconds(60));

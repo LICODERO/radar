@@ -9,6 +9,7 @@ using Radar.Server.Features.Session;
 using Radar.Server.Features.Settings;
 using Radar.Server.Infrastructure.Security;
 using Radar.Server.Infrastructure.Storage;
+using Radar.Server.Infrastructure.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,8 @@ builder.Services.ConfigureHttpJsonOptions(o =>
 builder.Services.AddSingleton(sp => new JsonFileStore(AppPaths.DataDir(sp.GetRequiredService<IConfiguration>())));
 builder.Services.AddSingleton<IScanStore>(sp => sp.GetRequiredService<JsonFileStore>());
 builder.Services.AddSingleton<ISettingsStore>(sp => sp.GetRequiredService<JsonFileStore>());
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<RequestMessages>();
 builder.Services.AddSingleton<LatestScanCache>();
 builder.Services.AddSingleton<SessionToken>();
 builder.Services.AddSingleton<ScanManager>();

@@ -43,7 +43,7 @@ Per repository, coverage is the sum of:
 - **UI:** Angular (standalone components, signals), served by the same process.
 - **Distribution:** a single self-contained binary per platform, no installer and no code signing.
 
-The UI language is Polish; code and identifiers are in English.
+The UI is available in Polish and English (switch in the header); code and identifiers are in English.
 
 ## Usage
 

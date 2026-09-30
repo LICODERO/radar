@@ -2,6 +2,7 @@ using System.Text.Json;
 using Radar.Scanner;
 using Radar.Server.Features.Settings;
 using Radar.Server.Infrastructure.Storage;
+using Radar.Server.Infrastructure.Localization;
 
 namespace Radar.Server.Features.Scans;
 
@@ -9,20 +10,20 @@ public static class ScanEndpoints
 {
     public static void MapScans(this RouteGroupBuilder api)
     {
-        api.MapGet("/scan/latest", async (IScanStore scans, CancellationToken ct) =>
+        api.MapGet("/scan/latest", async (IScanStore scans, RequestMessages m, CancellationToken ct) =>
         {
             var json = await scans.LoadLatestJsonAsync(ct);
-            return json is null ? Results.NotFound(new { error = "Brak zapisanego skanu." }) : Results.Bytes(json, "application/json");
+            return json is null ? Results.NotFound(new { error = m[Msg.NoScan] }) : Results.Bytes(json, "application/json");
         });
 
-        api.MapPost("/scans", (ScanManager manager, ISettingsStore settings) =>
+        api.MapPost("/scans", (ScanManager manager, ISettingsStore settings, RequestMessages m) =>
         {
             var s = SettingsEndpoints.Load(settings);
-            if (s.ScanPath is null || !Directory.Exists(s.ScanPath)) return Results.BadRequest(new { error = "Wybierz istniejący katalog skanu." });
+            if (s.ScanPath is null || !Directory.Exists(s.ScanPath)) return Results.BadRequest(new { error = m[Msg.PickScanDir] });
             var (session, started) = manager.Start(s.ScanPath, s.MaxDepth);
             return started
                 ? Results.Accepted($"/api/scans/{session.Id}/events", new { id = session.Id })
-                : Results.Json(new { id = session.Id, error = "Skan już trwa." }, statusCode: StatusCodes.Status409Conflict);
+                : Results.Json(new { id = session.Id, error = m[Msg.ScanRunning] }, statusCode: StatusCodes.Status409Conflict);
         });
 
         api.MapGet("/scans/current", (ScanManager manager) =>

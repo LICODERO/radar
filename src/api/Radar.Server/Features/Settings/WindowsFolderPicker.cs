@@ -44,7 +44,7 @@ try {
         };
         foreach (var a in new[] { "-NoProfile", "-STA", "-EncodedCommand", TerminalCommands.PowerShellEncoded(Script) }) psi.ArgumentList.Add(a);
 
-        using var proc = Process.Start(psi) ?? throw new InvalidOperationException("Nie udało się uruchomić PowerShell.");
+        using var proc = Process.Start(psi) ?? throw new InvalidOperationException("Could not start PowerShell.");
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
         timeout.CancelAfter(TimeSpan.FromMinutes(5));
         try
@@ -54,7 +54,7 @@ try {
             if (proc.ExitCode != 0)
             {
                 var error = (await proc.StandardError.ReadToEndAsync(timeout.Token)).Trim();
-                throw new InvalidOperationException($"Okno wyboru folderu nie otworzyło się (PowerShell, kod {proc.ExitCode}): {error}");
+                throw new InvalidOperationException($"The folder dialog did not open (PowerShell, exit code {proc.ExitCode}): {error}");
             }
             var encoded = output.Trim().Trim('\uFEFF');
             if (encoded.Length == 0) return null; // user cancelled

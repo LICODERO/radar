@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using System.Text;
 using Radar.Server.Features.Gaps;
+using Radar.Server.Infrastructure.Localization;
 
 namespace Radar.Server.Features.Agents;
 
@@ -9,9 +10,22 @@ public sealed record AgentGenerationRequest(string Description, string Stack, IR
 
 public sealed record GeneratedText(string Text, decimal? CostUsd);
 
-public sealed class GeneratorException(string message, int status) : Exception(message)
+public sealed class GeneratorException : Exception
 {
-    public int Status { get; } = status;
+    /// <summary>A ready message (shown as is).</summary>
+    public GeneratorException(string message, int status) : base(message) => Status = status;
+
+    /// <summary>A catalogued message: the endpoint renders it in the request language; <see cref="Exception.Message"/> is the Polish text.</summary>
+    public GeneratorException(Msg key, int status, params object[] args) : base(Messages.Get(Lang.Pl, key, args))
+    {
+        Status = status;
+        Key = key;
+        Args = args;
+    }
+
+    public int Status { get; }
+    public Msg? Key { get; }
+    public object[] Args { get; } = [];
 }
 
 public interface IAgentGenerator
@@ -30,7 +44,7 @@ public sealed class ClaudeCliGenerator(IToolLocator locator, IConfiguration conf
     public async Task<GeneratedText> GenerateAsync(AgentGenerationRequest request, CancellationToken ct)
     {
         var exe = config["Radar:ClaudePath"] ?? locator.Find("claude")
-            ?? throw new GeneratorException("Nie znaleziono polecenia claude w PATH serwera. Zainstaluj Claude Code i zaloguj się.", StatusCodes.Status503ServiceUnavailable);
+            ?? throw new GeneratorException(Msg.ClaudeNotFound, StatusCodes.Status503ServiceUnavailable);
 
         var workDir = Path.Combine(Path.GetTempPath(), "radar-gen-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(workDir);
@@ -73,7 +87,7 @@ public sealed class ClaudeCliGenerator(IToolLocator locator, IConfiguration conf
         if (viaCmd) { psi.ArgumentList.Add("/c"); psi.ArgumentList.Add(exe); }
         foreach (var a in args) psi.ArgumentList.Add(a);
 
-        using var proc = Process.Start(psi) ?? throw new GeneratorException("Nie udało się uruchomić claude.", StatusCodes.Status502BadGateway);
+        using var proc = Process.Start(psi) ?? throw new GeneratorException(Msg.ClaudeStartFailed, StatusCodes.Status502BadGateway);
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         cts.CancelAfter(Timeout);
         try
@@ -87,14 +101,14 @@ public sealed class ClaudeCliGenerator(IToolLocator locator, IConfiguration conf
             var error = await stderr;
 
             if (proc.ExitCode != 0)
-                throw new GeneratorException($"claude zakończył się błędem ({proc.ExitCode}): {Trim(error.Length > 0 ? error : output)}", StatusCodes.Status502BadGateway);
+                throw new GeneratorException(Msg.ClaudeExited, StatusCodes.Status502BadGateway, proc.ExitCode, Trim(error.Length > 0 ? error : output));
             return Parse(output);
         }
         catch (OperationCanceledException)
         {
             try { proc.Kill(true); } catch { /* already gone */ }
             if (ct.IsCancellationRequested) throw;
-            throw new GeneratorException("claude nie odpowiedział w ciągu 150 s.", StatusCodes.Status504GatewayTimeout);
+            throw new GeneratorException(Msg.ClaudeTimeout, StatusCodes.Status504GatewayTimeout);
         }
     }
 
@@ -107,11 +121,11 @@ public sealed class ClaudeCliGenerator(IToolLocator locator, IConfiguration conf
             if (root.ValueKind == JsonValueKind.Array) // stream-json style: take the last result object
                 root = root.EnumerateArray().LastOrDefault(e => e.ValueKind == JsonValueKind.Object && e.TryGetProperty("result", out _));
             if (root.ValueKind != JsonValueKind.Object || !root.TryGetProperty("result", out var result))
-                throw new GeneratorException("Nieoczekiwana odpowiedź claude.", StatusCodes.Status502BadGateway);
+                throw new GeneratorException(Msg.ClaudeUnexpected, StatusCodes.Status502BadGateway);
 
             var text = result.ValueKind == JsonValueKind.String ? result.GetString() ?? "" : result.ToString();
             if (root.TryGetProperty("is_error", out var isErr) && isErr.ValueKind == JsonValueKind.True)
-                throw new GeneratorException($"claude zgłosił błąd: {Trim(text)}", StatusCodes.Status502BadGateway);
+                throw new GeneratorException(Msg.ClaudeReportedError, StatusCodes.Status502BadGateway, Trim(text));
 
             decimal? cost = null;
             foreach (var key in new[] { "total_cost_usd", "cost_usd" })
@@ -122,7 +136,7 @@ public sealed class ClaudeCliGenerator(IToolLocator locator, IConfiguration conf
         {
             // not JSON: accept plain text output
             return string.IsNullOrWhiteSpace(output)
-                ? throw new GeneratorException("Pusta odpowiedź claude.", StatusCodes.Status502BadGateway)
+                ? throw new GeneratorException(Msg.ClaudeEmpty, StatusCodes.Status502BadGateway)
                 : new GeneratedText(output, null);
         }
     }

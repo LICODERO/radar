@@ -26,7 +26,7 @@ public sealed class OsaScriptFolderPicker : IFolderPicker
         psi.ArgumentList.Add("-e");
         psi.ArgumentList.Add("POSIX path of (choose folder with prompt \"Wybierz katalog z repozytoriami\")");
 
-        using var proc = Process.Start(psi) ?? throw new InvalidOperationException("Nie udało się uruchomić osascript.");
+        using var proc = Process.Start(psi) ?? throw new InvalidOperationException("Could not start osascript.");
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
         timeout.CancelAfter(TimeSpan.FromMinutes(5));
         try

@@ -1,0 +1,113 @@
+namespace Radar.Server.Infrastructure.Localization;
+
+public enum Lang { Pl, En }
+
+/// <summary>Every user-facing message the API can return. Endpoints pick the text by the language the UI sends.</summary>
+public enum Msg
+{
+    // common
+    NoScan, UnknownRepo, RepoDirMissing,
+    // security
+    HostDenied, OriginDenied, TokenDenied,
+    // settings
+    PathRequired, PathInvalid, PathIsRoot, PathMissing,
+    // scans
+    PickScanDir, ScanRunning,
+    // files
+    FileNotInScan, FileMissing, FileForbidden,
+    // run
+    RunUnsupported, UnknownTool, UnknownGap, GapAbsent, RepoOutsideRoot, TerminalFailed,
+    // agents
+    DescriptionRequired, DescriptionTooLong, GenerationBusy, AgentNameTakenInRepo, ContentRequired, AgentInvalid, AgentExists, WriteForbidden,
+    // agent file validation
+    FileTooBig, FrontmatterMissing, NameInvalid, DescriptionMissing, DescriptionLong, BodyMissing,
+    // claude CLI
+    ClaudeNotFound, ClaudeStartFailed, ClaudeExited, ClaudeTimeout, ClaudeUnexpected, ClaudeReportedError, ClaudeEmpty
+}
+
+public static class Messages
+{
+    private static readonly Dictionary<Msg, (string Pl, string En)> Catalog = new()
+    {
+        [Msg.NoScan] = ("Brak zapisanego skanu.", "No saved scan."),
+        [Msg.UnknownRepo] = ("Nieznane repozytorium.", "Unknown repository."),
+        [Msg.RepoDirMissing] = ("Katalog repozytorium już nie istnieje. Uruchom skan ponownie.", "The repository directory no longer exists. Run the scan again."),
+
+        [Msg.HostDenied] = ("Niedozwolony nagłówek Host.", "Host header not allowed."),
+        [Msg.OriginDenied] = ("Niedozwolone źródło żądania.", "Request origin not allowed."),
+        [Msg.TokenDenied] = ("Brak lub nieprawidłowy token sesji.", "Missing or invalid session token."),
+
+        [Msg.PathRequired] = ("Podaj ścieżkę katalogu.", "Enter a directory path."),
+        [Msg.PathInvalid] = ("Nieprawidłowa ścieżka.", "Invalid path."),
+        [Msg.PathIsRoot] = ("Nie można skanować katalogu głównego dysku.", "The drive root cannot be scanned."),
+        [Msg.PathMissing] = ("Katalog nie istnieje.", "The directory does not exist."),
+
+        [Msg.PickScanDir] = ("Wybierz istniejący katalog skanu.", "Choose an existing scan directory."),
+        [Msg.ScanRunning] = ("Skan już trwa.", "A scan is already running."),
+
+        [Msg.FileNotInScan] = ("Plik nie należy do wyniku skanu.", "The file is not part of the scan result."),
+        [Msg.FileMissing] = ("Plik już nie istnieje. Uruchom skan ponownie.", "The file no longer exists. Run the scan again."),
+        [Msg.FileForbidden] = ("Odczyt tego pliku jest zabroniony.", "Reading this file is not allowed."),
+
+        [Msg.RunUnsupported] = ("Uruchamianie terminala nie jest dostępne na tym systemie. Skopiuj polecenie.", "Opening a terminal is not available on this system. Copy the command instead."),
+        [Msg.UnknownTool] = ("Nieznane narzędzie.", "Unknown tool."),
+        [Msg.UnknownGap] = ("Nieznany typ luki.", "Unknown gap type."),
+        [Msg.GapAbsent] = ("Ta luka nie występuje w wyniku skanu.", "This gap is not present in the scan result."),
+        [Msg.RepoOutsideRoot] = ("Katalog repozytorium jest poza katalogiem skanu.", "The repository directory is outside the scan directory."),
+        [Msg.TerminalFailed] = ("Nie udało się otworzyć terminala: {0}", "Could not open the terminal: {0}"),
+
+        [Msg.DescriptionRequired] = ("Opisz agenta własnymi słowami.", "Describe the agent in your own words."),
+        [Msg.DescriptionTooLong] = ("Opis jest za długi (max {0} znaków).", "The description is too long (max {0} characters)."),
+        [Msg.GenerationBusy] = ("Trwa już inne generowanie.", "Another generation is already in progress."),
+        [Msg.AgentNameTakenInRepo] = ("Agent o tej nazwie już istnieje w tym repozytorium. Zmień nazwę.", "An agent with this name already exists in this repository. Change the name."),
+        [Msg.ContentRequired] = ("Brak treści pliku.", "The file content is missing."),
+        [Msg.AgentInvalid] = ("Plik agenta jest niepoprawny.", "The agent file is invalid."),
+        [Msg.AgentExists] = ("Agent o tej nazwie już istnieje. Zmień nazwę.", "An agent with this name already exists. Change the name."),
+        [Msg.WriteForbidden] = ("Zapis w tym katalogu jest zabroniony (dowiązanie poza repozytorium).", "Writing in this directory is not allowed (a link pointing outside the repository)."),
+
+        [Msg.FileTooBig] = ("Plik jest za duży (limit 64 KB).", "The file is too large (64 KB limit)."),
+        [Msg.FrontmatterMissing] = ("Brak poprawnego frontmattera: plik ma zaczynać się od bloku --- ... ---.", "Missing valid frontmatter: the file must start with a --- ... --- block."),
+        [Msg.NameInvalid] = ("Pole name musi być małymi literami, cyframi i myślnikami (np. migration-reviewer), 2-64 znaki.", "The name field must use lowercase letters, digits and hyphens (e.g. migration-reviewer), 2-64 characters."),
+        [Msg.DescriptionMissing] = ("Pole description jest wymagane (min. 10 znaków): kiedy używać agenta.", "The description field is required (min. 10 characters): when to use the agent."),
+        [Msg.DescriptionLong] = ("Pole description jest za długie (max 1024 znaki).", "The description field is too long (max 1024 characters)."),
+        [Msg.BodyMissing] = ("Brak treści instrukcji po frontmatterze.", "No instructions after the frontmatter."),
+
+        [Msg.ClaudeNotFound] = ("Nie znaleziono polecenia claude w PATH serwera. Zainstaluj Claude Code i zaloguj się.", "The claude command was not found in the server PATH. Install Claude Code and sign in."),
+        [Msg.ClaudeStartFailed] = ("Nie udało się uruchomić claude.", "Could not start claude."),
+        [Msg.ClaudeExited] = ("claude zakończył się błędem ({0}): {1}", "claude exited with an error ({0}): {1}"),
+        [Msg.ClaudeTimeout] = ("claude nie odpowiedział w ciągu 150 s.", "claude did not respond within 150 s."),
+        [Msg.ClaudeUnexpected] = ("Nieoczekiwana odpowiedź claude.", "Unexpected response from claude."),
+        [Msg.ClaudeReportedError] = ("claude zgłosił błąd: {0}", "claude reported an error: {0}"),
+        [Msg.ClaudeEmpty] = ("Pusta odpowiedź claude.", "Empty response from claude.")
+    };
+
+    public static string Get(Lang lang, Msg msg, params object[] args)
+    {
+        var (pl, en) = Catalog[msg];
+        var text = lang == Lang.En ? en : pl;
+        return args.Length == 0 ? text : string.Format(System.Globalization.CultureInfo.InvariantCulture, text, args);
+    }
+
+    /// <summary>Language from an Accept-Language header: the first supported tag wins; Polish when none is.</summary>
+    public static Lang Parse(string? acceptLanguage)
+    {
+        foreach (var part in (acceptLanguage ?? "").Split(','))
+        {
+            var tag = part.Split(';')[0].Trim().ToLowerInvariant();
+            var primary = tag.Split('-')[0];
+            if (primary == "en") return Lang.En;
+            if (primary == "pl") return Lang.Pl;
+        }
+        return Lang.Pl;
+    }
+}
+
+/// <summary>Messages in the language of the current request.</summary>
+public sealed class RequestMessages(IHttpContextAccessor accessor)
+{
+    public Lang Lang => Messages.Parse(accessor.HttpContext?.Request.Headers.AcceptLanguage.ToString());
+
+    public string this[Msg msg] => Messages.Get(Lang, msg);
+
+    public string T(Msg msg, params object[] args) => Messages.Get(Lang, msg, args);
+}

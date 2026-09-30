@@ -42,7 +42,11 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 
 ## Conventions
 
-- Talk to the user in Polish; the UI is in Polish; code, identifiers, commit messages and README are in English.
+- Talk to the user in Polish; code, identifiers, commit messages and README are in English.
+- i18n: the UI is bilingual (PL/EN, switch in the header, choice kept in localStorage `radar.lang`, default from the browser language, Polish fallback).
+  Every UI string lives in `src/web/src/app/i18n/pl.ts` (source, defines the keys) and `en.ts` (must match; a spec checks keys and `{placeholders}`);
+  use `inject(I18n).t('key', { params })` (plurals: message object with `one/few/many/other`, pick with `n`), never hard-coded text in templates.
+  The client sends `Accept-Language`; API error texts come from `src/api/Radar.Server/Infrastructure/Localization/Messages.cs` (`Msg` enum, PL default).
 - Commit messages: a single sentence in past tense, no description body, no Co-Authored-By.
 - Scanning is local and read-only. Nothing leaves the machine. No network calls at runtime (fonts are bundled).
 - Never read secrets (`.env`, keys); only AI/markdown files.

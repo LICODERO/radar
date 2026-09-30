@@ -1,3 +1,5 @@
+using Radar.Server.Infrastructure.Localization;
+
 namespace Radar.Server.Infrastructure.Security;
 
 /// <summary>
@@ -24,15 +26,15 @@ public sealed class ApiGuard(RequestDelegate next, SessionToken token, IConfigur
         ctx.Response.Headers["Cache-Control"] = "no-store";
         ctx.Response.Headers["X-Content-Type-Options"] = "nosniff";
 
-        if (!HostAllowed(ctx)) { await Deny(ctx, 403, "Niedozwolony nagłówek Host."); return; }
-        if (!OriginAllowed(ctx)) { await Deny(ctx, 403, "Niedozwolone źródło żądania."); return; }
+        if (!HostAllowed(ctx)) { await Deny(ctx, 403, Msg.HostDenied); return; }
+        if (!OriginAllowed(ctx)) { await Deny(ctx, 403, Msg.OriginDenied); return; }
 
         var open = ctx.Request.Method == HttpMethods.Get
             && (ctx.Request.Path.Equals("/api/session") || ctx.Request.Path.Equals("/api/health"));
         if (!open)
         {
             var supplied = ctx.Request.Headers["X-Radar-Token"].FirstOrDefault() ?? ctx.Request.Query["token"].FirstOrDefault();
-            if (!token.Matches(supplied)) { await Deny(ctx, 401, "Brak lub nieprawidłowy token sesji."); return; }
+            if (!token.Matches(supplied)) { await Deny(ctx, 401, Msg.TokenDenied); return; }
         }
         await next(ctx);
     }
@@ -55,10 +57,10 @@ public sealed class ApiGuard(RequestDelegate next, SessionToken token, IConfigur
         return string.Equals(origin, $"{ctx.Request.Scheme}://{ctx.Request.Host}", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static async Task Deny(HttpContext ctx, int status, string message)
+    private static async Task Deny(HttpContext ctx, int status, Msg message)
     {
         ctx.Response.StatusCode = status;
-        await ctx.Response.WriteAsJsonAsync(new { error = message });
+        await ctx.Response.WriteAsJsonAsync(new { error = Messages.Get(Messages.Parse(ctx.Request.Headers.AcceptLanguage.ToString()), message) });
     }
 }
 

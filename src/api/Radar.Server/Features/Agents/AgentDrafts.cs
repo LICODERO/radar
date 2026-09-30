@@ -2,6 +2,7 @@ using System.Text.RegularExpressions;
 using System.Text;
 using Radar.Scanner;
 using Radar.Server.Features.Gaps;
+using Radar.Server.Infrastructure.Localization;
 
 namespace Radar.Server.Features.Agents;
 
@@ -68,27 +69,29 @@ public static partial class AgentValidator
         return string.Join("\n", lines).Trim() + "\n";
     }
 
-    public static AgentValidation Validate(string content)
+    /// <param name="lang">language of the returned error messages</param>
+    public static AgentValidation Validate(string content, Lang lang = Lang.Pl)
     {
+        string M(Msg msg) => Messages.Get(lang, msg);
         var errors = new List<string>();
-        if (Encoding.UTF8.GetByteCount(content) > MaxBytes) errors.Add("Plik jest za duży (limit 64 KB).");
+        if (Encoding.UTF8.GetByteCount(content) > MaxBytes) errors.Add(M(Msg.FileTooBig));
 
         var fm = Frontmatter.Parse(content);
         if (!fm.Present || !fm.Valid)
         {
-            errors.Add("Brak poprawnego frontmattera: plik ma zaczynać się od bloku --- ... ---.");
+            errors.Add(M(Msg.FrontmatterMissing));
             return new AgentValidation(null, errors);
         }
 
         var name = fm.Get("name");
-        if (!IsValidName(name)) errors.Add("Pole name musi być małymi literami, cyframi i myślnikami (np. migration-reviewer), 2-64 znaki.");
+        if (!IsValidName(name)) errors.Add(M(Msg.NameInvalid));
 
         var description = fm.Get("description");
-        if (description is null || description.Length < 10) errors.Add("Pole description jest wymagane (min. 10 znaków): kiedy używać agenta.");
-        else if (description.Length > 1024) errors.Add("Pole description jest za długie (max 1024 znaki).");
+        if (description is null || description.Length < 10) errors.Add(M(Msg.DescriptionMissing));
+        else if (description.Length > 1024) errors.Add(M(Msg.DescriptionLong));
 
         var body = BodyOf(content);
-        if (body.Trim().Length < 20) errors.Add("Brak treści instrukcji po frontmatterze.");
+        if (body.Trim().Length < 20) errors.Add(M(Msg.BodyMissing));
 
         return new AgentValidation(IsValidName(name) ? name : null, errors);
     }
