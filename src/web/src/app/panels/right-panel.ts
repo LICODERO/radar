@@ -15,19 +15,15 @@ export class RightPanel {
   protected readonly store = inject(RadarStore);
   protected readonly sum = computed(() => this.store.result()?.summary);
   protected readonly sel = this.store.selected;
-  protected readonly gaps = this.store.claudeGaps;
-  protected readonly firstGaps = computed(() => this.gaps().slice(0, 2));
-  protected readonly restGaps = computed(() => this.gaps().slice(2));
-  protected readonly restText = computed(() => {
-    const rest = this.restGaps();
-    if (!rest.length) return '';
-    const names = rest.slice(0, 2).map((r) => `${r.initials} ${r.name}`).join(', ');
-    return `+ ${rest.length} kolejne · ${names}${rest.length > 2 ? '…' : ''}`;
-  });
-  protected readonly genTip = computed(() => {
-    const t = this.store.gapTotals();
-    return this.store.anyGaps() ? `Polecenia dla luk: ${t['no-claude-md']} bez CLAUDE.md, pozostałe w filtrach` : 'Brak luk do uzupełnienia';
-  });
+  protected readonly selName = computed(() => this.store.selected()?.name ?? '—');
+  protected readonly canCompose = computed(() => this.store.mode() === 'api' && !!this.store.selected() && !this.store.scanning());
+  protected readonly agentTip = computed(() => this.store.mode() === 'mock'
+    ? 'Wymaga działającego serwera'
+    : !this.store.selected()
+      ? 'Najpierw wybierz repozytorium'
+      : `Nowy agent w ${this.selName()} z opisu własnymi słowami`);
+  protected readonly vault = computed(() => this.store.selected()?.outputs.exists ?? false);
+
   protected readonly vaultText = computed(() => {
     const s = this.sel();
     if (!s) return '';

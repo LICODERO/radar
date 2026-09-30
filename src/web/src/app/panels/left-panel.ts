@@ -13,15 +13,19 @@ export class LeftPanel {
   protected readonly color = coverageColor;
   protected readonly total = computed(() => this.store.repos().length);
   protected readonly wfTotal = computed(() => this.store.workflows().length);
-  protected readonly selName = computed(() => this.store.selected()?.name ?? '—');
-  protected readonly canCompose = computed(() => this.store.mode() === 'api' && !!this.store.selected() && !this.store.scanning());
-  protected readonly agentTip = computed(() => this.store.mode() === 'mock'
-    ? 'Wymaga działającego serwera'
-    : !this.store.selected()
-      ? 'Najpierw wybierz repozytorium'
-      : `Nowy agent w ${this.selName()} z opisu własnymi słowami`);
-  protected readonly vault = computed(() => this.store.selected()?.outputs.exists ?? false);
-
+  protected readonly gaps = this.store.claudeGaps;
+  protected readonly firstGaps = computed(() => this.gaps().slice(0, 2));
+  protected readonly restGaps = computed(() => this.gaps().slice(2));
+  protected readonly restText = computed(() => {
+    const rest = this.restGaps();
+    if (!rest.length) return '';
+    const names = rest.slice(0, 2).map((r) => `${r.initials} ${r.name}`).join(', ');
+    return `+ ${rest.length} kolejne · ${names}${rest.length > 2 ? '…' : ''}`;
+  });
+  protected readonly genTip = computed(() => {
+    const t = this.store.gapTotals();
+    return this.store.anyGaps() ? `Polecenia dla luk: ${t['no-claude-md']} bez CLAUDE.md, pozostałe w filtrach` : 'Brak luk do uzupełnienia';
+  });
   protected onQuery(e: Event): void {
     this.store.setQuery((e.target as HTMLInputElement).value);
   }

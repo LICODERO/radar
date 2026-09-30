@@ -67,17 +67,11 @@
   </div>
 </div>
 
-<div class="head sec2">
-  <div class="m h">AKCJE · TWORZENIE</div>
-  <div class="m hint">W REPO: <span class="sel">{{ selName() }}</span></div>
-</div>
-<div class="acts">
-  <button class="m act tip tip-l" type="button" [disabled]="!canCompose()" [attr.data-tip]="agentTip()" (click)="store.openComposer()" style="color:#c6ff3d;border-color:#c6ff3d66;background:#c6ff3d0d"><span class="plus">+</span><span class="lbl">AGENT</span></button>
-  <button class="m act tip" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji" style="color:#a99bff;border-color:#a99bff66;background:#a99bff0d"><span class="plus">+</span><span class="lbl">SKILL</span></button>
-  <button class="m act tip tip-r" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji" style="color:#e6e9f2;border-color:#e6e9f266;background:#e6e9f20d"><span class="plus">+</span><span class="lbl">WORKFLOW</span></button>
-</div>
-<div class="acts vault">
-  <button class="m btn-ghost tip tip-l" type="button" disabled data-tip="Prezentacja pamięci w kolejnej wersji">MEMORY</button>
-  <button class="m btn-ghost tip" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji">+ NOTATKA</button>
-  <button class="m btn-ghost tip tip-r small" type="button" disabled data-tip="Tworzenie plików w kolejnej wersji">{{ vault() ? 'OUTPUTS' : '+ OUTPUTS' }}</button>
-</div>
+<div class="m gh">LUKI DO UZUPEŁNIENIA · {{ gaps().length }}</div>
+@for (g of firstGaps(); track g.id) {
+  <button class="m grow row" type="button" (click)="store.toggleRepo(g.id)">
+    <span><span style="color:#ff4fa3">◌</span> {{ g.initials }} {{ g.name }}</span><span class="gt">brak CLAUDE.md</span>
+  </button>
+}
+@if (restText()) { <div class="m rest">{{ restText() }}</div> }
+<button class="m btn-ghost tip gen" type="button" [disabled]="!store.anyGaps()" [attr.data-tip]="genTip()" (click)="store.openGaps()">GENERUJ POLECENIA</button>
