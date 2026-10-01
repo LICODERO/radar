@@ -15,15 +15,6 @@ export class LeftPanel {
   protected readonly color = coverageColor;
   protected readonly total = computed(() => this.store.repos().length);
   protected readonly wfTotal = computed(() => this.store.workflows().length);
-  protected readonly gaps = this.store.claudeGaps;
-  protected readonly firstGaps = computed(() => this.gaps().slice(0, 2));
-  protected readonly restGaps = computed(() => this.gaps().slice(2));
-  protected readonly restText = computed(() => {
-    const rest = this.restGaps();
-    if (!rest.length) return '';
-    const names = rest.slice(0, 2).map((r) => `${r.initials} ${r.name}`).join(', ');
-    return this.t('left.gapsRest', { n: rest.length, names: names + (rest.length > 2 ? '…' : '') });
-  });
   protected readonly genTip = computed(() => {
     const t = this.store.gapTotals();
     return this.store.anyGaps() ? this.t('left.generateTip', { n: t['no-claude-md'] }) : this.t('left.noGaps');

@@ -1,0 +1,21 @@
+<div class="backdrop" (click)="store.closeGapsList()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('left.gaps', { n: gaps().length })">
+  <div class="head">
+    <div class="m eyebrow">{{ t('left.gaps', { n: gaps().length }) }}</div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('gapsList.close')" (click)="store.closeGapsList()">✕</button>
+  </div>
+  <div class="m hint">{{ t('gapsList.hint') }}</div>
+  <div class="list">
+    @for (g of gaps(); track g.id) {
+      <button class="row" type="button" (click)="choose(g)">
+        <span class="m name"><span class="dot">◌</span> {{ g.initials }} {{ g.name }}</span>
+        <span class="m what">{{ t('left.gapNoClaude') }}</span>
+      </button>
+    } @empty {
+      <div class="m none">{{ t('gapsList.empty') }}</div>
+    }
+  </div>
+  <div class="foot">
+    <button class="m btn-ghost gen" type="button" [disabled]="!store.anyGaps()" (click)="generate()">{{ t('left.generate') }}</button>
+  </div>
+</div>

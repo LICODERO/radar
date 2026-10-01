@@ -70,11 +70,4 @@
   </div>
 </div>
 
-<div class="m gh">{{ t('left.gaps', { n: gaps().length }) }}</div>
-@for (g of firstGaps(); track g.id) {
-  <button class="m grow row" type="button" (click)="store.toggleRepo(g.id)">
-    <span><span style="color:#ff4fa3">◌</span> {{ g.initials }} {{ g.name }}</span><span class="gt">{{ t('left.gapNoClaude') }}</span>
-  </button>
-}
-@if (restText()) { <div class="m rest">{{ restText() }}</div> }
 <button class="m btn-ghost tip gen" type="button" [disabled]="!store.anyGaps()" [attr.data-tip]="genTip()" (click)="store.openGaps()">{{ t('left.generate') }}</button>

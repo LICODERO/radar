@@ -25,7 +25,7 @@ export interface FileView {
   mode: 'preview' | 'source';
 }
 
-export const REPO_PAGE_SIZE = 8;
+export const REPO_PAGE_SIZE = 10;
 export const WF_PAGE_SIZE = 2;
 
 @Injectable({ providedIn: 'root' })
@@ -70,6 +70,8 @@ export class RadarStore {
   readonly vaultOpen = signal(false);
   /** the full list of the selected repo's agents, skills or workflows (the "+N" tile on its card) */
   readonly itemsKind = signal<PickKind | null>(null);
+  /** the list of repos without CLAUDE.md, opened from the gaps tile */
+  readonly gapsListOpen = signal(false);
   /** the "enable the second brain for this repo" dialog; the id of the repo */
   readonly projectRepoId = signal<string | null>(null);
   readonly vaultReady = computed(() => this.vault()?.state === 'ok');
@@ -250,6 +252,9 @@ export class RadarStore {
   /** Throws ApiError (with `body.code`) when the server refuses; the dialog shows the message. */
   async createVault(path: string): Promise<void> { this.vault.set(await this.api.createVault(path)); }
   async relinkVault(path: string): Promise<void> { this.vault.set(await this.api.relinkVault(path)); }
+
+  openGapsList(): void { if (this.claudeGaps().length) this.gapsListOpen.set(true); }
+  closeGapsList(): void { this.gapsListOpen.set(false); }
 
   openItems(kind: PickKind): void { if (this.selected()) this.itemsKind.set(kind); }
   closeItems(): void { this.itemsKind.set(null); }

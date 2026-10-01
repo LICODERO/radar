@@ -46,7 +46,6 @@ export const EN: Record<MsgKey, Message> = {
   'left.wfRepos': '{n} REPO',
   'left.gaps': 'GAPS TO FILL · {n}',
   'left.gapNoClaude': 'no CLAUDE.md',
-  'left.gapsRest': '+ {n} more · {names}',
   'left.generate': 'GENERATE COMMANDS',
   'left.generateTip': 'Commands for gaps: {n} without CLAUDE.md, the rest in the filters',
   'left.noGaps': 'No gaps to fill',
@@ -394,5 +393,9 @@ export const EN: Record<MsgKey, Message> = {
   'items.close': 'Close',
   'items.hint': 'Click an item to see its details on the orbit.',
   'items.noDescription': 'no description',
+  'right.kpi.gapsOpen': 'Show the list of gaps',
+  'gapsList.close': 'Close',
+  'gapsList.hint': 'Repositories without CLAUDE.md. Click one to select it.',
+  'gapsList.empty': 'No gaps to fill.',
   'api.serverError': 'Server error ({status})'
 };

@@ -41,9 +41,5 @@
 .pg.on { background: $lime; border-color: $lime; color: #0b1006; font-weight: 600; }
 .pos { font-size: fs(10); color: $text; padding: 0 4px; }
 
-.gh { font-size: fs(10); letter-spacing: .08em; color: #ff9cc9; margin-top: 20px; padding-bottom: 8px; border-bottom: 1px solid #ff4fa355; }
-.grow { display: flex; justify-content: space-between; font-size: fs(11); height: 32px; align-items: center; background: transparent; border: 0; width: 100%; padding: 0; color: inherit; cursor: pointer; text-align: left; }
-.gt { color: #a3a9bf; }
-.rest { font-size: fs(10); color: $muted; height: 24px; display: flex; align-items: center; }
 .gen { margin-top: 10px; width: 100%; box-sizing: border-box; background: #c6ff3d14; border: 1px solid $lime; color: $lime; font-size: fs(11); letter-spacing: .14em; padding: 11px 14px; cursor: pointer; }
 .gen:disabled { opacity: .5; }

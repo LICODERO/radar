@@ -48,7 +48,6 @@ export const PL = {
   'left.wfRepos': '{n} REPO',
   'left.gaps': 'LUKI DO UZUPEŁNIENIA · {n}',
   'left.gapNoClaude': 'brak CLAUDE.md',
-  'left.gapsRest': '+ {n} kolejne · {names}',
   'left.generate': 'GENERUJ POLECENIA',
   'left.generateTip': 'Polecenia dla luk: {n} bez CLAUDE.md, pozostałe w filtrach',
   'left.noGaps': 'Brak luk do uzupełnienia',
@@ -396,6 +395,10 @@ export const PL = {
   'items.close': 'Zamknij',
   'items.hint': 'Kliknij pozycję, aby zobaczyć jej szczegóły na orbicie.',
   'items.noDescription': 'brak opisu',
+  'right.kpi.gapsOpen': 'Pokaż listę luk',
+  'gapsList.close': 'Zamknij',
+  'gapsList.hint': 'Repozytoria bez CLAUDE.md. Kliknij, aby je zaznaczyć.',
+  'gapsList.empty': 'Brak luk do uzupełnienia.',
   'api.serverError': 'Błąd serwera ({status})'
 } as const satisfies Record<string, Message>;
 

@@ -32,6 +32,7 @@
         @if (store.aboutOpen()) { <app-about-dialog /> }
         @if (store.legendOpen()) { <app-legend-dialog /> }
         @if (store.itemsKind()) { <app-items-dialog /> }
+        @if (store.gapsListOpen()) { <app-gaps-list-dialog /> }
         @if (store.vaultOpen()) { <app-vault-dialog /> }
         @if (store.projectRepoId()) { <app-project-dialog /> }
         @if (store.scan()) { <app-scan-overlay /> }

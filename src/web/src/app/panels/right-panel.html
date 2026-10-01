@@ -2,7 +2,7 @@
   <div class="kpi repos"><div class="m kl">{{ t('right.kpi.repos') }}</div><div class="kv" style="color:#ffffff">{{ sum()?.repos ?? 0 }}</div></div>
   <div class="kpi agents"><div class="m kl">{{ t('right.kpi.agents') }}</div><div class="kv" style="color:#c6ff3d">{{ sum()?.agents ?? 0 }}</div></div>
   <div class="kpi skills"><div class="m kl">{{ t('right.kpi.skills') }}</div><div class="kv" style="color:#a99bff">{{ sum()?.skills ?? 0 }}</div></div>
-  <div class="kpi bad"><div class="m kl" style="color:#ff9cc9">{{ t('right.kpi.gaps') }}</div><div class="kv" style="color:#ff4fa3">{{ sum()?.gaps ?? 0 }}</div></div>
+  <button class="kpi bad tilebtn" type="button" [disabled]="!(sum()?.gaps)" [attr.aria-label]="t('right.kpi.gapsOpen')" [attr.title]="t('right.kpi.gapsOpen')" (click)="store.openGapsList()"><div class="m kl" style="color:#ff9cc9">{{ t('right.kpi.gaps') }}</div><div class="kv" style="color:#ff4fa3">{{ sum()?.gaps ?? 0 }}</div></button>
 </div>
 
 @if (sel(); as s) {

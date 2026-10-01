@@ -8,6 +8,7 @@ import { FilePane } from './file/file-pane';
 import { GapPanel } from './gaps/gap-panel';
 import { AboutDialog } from './about/about-dialog';
 import { LegendDialog } from './legend/legend-dialog';
+import { GapsListDialog } from './gaps/gaps-list-dialog';
 import { ItemsDialog } from './items/items-dialog';
 import { ProjectDialog } from './vault/project-dialog';
 import { VaultDialog } from './vault/vault-dialog';
@@ -20,7 +21,7 @@ import { RightPanel } from './panels/right-panel';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog],
+  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -48,6 +49,7 @@ export class App {
     if (this.store.legendOpen()) { this.store.closeLegend(); return; }
     if (this.store.projectRepoId()) { this.store.closeProject(); return; }
     if (this.store.itemsKind()) { this.store.closeItems(); return; }
+    if (this.store.gapsListOpen()) { this.store.closeGapsList(); return; }
     if (this.store.vaultOpen()) { this.store.closeVault(); return; }
     if (this.store.aboutOpen()) { this.store.closeAbout(); return; }
     if (this.store.coverageInfoOpen()) { this.store.closeCoverageInfo(); return; }
