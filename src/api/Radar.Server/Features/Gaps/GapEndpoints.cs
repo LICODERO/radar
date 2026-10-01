@@ -19,6 +19,7 @@ public static class GapEndpoints
         api.MapGet("/tools", (ITerminalLauncher launcher, IToolLocator locator) => Results.Ok(new
         {
             platform = launcher.Platform,
+            terminal = launcher.App,
             shell = launcher.Shell,
             canLaunch = launcher.Supported,
             tools = Tools.Known.ToDictionary(t => t, locator.IsAvailable)

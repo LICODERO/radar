@@ -14,6 +14,9 @@ public interface ITerminalLauncher
 
     string Platform { get; }
 
+    /// <summary>The terminal app that will open, for display (null when it is just "the terminal").</summary>
+    string? App => null;
+
     /// <summary>Opens a terminal window in <see cref="LaunchRequest.Dir"/> running the tool with the prompt. Returns once the window has been requested.</summary>
     Task LaunchAsync(LaunchRequest request, CancellationToken ct);
 }
@@ -52,6 +55,32 @@ public static class TerminalCommands
         "-e", "end tell"
     ];
 
+    /// <summary>
+    /// Arguments for `osascript`: opens an iTerm2 window with the default profile and types the command into it. When iTerm2 was not
+    /// running it opens a window of its own at start-up, so that one is used instead of adding a second, empty one.
+    /// </summary>
+    public static string[] ITermOsaArguments(LaunchRequest r) =>
+    [
+        "-e", "set wasRunning to application \"iTerm\" is running",
+        "-e", "tell application \"iTerm\"",
+        "-e", "activate",
+        "-e", "if not wasRunning then",
+        "-e", "repeat 30 times",
+        "-e", "if (count of windows) > 0 then exit repeat",
+        "-e", "delay 0.1",
+        "-e", "end repeat",
+        "-e", "end if",
+        "-e", "if (count of windows) is 0 or wasRunning then",
+        "-e", "set targetWindow to (create window with default profile)",
+        "-e", "else",
+        "-e", "set targetWindow to current window",
+        "-e", "end if",
+        "-e", "tell current session of targetWindow",
+        "-e", $"write text {AppleScript(PosixCommand(r))}",
+        "-e", "end tell",
+        "-e", "end tell"
+    ];
+
     public static string PowerShellScript(LaunchRequest r)
     {
         Check(r);
@@ -68,16 +97,35 @@ public static class TerminalCommands
     public static string PowerShellEncoded(string script) => Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
 }
 
-public sealed class MacTerminalLauncher : ITerminalLauncher
+public enum MacTerminalApp { Terminal, ITerm }
+
+public static class MacTerminalChoice
+{
+    /// <summary>
+    /// <paramref name="setting"/> is `terminal`, `iterm` or `auto` (also when empty): auto picks iTerm2 when it is installed,
+    /// because a developer who has it almost always works there, and Terminal.app otherwise.
+    /// </summary>
+    public static MacTerminalApp Resolve(string? setting, Func<string, bool> exists) => (setting ?? "").Trim().ToLowerInvariant() switch
+    {
+        "terminal" => MacTerminalApp.Terminal,
+        "iterm" or "iterm2" => MacTerminalApp.ITerm,
+        _ => exists("/Applications/iTerm.app") || exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Applications", "iTerm.app"))
+            ? MacTerminalApp.ITerm : MacTerminalApp.Terminal
+    };
+}
+
+public sealed class MacTerminalLauncher(MacTerminalApp app = MacTerminalApp.Terminal) : ITerminalLauncher
 {
     public bool Supported => true;
     public string Shell => "posix";
     public string Platform => "macos";
+    public string? App => app == MacTerminalApp.ITerm ? "iTerm2" : "Terminal.app";
 
     public async Task LaunchAsync(LaunchRequest request, CancellationToken ct)
     {
         var psi = new ProcessStartInfo("osascript") { RedirectStandardError = true, RedirectStandardOutput = true, UseShellExecute = false };
-        foreach (var a in TerminalCommands.MacOsaArguments(request)) psi.ArgumentList.Add(a);
+        var args = app == MacTerminalApp.ITerm ? TerminalCommands.ITermOsaArguments(request) : TerminalCommands.MacOsaArguments(request);
+        foreach (var a in args) psi.ArgumentList.Add(a);
 
         using var proc = Process.Start(psi) ?? throw new InvalidOperationException("Could not start osascript.");
         // the first run makes macOS ask the user to allow controlling Terminal, so allow a generous wait
@@ -85,7 +133,7 @@ public sealed class MacTerminalLauncher : ITerminalLauncher
         timeout.CancelAfter(TimeSpan.FromSeconds(60));
         var err = await proc.StandardError.ReadToEndAsync(timeout.Token);
         await proc.WaitForExitAsync(timeout.Token);
-        if (proc.ExitCode != 0) throw new InvalidOperationException(string.IsNullOrWhiteSpace(err) ? "Terminal nie zostal uruchomiony." : err.Trim());
+        if (proc.ExitCode != 0) throw new InvalidOperationException(string.IsNullOrWhiteSpace(err) ? $"{App} did not start." : err.Trim());
     }
 }
 
@@ -116,8 +164,9 @@ public sealed class UnsupportedTerminalLauncher : ITerminalLauncher
 
 public static class TerminalLauncherFactory
 {
-    public static ITerminalLauncher ForCurrentOs() =>
-        OperatingSystem.IsMacOS() ? new MacTerminalLauncher()
+    /// <param name="terminalSetting">`Radar:Terminal` (macOS): terminal, iterm or auto</param>
+    public static ITerminalLauncher ForCurrentOs(string? terminalSetting = null) =>
+        OperatingSystem.IsMacOS() ? new MacTerminalLauncher(MacTerminalChoice.Resolve(terminalSetting, Directory.Exists))
         : OperatingSystem.IsWindows() ? new WindowsTerminalLauncher()
         : new UnsupportedTerminalLauncher();
 }

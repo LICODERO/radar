@@ -29,6 +29,8 @@ export class GapPanel {
   protected readonly shell = computed<Shell>(() => this.store.tools()?.shell ?? 'posix');
   protected readonly canLaunch = computed(() => this.store.tools()?.canLaunch === true);
   protected readonly terminalName = computed(() => {
+    const app = this.store.tools()?.terminal;
+    if (app) return app;
     switch (this.store.tools()?.platform) {
       case 'macos': return 'Terminal.app';
       case 'windows': return 'PowerShell';

@@ -95,6 +95,8 @@ export interface ToolsInfo {
   platform: 'macos' | 'windows' | 'linux' | 'other' | string;
   shell: 'posix' | 'powershell';
   canLaunch: boolean;
+  /** the terminal app that opens (iTerm2, Terminal.app...); absent when it is just "the terminal" */
+  terminal?: string;
   tools: Record<string, boolean>;
 }
 

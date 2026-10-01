@@ -61,6 +61,39 @@ public class TerminalCommandTests
     }
 
     [Fact]
+    public void Iterm_arguments_type_the_posix_command_into_a_new_iterm_window()
+    {
+        var args = TerminalCommands.ITermOsaArguments(Req("/p/O'Brien", "say \"hi\" \\ there"));
+        Assert.Contains("tell application \"iTerm\"", args);
+        Assert.Contains("set targetWindow to (create window with default profile)", args);
+        var write = args.Single(a => a.StartsWith("write text "));
+        Assert.Contains("say \\\"hi\\\" \\\\ there", write);
+        Assert.Contains("O'\\\\''Brien", write);
+        Assert.Contains("claude", write);
+        Assert.DoesNotContain(args, a => a.Contains("Terminal"));
+    }
+
+    [Theory]
+    [InlineData(null, true, MacTerminalApp.ITerm)]
+    [InlineData("", true, MacTerminalApp.ITerm)]
+    [InlineData("auto", true, MacTerminalApp.ITerm)]
+    [InlineData("auto", false, MacTerminalApp.Terminal)]
+    [InlineData("terminal", true, MacTerminalApp.Terminal)]
+    [InlineData("Terminal", true, MacTerminalApp.Terminal)]
+    [InlineData("iterm", false, MacTerminalApp.ITerm)]
+    [InlineData("iTerm2", false, MacTerminalApp.ITerm)]
+    [InlineData("nonsense", false, MacTerminalApp.Terminal)]
+    public void Picks_the_mac_terminal_from_the_setting_and_what_is_installed(string? setting, bool itermInstalled, MacTerminalApp expected) =>
+        Assert.Equal(expected, MacTerminalChoice.Resolve(setting, _ => itermInstalled));
+
+    [Fact]
+    public void Launchers_name_the_app_they_open()
+    {
+        Assert.Equal("iTerm2", new MacTerminalLauncher(MacTerminalApp.ITerm).App);
+        Assert.Equal("Terminal.app", new MacTerminalLauncher().App);
+    }
+
+    [Fact]
     public void Unknown_tools_are_refused_before_anything_is_built()
     {
         Assert.Throws<ArgumentException>(() => TerminalCommands.PosixCommand(Req(tool: "rm -rf /")));

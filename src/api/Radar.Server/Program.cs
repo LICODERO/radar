@@ -32,7 +32,7 @@ builder.Services.AddSingleton<LatestScanCache>();
 builder.Services.AddSingleton<SessionToken>();
 builder.Services.AddSingleton<ScanManager>();
 builder.Services.AddSingleton<IFolderPicker>(FolderPickerFactory.ForCurrentOs());
-builder.Services.AddSingleton<ITerminalLauncher>(TerminalLauncherFactory.ForCurrentOs());
+builder.Services.AddSingleton<ITerminalLauncher>(sp => TerminalLauncherFactory.ForCurrentOs(sp.GetRequiredService<IConfiguration>()["Radar:Terminal"]));
 builder.Services.AddSingleton<IToolLocator, PathToolLocator>();
 builder.Services.AddSingleton<IAgentGenerator, ClaudeCliGenerator>();
 builder.Services.AddSingleton<GenerationGate>();
