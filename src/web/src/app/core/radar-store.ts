@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { Hover, Pick, RepoInfo, ScanResult, Settings, ToolsInfo, WorkflowInfo } from './models';
+import { EnableProjectResult, Hover, Pick, RepoInfo, ScanResult, Settings, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, countByType } from './commands';
@@ -65,6 +65,16 @@ export class RadarStore {
   /** the "new agent from a description" panel; the id of the repo it works on */
   readonly composerRepoId = signal<string | null>(null);
   readonly tools = signal<ToolsInfo | null>(null);
+  /** second brain: status from the server (null in sample-data mode or when it could not be read) */
+  readonly vault = signal<VaultStatus | null>(null);
+  readonly vaultOpen = signal(false);
+  /** the "enable the second brain for this repo" dialog; the id of the repo */
+  readonly projectRepoId = signal<string | null>(null);
+  readonly vaultReady = computed(() => this.vault()?.state === 'ok');
+  readonly selectedHasVault = computed(() => {
+    const id = this.selected()?.id;
+    return !!id && !!this.vault()?.projects.some((p) => p.repoId === id);
+  });
   readonly gapItems = signal<GapItem[]>([]);
   readonly gapsError = signal<string | null>(null);
   /** run confirmation shown inside the generator; Esc cancels it before it closes the panel */
@@ -151,6 +161,7 @@ export class RadarStore {
       this.tools.set(await this.api.toolsInfo());
       this.applyResult(await this.api.latest());
       await this.loadGaps();
+      await this.loadVault();
       const running = await this.api.currentScan();
       if (running) await this.attach(running);
     } catch (e) {
@@ -218,6 +229,40 @@ export class RadarStore {
   closeCoverageInfo(): void { this.coverageInfoOpen.set(false); }
 
   closeComposer(): void { this.composerRepoId.set(null); }
+
+  // ---- second brain -----------------------------------------------------------------------------
+  /** Non-fatal: the rest of the app works without the vault status. */
+  async loadVault(): Promise<void> {
+    if (this.mode() === 'mock') { this.vault.set(null); return; }
+    try { this.vault.set(await this.api.vault()); }
+    catch { this.vault.set(null); }
+  }
+
+  openVault(): void {
+    if (this.mode() === 'mock') return;
+    void this.loadVault();
+    this.vaultOpen.set(true);
+  }
+  closeVault(): void { this.vaultOpen.set(false); }
+
+  /** Throws ApiError (with `body.code`) when the server refuses; the dialog shows the message. */
+  async createVault(path: string): Promise<void> { this.vault.set(await this.api.createVault(path)); }
+  async relinkVault(path: string): Promise<void> { this.vault.set(await this.api.relinkVault(path)); }
+
+  openProject(): void {
+    const id = this.selected()?.id;
+    if (!id || this.mode() === 'mock' || !this.vaultReady()) return;
+    this.projectRepoId.set(id);
+  }
+  closeProject(): void { this.projectRepoId.set(null); }
+
+  planProject(repoId: string): Promise<EnableProjectResult> { return this.api.enableProject(repoId, false); }
+
+  async applyProject(repoId: string): Promise<EnableProjectResult> {
+    const r = await this.api.enableProject(repoId, true);
+    this.vault.set(r.vault);
+    return r;
+  }
 
   /**
    * Rescans without the overlay (used after the app created a file) and resolves when the fresh result is in.

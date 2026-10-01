@@ -194,3 +194,102 @@ describe('repo selection', () => {
     expect(store.composerRepoId()).toBeNull();
   });
 });
+
+describe('second brain', () => {
+  const vault = (state: 'none' | 'ok' | 'missing', projects: { name: string; repoId?: string }[] = []) => ({
+    state, path: '/v', pathDisplay: '/v', projects, suggestedPath: '/s', suggestedPathDisplay: '/s'
+  });
+  const repo = (id: string) => ({ id, name: id, agents: [], skills: [], coverage: { score: 50 }, gaps: [] });
+
+  function setupVault(initial = vault('none')) {
+    const api = {
+      vault: vi.fn(async () => initial),
+      createVault: vi.fn(async (_p: string) => vault('ok')),
+      relinkVault: vi.fn(async (_p: string) => vault('ok')),
+      enableProject: vi.fn(async (_id: string, confirm: boolean) => ({
+        applied: confirm,
+        plan: { vaultDir: '/v/a', creates: [], claudeLocalPath: '/r/a/CLAUDE.local.md', claudeLocalExists: false, block: 'b', alreadyEnabled: confirm },
+        vault: vault('ok', [{ name: 'a', repoId: 'a' }])
+      }))
+    };
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), { provide: RadarApi, useValue: api }] });
+    const store = TestBed.inject(RadarStore);
+    store.result.set({ repos: [repo('a'), repo('b')], workflows: [], gaps: [] } as unknown as ScanResult);
+    return { api, store };
+  }
+
+  it('reads the status when the dialog opens and keeps working without it', async () => {
+    const { api, store } = setupVault(vault('missing'));
+    store.openVault();
+    await vi.waitFor(() => expect(store.vault()?.state).toBe('missing'));
+    expect(store.vaultOpen()).toBe(true);
+    expect(store.vaultReady()).toBe(false);
+
+    api.vault.mockRejectedValueOnce(new ApiError('x', 500));
+    await store.loadVault();
+    expect(store.vault()).toBeNull();
+  });
+
+  it('does not touch the server in sample-data mode', async () => {
+    const { api, store } = setupVault();
+    store.mode.set('mock');
+    store.openVault();
+    expect(api.vault).not.toHaveBeenCalled();
+    expect(store.vaultOpen()).toBe(false);
+  });
+
+  it('remembers the status after create and relink', async () => {
+    const { api, store } = setupVault();
+    await store.createVault('/new');
+    expect(api.createVault).toHaveBeenCalledWith('/new');
+    expect(store.vaultReady()).toBe(true);
+
+    store.vault.set(vault('missing') as never);
+    await store.relinkVault('/moved');
+    expect(api.relinkVault).toHaveBeenCalledWith('/moved');
+    expect(store.vaultReady()).toBe(true);
+  });
+
+  it('passes the server error code through when creating fails', async () => {
+    const { api, store } = setupVault();
+    api.createVault.mockRejectedValueOnce(new ApiError('Folder nie jest pusty.', 409, { code: 'not-empty' }));
+    await expect(store.createVault('/x')).rejects.toMatchObject({ status: 409, body: { code: 'not-empty' } });
+    expect(store.vault()).toBeNull();
+  });
+
+  it('opens the repo dialog only for a selected repo and a working vault', async () => {
+    const { store } = setupVault();
+    store.selectRepo('a');
+    store.openProject();
+    expect(store.projectRepoId()).toBeNull(); // no vault yet
+
+    store.vault.set(vault('ok') as never);
+    store.clearSelection();
+    store.openProject();
+    expect(store.projectRepoId()).toBeNull(); // no repo selected
+
+    store.selectRepo('a');
+    store.openProject();
+    expect(store.projectRepoId()).toBe('a');
+    store.closeProject();
+    expect(store.projectRepoId()).toBeNull();
+  });
+
+  it('previews without confirm, then confirms and learns that the repo is enabled', async () => {
+    const { api, store } = setupVault();
+    store.vault.set(vault('ok') as never);
+    store.selectRepo('a');
+    expect(store.selectedHasVault()).toBe(false);
+
+    const preview = await store.planProject('a');
+    expect(api.enableProject).toHaveBeenLastCalledWith('a', false);
+    expect(preview.applied).toBe(false);
+    expect(store.selectedHasVault()).toBe(false);
+
+    await store.applyProject('a');
+    expect(api.enableProject).toHaveBeenLastCalledWith('a', true);
+    expect(store.selectedHasVault()).toBe(true);
+    store.selectRepo('b');
+    expect(store.selectedHasVault()).toBe(false);
+  });
+});

@@ -74,19 +74,22 @@ public static class VaultEndpoints
         });
     }
 
-    private static IResult Conflict(string error) => Results.Json(new { error }, statusCode: StatusCodes.Status409Conflict);
+    private static IResult Conflict(string error, string? code = null) => Results.Json(new { error, code }, statusCode: StatusCodes.Status409Conflict);
 
+    private static IResult Bad(string error, string code) => Results.Json(new { error, code }, statusCode: StatusCodes.Status400BadRequest);
+
+    // `code` lets the UI react to the kind of failure (offer a subfolder, offer to link an existing vault) without parsing texts
     private static IResult Failure(VaultOutcome outcome, RequestMessages m) => outcome switch
     {
-        VaultOutcome.PathInvalid => Results.BadRequest(new { error = m[Msg.PathInvalid] }),
-        VaultOutcome.PathIsRoot => Results.BadRequest(new { error = m[Msg.PathIsRoot] }),
-        VaultOutcome.FolderMissing => Results.BadRequest(new { error = m[Msg.PathMissing] }),
-        VaultOutcome.InsideRepo => Results.BadRequest(new { error = m[Msg.VaultInsideRepo] }),
-        VaultOutcome.NotEmpty => Conflict(m[Msg.VaultNotEmpty]),
-        VaultOutcome.AlreadyVault => Conflict(m[Msg.VaultAlready]),
-        VaultOutcome.NotAVault => Results.BadRequest(new { error = m[Msg.VaultNotAVault] }),
-        VaultOutcome.UnsupportedVersion => Results.BadRequest(new { error = m[Msg.VaultTooNew] }),
-        _ => Results.Json(new { error = m[Msg.VaultWriteFailed] }, statusCode: StatusCodes.Status500InternalServerError)
+        VaultOutcome.PathInvalid => Bad(m[Msg.PathInvalid], "path-invalid"),
+        VaultOutcome.PathIsRoot => Bad(m[Msg.PathIsRoot], "path-is-root"),
+        VaultOutcome.FolderMissing => Bad(m[Msg.PathMissing], "folder-missing"),
+        VaultOutcome.InsideRepo => Bad(m[Msg.VaultInsideRepo], "inside-repo"),
+        VaultOutcome.NotEmpty => Conflict(m[Msg.VaultNotEmpty], "not-empty"),
+        VaultOutcome.AlreadyVault => Conflict(m[Msg.VaultAlready], "already-vault"),
+        VaultOutcome.NotAVault => Bad(m[Msg.VaultNotAVault], "not-a-vault"),
+        VaultOutcome.UnsupportedVersion => Bad(m[Msg.VaultTooNew], "unsupported-version"),
+        _ => Results.Json(new { error = m[Msg.VaultWriteFailed], code = "write-failed" }, statusCode: StatusCodes.Status500InternalServerError)
     };
 
     private static object View(VaultStatus s)

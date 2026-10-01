@@ -487,7 +487,9 @@ public class VaultEndpointTests : IDisposable
         var created = await c.PostAsJsonAsync("/api/vault", new { path = VaultDir });
         Assert.Equal(HttpStatusCode.Created, created.StatusCode);
         Assert.Equal("ok", (await created.Content.ReadFromJsonAsync<JsonElement>()).GetProperty("state").GetString());
-        Assert.Equal(HttpStatusCode.Conflict, (await c.PostAsJsonAsync("/api/vault", new { path = VaultDir })).StatusCode);
+        var again = await c.PostAsJsonAsync("/api/vault", new { path = VaultDir });
+        Assert.Equal(HttpStatusCode.Conflict, again.StatusCode);
+        Assert.Equal("already-vault", (await again.Content.ReadFromJsonAsync<JsonElement>()).GetProperty("code").GetString());
 
         var moved = Path.Combine(_root, "moved");
         Directory.Move(VaultDir, moved);
@@ -511,6 +513,7 @@ public class VaultEndpointTests : IDisposable
         c.DefaultRequestHeaders.AcceptLanguage.ParseAdd("en");
         var en = await (await c.PostAsJsonAsync("/api/vault", new { path = VaultDir })).Content.ReadFromJsonAsync<JsonElement>();
         Assert.Contains("not empty", en.GetProperty("error").GetString());
+        Assert.Equal("not-empty", en.GetProperty("code").GetString());
 
         c.DefaultRequestHeaders.AcceptLanguage.Clear();
         c.DefaultRequestHeaders.AcceptLanguage.ParseAdd("pl");

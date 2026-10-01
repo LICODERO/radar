@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { I18n } from '../i18n/i18n';
 import { GapItem, Tool } from './commands';
-import { AgentDraft, FileContent, ScanResult, Settings, ToolsInfo } from './models';
+import { AgentDraft, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolsInfo, VaultStatus } from './models';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly body?: any) {
@@ -84,6 +84,22 @@ export class RadarApi {
   /** Writes the reviewed file as a brand-new .claude/agents/<name>.md (the server never overwrites). */
   createAgent(repoId: string, content: string): Promise<{ path: string }> {
     return this.call('POST', '/api/agents', { repoId, content });
+  }
+
+  // ---- second brain ----------------------------------------------------------------------------
+  vault(): Promise<VaultStatus> { return this.call('GET', '/api/vault'); }
+  /** New vault in an empty or new folder. Failures carry `body.code` (not-empty, already-vault, inside-repo...). */
+  createVault(path: string): Promise<VaultStatus> { return this.call('POST', '/api/vault', { path }); }
+  /** Points the app at an existing (for instance moved) vault. */
+  relinkVault(path: string): Promise<VaultStatus> { return this.call('PUT', '/api/vault', { path }); }
+  skill(): Promise<SkillStatus> { return this.call('GET', '/api/vault/skill'); }
+  /** Installs the bundled skill; the server never overwrites, and updates only an untouched older copy when `update` is set. */
+  async installSkill(update: boolean): Promise<SkillStatus> {
+    return (await this.call<{ skill: SkillStatus }>('POST', '/api/vault/skill', { update })).skill;
+  }
+  /** Without `confirm` the server only returns what it would write. */
+  enableProject(repoId: string, confirm: boolean): Promise<EnableProjectResult> {
+    return this.call('POST', '/api/vault/projects', { repoId, confirm });
   }
 
   private abortable<T>(source: Observable<T>, signal: AbortSignal): Promise<T> {

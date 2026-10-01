@@ -1,0 +1,61 @@
+<div class="backdrop" (click)="store.closeProject()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('project.title', { repo: repo()?.name ?? '' })">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">{{ t('project.eyebrow') }}</div>
+      <div class="ttl">{{ t('project.title', { repo: repo()?.name ?? '' }) }}</div>
+    </div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('project.close')" (click)="store.closeProject()">✕</button>
+  </div>
+
+  <div class="body">
+    @if (phase() === 'done') {
+      <p class="lead">{{ t('project.done') }}</p>
+      <p class="text">{{ t('project.doneText', { path: plan()?.claudeLocalPath ?? '' }) }}</p>
+      <div class="btns">
+        <button class="m btn-solid go" type="button" (click)="store.closeProject()">{{ t('project.closeBtn') }}</button>
+      </div>
+    } @else {
+      <p class="text">{{ t('project.intro') }}</p>
+
+      @if (phase() === 'loading') {
+        <p class="m wait">{{ t('project.loading') }}</p>
+      }
+
+      @if (plan(); as p) {
+        @if (p.alreadyEnabled) { <p class="m note">{{ t('project.already') }}</p> }
+
+        <div class="m lbl">{{ t('project.vaultCreates') }}</div>
+        @if (creates().length) {
+          <ul class="m list">
+            @for (c of creates(); track c) { <li>{{ c }}</li> }
+          </ul>
+        } @else {
+          <p class="m hint">{{ t('project.vaultNothing') }}</p>
+        }
+
+        <div class="m lbl">{{ t('project.repoPart') }}</div>
+        <p class="m hint path">{{ p.claudeLocalExists ? t('project.claudeLocalUpdate', { path: p.claudeLocalPath }) : t('project.claudeLocalNew', { path: p.claudeLocalPath }) }}</p>
+        @if (p.gitIgnored === true) {
+          <p class="m hint good">{{ t('project.git.ignored') }}</p>
+        } @else if (p.gitIgnored === false) {
+          <p class="m warn" role="alert">{{ t('project.git.notIgnored') }}</p>
+        } @else {
+          <p class="m hint">{{ t('project.git.unknown') }}</p>
+        }
+
+        <div class="m lbl">{{ t('project.block') }}</div>
+        <pre class="m block">{{ p.block }}</pre>
+      }
+
+      @if (error(); as e) { <div class="m err" role="alert">{{ e }}</div> }
+
+      <div class="btns">
+        <button class="m btn-solid go" type="button" [disabled]="phase() !== 'plan'" (click)="confirm()">
+          {{ phase() === 'saving' ? t('project.saving') : (plan()?.alreadyEnabled ? t('project.confirmRefresh') : t('project.confirm')) }}
+        </button>
+        <button class="m btn-ghost" type="button" [disabled]="phase() === 'saving'" (click)="store.closeProject()">{{ t('project.cancel') }}</button>
+      </div>
+    }
+  </div>
+</div>

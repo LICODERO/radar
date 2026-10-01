@@ -1,0 +1,125 @@
+<div class="backdrop" (click)="store.closeVault()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('vault.title')">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">{{ t('vault.eyebrow') }}</div>
+      <div class="ttl">{{ t('vault.title') }}</div>
+    </div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('vault.close')" (click)="store.closeVault()">✕</button>
+  </div>
+
+  <div class="body">
+    @switch (view()) {
+      @case ('intro') {
+        <p class="lead">{{ t('vault.intro.lead') }}</p>
+        <p class="text">{{ t('vault.intro.text') }}</p>
+        <p class="text parts">{{ t('vault.intro.parts') }}</p>
+        <ul class="m list">
+          <li><b>raw</b> – {{ t('vault.intro.raw') }}</li>
+          <li><b>memory</b> – {{ t('vault.intro.memory') }}</li>
+          <li><b>outputs</b> – {{ t('vault.intro.outputs') }}</li>
+        </ul>
+        <div class="btns">
+          <button class="m btn-solid go" type="button" (click)="toLocation()">{{ t('vault.intro.next') }}</button>
+          <button class="m btn-ghost" type="button" (click)="store.closeVault()">{{ t('vault.cancel') }}</button>
+        </div>
+      }
+
+      @case ('location') {
+        <p class="lead">{{ t('vault.location.title') }}</p>
+        <label class="m lbl" for="vault-path">{{ t('vault.location.label') }}</label>
+        <div class="pathrow">
+          <input id="vault-path" class="m pin" type="text" spellcheck="false" [attr.aria-label]="t('vault.location.aria')"
+                 [value]="path()" [disabled]="busy()" (input)="onPath($event)" (keydown.enter)="create()" />
+          @if (canPick()) {
+            <button class="m btn-ghost" type="button" [disabled]="busy()" (click)="pick()">{{ t('vault.location.pick') }}</button>
+          }
+        </div>
+        <p class="m hint">{{ t('vault.location.hint') }}</p>
+        <p class="m hint">{{ t('vault.location.files') }}</p>
+
+        @if (error(); as e) {
+          <div class="m err" role="alert">{{ e }}</div>
+          @if (errorCode() === 'not-empty') {
+            <div class="m offer">
+              {{ t('vault.notEmpty') }}
+              <div class="m sub">{{ subPath() }}</div>
+              <button class="m btn-ghost" type="button" [disabled]="busy()" (click)="useSubfolder()">{{ t('vault.notEmpty.sub') }}</button>
+            </div>
+          } @else if (errorCode() === 'already-vault') {
+            <div class="m offer">
+              {{ t('vault.already') }}
+              <button class="m btn-ghost" type="button" [disabled]="busy()" (click)="relink()">{{ t('vault.already.use') }}</button>
+            </div>
+          }
+        }
+
+        <div class="btns">
+          <button class="m btn-solid go" type="button" [disabled]="busy() || !path().trim()" (click)="create()">
+            {{ busy() ? t('vault.location.creating') : t('vault.location.create') }}
+          </button>
+          <button class="m btn-ghost" type="button" [disabled]="busy()" (click)="go('intro')">{{ t('vault.back') }}</button>
+        </div>
+      }
+
+      @case ('relink') {
+        <p class="lead">{{ t('vault.relink.title') }}</p>
+        @if (relinkReason(); as reason) { <p class="m warn">{{ reason }}</p> }
+        <p class="text">{{ t('vault.relink.text') }}</p>
+        <label class="m lbl" for="vault-path">{{ t('vault.location.label') }}</label>
+        <div class="pathrow">
+          <input id="vault-path" class="m pin" type="text" spellcheck="false" [attr.aria-label]="t('vault.location.aria')"
+                 [value]="path()" [disabled]="busy()" (input)="onPath($event)" (keydown.enter)="relink()" />
+          @if (canPick()) {
+            <button class="m btn-ghost" type="button" [disabled]="busy()" (click)="pick()">{{ t('vault.location.pick') }}</button>
+          }
+        </div>
+        @if (error(); as e) { <div class="m err" role="alert">{{ e }}</div> }
+        <div class="btns">
+          <button class="m btn-solid go" type="button" [disabled]="busy() || !path().trim()" (click)="relink()">
+            {{ busy() ? t('vault.relink.applying') : t('vault.relink.apply') }}
+          </button>
+          @if (vault()?.state === 'ok') {
+            <button class="m btn-ghost" type="button" [disabled]="busy()" (click)="go('manage')">{{ t('vault.cancel') }}</button>
+          } @else {
+            <button class="m btn-ghost" type="button" [disabled]="busy()" (click)="toLocation()">{{ t('vault.relink.new') }}</button>
+          }
+        </div>
+      }
+
+      @case ('manage') {
+        @if (justCreated()) { <p class="m okmsg" role="status">{{ t('vault.created') }}</p> }
+
+        <div class="rows">
+          <div class="m row"><span class="k">{{ t('vault.manage.path') }}</span><span class="v">{{ vault()?.pathDisplay }}</span></div>
+          <div class="m row proj">
+            <span class="k">{{ t('vault.manage.projects') }}</span>
+            <span class="v">
+              @for (p of vault()?.projects ?? []; track p.name) { <span class="chip">{{ p.name }}</span> }
+              @empty { <span class="none">{{ t('vault.manage.noProjects') }}</span> }
+            </span>
+          </div>
+        </div>
+        <div class="btns tight">
+          <button class="m btn-ghost" type="button" (click)="toRelink()">{{ t('vault.manage.change') }}</button>
+        </div>
+
+        <div class="skill">
+          <div class="m lbl">{{ t('vault.skill.title') }}</div>
+          @if (skill(); as s) {
+            <p class="text small">{{ t('vault.skill.text', { name: s.name, path: s.pathDisplay }) }}</p>
+            <div class="m skillrow">
+              <span class="sstate" [class.good]="s.state === 'up-to-date'" [class.info]="s.state !== 'up-to-date' && s.state !== 'not-installed' && s.state !== 'outdated'">{{ skillState() }}</span>
+              @if (canInstall()) {
+                <button class="m btn-solid go" type="button" [disabled]="skillBusy()" (click)="installSkill()">
+                  {{ skillBusy() ? t('vault.skill.working') : (s.state === 'outdated' ? t('vault.skill.update') : t('vault.skill.install')) }}
+                </button>
+              }
+            </div>
+          }
+          @if (skillError(); as e) { <div class="m err" role="alert">{{ e }}</div> }
+        </div>
+      }
+    }
+  </div>
+</div>

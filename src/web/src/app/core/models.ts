@@ -106,3 +106,44 @@ export interface AgentDraft {
   errors: string[];
   costUsd?: number;
 }
+
+/** Second brain: a vault folder outside the repos (see `Features/Vault` on the server). */
+export interface VaultStatus {
+  /** 'missing' = a path is saved but the folder is gone or no longer a vault */
+  state: 'none' | 'ok' | 'missing';
+  path?: string | null;
+  pathDisplay: string;
+  reason?: 'folder-missing' | 'not-a-vault' | 'unsupported-version' | null;
+  projects: { name: string; repoId?: string | null }[];
+  suggestedPath: string;
+  suggestedPathDisplay: string;
+}
+
+export type SkillState = 'not-installed' | 'up-to-date' | 'outdated' | 'modified' | 'foreign' | 'linked';
+
+export interface SkillStatus {
+  name: string;
+  state: SkillState;
+  path: string;
+  pathDisplay: string;
+  availableVersion: number;
+  installedVersion?: number | null;
+}
+
+/** What enabling the second brain for a repo would write (or just wrote). */
+export interface ProjectPlan {
+  vaultDir: string;
+  creates: string[];
+  claudeLocalPath: string;
+  claudeLocalExists: boolean;
+  block: string;
+  alreadyEnabled: boolean;
+  /** whether git ignores CLAUDE.local.md in the repo; absent when git could not tell */
+  gitIgnored?: boolean | null;
+}
+
+export interface EnableProjectResult {
+  applied: boolean;
+  plan: ProjectPlan;
+  vault: VaultStatus;
+}

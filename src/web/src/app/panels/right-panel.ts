@@ -20,6 +20,21 @@ export class RightPanel {
     : !this.store.selected()
       ? this.t('right.pickRepoFirst')
       : this.t('right.newAgentTip', { name: this.selName() }));
+  protected readonly isMock = computed(() => this.store.mode() === 'mock');
+  protected readonly vaultState = computed(() => this.store.vault()?.state ?? 'none');
+  protected readonly vaultTip = computed(() => {
+    const v = this.store.vault();
+    if (this.isMock()) return this.t('right.needServer');
+    return v?.state === 'ok' ? this.t('right.vaultTip.ok', { path: v.pathDisplay })
+      : v?.state === 'missing' ? this.t('right.vaultTip.missing')
+      : this.t('right.vaultTip.none');
+  });
+  protected readonly canEnable = computed(() => !this.isMock() && this.store.vaultReady() && !!this.store.selected() && !this.store.scanning());
+  protected readonly enableTip = computed(() =>
+    this.isMock() ? this.t('right.needServer')
+      : !this.store.vaultReady() ? this.t('right.enableRepoNeedVault')
+      : !this.store.selected() ? this.t('right.pickRepoFirst')
+      : this.t('right.enableRepoTip', { name: this.selName() }));
   protected readonly flags = computed(() => {
     const s = this.sel();
     if (!s) return '';

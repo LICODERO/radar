@@ -81,6 +81,6 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 3. Scan from the UI: SSE progress overlay, saved result, "last scan", folder picker (done).
 4. Read-only markdown preview + command generator for gaps (done), plus URUCHOM: opens a terminal after an explicit confirmation. Prompts live in `src/api/Radar.Server/Features/Gaps/GapCommands.cs`; the UI formats commands per shell in `src/web/src/app/core/commands.ts`.
 5. Distribution (GitHub Actions release binaries).
-6. Second brain: vault logic, bundled skill and per-repo enabling are on the server (done, no UI yet); next the vault wizard in the UI, then repo relations (`relations.json`, names only, repos as siblings, export/import) and their block in `CLAUDE.local.md`.
+6. Second brain: vault logic, bundled skill and per-repo enabling on the server, and their UI in `src/web/src/app/vault/` (`vault-dialog`: intro / location / manage / relink + skill install, `project-dialog`: preview then confirm; opened from the right panel) are done; next repo relations (`relations.json`, names only, repos as siblings, export/import) and their block in `CLAUDE.local.md`.
 
 Requirements, mockup and the MVP spec live outside the repo (see `CLAUDE.local.md` if present).
