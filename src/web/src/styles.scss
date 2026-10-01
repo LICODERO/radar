@@ -31,6 +31,15 @@ button:disabled { cursor: not-allowed !important; box-shadow: none !important; t
 .snode:hover > span { transform: scale(1.7) !important; }
 .act:hover:not(:disabled) { box-shadow: 0 0 18px currentColor; transform: translateY(-2px); background: #ffffff12 !important; }
 
+// Close buttons (the dialogs' .x and the orbit popover's .close): the cross is drawn here instead of typed as ✕, because that glyph is not in the
+// mono font and the fallback font put it in the corner of the box. The button's own text is hidden (it is still there for tests and screen readers).
+button.x, button.close { position: relative; font-size: 0 !important; line-height: 0; }
+button.x::before, button.x::after, button.close::before, button.close::after {
+  content: ''; position: absolute; left: 50%; top: 50%; width: 11px; height: 1.5px; background: currentColor;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+button.x::after, button.close::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
 .tip { position: relative; }
 .tip::after {
   content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translate(-50%, 4px);
