@@ -303,7 +303,7 @@ export const EN: Record<MsgKey, Message> = {
   'store.fileFailed': 'Could not load the file.',
   'api.aborted': 'Aborted',
   'right.vault': 'SECOND BRAIN',
-  'right.vaultTip.none': 'Set up the second brain: a folder with knowledge about your projects, outside the repositories',
+  'right.vaultTip.none': 'Set up the second brain (project knowledge outside the repositories)',
   'right.vaultTip.ok': 'Second brain: {path}',
   'right.vaultTip.missing': 'The second brain folder is unavailable. Point to it again',
   'right.enableRepo': '+ FOR THIS REPO',

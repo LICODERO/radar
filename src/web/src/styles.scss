@@ -34,8 +34,8 @@ button:disabled { cursor: not-allowed !important; box-shadow: none !important; t
 .tip { position: relative; }
 .tip::after {
   content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translate(-50%, 4px);
-  white-space: nowrap; background: $panel; border: 1px solid #c6ff3d88; color: $text; font-family: $mono;
-  font-size: fs(10); font-weight: 400; letter-spacing: .06em; padding: 5px 9px; opacity: 0; pointer-events: none;
+  white-space: normal; width: max-content; max-width: 280px; line-height: 1.45; background: $panel; border: 1px solid #c6ff3d88; color: $text; font-family: $mono;
+  font-size: fs(11.5); font-weight: 400; letter-spacing: .04em; padding: 6px 10px; opacity: 0; pointer-events: none;
   transition: opacity .18s, transform .18s; z-index: 20;
 }
 .tip-b::after { bottom: auto; top: calc(100% + 8px); transform: translate(-50%, -4px); }

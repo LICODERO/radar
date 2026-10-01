@@ -39,7 +39,7 @@ span.chipx { cursor: default; }
 .act:disabled { opacity: .5; }
 .plus { font-size: fs(20); line-height: 1; }
 .lbl { font-size: fs(10); letter-spacing: .14em; }
-.vault button { background: transparent; border: 1px solid #ffb84d88; color: $amber; font-size: fs(10); letter-spacing: .08em; padding: 9px 4px; cursor: pointer; }
+.vault button { background: transparent; border: 1px solid #ffb84d88; color: $amber; font-size: fs(11.5); letter-spacing: .06em; padding: 10px 4px; cursor: pointer; }
 .vault button:hover:not(:disabled) { background: #ffb84d14; }
 .vault button:disabled { opacity: .5; cursor: default; }
 .vault button.warn { border-style: dashed; }

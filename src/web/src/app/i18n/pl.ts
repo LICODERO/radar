@@ -305,7 +305,7 @@ export const PL = {
   'store.fileFailed': 'Nie udało się wczytać pliku.',
   'api.aborted': 'Przerwano',
   'right.vault': 'SECOND BRAIN',
-  'right.vaultTip.none': 'Skonfiguruj second brain: folder z wiedzą o projektach poza repozytoriami',
+  'right.vaultTip.none': 'Skonfiguruj second brain (wiedza o projektach poza repozytoriami)',
   'right.vaultTip.ok': 'Second brain: {path}',
   'right.vaultTip.missing': 'Folder second brain jest niedostępny. Wskaż go ponownie',
   'right.enableRepo': '+ DLA TEGO REPO',
