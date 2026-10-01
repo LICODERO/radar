@@ -8,7 +8,7 @@ public sealed record GapItem(string RepoId, string RepoName, string Initials, st
 public static class GapCommands
 {
     public static readonly string[] Order =
-        [GapTypes.NoClaudeMd, GapTypes.NoAgents, GapTypes.NoSkills, GapTypes.NoOutputs, GapTypes.WorkflowNotLinked];
+        [GapTypes.NoClaudeMd, GapTypes.NoAgents, GapTypes.NoSkills, GapTypes.WorkflowNotLinked];
 
     public static string DirOf(ScanResult result, RepoInfo repo) =>
         Path.GetFullPath(Path.Combine(result.ScanRoot, repo.Path.Replace('/', Path.DirectorySeparatorChar)));
@@ -43,8 +43,6 @@ public static class GapCommands
             "Create the directory .claude/agents and add 1-3 subagents that would be useful in this repository (for example a code reviewer and a test writer), based on its stack and conventions. Each agent is a Markdown file with the frontmatter fields name, description and tools, followed by short instructions. Do not modify any other file.",
         GapTypes.NoSkills =>
             "Create the directory .claude/skills and add 1-3 skills for recurring procedures in this repository (for example build and test, database migrations, conventions). Each skill is a folder with a SKILL.md that has the frontmatter fields name and description followed by concrete steps. Base them only on what exists in the repository and do not modify any other file.",
-        GapTypes.NoOutputs =>
-            "Create .claude/memory/OUTPUTS.md as an index of project notes, plus .claude/memory/project.md describing the goal, tech stack and constraints of this repository as far as they are visible in it. Keep every entry in the index to one line. Do not modify any other file.",
         GapTypes.WorkflowNotLinked =>
             $"CLAUDE.md does not mention these workflow files: {string.Join(", ", unlinkedWorkflows)}. Read each one and add a short table to CLAUDE.md (create the file if it does not exist) with the columns workflow, when to use, file path, taking the name and when fields from the frontmatter. Reference the files by path only and do not import them with @. Do not modify any other file.",
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Unknown gap type")

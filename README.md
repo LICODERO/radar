@@ -12,7 +12,6 @@
   - agents – `.claude/agents/*.md`
   - skills – `.claude/skills/*/SKILL.md`
   - workflows – `.claude/workflows/*.md`
-  - memory – `.claude/memory/OUTPUTS.md` and notes (detection and counters only)
 - Detects the tech stack heuristically (.NET, Angular, Node, YAML, SQL).
 - Computes AI coverage per repository and overall, and lists gaps (for example a missing `CLAUDE.md`).
 - Shows everything in an "Orbit" HUD: repositories, agents, skills and workflows on concentric rings, with relations highlighted on selection.
@@ -26,9 +25,8 @@ Per repository, coverage is the sum of:
 | Element | Weight |
 |---|---|
 | `CLAUDE.md` | 40 |
-| at least one agent | 25 |
-| at least one skill | 25 |
-| `OUTPUTS.md` | 10 |
+| at least one agent | 30 |
+| at least one skill | 30 |
 
 ## Privacy and safety
 
@@ -61,7 +59,7 @@ cd radar
 2. The overlay shows real progress from the scanner; when it finishes, close it to see the dashboard. Use **SKANUJ PONOWNIE** to rescan the same directory.
 3. Click an agent, skill or workflow (or **OTWÓRZ CLAUDE.md**) and choose **OTWÓRZ PLIK** for a read-only preview of the file.
 4. **+ AGENT** (left panel) drafts a new agent from a description in your own words: it calls your `claude` CLI once, with no tools and in an empty temporary directory, sending only your description, the stack name and existing agent names. You review and edit the draft; **ZAPISZ** then creates `.claude/agents/<name>.md` (never overwriting an existing file).
-5. **GENERUJ POLECENIA** lists ready-made `claude` / `codex` commands for the gaps (missing `CLAUDE.md`, agents, skills, OUTPUTS, unlinked workflows). **KOPIUJ** copies a command (POSIX or PowerShell flavour, depending on your system); **URUCHOM** opens Terminal.app (macOS) or PowerShell (Windows) in the repo and starts `claude` / `codex` with the prompt after you confirm. The session is interactive, so you approve every change in the tool; the app itself never writes into your repos.
+5. **GENERUJ POLECENIA** lists ready-made `claude` / `codex` commands for the gaps (missing `CLAUDE.md`, agents, skills, unlinked workflows). **KOPIUJ** copies a command (POSIX or PowerShell flavour, depending on your system); **URUCHOM** opens Terminal.app (macOS) or PowerShell (Windows) in the repo and starts `claude` / `codex` with the prompt after you confirm. The session is interactive, so you approve every change in the tool; the app itself never writes into your repos.
 
 The last scan and your settings are saved in `~/Library/Application Support/RADAR` (`%APPDATA%\RADAR` on Windows, `~/.local/share/radar` on Linux), so the next start shows the previous result immediately.
 
@@ -80,7 +78,7 @@ xattr -d com.apple.quarantine ./radar
 ## Roadmap
 
 1. ~~Skeleton and the Orbit layout on mock data~~
-2. ~~Scanner (repositories, `CLAUDE.md`, agents, skills, workflows, OUTPUTS, stack, coverage, gaps)~~
+2. ~~Scanner (repositories, `CLAUDE.md`, agents, skills, workflows, stack, coverage, gaps)~~
 3. ~~Scan from the UI with real progress, saved result and "last scan"~~
 4. ~~Read-only markdown preview and command generator for gaps (Claude Code and Codex CLI)~~
 5. Distribution (release binaries)

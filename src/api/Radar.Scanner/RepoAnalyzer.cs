@@ -87,40 +87,20 @@ public static class RepoAnalyzer
                 linked));
         }
 
-        // memory / OUTPUTS
-        var outputs = DetectOutputs(repoDir);
-
         var (primary, stacks) = StackDetector.Detect(repoDir, ct);
-        var coverage = Coverage.Compute(claudeExists, agents.Count, skills.Count, outputs.Exists);
+        var coverage = Coverage.Compute(claudeExists, agents.Count, skills.Count);
 
         var gaps = new List<string>();
         if (!claudeExists) gaps.Add(GapTypes.NoClaudeMd);
         if (agents.Count == 0) gaps.Add(GapTypes.NoAgents);
         if (skills.Count == 0) gaps.Add(GapTypes.NoSkills);
-        if (!outputs.Exists) gaps.Add(GapTypes.NoOutputs);
         if (workflows.Any(w => !w.Linked)) gaps.Add(GapTypes.WorkflowNotLinked);
 
         var repo = new RepoInfo(
             id, name, id, InitialsOf(name), primary, stacks,
             new ClaudeMdInfo(claudeExists, "CLAUDE.md"),
-            agents, skills, outputs, coverage, gaps);
+            agents, skills, coverage, gaps);
         return new RepoAnalysis(repo, workflows, warnings);
-    }
-
-    private static OutputsInfo DetectOutputs(string repoDir)
-    {
-        var memory = Path.Combine(repoDir, ".claude", "memory");
-        var file = Path.Combine(memory, "OUTPUTS.md");
-        if (File.Exists(file))
-        {
-            var notes = SafeFs.EnumerateMarkdown(memory)
-                .Count(f => !Path.GetFileName(f).Equals("OUTPUTS.md", StringComparison.OrdinalIgnoreCase));
-            return new OutputsInfo(true, ".claude/memory/OUTPUTS.md", notes);
-        }
-
-        var folder = Path.Combine(repoDir, "OUTPUTS");
-        if (Directory.Exists(folder)) return new OutputsInfo(true, "OUTPUTS/", SafeFs.EnumerateMarkdown(folder).Count());
-        return new OutputsInfo(false, ".claude/memory/OUTPUTS.md", 0);
     }
 
     private static IEnumerable<string> SafeDirs(string dir)

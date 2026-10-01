@@ -21,6 +21,10 @@ public enum Msg
     DescriptionRequired, DescriptionTooLong, GenerationBusy, AgentNameTakenInRepo, ContentRequired, AgentInvalid, AgentExists, WriteForbidden,
     // agent file validation
     FileTooBig, FrontmatterMissing, NameInvalid, DescriptionMissing, DescriptionLong, BodyMissing,
+    // vault
+    VaultNotReady, VaultNotEmpty, VaultInsideRepo, VaultAlready, VaultNotAVault, VaultTooNew, VaultWriteFailed,
+    ProjectNameTaken, ClaudeLocalForbidden, ClaudeLocalDamaged,
+    SkillLinked, SkillForeign, SkillModified, SkillOutdated, SkillWriteFailed,
     // claude CLI
     ClaudeNotFound, ClaudeStartFailed, ClaudeExited, ClaudeTimeout, ClaudeUnexpected, ClaudeReportedError, ClaudeEmpty
 }
@@ -71,6 +75,22 @@ public static class Messages
         [Msg.DescriptionMissing] = ("Pole description jest wymagane (min. 10 znaków): kiedy używać agenta.", "The description field is required (min. 10 characters): when to use the agent."),
         [Msg.DescriptionLong] = ("Pole description jest za długie (max 1024 znaki).", "The description field is too long (max 1024 characters)."),
         [Msg.BodyMissing] = ("Brak treści instrukcji po frontmatterze.", "No instructions after the frontmatter."),
+
+        [Msg.VaultNotReady] = ("Second brain nie jest skonfigurowany albo jego folder jest niedostępny.", "The second brain is not set up, or its folder is unavailable."),
+        [Msg.VaultNotEmpty] = ("Wybrany folder nie jest pusty. Wskaż pusty lub nowy folder.", "The chosen folder is not empty. Choose an empty or new folder."),
+        [Msg.VaultInsideRepo] = ("Folder second brain nie może leżeć wewnątrz repozytorium git.", "The second brain folder cannot be inside a git repository."),
+        [Msg.VaultAlready] = ("W tym folderze jest już second brain. Wskaż go jako istniejący.", "This folder already holds a second brain. Link to it as an existing one."),
+        [Msg.VaultNotAVault] = ("To nie jest folder second brain (brak pliku .radar-vault.json).", "This is not a second brain folder (.radar-vault.json is missing)."),
+        [Msg.VaultTooNew] = ("Ten second brain pochodzi z nowszej wersji R.A.D.A.R.", "This second brain was created by a newer version of R.A.D.A.R."),
+        [Msg.VaultWriteFailed] = ("Nie udało się zapisać plików w tym folderze.", "Could not write the files in this folder."),
+        [Msg.ProjectNameTaken] = ("Inny projekt używa już folderu o tej nazwie w second brain.", "Another project already uses a folder with this name in the second brain."),
+        [Msg.ClaudeLocalForbidden] = ("Nie można zapisać CLAUDE.local.md (dowiązanie poza repozytorium albo katalog).", "CLAUDE.local.md cannot be written (a link outside the repository, or a directory)."),
+        [Msg.ClaudeLocalDamaged] = ("Znaczniki bloku second brain w CLAUDE.local.md są uszkodzone. Popraw je ręcznie.", "The second brain block markers in CLAUDE.local.md are damaged. Fix them by hand."),
+        [Msg.SkillLinked] = ("Skill jest dowiązaniem symbolicznym (np. do ai-toolkit). R.A.D.A.R. go nie zmienia.", "The skill is a symbolic link (for example to ai-toolkit). R.A.D.A.R. leaves it alone."),
+        [Msg.SkillForeign] = ("W tym miejscu jest już inny skill o tej nazwie. R.A.D.A.R. go nie nadpisze.", "A different skill with this name is already there. R.A.D.A.R. will not overwrite it."),
+        [Msg.SkillModified] = ("Skill został zmieniony ręcznie. R.A.D.A.R. go nie nadpisze.", "The skill was edited by hand. R.A.D.A.R. will not overwrite it."),
+        [Msg.SkillOutdated] = ("Zainstalowany skill jest w starszej wersji. Potwierdź aktualizację.", "The installed skill is an older version. Confirm the update."),
+        [Msg.SkillWriteFailed] = ("Nie udało się zapisać skilla.", "Could not write the skill."),
 
         [Msg.ClaudeNotFound] = ("Nie znaleziono polecenia claude w PATH serwera. Zainstaluj Claude Code i zaloguj się.", "The claude command was not found in the server PATH. Install Claude Code and sign in."),
         [Msg.ClaudeStartFailed] = ("Nie udało się uruchomić claude.", "Could not start claude."),

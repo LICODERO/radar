@@ -5,15 +5,14 @@ import { buildScene } from './orbit-scene';
 const repo = (id: string, o: Partial<RepoInfo> = {}): RepoInfo => ({
   id, name: id, path: id, initials: id.slice(0, 2).toUpperCase(), stack: '.NET', stacks: ['.NET'],
   claudeMd: { exists: true, path: 'CLAUDE.md' }, agents: [], skills: [],
-  outputs: { exists: false, path: '', notes: 0 },
-  coverage: { score: 50, parts: { claudeMd: 40, agents: 0, skills: 0, outputs: 0 } }, gaps: [], ...o
+  coverage: { score: 50, parts: { claudeMd: 40, agents: 0, skills: 0 } }, gaps: [], ...o
 });
 const agent = (name: string) => ({ name, description: name + ' desc', tools: ['Read'], model: null, path: `.claude/agents/${name}.md` });
 const skill = (name: string) => ({ name, description: name + ' desc', path: `.claude/skills/${name}/SKILL.md` });
 
 const repos = [
   repo('alpha', { agents: [agent('a1'), agent('a2')], skills: [skill('s1')] }),
-  repo('beta', { agents: [agent('a1')], claudeMd: { exists: false, path: 'CLAUDE.md' }, coverage: { score: 10, parts: { claudeMd: 0, agents: 25, skills: 0, outputs: 0 } } }),
+  repo('beta', { agents: [agent('a1')], claudeMd: { exists: false, path: 'CLAUDE.md' }, coverage: { score: 10, parts: { claudeMd: 0, agents: 30, skills: 0 } } }),
   repo('gamma')
 ];
 const wfs: WorkflowInfo[] = [

@@ -17,6 +17,8 @@ public sealed class FakePicker(bool supported, string? result) : IFolderPicker
 public class ServerFactoryBase : WebApplicationFactory<Program>
 {
     public string DataDir { get; } = Path.Combine(Path.GetTempPath(), "radar-data-" + Guid.NewGuid().ToString("N"));
+    /// <summary>Stands in for ~/.claude so no test can touch the real Claude Code configuration.</summary>
+    public string ClaudeDir { get; } = Path.Combine(Path.GetTempPath(), "radar-claude-" + Guid.NewGuid().ToString("N"));
     public IFolderPicker? Picker { get; init; }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -25,6 +27,7 @@ public class ServerFactoryBase : WebApplicationFactory<Program>
         builder.ConfigureAppConfiguration((_, cfg) => cfg.AddInMemoryCollection(new Dictionary<string, string?>
         {
             ["Radar:DataDir"] = DataDir,
+            ["Radar:ClaudeDir"] = ClaudeDir,
             ["Radar:OpenBrowser"] = "false"
         }));
         if (Picker is not null)
@@ -43,6 +46,7 @@ public class ServerFactoryBase : WebApplicationFactory<Program>
     {
         base.Dispose(disposing);
         try { Directory.Delete(DataDir, true); } catch { /* best effort */ }
+        try { Directory.Delete(ClaudeDir, true); } catch { /* best effort */ }
     }
 }
 

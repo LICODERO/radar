@@ -3,7 +3,8 @@ using Radar.Scanner;
 
 namespace Radar.Server.Infrastructure.Storage;
 
-public sealed record AppSettings(string? ScanPath, int MaxDepth = 4);
+/// <param name="VaultPath">root of the second brain vault; null until the user creates or links one</param>
+public sealed record AppSettings(string? ScanPath, int MaxDepth = 4, string? VaultPath = null);
 
 public interface IScanStore
 {

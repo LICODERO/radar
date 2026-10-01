@@ -16,7 +16,7 @@
       "YAML",
       "SQL"
     ],
-    "avgCoverage": 49
+    "avgCoverage": 78
   },
   "repos": [
     {
@@ -99,18 +99,12 @@
           "path": ".claude/skills/azure-devops-yaml/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": true,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 14
-      },
       "coverage": {
-        "score": 92,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 10
+          "agents": 30,
+          "skills": 30
         }
       },
       "gaps": []
@@ -174,18 +168,12 @@
           "path": ".claude/skills/jest-tests/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": true,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 9
-      },
       "coverage": {
-        "score": 81,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 10
+          "agents": 30,
+          "skills": 30
         }
       },
       "gaps": []
@@ -228,23 +216,15 @@
           "path": ".claude/skills/serilog-logging/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 64,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 0
+          "agents": 30,
+          "skills": 30
         }
       },
-      "gaps": [
-        "no-outputs"
-      ]
+      "gaps": []
     },
     {
       "id": "reports-api",
@@ -309,18 +289,12 @@
           "path": ".claude/skills/excel-export/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": true,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 11
-      },
       "coverage": {
-        "score": 77,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 10
+          "agents": 30,
+          "skills": 30
         }
       },
       "gaps": []
@@ -368,23 +342,15 @@
           "path": ".claude/skills/jest-tests/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 58,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 0
+          "agents": 30,
+          "skills": 30
         }
       },
-      "gaps": [
-        "no-outputs"
-      ]
+      "gaps": []
     },
     {
       "id": "auth-service",
@@ -407,23 +373,16 @@
           "path": ".claude/skills/serilog-logging/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 33,
+        "score": 70,
         "parts": {
           "claudeMd": 40,
           "agents": 0,
-          "skills": 25,
-          "outputs": 0
+          "skills": 30
         }
       },
       "gaps": [
-        "no-agents",
-        "no-outputs"
+        "no-agents"
       ]
     },
     {
@@ -441,25 +400,18 @@
       },
       "agents": [],
       "skills": [],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 12,
+        "score": 0,
         "parts": {
           "claudeMd": 0,
           "agents": 0,
-          "skills": 0,
-          "outputs": 0
+          "skills": 0
         }
       },
       "gaps": [
         "no-claude-md",
         "no-agents",
-        "no-skills",
-        "no-outputs"
+        "no-skills"
       ]
     },
     {
@@ -521,18 +473,12 @@
           "path": ".claude/skills/jest-tests/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": true,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 7
-      },
       "coverage": {
-        "score": 71,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 10
+          "agents": 30,
+          "skills": 30
         }
       },
       "gaps": []
@@ -552,25 +498,18 @@
       },
       "agents": [],
       "skills": [],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 8,
+        "score": 0,
         "parts": {
           "claudeMd": 0,
           "agents": 0,
-          "skills": 0,
-          "outputs": 0
+          "skills": 0
         }
       },
       "gaps": [
         "no-claude-md",
         "no-agents",
-        "no-skills",
-        "no-outputs"
+        "no-skills"
       ]
     },
     {
@@ -611,23 +550,15 @@
           "path": ".claude/skills/ef-migrations/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 46,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 0
+          "agents": 30,
+          "skills": 30
         }
       },
-      "gaps": [
-        "no-outputs"
-      ]
+      "gaps": []
     },
     {
       "id": "invoices-api",
@@ -683,18 +614,12 @@
           "path": ".claude/skills/swagger-docs/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": true,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 5
-      },
       "coverage": {
-        "score": 74,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 10
+          "agents": 30,
+          "skills": 30
         }
       },
       "gaps": []
@@ -737,23 +662,15 @@
           "path": ".claude/skills/jest-tests/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 66,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 0
+          "agents": 30,
+          "skills": 30
         }
       },
-      "gaps": [
-        "no-outputs"
-      ]
+      "gaps": []
     },
     {
       "id": "stock-api",
@@ -798,23 +715,15 @@
           "path": ".claude/skills/serilog-logging/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 59,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 0
+          "agents": 30,
+          "skills": 30
         }
       },
-      "gaps": [
-        "no-outputs"
-      ]
+      "gaps": []
     },
     {
       "id": "stock-front",
@@ -849,23 +758,15 @@
           "path": ".claude/skills/angular-component/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 48,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 0
+          "agents": 30,
+          "skills": 30
         }
       },
-      "gaps": [
-        "no-outputs"
-      ]
+      "gaps": []
     },
     {
       "id": "clients-api",
@@ -893,23 +794,16 @@
           "path": ".claude/skills/serilog-logging/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 39,
+        "score": 70,
         "parts": {
           "claudeMd": 40,
           "agents": 0,
-          "skills": 25,
-          "outputs": 0
+          "skills": 30
         }
       },
       "gaps": [
-        "no-agents",
-        "no-outputs"
+        "no-agents"
       ]
     },
     {
@@ -933,23 +827,16 @@
           "path": ".claude/skills/jest-tests/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 27,
+        "score": 70,
         "parts": {
           "claudeMd": 40,
           "agents": 0,
-          "skills": 25,
-          "outputs": 0
+          "skills": 30
         }
       },
       "gaps": [
-        "no-agents",
-        "no-outputs"
+        "no-agents"
       ]
     },
     {
@@ -990,23 +877,15 @@
           "path": ".claude/skills/xunit-tests/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 52,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 0
+          "agents": 30,
+          "skills": 30
         }
       },
-      "gaps": [
-        "no-outputs"
-      ]
+      "gaps": []
     },
     {
       "id": "gateway-api",
@@ -1051,23 +930,15 @@
           "path": ".claude/skills/azure-devops-yaml/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 68,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 0
+          "agents": 30,
+          "skills": 30
         }
       },
-      "gaps": [
-        "no-outputs"
-      ]
+      "gaps": []
     },
     {
       "id": "files-service",
@@ -1090,23 +961,16 @@
           "path": ".claude/skills/serilog-logging/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 21,
+        "score": 70,
         "parts": {
           "claudeMd": 40,
           "agents": 0,
-          "skills": 25,
-          "outputs": 0
+          "skills": 30
         }
       },
       "gaps": [
-        "no-agents",
-        "no-outputs"
+        "no-agents"
       ]
     },
     {
@@ -1124,25 +988,18 @@
       },
       "agents": [],
       "skills": [],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 6,
+        "score": 0,
         "parts": {
           "claudeMd": 0,
           "agents": 0,
-          "skills": 0,
-          "outputs": 0
+          "skills": 0
         }
       },
       "gaps": [
         "no-claude-md",
         "no-agents",
-        "no-skills",
-        "no-outputs"
+        "no-skills"
       ]
     },
     {
@@ -1183,23 +1040,15 @@
           "path": ".claude/skills/jest-tests/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 44,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 0
+          "agents": 30,
+          "skills": 30
         }
       },
-      "gaps": [
-        "no-outputs"
-      ]
+      "gaps": []
     },
     {
       "id": "shared-ui",
@@ -1239,23 +1088,15 @@
           "path": ".claude/skills/dashboard-charts/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 63,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 0
+          "agents": 30,
+          "skills": 30
         }
       },
-      "gaps": [
-        "no-outputs"
-      ]
+      "gaps": []
     },
     {
       "id": "db-scripts",
@@ -1272,25 +1113,18 @@
       },
       "agents": [],
       "skills": [],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 15,
+        "score": 0,
         "parts": {
           "claudeMd": 0,
           "agents": 0,
-          "skills": 0,
-          "outputs": 0
+          "skills": 0
         }
       },
       "gaps": [
         "no-claude-md",
         "no-agents",
-        "no-skills",
-        "no-outputs"
+        "no-skills"
       ]
     },
     {
@@ -1331,23 +1165,15 @@
           "path": ".claude/skills/ef-migrations/SKILL.md"
         }
       ],
-      "outputs": {
-        "exists": false,
-        "path": ".claude/memory/OUTPUTS.md",
-        "notes": 0
-      },
       "coverage": {
-        "score": 57,
+        "score": 100,
         "parts": {
           "claudeMd": 40,
-          "agents": 25,
-          "skills": 25,
-          "outputs": 0
+          "agents": 30,
+          "skills": 30
         }
       },
-      "gaps": [
-        "no-outputs"
-      ]
+      "gaps": []
     }
   ],
   "workflows": [

@@ -10,7 +10,6 @@
     <div class="ch"><div class="m cl">{{ t('right.selected', { initials: s.initials }) }}</div><div class="m cm">{{ s.stack }} · {{ s.coverage.score }}%</div></div>
     <div class="cname">{{ s.name }}</div>
     <div class="m flags" [style.color]="s.claudeMd.exists ? '#a99bff' : '#ff4fa3'">{{ flags() }}</div>
-    <div class="m outs">{{ vaultText() }}</div>
     @if (s.claudeMd.exists) {
       <button class="m btn-ghost open" type="button" (click)="store.openFile(s.id, s.claudeMd.path, 'CLAUDE.md', '#c6ff3d')">{{ t('right.openClaude') }}</button>
     }
@@ -60,5 +59,4 @@
 <div class="acts vault">
   <button class="m btn-ghost tip tip-l" type="button" disabled [attr.data-tip]="t('right.memoryTip')">{{ t('right.memory') }}</button>
   <button class="m btn-ghost tip" type="button" disabled [attr.data-tip]="t('right.nextVersion')">{{ t('right.addNote') }}</button>
-  <button class="m btn-ghost tip tip-r small" type="button" disabled [attr.data-tip]="t('right.nextVersion')">{{ vault() ? t('right.outputs') : t('right.addOutputs') }}</button>
 </div>

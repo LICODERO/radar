@@ -5,7 +5,6 @@ public static class GapTypes
     public const string NoClaudeMd = "no-claude-md";
     public const string NoAgents = "no-agents";
     public const string NoSkills = "no-skills";
-    public const string NoOutputs = "no-outputs";
     public const string WorkflowNotLinked = "workflow-not-linked";
 }
 
@@ -15,9 +14,7 @@ public sealed record SkillInfo(string Name, string Description, string Path);
 
 public sealed record ClaudeMdInfo(bool Exists, string Path);
 
-public sealed record OutputsInfo(bool Exists, string Path, int Notes);
-
-public sealed record CoverageParts(int ClaudeMd, int Agents, int Skills, int Outputs);
+public sealed record CoverageParts(int ClaudeMd, int Agents, int Skills);
 
 public sealed record CoverageInfo(int Score, CoverageParts Parts);
 
@@ -31,7 +28,6 @@ public sealed record RepoInfo(
     ClaudeMdInfo ClaudeMd,
     IReadOnlyList<AgentInfo> Agents,
     IReadOnlyList<SkillInfo> Skills,
-    OutputsInfo Outputs,
     CoverageInfo Coverage,
     IReadOnlyList<string> Gaps);
 

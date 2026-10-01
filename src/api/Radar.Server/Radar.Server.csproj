@@ -11,4 +11,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- vault and skill templates, embedded so the app ships them and the client can never supply their text -->
+    <EmbeddedResource Include="Features\Vault\Templates\*.md" />
+  </ItemGroup>
+
 </Project>

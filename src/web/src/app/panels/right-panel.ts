@@ -20,15 +20,6 @@ export class RightPanel {
     : !this.store.selected()
       ? this.t('right.pickRepoFirst')
       : this.t('right.newAgentTip', { name: this.selName() }));
-  protected readonly vault = computed(() => this.store.selected()?.outputs.exists ?? false);
-
-  protected readonly vaultText = computed(() => {
-    const s = this.sel();
-    if (!s) return '';
-    return s.outputs.exists
-      ? this.t('right.outputsOk', { notes: this.t('right.notes', { n: s.outputs.notes }) })
-      : this.t('right.outputsMissing');
-  });
   protected readonly flags = computed(() => {
     const s = this.sel();
     if (!s) return '';

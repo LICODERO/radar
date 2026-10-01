@@ -60,7 +60,6 @@ const RAW = [
   ['db-scripts', 15, 0, 'SQL', 'DS', A(''), S('')],
   ['deploy-templates', 57, 1, 'YAML', 'DT', A('pf'), S('az ef')]
 ];
-const NOTES = { 0: 14, 1: 9, 3: 11, 7: 7, 10: 5 };
 const WFS = [
   ['pr-review', [0, 1, 2, 3], ['code-reviewer', 'test-writer'], 'Otwarcie pull requesta', 'Automatyczny przegląd PR i uzupełnienie brakujących testów.'],
   ['db-migration', [0, 9], ['migration-helper', 'test-writer', 'pipeline-fixer'], 'Zmiana w katalogu Migrations', 'Migracja bazy od skryptu po wdrożenie w pipeline.'],
@@ -73,24 +72,22 @@ const WFS = [
   ['commit', [0, 1, 2, 3, 4, 7, 10], [], 'Przed każdym commitem', 'Jak przygotować i opisać commit: jedno zdanie po angielsku, czas przeszły.']
 ];
 
-const band = (n) => n;
-const partsOf = (has, ag, sk, out) => ({ claudeMd: has ? 40 : 0, agents: ag ? 25 : 0, skills: sk ? 25 : 0, outputs: out ? 10 : 0 });
+const partsOf = (has, ag, sk) => ({ claudeMd: has ? 40 : 0, agents: ag ? 30 : 0, skills: sk ? 30 : 0 });
+const scoreOf = (p) => p.claudeMd + p.agents + p.skills;
 
-function build(raw, wfs, notes, sample) {
-  const repos = raw.map(([name, score, has, stack, initials, ag, sk], i) => {
-    const out = notes[i] !== undefined;
+function build(raw, wfs, sample) {
+  const repos = raw.map(([name, , has, stack, initials, ag, sk]) => {
+    const parts = partsOf(has, ag.length, sk.length);
     const gaps = [];
     if (!has) gaps.push('no-claude-md');
     if (!ag.length) gaps.push('no-agents');
     if (!sk.length) gaps.push('no-skills');
-    if (!out) gaps.push('no-outputs');
     return {
       id: name, name, path: name, initials, stack, stacks: [stack],
       claudeMd: { exists: !!has, path: 'CLAUDE.md' },
       agents: ag.map((a) => ({ name: a, description: AGENTS[a][0], tools: AGENTS[a][1], model: null, path: `.claude/agents/${a}.md` })),
       skills: sk.map((s) => ({ name: s, description: SKILLS[s], path: `.claude/skills/${s}/SKILL.md` })),
-      outputs: { exists: out, path: '.claude/memory/OUTPUTS.md', notes: out ? notes[i] : 0 },
-      coverage: { score: band(score), parts: partsOf(has, ag.length, sk.length, out) },
+      coverage: { score: scoreOf(parts), parts },
       gaps
     };
   });
@@ -121,7 +118,7 @@ function build(raw, wfs, notes, sample) {
 }
 
 // 24 repos from the mockup
-writeFileSync(join(outDir, 'scan-result.json'), JSON.stringify(build(RAW, WFS, NOTES, true), null, 2));
+writeFileSync(join(outDir, 'scan-result.json'), JSON.stringify(build(RAW, WFS, true), null, 2));
 
 // Stress mock: deterministic pseudo-random N repos
 function stress(n, wfCount) {
@@ -140,19 +137,15 @@ function stress(n, wfCount) {
     const has = rnd() > 0.15 ? 1 : 0;
     const ag = agKeys.filter(() => rnd() > 0.7);
     const sk = skKeys.filter(() => rnd() > 0.75);
-    const out = rnd() > 0.7;
-    const score = (has ? 40 : 0) + (ag.length ? 25 : 0) + (sk.length ? 25 : 0) + (out ? 10 : 0);
     const parts = name.split('-');
-    raw.push([name, score, has, stack, (parts[0][0] + (parts[1] ?? parts[0])[0]).toUpperCase(), ag, sk, out]);
+    raw.push([name, 0, has, stack, (parts[0][0] + (parts[1] ?? parts[0])[0]).toUpperCase(), ag, sk]);
   }
-  const notes = {};
-  raw.forEach((r, i) => { if (r[7]) notes[i] = 1 + Math.floor(rnd() * 15); });
   const wfs = Array.from({ length: wfCount }, (_, k) => {
     const mem = raw.map((_, i) => i).filter(() => rnd() > 0.93);
     const chain = agKeys.filter(() => rnd() > 0.6);
     return [`workflow-${k + 1}`, mem.length ? mem : [0], chain, 'Ręcznie', `Przykładowy workflow numer ${k + 1}.`];
   });
-  return build(raw.map((r) => r.slice(0, 7)), wfs, notes, true);
+  return build(raw, wfs, true);
 }
 writeFileSync(join(outDir, 'scan-result-150.json'), JSON.stringify(stress(150, 20)));
 writeFileSync(join(outDir, 'scan-result-400.json'), JSON.stringify(stress(400, 40)));

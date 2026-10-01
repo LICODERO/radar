@@ -7,6 +7,7 @@ using Radar.Server.Features.Gaps;
 using Radar.Server.Features.Scans;
 using Radar.Server.Features.Session;
 using Radar.Server.Features.Settings;
+using Radar.Server.Features.Vault;
 using Radar.Server.Infrastructure.Security;
 using Radar.Server.Infrastructure.Storage;
 using Radar.Server.Infrastructure.Localization;
@@ -35,6 +36,8 @@ builder.Services.AddSingleton<ITerminalLauncher>(TerminalLauncherFactory.ForCurr
 builder.Services.AddSingleton<IToolLocator, PathToolLocator>();
 builder.Services.AddSingleton<IAgentGenerator, ClaudeCliGenerator>();
 builder.Services.AddSingleton<GenerationGate>();
+builder.Services.AddSingleton<VaultService>();
+builder.Services.AddSingleton(sp => new SecondBrainSkill(AppPaths.ClaudeDir(sp.GetRequiredService<IConfiguration>())));
 
 var app = builder.Build();
 
@@ -48,6 +51,7 @@ api.MapScans();
 api.MapFiles();
 api.MapGaps();
 api.MapAgents();
+api.MapVault();
 
 // ---- static UI ------------------------------------------------------------------------------
 // The Angular build is served as static files (copied to wwwroot by run.sh).

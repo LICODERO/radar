@@ -15,6 +15,15 @@ public static class AppPaths
         return Path.Combine(string.IsNullOrEmpty(xdg) ? Path.Combine(home, ".local", "share") : xdg, "radar");
     }
 
+    /// <summary>Claude Code's config directory (<c>CLAUDE_CONFIG_DIR</c>, else <c>~/.claude</c>). <c>Radar:ClaudeDir</c> overrides it for tests.</summary>
+    public static string ClaudeDir(IConfiguration config)
+    {
+        var overrideDir = config["Radar:ClaudeDir"];
+        if (!string.IsNullOrWhiteSpace(overrideDir)) return Path.GetFullPath(overrideDir);
+        var env = Environment.GetEnvironmentVariable("CLAUDE_CONFIG_DIR");
+        return string.IsNullOrWhiteSpace(env) ? Path.Combine(Home, ".claude") : Expand(env);
+    }
+
     public static string Home => Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
     /// <summary>Expands a leading ~ and returns a full path.</summary>

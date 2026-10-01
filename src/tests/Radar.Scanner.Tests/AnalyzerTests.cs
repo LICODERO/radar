@@ -5,7 +5,7 @@ namespace Radar.Scanner.Tests;
 public class AnalyzerTests
 {
     [Fact]
-    public void Detects_claude_md_agents_skills_and_outputs()
+    public void Detects_claude_md_agents_and_skills()
     {
         using var t = new FixtureTree();
         var repo = t.Repo("orders-api");
@@ -14,9 +14,6 @@ public class AnalyzerTests
         t.File("orders-api/.claude/agents/plain.md", "no frontmatter");
         t.File("orders-api/.claude/skills/ef-migrations/SKILL.md", "---\nname: ef-migrations\ndescription: EF\n---\n");
         t.File("orders-api/.claude/skills/empty-dir/README.md", "not a skill");
-        t.File("orders-api/.claude/memory/OUTPUTS.md", "# outputs");
-        t.File("orders-api/.claude/memory/decision-1.md", "x");
-        t.File("orders-api/.claude/memory/decision-2.md", "x");
 
         var a = RepoAnalyzer.Analyze(t.Root, repo);
 
@@ -31,8 +28,6 @@ public class AnalyzerTests
         Assert.Contains(a.Repo.Agents, x => x.Name == "plain");
         Assert.Single(a.Repo.Skills);
         Assert.Equal(".claude/skills/ef-migrations/SKILL.md", a.Repo.Skills[0].Path);
-        Assert.True(a.Repo.Outputs.Exists);
-        Assert.Equal(2, a.Repo.Outputs.Notes);
         Assert.Equal(100, a.Repo.Coverage.Score);
         Assert.Empty(a.Repo.Gaps);
     }
@@ -45,31 +40,19 @@ public class AnalyzerTests
         var a = RepoAnalyzer.Analyze(t.Root, repo);
         Assert.Equal(0, a.Repo.Coverage.Score);
         Assert.Equal(
-            [GapTypes.NoClaudeMd, GapTypes.NoAgents, GapTypes.NoSkills, GapTypes.NoOutputs],
+            [GapTypes.NoClaudeMd, GapTypes.NoAgents, GapTypes.NoSkills],
             a.Repo.Gaps);
     }
 
     [Theory]
-    [InlineData(true, 0, 0, false, 40)]
-    [InlineData(true, 2, 0, false, 65)]
-    [InlineData(false, 3, 4, false, 50)]
-    [InlineData(true, 1, 1, true, 100)]
-    [InlineData(false, 0, 0, true, 10)]
-    public void Coverage_follows_the_weights(bool claude, int agents, int skills, bool outputs, int expected)
+    [InlineData(true, 0, 0, 40)]
+    [InlineData(true, 2, 0, 70)]
+    [InlineData(false, 3, 4, 60)]
+    [InlineData(true, 1, 1, 100)]
+    [InlineData(false, 0, 0, 0)]
+    public void Coverage_follows_the_weights(bool claude, int agents, int skills, int expected)
     {
-        Assert.Equal(expected, Coverage.Compute(claude, agents, skills, outputs).Score);
-    }
-
-    [Fact]
-    public void Detects_outputs_folder_variant()
-    {
-        using var t = new FixtureTree();
-        var repo = t.Repo("r");
-        t.File("r/OUTPUTS/a.md", "x");
-        t.File("r/OUTPUTS/b.md", "x");
-        var a = RepoAnalyzer.Analyze(t.Root, repo);
-        Assert.True(a.Repo.Outputs.Exists);
-        Assert.Equal(2, a.Repo.Outputs.Notes);
+        Assert.Equal(expected, Coverage.Compute(claude, agents, skills).Score);
     }
 
     [Fact]

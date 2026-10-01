@@ -26,8 +26,8 @@ describe('translate', () => {
   });
 
   it('picks the Polish plural category', () => {
-    const notes = (n: number) => translate('pl', 'right.notes', { n });
-    expect([notes(1), notes(2), notes(5), notes(22), notes(12)]).toEqual(['1 notatka', '2 notatki', '5 notatek', '22 notatki', '12 notatek']);
+    const skills = (n: number) => translate('pl', 'right.skillsCount', { n });
+    expect([skills(1), skills(2), skills(5), skills(22), skills(12)]).toEqual(['1 skill', '2 skille', '5 skilli', '22 skille', '12 skilli']);
   });
 
   it('picks the English plural category', () => {

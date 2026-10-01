@@ -1,4 +1,4 @@
-export type GapType = 'no-claude-md' | 'no-agents' | 'no-skills' | 'no-outputs' | 'workflow-not-linked';
+export type GapType = 'no-claude-md' | 'no-agents' | 'no-skills' | 'workflow-not-linked';
 
 export interface AgentInfo {
   name: string;
@@ -24,8 +24,7 @@ export interface RepoInfo {
   claudeMd: { exists: boolean; path: string };
   agents: AgentInfo[];
   skills: SkillInfo[];
-  outputs: { exists: boolean; path: string; notes: number };
-  coverage: { score: number; parts: { claudeMd: number; agents: number; skills: number; outputs: number } };
+  coverage: { score: number; parts: { claudeMd: number; agents: number; skills: number } };
   gaps: GapType[];
 }
 
