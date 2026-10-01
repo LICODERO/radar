@@ -25,8 +25,8 @@ export interface FileView {
   mode: 'preview' | 'source';
 }
 
-export const REPO_PAGE_SIZE = 10;
-export const WF_PAGE_SIZE = 2;
+export const REPO_PAGE_SIZE = 8;
+export const WF_PAGE_SIZE = 4;
 
 @Injectable({ providedIn: 'root' })
 export class RadarStore {

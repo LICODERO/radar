@@ -4,7 +4,7 @@
 .sr { position: absolute; left: -9999px; }
 
 .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid #c6ff3d44; }
-.head.sec { margin-top: 16px; }
+.head.sec { margin-top: 30px; }
 .head.sec2 { margin-top: 14px; }
 .h { font-size: fs(10); letter-spacing: .06em; color: $lime; white-space: nowrap; }
 .hint { font-size: fs(9); color: $muted; white-space: nowrap; }
@@ -41,5 +41,3 @@
 .pg.on { background: $lime; border-color: $lime; color: #0b1006; font-weight: 600; }
 .pos { font-size: fs(10); color: $text; padding: 0 4px; }
 
-.gen { margin-top: 10px; width: 100%; box-sizing: border-box; background: #c6ff3d14; border: 1px solid $lime; color: $lime; font-size: fs(11); letter-spacing: .14em; padding: 11px 14px; cursor: pointer; }
-.gen:disabled { opacity: .5; }

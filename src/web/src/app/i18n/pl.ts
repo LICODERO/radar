@@ -49,8 +49,6 @@ export const PL = {
   'left.gaps': 'LUKI DO UZUPEŁNIENIA · {n}',
   'left.gapNoClaude': 'brak CLAUDE.md',
   'left.generate': 'GENERUJ POLECENIA',
-  'left.generateTip': 'Polecenia dla luk: {n} bez CLAUDE.md, pozostałe w filtrach',
-  'left.noGaps': 'Brak luk do uzupełnienia',
   'pager.of': '{from}–{to} z {total}',
 
   // right panel

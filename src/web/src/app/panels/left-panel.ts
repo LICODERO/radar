@@ -15,10 +15,6 @@ export class LeftPanel {
   protected readonly color = coverageColor;
   protected readonly total = computed(() => this.store.repos().length);
   protected readonly wfTotal = computed(() => this.store.workflows().length);
-  protected readonly genTip = computed(() => {
-    const t = this.store.gapTotals();
-    return this.store.anyGaps() ? this.t('left.generateTip', { n: t['no-claude-md'] }) : this.t('left.noGaps');
-  });
   protected onQuery(e: Event): void {
     this.store.setQuery((e.target as HTMLInputElement).value);
   }

@@ -47,8 +47,6 @@ export const EN: Record<MsgKey, Message> = {
   'left.gaps': 'GAPS TO FILL · {n}',
   'left.gapNoClaude': 'no CLAUDE.md',
   'left.generate': 'GENERATE COMMANDS',
-  'left.generateTip': 'Commands for gaps: {n} without CLAUDE.md, the rest in the filters',
-  'left.noGaps': 'No gaps to fill',
   'pager.of': '{from}–{to} of {total}',
 
   // right panel

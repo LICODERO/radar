@@ -69,5 +69,3 @@
     <button class="m pg" type="button" [attr.aria-label]="t('left.nextWf')" [disabled]="store.wfPager().nextDisabled" (click)="store.goWfPage(store.wfPager().page + 1)">›</button>
   </div>
 </div>
-
-<button class="m btn-ghost tip gen" type="button" [disabled]="!store.anyGaps()" [attr.data-tip]="genTip()" (click)="store.openGaps()">{{ t('left.generate') }}</button>
