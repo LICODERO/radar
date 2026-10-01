@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
-import { GapItem, Tool, countByType } from './commands';
+import { GapItem, Tool, buildCommand, countByType } from './commands';
 import { ScanPlayback } from './scan-playback';
 import { ScanUiState, applyScanEvent, initialScan } from './scan-state';
 import { I18n } from '../i18n/i18n';
@@ -309,6 +309,19 @@ export class RadarStore {
       this.gapItems.set([]);
       this.gapsError.set(this.messageOf(e, this.i18n.t('gaps.fetchFailed')));
     }
+  }
+
+  /**
+   * "STWÓRZ" in the gaps list: opens the command panel with the confirmation to run the CLAUDE.md prompt for this repo in Claude Code.
+   * Nothing runs without that confirmation; where no terminal can be opened the panel just shows the command to copy.
+   */
+  async createClaudeMd(repoId: string): Promise<void> {
+    this.closeGapsList();
+    await this.openGaps();
+    const tools = this.tools();
+    const item = this.gapItems().find((i) => i.repoId === repoId && i.type === 'no-claude-md');
+    if (!item || tools?.canLaunch !== true) return;
+    this.pendingRun.set({ item, command: buildCommand(tools.shell, 'claude', item.dir, item.prompt), toolFound: tools.tools['claude'] !== false });
   }
 
   async openGaps(): Promise<void> {

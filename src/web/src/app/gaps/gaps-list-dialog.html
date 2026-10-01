@@ -7,10 +7,13 @@
   <div class="m hint">{{ t('gapsList.hint') }}</div>
   <div class="list">
     @for (g of gaps(); track g.id) {
-      <button class="row" type="button" (click)="choose(g)">
-        <span class="m name"><span class="dot">◌</span> {{ g.initials }} {{ g.name }}</span>
-        <span class="m what">{{ t('left.gapNoClaude') }}</span>
-      </button>
+      <div class="row">
+        <button class="m pick" type="button" (click)="choose(g)">
+          <span class="name"><span class="dot">◌</span> {{ g.initials }} {{ g.name }}</span>
+          <span class="what">{{ t('left.gapNoClaude') }}</span>
+        </button>
+        <button class="m btn-ghost create" type="button" [disabled]="!canCreate()" [attr.title]="t('gapsList.createTip', { repo: g.name })" (click)="create(g)">{{ t('gapsList.create') }}</button>
+      </div>
     } @empty {
       <div class="m none">{{ t('gapsList.empty') }}</div>
     }

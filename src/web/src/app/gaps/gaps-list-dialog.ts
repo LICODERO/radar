@@ -20,6 +20,12 @@ export class GapsListDialog {
     this.store.selectRepo(repo.id);
   }
 
+  protected canCreate(): boolean { return this.store.mode() === 'api'; }
+
+  protected create(repo: RepoInfo): void {
+    void this.store.createClaudeMd(repo.id);
+  }
+
   protected generate(): void {
     this.store.closeGapsList();
     void this.store.openGaps();

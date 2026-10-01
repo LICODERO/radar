@@ -48,7 +48,7 @@ export const PL = {
   'left.wfRepos': '{n} REPO',
   'left.gaps': 'LUKI DO UZUPEŁNIENIA · {n}',
   'left.gapNoClaude': 'brak CLAUDE.md',
-  'left.generate': 'GENERUJ POLECENIA',
+  'left.generate': 'POKAŻ POLECENIA',
   'pager.of': '{from}–{to} z {total}',
 
   // right panel
@@ -397,6 +397,8 @@ export const PL = {
   'gapsList.close': 'Zamknij',
   'gapsList.hint': 'Repozytoria bez CLAUDE.md. Kliknij, aby je zaznaczyć.',
   'gapsList.empty': 'Brak luk do uzupełnienia.',
+  'gapsList.create': 'STWÓRZ',
+  'gapsList.createTip': 'Uruchomi Claude Code w {repo}, żeby utworzyć CLAUDE.md. Najpierw poprosimy o potwierdzenie.',
   'api.serverError': 'Błąd serwera ({status})'
 } as const satisfies Record<string, Message>;
 

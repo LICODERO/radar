@@ -10,7 +10,7 @@ import { GapsListDialog } from './gaps-list-dialog';
 const repo = (id: string, gaps: string[]) => ({ id, name: id, initials: id.slice(0, 2).toUpperCase(), stack: '', agents: [], skills: [], coverage: { score: 0 }, claudeMd: { exists: !gaps.includes('no-claude-md'), path: 'CLAUDE.md' }, gaps });
 
 async function open(repos: ReturnType<typeof repo>[]) {
-  const api = { gaps: vi.fn(async () => []) };
+  const api = { gaps: vi.fn(async () => repos.flatMap((x) => x.gaps.filter((g) => g === 'no-claude-md').map((type) => ({ repoId: x.id, repoName: x.id, initials: x.initials, type, dir: '/p/' + x.id, prompt: 'make claude md' })))) };
   TestBed.configureTestingModule({ providers: [provideHttpClient(), { provide: RadarApi, useValue: api }] });
   TestBed.inject(I18n).setLang('en');
   const store = TestBed.inject(RadarStore);
@@ -18,6 +18,7 @@ async function open(repos: ReturnType<typeof repo>[]) {
     repos, workflows: [],
     gaps: repos.flatMap((r) => r.gaps.filter((g) => g === 'no-claude-md').map((type) => ({ repoId: r.id, type })))
   } as unknown as ScanResult);
+  store.tools.set({ platform: 'macos', shell: 'posix', canLaunch: true, tools: { claude: true, codex: true } });
   store.openGapsList();
   const fixture = TestBed.createComponent(GapsListDialog);
   await fixture.whenStable();
@@ -45,9 +46,37 @@ describe('gaps list', () => {
 
   it('selecting a repo closes the list and selects it', async () => {
     const { store, el } = await open([repo('shared-ui-kit', ['no-claude-md']), repo('terraform', ['no-claude-md'])]);
-    (el.querySelectorAll('.row')[1] as HTMLButtonElement).click();
+    (el.querySelectorAll('.pick')[1] as HTMLButtonElement).click();
     expect(store.gapsListOpen()).toBe(false);
     expect(store.selected()?.id).toBe('terraform');
+  });
+
+  it('has a CREATE button for every repo next to its name', async () => {
+    const { el } = await open([repo('shared-ui-kit', ['no-claude-md']), repo('terraform', ['no-claude-md'])]);
+    const buttons = Array.from(el.querySelectorAll('.create'));
+    expect(buttons.length).toBe(2);
+    expect(buttons[0].textContent?.trim()).toBe('CREATE');
+  });
+
+  it('CREATE asks for confirmation to run the CLAUDE.md prompt for that repo; it does not run anything by itself', async () => {
+    const { store, el, api } = await open([repo('shared-ui-kit', ['no-claude-md']), repo('terraform', ['no-claude-md'])]);
+    (el.querySelectorAll('.create')[1] as HTMLButtonElement).click();
+    await vi.waitFor(() => expect(store.pendingRun()).not.toBeNull());
+    expect(store.gapsListOpen()).toBe(false);
+    expect(store.gapsOpen()).toBe(true);
+    const p = store.pendingRun()!;
+    expect(p.item.repoId).toBe('terraform');
+    expect(p.item.type).toBe('no-claude-md');
+    expect(p.command).toContain("cd '/p/terraform' && claude");
+    expect(api.gaps).toHaveBeenCalled();
+  });
+
+  it('CREATE only opens the commands where no terminal can be launched', async () => {
+    const { store, el } = await open([repo('a', ['no-claude-md'])]);
+    store.tools.set({ platform: 'linux', shell: 'posix', canLaunch: false, tools: {} });
+    (el.querySelector('.create') as HTMLButtonElement).click();
+    await vi.waitFor(() => expect(store.gapsOpen()).toBe(true));
+    expect(store.pendingRun()).toBeNull();
   });
 
   it('can go on to the command generator', async () => {
