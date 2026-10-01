@@ -1,6 +1,9 @@
 @use 'tokens' as *;
 
-:host { position: absolute; left: 36px; top: 104px; width: 300px; display: block; }
+// Both side panels end on the same line (y=824, 720px tall, see right-panel.scss): the workflow pager is pinned to the bottom here,
+// the actions to the bottom there. The height is a minimum, so a long list can still push the pager down instead of being clipped.
+:host { position: absolute; left: 36px; top: 104px; width: 300px; min-height: 720px; display: flex; flex-direction: column; }
+.pager.wf-pager { margin-top: auto; padding-top: 8px; } // more specific than .pager below, or its margin-top would win
 .sr { position: absolute; left: -9999px; }
 
 .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid #c6ff3d44; }

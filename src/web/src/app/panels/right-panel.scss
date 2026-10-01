@@ -1,7 +1,8 @@
 @use 'tokens' as *;
 
-// a column down to y=836 (the legend row starts at 842): the card in the middle scrolls when it must, the actions stay at the bottom
-:host { position: absolute; left: 1104px; top: 104px; width: 300px; height: 732px; display: flex; flex-direction: column; }
+// a column down to y=824, the line where the left panel's workflow section ends (the legend row starts at 842): the card in the middle scrolls
+// when it must, the actions stay at the bottom. Keep the height equal to the left panel's min-height.
+:host { position: absolute; left: 1104px; top: 104px; width: 300px; height: 720px; display: flex; flex-direction: column; }
 .kpis { flex: none; }
 .actions { flex: none; margin-top: auto; padding-top: 14px; }
 .kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }

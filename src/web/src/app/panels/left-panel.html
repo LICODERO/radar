@@ -55,7 +55,7 @@
     </div>
   </button>
 }
-<div class="pager">
+<div class="pager wf-pager">
   <div class="m plabel">{{ t('pager.of', { from: store.wfPager().from, to: store.wfPager().to, total: store.wfPager().total }) }}</div>
   <div class="pbtns">
     <button class="m pg" type="button" [attr.aria-label]="t('left.prevWf')" [disabled]="store.wfPager().prevDisabled" (click)="store.goWfPage(store.wfPager().page - 1)">‹</button>
