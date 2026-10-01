@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { limitChips } from '../core/chips';
 import { RadarStore } from '../core/radar-store';
 import { I18n } from '../i18n/i18n';
 
@@ -20,6 +21,9 @@ export class RightPanel {
     : !this.store.selected()
       ? this.t('right.pickRepoFirst')
       : this.t('right.newAgentTip', { name: this.selName() }));
+  protected readonly agentChips = computed(() => limitChips(this.sel()?.agents ?? []));
+  protected readonly skillChips = computed(() => limitChips(this.sel()?.skills ?? []));
+  protected readonly workflowChips = computed(() => limitChips(this.store.selectedWorkflows()));
   protected readonly isMock = computed(() => this.store.mode() === 'mock');
   protected readonly vaultState = computed(() => this.store.vault()?.state ?? 'none');
   protected readonly vaultTip = computed(() => {

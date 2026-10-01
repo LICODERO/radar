@@ -1,6 +1,9 @@
 @use 'tokens' as *;
 
-:host { position: absolute; left: 1104px; top: 104px; width: 300px; display: block; }
+// a column down to y=836 (the legend row starts at 842): the card in the middle scrolls when it must, the actions stay at the bottom
+:host { position: absolute; left: 1104px; top: 104px; width: 300px; height: 732px; display: flex; flex-direction: column; }
+.kpis { flex: none; }
+.actions { flex: none; margin-top: auto; padding-top: 14px; }
 .kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .kpi { border: 1px solid; padding: 10px 12px; }
 // tile colours follow the orbit legend: repos white, agents lime, skills violet, gaps magenta
@@ -11,7 +14,7 @@
 .kl { font-size: fs(9); letter-spacing: .16em; color: $muted; }
 .kv { font-size: fs(38); font-weight: 600; line-height: 1.1; }
 
-.card { margin-top: 18px; border: 1px solid #c6ff3d44; padding: 14px 14px 16px; background: #c6ff3d08; max-height: 410px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #c6ff3d66 transparent; }
+.card { margin-top: 18px; border: 1px solid #c6ff3d44; padding: 14px 14px 16px; background: #c6ff3d08; flex: 0 1 auto; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #c6ff3d66 transparent; }
 .card.empty { border-style: dashed; border-color: #ffffff33; background: transparent; }
 .etitle { font-size: fs(15); font-weight: 600; color: $text; margin-top: 8px; }
 .etext { font-size: fs(10); line-height: 1.5; color: $muted; margin-top: 6px; }
@@ -27,9 +30,10 @@
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chipx { background: transparent; font-size: fs(10); padding: 3px 7px; cursor: pointer; }
 span.chipx { cursor: default; }
+.chipx.more { font-weight: 600; }
 
 .head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid #c6ff3d44; }
-.head.sec2 { margin-top: 20px; }
+.head.sec2 { margin-top: 0; }
 .h { font-size: fs(10); letter-spacing: .18em; color: $lime; }
 .hint { font-size: fs(9); color: $muted; }
 .sel { color: #fff; }

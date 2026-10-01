@@ -387,5 +387,12 @@ export const EN: Record<MsgKey, Message> = {
   'project.closeBtn': 'CLOSE',
   'project.planFailed': 'Could not check what would be written.',
   'project.saveFailed': 'Could not save.',
+  'right.more': 'Show all ({n})',
+  'items.eyebrow.a': 'AGENTS · {n}',
+  'items.eyebrow.s': 'SKILLS · {n}',
+  'items.eyebrow.w': 'WORKFLOWS · {n}',
+  'items.close': 'Close',
+  'items.hint': 'Click an item to see its details on the orbit.',
+  'items.noDescription': 'no description',
   'api.serverError': 'Server error ({status})'
 };

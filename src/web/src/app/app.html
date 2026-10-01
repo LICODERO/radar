@@ -31,6 +31,7 @@
         @if (store.coverageInfoOpen()) { <app-coverage-info /> }
         @if (store.aboutOpen()) { <app-about-dialog /> }
         @if (store.legendOpen()) { <app-legend-dialog /> }
+        @if (store.itemsKind()) { <app-items-dialog /> }
         @if (store.vaultOpen()) { <app-vault-dialog /> }
         @if (store.projectRepoId()) { <app-project-dialog /> }
         @if (store.scan()) { <app-scan-overlay /> }

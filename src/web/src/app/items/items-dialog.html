@@ -1,0 +1,19 @@
+<div class="backdrop" (click)="store.closeItems()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="eyebrow()" [style.--c]="color()">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">{{ eyebrow() }}</div>
+      <div class="ttl">{{ repo()?.name }}</div>
+    </div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('items.close')" (click)="store.closeItems()">✕</button>
+  </div>
+  <div class="m hint">{{ t('items.hint') }}</div>
+  <div class="list">
+    @for (r of rows(); track r.name) {
+      <button class="row" type="button" (click)="choose(r)">
+        <span class="m name">{{ r.name }}</span>
+        <span class="m desc">{{ r.text || t('items.noDescription') }}</span>
+      </button>
+    }
+  </div>
+</div>

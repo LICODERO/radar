@@ -389,6 +389,13 @@ export const PL = {
   'project.closeBtn': 'ZAMKNIJ',
   'project.planFailed': 'Nie udało się sprawdzić, co zostanie zapisane.',
   'project.saveFailed': 'Nie udało się zapisać.',
+  'right.more': 'Pokaż wszystkie ({n})',
+  'items.eyebrow.a': 'AGENCI · {n}',
+  'items.eyebrow.s': 'SKILLE · {n}',
+  'items.eyebrow.w': 'WORKFLOWY · {n}',
+  'items.close': 'Zamknij',
+  'items.hint': 'Kliknij pozycję, aby zobaczyć jej szczegóły na orbicie.',
+  'items.noDescription': 'brak opisu',
   'api.serverError': 'Błąd serwera ({status})'
 } as const satisfies Record<string, Message>;
 

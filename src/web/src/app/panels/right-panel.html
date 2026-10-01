@@ -19,26 +19,35 @@
 
     <div class="m sec">{{ t('right.agents', { n: s.agents.length }) }}</div>
     <div class="chips">
-      @for (a of s.agents; track a.name) {
+      @for (a of agentChips().visible; track a.name) {
         <button class="m chipx" type="button" style="color:#c6ff3d;border:1px solid #c6ff3d" (click)="store.pickItem({ kind: 'a', repoId: s.id, name: a.name })">{{ a.name }}</button>
       } @empty {
         <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">{{ t('right.noAgents') }}</span>
       }
+      @if (agentChips().extra) {
+        <button class="m chipx more" type="button" style="color:#c6ff3d;border:1px dashed #c6ff3d" [attr.aria-label]="t('right.more', { n: s.agents.length })" [attr.title]="t('right.more', { n: s.agents.length })" (click)="store.openItems('a')">+{{ agentChips().extra }}</button>
+      }
     </div>
     <div class="m sec">{{ t('right.skills', { n: s.skills.length }) }}</div>
     <div class="chips">
-      @for (k of s.skills; track k.name) {
+      @for (k of skillChips().visible; track k.name) {
         <button class="m chipx" type="button" style="color:#a99bff;border:1px solid #a99bff" (click)="store.pickItem({ kind: 's', repoId: s.id, name: k.name })">{{ k.name }}</button>
       } @empty {
         <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">{{ t('right.noSkills') }}</span>
       }
+      @if (skillChips().extra) {
+        <button class="m chipx more" type="button" style="color:#a99bff;border:1px dashed #a99bff" [attr.aria-label]="t('right.more', { n: s.skills.length })" [attr.title]="t('right.more', { n: s.skills.length })" (click)="store.openItems('s')">+{{ skillChips().extra }}</button>
+      }
     </div>
     <div class="m sec">{{ t('right.workflows', { n: store.selectedWorkflows().length }) }}</div>
     <div class="chips">
-      @for (w of store.selectedWorkflows(); track w.id) {
+      @for (w of workflowChips().visible; track w.id) {
         <button class="m chipx" type="button" style="color:#4dd6ff;border:1px solid #4dd6ff" (click)="store.pickItem({ kind: 'w', name: w.id }, true)">{{ w.name }}</button>
       } @empty {
         <span class="m chipx" style="color:#ff4fa3;border:1px dashed #ff4fa3">{{ t('right.noWorkflows') }}</span>
+      }
+      @if (workflowChips().extra) {
+        <button class="m chipx more" type="button" style="color:#4dd6ff;border:1px dashed #4dd6ff" [attr.aria-label]="t('right.more', { n: store.selectedWorkflows().length })" [attr.title]="t('right.more', { n: store.selectedWorkflows().length })" (click)="store.openItems('w')">+{{ workflowChips().extra }}</button>
       }
     </div>
   </div>
@@ -50,6 +59,7 @@
   </div>
 }
 
+<div class="actions">
 <div class="head sec2">
   <div class="m h">{{ t('right.actions') }}</div>
   <div class="m hint">{{ t('right.inRepo') }} <span class="sel">{{ selName() }}</span></div>
@@ -62,4 +72,5 @@
 <div class="acts vault">
   <button class="m btn-ghost tip tip-l" type="button" [class.warn]="vaultState() !== 'ok'" [disabled]="isMock()" [attr.data-tip]="vaultTip()" (click)="store.openVault()">{{ t('right.vault') }}</button>
   <button class="m btn-ghost tip tip-r" type="button" [disabled]="!canEnable()" [attr.data-tip]="enableTip()" (click)="store.openProject()">{{ t('right.enableRepo') }}</button>
+</div>
 </div>

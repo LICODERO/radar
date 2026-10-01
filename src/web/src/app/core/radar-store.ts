@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { EnableProjectResult, Hover, Pick, RepoInfo, ScanResult, Settings, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
+import { EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, countByType } from './commands';
@@ -68,6 +68,8 @@ export class RadarStore {
   /** second brain: status from the server (null in sample-data mode or when it could not be read) */
   readonly vault = signal<VaultStatus | null>(null);
   readonly vaultOpen = signal(false);
+  /** the full list of the selected repo's agents, skills or workflows (the "+N" tile on its card) */
+  readonly itemsKind = signal<PickKind | null>(null);
   /** the "enable the second brain for this repo" dialog; the id of the repo */
   readonly projectRepoId = signal<string | null>(null);
   readonly vaultReady = computed(() => this.vault()?.state === 'ok');
@@ -248,6 +250,9 @@ export class RadarStore {
   /** Throws ApiError (with `body.code`) when the server refuses; the dialog shows the message. */
   async createVault(path: string): Promise<void> { this.vault.set(await this.api.createVault(path)); }
   async relinkVault(path: string): Promise<void> { this.vault.set(await this.api.relinkVault(path)); }
+
+  openItems(kind: PickKind): void { if (this.selected()) this.itemsKind.set(kind); }
+  closeItems(): void { this.itemsKind.set(null); }
 
   openProject(): void {
     const id = this.selected()?.id;
