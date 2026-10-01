@@ -94,6 +94,18 @@ public class TerminalCommandTests
     }
 
     [Fact]
+    public void A_found_tool_runs_by_its_full_path_so_the_terminal_does_not_need_it_on_its_PATH()
+    {
+        var req = new LaunchRequest("/p/repo", "claude", "do it", "t", "/Users/me/.nvm/versions/node/v20.9.0/bin/claude");
+        Assert.Equal("cd '/p/repo' && '/Users/me/.nvm/versions/node/v20.9.0/bin/claude' 'do it'", TerminalCommands.PosixCommand(req));
+        Assert.Contains("& 'C:\\tools\\claude.cmd' $prompt", TerminalCommands.PowerShellScript(req with { ToolPath = "C:\\tools\\claude.cmd" }));
+        // an odd path is quoted, not interpreted
+        Assert.Contains("'/x/it'\\''s/claude'", TerminalCommands.PosixCommand(req with { ToolPath = "/x/it's/claude" }));
+        // without a path the plain name is used, as before
+        Assert.Equal("cd '/p/repo' && claude 'do it'", TerminalCommands.PosixCommand(req with { ToolPath = null }));
+    }
+
+    [Fact]
     public void Unknown_tools_are_refused_before_anything_is_built()
     {
         Assert.Throws<ArgumentException>(() => TerminalCommands.PosixCommand(Req(tool: "rm -rf /")));
@@ -150,6 +162,55 @@ public class ToolLocatorTests
             Assert.False(loc.IsAvailable("codex"));
         }
         finally { Directory.Delete(dir, true); }
+    }
+}
+
+public class NvmSearchTests : IDisposable
+{
+    private readonly string _home = Path.Combine(Path.GetTempPath(), "radar-nvm-" + Guid.NewGuid().ToString("N"));
+    public void Dispose() { try { Directory.Delete(_home, true); } catch { /* best effort */ } }
+
+    private string Bin(string version, bool withClaude)
+    {
+        var bin = Path.Combine(_home, ".nvm", "versions", "node", version, "bin");
+        Directory.CreateDirectory(bin);
+        if (withClaude && !OperatingSystem.IsWindows())
+        {
+            var exe = Path.Combine(bin, "claude");
+            File.WriteAllText(exe, "#!/bin/sh\n");
+            File.SetUnixFileMode(exe, UnixFileMode.UserRead | UnixFileMode.UserExecute);
+        }
+        return bin;
+    }
+
+    [Fact]
+    public void Searches_path_first_and_then_every_nvm_version_newest_first()
+    {
+        var v18 = Bin("v18.13.0", false); var v20 = Bin("v20.9.0", true); var v22 = Bin("v22.23.2", false); var v9 = Bin("v9.1.0", false);
+        var dirs = PathToolLocator.SearchDirs(_home, null, "/first/on/path");
+
+        Assert.Equal("/first/on/path", dirs[0]);
+        var nvm = dirs.Where(d => d.StartsWith(Path.Combine(_home, ".nvm"))).ToList();
+        Assert.Equal([v22, v20, v18, v9], nvm);   // numeric, not alphabetical: v22 > v20 > v18 > v9
+    }
+
+    [Fact]
+    public void Finds_a_tool_installed_under_a_node_version_that_is_not_the_default()
+    {
+        if (OperatingSystem.IsWindows()) return;
+        Bin("v22.23.2", false); var v20 = Bin("v20.9.0", true);   // the shell's default is 22, claude lives in 20
+        IToolLocator loc = new PathToolLocator(PathToolLocator.SearchDirs(_home, null, "").Where(d => d.StartsWith(_home)).ToList());
+        Assert.Equal(Path.Combine(v20, "claude"), loc.Find("claude"));
+        Assert.Null(loc.Find("codex"));
+    }
+
+    [Fact]
+    public void Honours_NVM_DIR_and_survives_a_missing_nvm()
+    {
+        var custom = Path.Combine(_home, "elsewhere", "versions", "node", "v20.0.0", "bin");
+        Directory.CreateDirectory(custom);
+        Assert.Contains(custom, PathToolLocator.SearchDirs(_home, Path.Combine(_home, "elsewhere"), ""));
+        Assert.DoesNotContain(PathToolLocator.SearchDirs(Path.Combine(_home, "nobody"), null, ""), d => d.Contains("versions"));
     }
 }
 
@@ -231,6 +292,7 @@ public class RunEndpointTests : IDisposable
         Assert.Equal("claude", req.Tool);
         Assert.Equal(Path.Combine(_root, "billing-api"), req.Dir);
         Assert.Contains("CLAUDE.md", req.Prompt);
+        Assert.Equal("/fake/claude", req.ToolPath); // the server's own lookup, never anything the client sent
         Assert.True((await r.Content.ReadFromJsonAsync<JsonElement>()).GetProperty("toolFound").GetBoolean());
     }
 

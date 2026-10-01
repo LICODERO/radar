@@ -23,10 +23,12 @@ export function quote(shell: Shell, s: string): string {
 }
 
 /** `cd <repo> && claude '<prompt>'` (POSIX) or `Set-Location ...; claude '<prompt>'` (PowerShell). */
-export function buildCommand(shell: Shell, tool: Tool, dir: string, prompt: string): string {
+export function buildCommand(shell: Shell, tool: Tool, dir: string, prompt: string, toolPath?: string | null): string {
+  // with a path (what RADAR runs: the server found the tool, the terminal's own PATH may not have it) the tool is called by it
+  const bin = toolPath ? (shell === 'powershell' ? `& ${quote(shell, toolPath)}` : quote(shell, toolPath)) : tool;
   return shell === 'powershell'
-    ? `Set-Location -LiteralPath ${quote(shell, dir)}; ${tool} ${quote(shell, prompt)}`
-    : `cd ${quote(shell, dir)} && ${tool} ${quote(shell, prompt)}`;
+    ? `Set-Location -LiteralPath ${quote(shell, dir)}; ${bin} ${quote(shell, prompt)}`
+    : `cd ${quote(shell, dir)} && ${bin} ${quote(shell, prompt)}`;
 }
 
 export function filterItems(items: readonly GapItem[], types: ReadonlySet<GapType>): GapItem[] {

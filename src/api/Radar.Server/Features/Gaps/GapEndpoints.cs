@@ -22,7 +22,8 @@ public static class GapEndpoints
             terminal = launcher.App,
             shell = launcher.Shell,
             canLaunch = launcher.Supported,
-            tools = Tools.Known.ToDictionary(t => t, locator.IsAvailable)
+            tools = Tools.Known.ToDictionary(t => t, locator.IsAvailable),
+            toolPaths = Tools.Known.ToDictionary(t => t, locator.Find)
         }));
 
         // Opens a terminal in the repo and starts claude/codex there. The command is built on the server from the scan
@@ -46,7 +47,7 @@ public static class GapEndpoints
 
             try
             {
-                await launcher.LaunchAsync(new LaunchRequest(item.Dir, req.Tool!, item.Prompt, $"R.A.D.A.R. · {repo.Name} · {req.Type}"), ct);
+                await launcher.LaunchAsync(new LaunchRequest(item.Dir, req.Tool!, item.Prompt, $"R.A.D.A.R. · {repo.Name} · {req.Type}", locator.Find(req.Tool!)), ct);
             }
             catch (Exception e) when (e is InvalidOperationException or System.ComponentModel.Win32Exception or OperationCanceledException)
             {

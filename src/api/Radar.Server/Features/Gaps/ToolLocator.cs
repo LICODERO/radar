@@ -45,16 +45,47 @@ public sealed class PathToolLocator : IToolLocator
     private static bool IsExecutable(string path) =>
         (File.GetUnixFileMode(path) & (UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute)) != 0;
 
-    private static IReadOnlyList<string> SearchDirs()
+    private static IReadOnlyList<string> SearchDirs() =>
+        SearchDirs(AppPaths.Home, Environment.GetEnvironmentVariable("NVM_DIR"), Environment.GetEnvironmentVariable("PATH"));
+
+    /// <summary>
+    /// PATH first, then the usual install folders. Global npm packages live in the bin folder of the Node version that installed them, and a new shell
+    /// only has the nvm default on its PATH, so every nvm version is searched too (newest first): `claude` installed under another version is still found.
+    /// </summary>
+    public static IReadOnlyList<string> SearchDirs(string home, string? nvmDir, string? path)
     {
-        var dirs = (Environment.GetEnvironmentVariable("PATH") ?? string.Empty)
-            .Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries).ToList();
-        var home = AppPaths.Home;
+        var dirs = (path ?? string.Empty).Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries).ToList();
         dirs.AddRange([
             Path.Combine(home, ".local", "bin"), Path.Combine(home, ".claude", "local"),
             "/opt/homebrew/bin", "/usr/local/bin",
+            Path.Combine(home, ".npm-global", "bin"), Path.Combine(home, ".volta", "bin"),
             Path.Combine(home, "AppData", "Roaming", "npm"), Path.Combine(home, "AppData", "Local", "Programs", "claude")
         ]);
+        dirs.AddRange(NvmBinDirs(string.IsNullOrWhiteSpace(nvmDir) ? Path.Combine(home, ".nvm") : nvmDir));
         return dirs;
+    }
+
+    private static IEnumerable<string> NvmBinDirs(string nvmDir)
+    {
+        var versions = Path.Combine(nvmDir, "versions", "node");
+        try
+        {
+            if (!Directory.Exists(versions)) return [];
+            return Directory.EnumerateDirectories(versions)
+                .OrderByDescending(d => VersionKey(Path.GetFileName(d)))
+                .ThenByDescending(d => d, StringComparer.Ordinal)
+                .Select(d => Path.Combine(d, "bin"))
+                .ToList();
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException) { return []; }
+    }
+
+    /// <summary>"v20.9.0" as a comparable number (major, minor, patch); anything that does not parse sorts last.</summary>
+    private static long VersionKey(string name)
+    {
+        var parts = name.TrimStart('v').Split('.');
+        long key = 0;
+        for (var i = 0; i < 3; i++) key = key * 100000 + (i < parts.Length && long.TryParse(parts[i], out var n) && n < 100000 ? n : 0);
+        return key;
     }
 }

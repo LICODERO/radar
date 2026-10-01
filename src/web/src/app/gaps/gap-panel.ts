@@ -73,7 +73,7 @@ export class GapPanel {
     this.runError.set(null);
     this.pending.set({
       item,
-      command: buildCommand(this.shell(), this.tool(), item.dir, item.prompt),
+      command: buildCommand(this.shell(), this.tool(), item.dir, item.prompt, this.store.tools()?.toolPaths?.[this.tool()]),
       toolFound: this.store.tools()?.tools[this.tool()] !== false
     });
   }

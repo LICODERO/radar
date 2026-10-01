@@ -3,7 +3,8 @@ using System.Text;
 
 namespace Radar.Server.Features.Gaps;
 
-public sealed record LaunchRequest(string Dir, string Tool, string Prompt, string Title);
+/// <param name="ToolPath">absolute path of the tool as the server found it; the terminal's own PATH may not have it (nvm installs per Node version)</param>
+public sealed record LaunchRequest(string Dir, string Tool, string Prompt, string Title, string? ToolPath = null);
 
 public interface ITerminalLauncher
 {
@@ -43,7 +44,7 @@ public static class TerminalCommands
     public static string PosixCommand(LaunchRequest r)
     {
         Check(r);
-        return $"cd {Posix(r.Dir)} && {r.Tool} {Posix(r.Prompt)}";
+        return $"cd {Posix(r.Dir)} && {(r.ToolPath is null ? r.Tool : Posix(r.ToolPath))} {Posix(r.Prompt)}";
     }
 
     /// <summary>Arguments for `osascript`: opens a Terminal.app window and runs the command in it.</summary>
@@ -90,7 +91,7 @@ public static class TerminalCommands
             $"$Host.UI.RawUI.WindowTitle = {PowerShell(title)}",
             $"Set-Location -LiteralPath {PowerShell(r.Dir)}",
             $"$prompt = {PowerShell(r.Prompt)}",
-            $"& {r.Tool} $prompt");
+            $"& {(r.ToolPath is null ? r.Tool : PowerShell(r.ToolPath))} $prompt");
     }
 
     /// <summary>Base64 (UTF-16LE) for `powershell -EncodedCommand`, which avoids every command-line quoting problem.</summary>

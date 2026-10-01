@@ -18,7 +18,7 @@ async function open(repos: ReturnType<typeof repo>[]) {
     repos, workflows: [],
     gaps: repos.flatMap((r) => r.gaps.filter((g) => g === 'no-claude-md').map((type) => ({ repoId: r.id, type })))
   } as unknown as ScanResult);
-  store.tools.set({ platform: 'macos', shell: 'posix', canLaunch: true, tools: { claude: true, codex: true } });
+  store.tools.set({ platform: 'macos', shell: 'posix', canLaunch: true, tools: { claude: true, codex: true }, toolPaths: { claude: '/n/v20/bin/claude', codex: null } });
   store.openGapsList();
   const fixture = TestBed.createComponent(GapsListDialog);
   await fixture.whenStable();
@@ -67,7 +67,7 @@ describe('gaps list', () => {
     const p = store.pendingRun()!;
     expect(p.item.repoId).toBe('terraform');
     expect(p.item.type).toBe('no-claude-md');
-    expect(p.command).toContain("cd '/p/terraform' && claude");
+    expect(p.command).toContain("cd '/p/terraform' && '/n/v20/bin/claude' 'make claude md'"); // by full path: the terminal's PATH may lack it
     expect(api.gaps).toHaveBeenCalled();
   });
 

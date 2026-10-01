@@ -98,6 +98,8 @@ export interface ToolsInfo {
   /** the terminal app that opens (iTerm2, Terminal.app...); absent when it is just "the terminal" */
   terminal?: string;
   tools: Record<string, boolean>;
+  /** where the server found each tool (absolute path), null when it did not; absent from older servers */
+  toolPaths?: Record<string, string | null>;
 }
 
 export interface AgentDraft {

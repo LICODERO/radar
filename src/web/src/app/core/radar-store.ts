@@ -321,7 +321,7 @@ export class RadarStore {
     const tools = this.tools();
     const item = this.gapItems().find((i) => i.repoId === repoId && i.type === 'no-claude-md');
     if (!item || tools?.canLaunch !== true) return;
-    this.pendingRun.set({ item, command: buildCommand(tools.shell, 'claude', item.dir, item.prompt), toolFound: tools.tools['claude'] !== false });
+    this.pendingRun.set({ item, command: buildCommand(tools.shell, 'claude', item.dir, item.prompt, tools.toolPaths?.['claude']), toolFound: tools.tools['claude'] !== false });
   }
 
   async openGaps(): Promise<void> {

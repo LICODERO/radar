@@ -55,3 +55,18 @@ describe('toScript', () => {
     expect(toScript('powershell', 'codex', items.slice(0, 1), comment)).toContain('Set-Location -LiteralPath');
   });
 });
+
+describe('buildCommand with a tool path', () => {
+  it('calls the tool by its full path, quoted for the shell', () => {
+    expect(buildCommand('posix', 'claude', '/r/app', 'do it', '/Users/me/.nvm/versions/node/v20.9.0/bin/claude'))
+      .toBe("cd '/r/app' && '/Users/me/.nvm/versions/node/v20.9.0/bin/claude' 'do it'");
+    expect(buildCommand('powershell', 'claude', 'C:\\r', 'do it', 'C:\\Tools\\claude.cmd'))
+      .toBe("Set-Location -LiteralPath 'C:\\r'; & 'C:\\Tools\\claude.cmd' 'do it'");
+    expect(buildCommand('posix', 'claude', '/r', 'p', "/x/it's/claude")).toContain("'/x/it'\\''s/claude'");
+  });
+
+  it('keeps the plain tool name without a path (the commands users copy)', () => {
+    expect(buildCommand('posix', 'claude', '/r/app', 'do it')).toBe("cd '/r/app' && claude 'do it'");
+    expect(buildCommand('posix', 'codex', '/r/app', 'do it', null)).toBe("cd '/r/app' && codex 'do it'");
+  });
+});
