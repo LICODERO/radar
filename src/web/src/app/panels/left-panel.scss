@@ -6,8 +6,8 @@
 .head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid #c6ff3d44; }
 .head.sec { margin-top: 16px; }
 .head.sec2 { margin-top: 14px; }
-.h { font-size: fs(10); letter-spacing: .18em; color: $lime; }
-.hint { font-size: fs(9); color: $muted; }
+.h { font-size: fs(10); letter-spacing: .12em; color: $lime; white-space: nowrap; }
+.hint { font-size: fs(9); color: $muted; white-space: nowrap; }
 .hint-group { display: flex; align-items: center; gap: 8px; }
 .info-btn { width: 12px; height: 12px; padding: 0; border-radius: 50%; border: 1px solid #c6ff3dcc; background: #c6ff3d14; color: $lime; font-size: fs(7.5); line-height: 1; cursor: pointer; }
 .info-btn:hover, .info-btn:focus-visible { background: #c6ff3d26; border-color: $lime; }
@@ -18,7 +18,7 @@
 .search input:focus { border-color: #c6ff3d88; box-shadow: 0 0 0 1px #c6ff3d33; }
 
 .row { color: inherit; cursor: pointer; text-align: left; border: 0; border-bottom: 1px solid #c6ff3d14; width: 100%; box-sizing: border-box; }
-.repo-row { display: grid; grid-template-columns: 26px minmax(0, 1fr) 58px 34px; gap: 10px; align-items: center; height: 26px; padding: 0; background: transparent; }
+.repo-row { display: grid; grid-template-columns: 26px minmax(0, 1fr) 58px 34px; gap: 10px; align-items: center; height: 34px; padding: 0; background: transparent; }
 .ini { font-size: fs(11); color: $lime; padding-left: 2px; font-weight: 600; }
 .rn { font-size: fs(12); color: $text; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .meta { font-size: fs(9); color: $muted; }
@@ -27,7 +27,7 @@
 .pct { font-size: fs(11); text-align: right; }
 .none { font-size: fs(10); color: $muted; padding: 10px 0; }
 
-.wf-row { min-height: 52px; align-content: start; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; padding: 5px 0; background: transparent; }
+.wf-row { min-height: 60px; align-content: start; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; padding: 5px 0; background: transparent; }
 .wno { width: 26px; height: 26px; box-sizing: border-box; border: 1px solid $workflow; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: fs(10); color: $workflow; }
 .wname { display: flex; justify-content: space-between; font-size: fs(12); color: $text; }
 .wn { font-size: fs(9); color: $muted; }
@@ -42,7 +42,7 @@
 .pos { font-size: fs(10); color: $text; padding: 0 4px; }
 
 .gh { font-size: fs(10); letter-spacing: .18em; color: #ff9cc9; margin-top: 20px; padding-bottom: 8px; border-bottom: 1px solid #ff4fa355; }
-.grow { display: flex; justify-content: space-between; font-size: fs(11); height: 30px; align-items: center; background: transparent; border: 0; width: 100%; padding: 0; color: inherit; cursor: pointer; text-align: left; }
+.grow { display: flex; justify-content: space-between; font-size: fs(11); height: 32px; align-items: center; background: transparent; border: 0; width: 100%; padding: 0; color: inherit; cursor: pointer; text-align: left; }
 .gt { color: #a3a9bf; }
 .rest { font-size: fs(10); color: $muted; height: 24px; display: flex; align-items: center; }
 .gen { margin-top: 10px; width: 100%; box-sizing: border-box; background: #c6ff3d14; border: 1px solid $lime; color: $lime; font-size: fs(11); letter-spacing: .14em; padding: 11px 14px; cursor: pointer; }

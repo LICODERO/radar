@@ -11,7 +11,7 @@
 .kl { font-size: fs(9); letter-spacing: .16em; color: $muted; }
 .kv { font-size: fs(38); font-weight: 600; line-height: 1.1; }
 
-.card { margin-top: 18px; border: 1px solid #c6ff3d44; padding: 14px 14px 16px; background: #c6ff3d08; }
+.card { margin-top: 18px; border: 1px solid #c6ff3d44; padding: 14px 14px 16px; background: #c6ff3d08; max-height: 410px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #c6ff3d66 transparent; }
 .card.empty { border-style: dashed; border-color: #ffffff33; background: transparent; }
 .etitle { font-size: fs(15); font-weight: 600; color: $text; margin-top: 8px; }
 .etext { font-size: fs(10); line-height: 1.5; color: $muted; margin-top: 6px; }

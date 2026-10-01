@@ -13,6 +13,9 @@ $display: 'Oxanium', sans-serif;
 $mono: 'IBM Plex Mono', ui-monospace, monospace;
 
 /// Font size that follows the stage font factor (--fs), see core/fit-scale.ts.
+/// The design sizes of 9-13 px were too small to read on a laptop, so they are lifted towards 14 px (the smaller, the more:
+/// 9 -> 11.75, 10 -> 12.2, 12 -> 13.1). Sizes below 9 (glyphs inside fixed tiny boxes) and from 14 up are used as they are.
 @function fs($px) {
-  @return calc(#{$px}px * var(--fs, 1));
+  $lifted: if($px >= 9 and $px < 14, $px + (14 - $px) * 0.55, $px);
+  @return calc(#{$lifted}px * var(--fs, 1));
 }
