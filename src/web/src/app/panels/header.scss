@@ -11,7 +11,7 @@ $row-h: 64px;
 
 .path { position: absolute; left: 380px; top: 14px; width: 560px; height: $row-h; display: flex; flex-direction: column; justify-content: center; }
 .path-row { display: flex; align-items: center; gap: 10px; }
-.label { font-size: fs(9); letter-spacing: .2em; color: $muted; white-space: nowrap; }
+.label { font-size: fs(9); letter-spacing: .1em; color: $muted; white-space: nowrap; }
 .path-box { flex-grow: 1; font-size: fs(12); color: $text; border: 1px solid #c6ff3d55; background: #c6ff3d0d; padding: 5px 10px; }
 .path-box { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .path-input { outline: none; font-family: inherit; }
@@ -26,7 +26,7 @@ $row-h: 64px;
 .clock-block { position: absolute; right: 36px; top: 14px; height: $row-h; display: flex; align-items: center; gap: 20px; }
 .clock-text { text-align: right; }
 .clock { font-size: fs(24); font-weight: 500; color: $lime; line-height: 1.2; }
-.last { font-size: fs(9); letter-spacing: .14em; color: $muted; margin-top: 6px; white-space: nowrap; }
+.last { font-size: fs(9); letter-spacing: .08em; color: $muted; margin-top: 6px; white-space: nowrap; }
 .clock-block button {
   background: $lime; border: 0; color: #0b1006; font-size: fs(11); font-weight: 600; letter-spacing: .14em;
   padding: 14px 16px; cursor: pointer;

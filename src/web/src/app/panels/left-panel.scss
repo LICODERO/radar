@@ -3,10 +3,10 @@
 :host { position: absolute; left: 36px; top: 104px; width: 300px; display: block; }
 .sr { position: absolute; left: -9999px; }
 
-.head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid #c6ff3d44; }
+.head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid #c6ff3d44; }
 .head.sec { margin-top: 16px; }
 .head.sec2 { margin-top: 14px; }
-.h { font-size: fs(10); letter-spacing: .12em; color: $lime; white-space: nowrap; }
+.h { font-size: fs(10); letter-spacing: .06em; color: $lime; white-space: nowrap; }
 .hint { font-size: fs(9); color: $muted; white-space: nowrap; }
 .hint-group { display: flex; align-items: center; gap: 8px; }
 .info-btn { width: 12px; height: 12px; padding: 0; border-radius: 50%; border: 1px solid #c6ff3dcc; background: #c6ff3d14; color: $lime; font-size: fs(7.5); line-height: 1; cursor: pointer; }
@@ -41,7 +41,7 @@
 .pg.on { background: $lime; border-color: $lime; color: #0b1006; font-weight: 600; }
 .pos { font-size: fs(10); color: $text; padding: 0 4px; }
 
-.gh { font-size: fs(10); letter-spacing: .18em; color: #ff9cc9; margin-top: 20px; padding-bottom: 8px; border-bottom: 1px solid #ff4fa355; }
+.gh { font-size: fs(10); letter-spacing: .08em; color: #ff9cc9; margin-top: 20px; padding-bottom: 8px; border-bottom: 1px solid #ff4fa355; }
 .grow { display: flex; justify-content: space-between; font-size: fs(11); height: 32px; align-items: center; background: transparent; border: 0; width: 100%; padding: 0; color: inherit; cursor: pointer; text-align: left; }
 .gt { color: #a3a9bf; }
 .rest { font-size: fs(10); color: $muted; height: 24px; display: flex; align-items: center; }

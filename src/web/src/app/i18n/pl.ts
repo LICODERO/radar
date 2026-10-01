@@ -34,7 +34,7 @@ export const PL = {
 
   // left panel
   'left.repos': 'REPOZYTORIA · {n}',
-  'left.reposHint': 'A = AGENCI · S = SKILLE',
+  'left.reposHint': 'A=AGENCI S=SKILLE',
   'left.search': 'Szukaj repo…  (nazwa, stos, agent)',
   'left.searchAria': 'Szukaj repozytorium',
   'left.noMatch': 'Brak repozytoriów pasujących do zapytania.',

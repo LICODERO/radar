@@ -32,7 +32,7 @@ export const EN: Record<MsgKey, Message> = {
 
   // left panel
   'left.repos': 'REPOSITORIES · {n}',
-  'left.reposHint': 'A = AGENTS · S = SKILLS',
+  'left.reposHint': 'A=AGENTS S=SKILLS',
   'left.search': 'Search repos…  (name, stack, agent)',
   'left.searchAria': 'Search repositories',
   'left.noMatch': 'No repositories match the query.',
