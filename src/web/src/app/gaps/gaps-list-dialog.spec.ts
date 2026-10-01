@@ -63,7 +63,7 @@ describe('gaps list', () => {
     (el.querySelectorAll('.create')[1] as HTMLButtonElement).click();
     await vi.waitFor(() => expect(store.pendingRun()).not.toBeNull());
     expect(store.gapsListOpen()).toBe(false);
-    expect(store.gapsOpen()).toBe(true);
+    expect(store.gapsOpen()).toBe(false); // just the confirmation, not the command panel behind it
     const p = store.pendingRun()!;
     expect(p.item.repoId).toBe('terraform');
     expect(p.item.type).toBe('no-claude-md');
@@ -71,7 +71,7 @@ describe('gaps list', () => {
     expect(api.gaps).toHaveBeenCalled();
   });
 
-  it('CREATE only opens the commands where no terminal can be launched', async () => {
+  it('CREATE shows the commands to copy where no terminal can be launched', async () => {
     const { store, el } = await open([repo('a', ['no-claude-md'])]);
     store.tools.set({ platform: 'linux', shell: 'posix', canLaunch: false, tools: {} });
     (el.querySelector('.create') as HTMLButtonElement).click();

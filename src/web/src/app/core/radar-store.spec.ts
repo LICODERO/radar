@@ -118,17 +118,61 @@ describe('gap commands', () => {
     expect(store.gapItems()).toEqual([]);
   });
 
-  it('runs a gap by repo id, gap type and tool only', async () => {
-    const { api, store } = setup(async (p) => settings(p));
+  describe('running a gap', () => {
     const item = { repoId: 'r', repoName: 'r', initials: 'R', type: 'no-agents', dir: '/p/r', prompt: 'p' } as const;
-    await store.runGap(item, 'codex');
-    expect(api.run).toHaveBeenCalledWith('r', 'no-agents', 'codex');
+    const tools = { platform: 'macos', shell: 'posix', canLaunch: true, tools: { claude: true, codex: true }, toolPaths: { claude: '/n/claude', codex: null } } as const;
+
+    it('asks first: the confirmation shows the command, by the full path when the server found the tool', () => {
+      const { api, store } = setup(async (p) => settings(p));
+      store.tools.set({ ...tools, tools: { ...tools.tools }, toolPaths: { ...tools.toolPaths } });
+      store.askRun(item, 'claude');
+      expect(api.run).not.toHaveBeenCalled();
+      expect(store.pendingRun()).toMatchObject({ tool: 'claude', toolFound: true, command: "cd '/p/r' && '/n/claude' 'p'" });
+      store.askRun(item, 'codex');
+      expect(store.pendingRun()!.command).toBe("cd '/p/r' && codex 'p'"); // no path known: the plain name
+    });
+
+    it('runs by repo id, gap type and tool only, and clears the confirmation', async () => {
+      const { api, store } = setup(async (p) => settings(p));
+      store.askRun(item, 'codex');
+      await store.confirmRun();
+      expect(api.run).toHaveBeenCalledWith('r', 'no-agents', 'codex');
+      expect(store.pendingRun()).toBeNull();
+      expect(store.launchedKey()).toBe('r|no-agents');
+      expect(store.running()).toBe(false);
+    });
+
+    it('keeps the confirmation open and shows the server message when the run is refused', async () => {
+      const { api, store } = setup(async (p) => settings(p));
+      api.run.mockRejectedValueOnce(new ApiError('Nie udało się otworzyć terminala: x', 500));
+      store.askRun(item, 'claude');
+      await store.confirmRun();
+      expect(store.pendingRun()).not.toBeNull();
+      expect(store.runError()).toBe('Nie udało się otworzyć terminala: x');
+      expect(store.launchedKey()).toBeNull();
+    });
+
+    it('cancelling drops the confirmation without running anything', () => {
+      const { api, store } = setup(async (p) => settings(p));
+      store.askRun(item, 'claude');
+      store.cancelRun();
+      expect(store.pendingRun()).toBeNull();
+      expect(api.run).not.toHaveBeenCalled();
+    });
+
+    it('names the terminal that opens', () => {
+      const { store } = setup(async (p) => settings(p));
+      store.tools.set({ ...tools, tools: { ...tools.tools }, terminal: 'iTerm2' });
+      expect(store.terminalName()).toBe('iTerm2');
+      store.tools.set({ ...tools, tools: { ...tools.tools } });
+      expect(store.terminalName()).toBe('Terminal.app');
+    });
   });
 
   it('closing the generator also drops a pending confirmation', () => {
     const { store } = setup(async (p) => settings(p));
     store.gapsOpen.set(true);
-    store.pendingRun.set({ item: {} as never, command: 'x', toolFound: true });
+    store.pendingRun.set({ item: {} as never, tool: 'claude', command: 'x', toolFound: true });
     store.closeGaps();
     expect(store.pendingRun()).toBeNull();
     expect(store.gapsOpen()).toBe(false);

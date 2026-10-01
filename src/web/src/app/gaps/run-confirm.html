@@ -1,0 +1,18 @@
+@if (pending(); as p) {
+  <div class="backdrop" (click)="store.cancelRun()"></div>
+  <div class="confirm" role="alertdialog" aria-modal="true" [attr.aria-label]="t('gaps.confirmAria')">
+    <div class="m eyebrow">{{ t('gaps.confirmEyebrow', { terminal: terminal().toUpperCase() }) }}</div>
+    <div class="cttl">{{ t('gaps.confirmTitle', { tool: toolName(), repo: p.item.repoName }) }}</div>
+    <div class="m cgap">{{ label(p.item.type) }}</div>
+    <pre class="m cmd">{{ p.command }}</pre>
+    <div class="m cnote">{{ t('gaps.confirmNote', { terminal: terminal(), tool: toolName() }) }}</div>
+    @if (!p.toolFound) {
+      <div class="m cwarn">{{ t('gaps.notInPath', { tool: p.tool }) }}</div>
+    }
+    @if (store.runError(); as e) { <div class="m cerr" role="alert">{{ e }}</div> }
+    <div class="cbtns">
+      <button class="m btn-ghost" type="button" [disabled]="store.running()" (click)="store.cancelRun()">{{ t('gaps.cancel') }}</button>
+      <button class="m btn-solid go" type="button" [disabled]="store.running()" (click)="store.confirmRun()">{{ store.running() ? t('gaps.opening') : t('gaps.run') }}</button>
+    </div>
+  </div>
+}

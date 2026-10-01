@@ -9,6 +9,7 @@ import { GapPanel } from './gaps/gap-panel';
 import { AboutDialog } from './about/about-dialog';
 import { LegendDialog } from './legend/legend-dialog';
 import { GapsListDialog } from './gaps/gaps-list-dialog';
+import { RunConfirm } from './gaps/run-confirm';
 import { ItemsDialog } from './items/items-dialog';
 import { ProjectDialog } from './vault/project-dialog';
 import { VaultDialog } from './vault/vault-dialog';
@@ -21,7 +22,7 @@ import { RightPanel } from './panels/right-panel';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog],
+  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog, RunConfirm],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -46,6 +47,7 @@ export class App {
   @HostListener('document:keydown.escape')
   protected onEscape(): void {
     if (this.store.scan()) return;
+    if (this.store.pendingRun()) { this.store.cancelRun(); return; }
     if (this.store.legendOpen()) { this.store.closeLegend(); return; }
     if (this.store.projectRepoId()) { this.store.closeProject(); return; }
     if (this.store.itemsKind()) { this.store.closeItems(); return; }
@@ -54,8 +56,7 @@ export class App {
     if (this.store.aboutOpen()) { this.store.closeAbout(); return; }
     if (this.store.coverageInfoOpen()) { this.store.closeCoverageInfo(); return; }
     if (this.store.composerRepoId()) { this.store.closeComposer(); return; }
-    if (this.store.pendingRun()) this.store.pendingRun.set(null);
-    else if (this.store.gapsOpen()) this.store.closeGaps();
+    if (this.store.gapsOpen()) this.store.closeGaps();
     else if (this.store.file()) this.store.closeFile();
     else if (this.store.pick()) this.store.closePop();
     else if (this.store.selected()) this.store.clearSelection();

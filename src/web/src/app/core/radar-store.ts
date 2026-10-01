@@ -25,6 +25,14 @@ export interface FileView {
   mode: 'preview' | 'source';
 }
 
+/** A run waiting for the user's confirmation; `command` is what will be typed into the terminal (the server builds the real one). */
+export interface PendingRun {
+  item: GapItem;
+  tool: Tool;
+  command: string;
+  toolFound: boolean;
+}
+
 export const REPO_PAGE_SIZE = 8;
 export const WF_PAGE_SIZE = 4;
 
@@ -82,7 +90,21 @@ export class RadarStore {
   readonly gapItems = signal<GapItem[]>([]);
   readonly gapsError = signal<string | null>(null);
   /** run confirmation shown inside the generator; Esc cancels it before it closes the panel */
-  readonly pendingRun = signal<{ item: GapItem; command: string; toolFound: boolean } | null>(null);
+  readonly pendingRun = signal<PendingRun | null>(null);
+  readonly running = signal(false);
+  readonly runError = signal<string | null>(null);
+  /** repo|gap of the run that was just launched: its RUN button says "opened" for a few seconds */
+  readonly launchedKey = signal<string | null>(null);
+  /** the terminal app a run opens, for the texts around it */
+  readonly terminalName = computed(() => {
+    const app = this.tools()?.terminal;
+    if (app) return app;
+    switch (this.tools()?.platform) {
+      case 'macos': return 'Terminal.app';
+      case 'windows': return 'PowerShell';
+      default: return this.i18n.t('gaps.terminal.generic');
+    }
+  });
   readonly gapTotals = computed(() => countByType(this.gapItems()));
   readonly anyGaps = computed(() => (this.result()?.repos ?? []).some((r) => r.gaps.length > 0));
   readonly scanning = computed(() => this.scan()?.status === 'running');
@@ -312,16 +334,50 @@ export class RadarStore {
   }
 
   /**
-   * "STWÓRZ" in the gaps list: opens the command panel with the confirmation to run the CLAUDE.md prompt for this repo in Claude Code.
-   * Nothing runs without that confirmation; where no terminal can be opened the panel just shows the command to copy.
+   * "STWÓRZ" in the gaps list: asks for the confirmation to run the CLAUDE.md prompt for this repo in Claude Code, and nothing else
+   * (no command panel behind it). Nothing runs without that confirmation; where no terminal can be opened the panel with the
+   * commands to copy opens instead.
    */
   async createClaudeMd(repoId: string): Promise<void> {
     this.closeGapsList();
-    await this.openGaps();
-    const tools = this.tools();
+    await this.loadGaps();
     const item = this.gapItems().find((i) => i.repoId === repoId && i.type === 'no-claude-md');
-    if (!item || tools?.canLaunch !== true) return;
-    this.pendingRun.set({ item, command: buildCommand(tools.shell, 'claude', item.dir, item.prompt, tools.toolPaths?.['claude']), toolFound: tools.tools['claude'] !== false });
+    if (item && this.tools()?.canLaunch === true) this.askRun(item, 'claude');
+    else await this.openGaps();
+  }
+
+  /** Puts a run up for confirmation (the dialog shows the command that will be typed, by the tool's full path when the server found it). */
+  askRun(item: GapItem, tool: Tool): void {
+    const tools = this.tools();
+    this.runError.set(null);
+    this.pendingRun.set({
+      item, tool,
+      command: buildCommand(tools?.shell ?? 'posix', tool, item.dir, item.prompt, tools?.toolPaths?.[tool]),
+      toolFound: tools?.tools[tool] !== false
+    });
+  }
+
+  cancelRun(): void {
+    if (!this.running()) this.pendingRun.set(null);
+  }
+
+  /** Opens the terminal for the pending run. The server builds the command; a refusal is shown in the dialog. */
+  async confirmRun(): Promise<void> {
+    const p = this.pendingRun();
+    if (!p || this.running()) return;
+    this.running.set(true);
+    this.runError.set(null);
+    try {
+      await this.api.run(p.item.repoId, p.item.type, p.tool);
+      const key = p.item.repoId + '|' + p.item.type;
+      this.launchedKey.set(key);
+      setTimeout(() => { if (this.launchedKey() === key) this.launchedKey.set(null); }, 4000);
+      this.pendingRun.set(null);
+    } catch (e) {
+      this.runError.set(e instanceof ApiError ? e.message : this.i18n.t('gaps.runFailed'));
+    } finally {
+      this.running.set(false);
+    }
   }
 
   async openGaps(): Promise<void> {
@@ -329,10 +385,6 @@ export class RadarStore {
     await this.loadGaps();
   }
 
-  /** Opens a terminal running the tool in the repo. Throws ApiError with a user-facing message. */
-  runGap(item: GapItem, tool: Tool): Promise<{ launched: boolean; toolFound: boolean }> {
-    return this.api.run(item.repoId, item.type, tool);
-  }
   closeGaps(): void {
     this.pendingRun.set(null);
     this.gapsOpen.set(false);

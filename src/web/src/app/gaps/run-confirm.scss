@@ -1,0 +1,17 @@
+@use 'tokens' as *;
+
+:host { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; z-index: 70; display: block; animation: fadeIn .2s ease-out both; }
+.backdrop { position: absolute; inset: 0; background: rgba(4, 5, 10, .85); }
+.confirm { position: absolute; left: 370px; top: 250px; width: 700px; box-sizing: border-box; background: #070a10; border: 1px solid $lime; box-shadow: 0 20px 60px rgba(0, 0, 0, .8); padding: 20px 24px 22px; }
+.eyebrow { font-size: fs(9); letter-spacing: .1em; color: $lime; }
+.cttl { font-size: fs(22); font-weight: 600; color: #fff; margin-top: 4px; }
+.cgap { font-size: fs(10); letter-spacing: .1em; color: #ff9cc9; margin-top: 2px; }
+.cmd { margin: 8px 0 0; font-size: fs(10.5); line-height: 1.5; color: #c9d2a8; white-space: pre-wrap; word-break: break-word; background: #04060b; border: 1px solid #c6ff3d22; padding: 8px 10px; }
+.cnote { font-size: fs(11); line-height: 1.5; color: #c3c8db; margin-top: 12px; }
+.cwarn { font-size: fs(11); line-height: 1.5; color: $amber; margin-top: 10px; }
+.cerr { font-size: fs(11); color: #ff9cc9; margin-top: 10px; }
+.cbtns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+.cbtns button { font-size: fs(11); letter-spacing: .14em; padding: 12px 22px; cursor: pointer; }
+.cbtns .btn-ghost { background: transparent; border: 1px solid #c6ff3d88; color: $lime; }
+.cbtns .go { background: $lime; border: 0; color: #0b1006; font-weight: 600; }
+.cbtns button:disabled { opacity: .5; }

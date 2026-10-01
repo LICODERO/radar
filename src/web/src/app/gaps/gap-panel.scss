@@ -36,15 +36,3 @@
 .all { background: $lime; border: 0; color: #0b1006; font-size: fs(11); font-weight: 600; letter-spacing: .12em; padding: 12px 18px; cursor: pointer; white-space: nowrap; }
 .all:disabled { opacity: .5; }
 
-.confirm-back { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; background: rgba(4, 5, 10, .88); }
-.confirm { width: 700px; box-sizing: border-box; background: #070a10; border: 1px solid $lime; box-shadow: 0 20px 60px rgba(0, 0, 0, .8); padding: 20px 24px 22px; }
-.cttl { font-size: fs(22); font-weight: 600; color: #fff; margin-top: 4px; }
-.cgap { font-size: fs(10); letter-spacing: .1em; color: #ff9cc9; margin-top: 2px; }
-.cnote { font-size: fs(11); line-height: 1.5; color: #c3c8db; margin-top: 12px; }
-.cwarn { font-size: fs(11); line-height: 1.5; color: $amber; margin-top: 10px; }
-.cerr { font-size: fs(11); color: #ff9cc9; margin-top: 10px; }
-.cbtns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
-.cbtns button { font-size: fs(11); letter-spacing: .14em; padding: 12px 22px; cursor: pointer; }
-.cbtns .btn-ghost { background: transparent; border: 1px solid #c6ff3d88; color: $lime; }
-.cbtns .go { background: $lime; border: 0; color: #0b1006; font-weight: 600; }
-.cbtns button:disabled { opacity: .5; }

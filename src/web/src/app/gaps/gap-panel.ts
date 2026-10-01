@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { GapType } from '../core/models';
-import { ApiError } from '../core/radar-api';
 import { GAP_ORDER, GapItem, Shell, Tool, buildCommand, filterItems, toScript } from '../core/commands';
 import { RadarStore } from '../core/radar-store';
 import { I18n } from '../i18n/i18n';
@@ -21,22 +20,11 @@ export class GapPanel {
   protected readonly label = (g: GapType): string => this.t(('gap.' + g) as MsgKey);
   protected readonly order = GAP_ORDER;
   protected readonly copied = signal<string | null>(null);
-  protected readonly pending = this.store.pendingRun;
-  protected readonly running = signal(false);
-  protected readonly runError = signal<string | null>(null);
-  protected readonly launched = signal<string | null>(null);
+  protected readonly launched = this.store.launchedKey;
 
   protected readonly shell = computed<Shell>(() => this.store.tools()?.shell ?? 'posix');
   protected readonly canLaunch = computed(() => this.store.tools()?.canLaunch === true);
-  protected readonly terminalName = computed(() => {
-    const app = this.store.tools()?.terminal;
-    if (app) return app;
-    switch (this.store.tools()?.platform) {
-      case 'macos': return 'Terminal.app';
-      case 'windows': return 'PowerShell';
-      default: return this.t('gaps.terminal.generic');
-    }
-  });
+  protected readonly terminalName = this.store.terminalName;
 
   /** default filter: the gaps counted in the KPI; when there are none, every type that has gaps */
   protected readonly selected = signal<ReadonlySet<GapType>>(this.initialSelection());
@@ -70,34 +58,7 @@ export class GapPanel {
   }
 
   protected askRun(item: GapItem): void {
-    this.runError.set(null);
-    this.pending.set({
-      item,
-      command: buildCommand(this.shell(), this.tool(), item.dir, item.prompt, this.store.tools()?.toolPaths?.[this.tool()]),
-      toolFound: this.store.tools()?.tools[this.tool()] !== false
-    });
-  }
-
-  protected cancelRun(): void {
-    if (!this.running()) this.pending.set(null);
-  }
-
-  protected async confirmRun(): Promise<void> {
-    const p = this.pending();
-    if (!p || this.running()) return;
-    this.running.set(true);
-    this.runError.set(null);
-    try {
-      await this.store.runGap(p.item, this.tool());
-      const key = p.item.repoId + '|' + p.item.type;
-      this.launched.set(key);
-      setTimeout(() => { if (this.launched() === key) this.launched.set(null); }, 4000);
-      this.pending.set(null);
-    } catch (e) {
-      this.runError.set(e instanceof ApiError ? e.message : this.t('gaps.runFailed'));
-    } finally {
-      this.running.set(false);
-    }
+    this.store.askRun(item, this.tool());
   }
 }
 
