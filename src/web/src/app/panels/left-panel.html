@@ -41,6 +41,7 @@
   </div>
 </div>
 
+@if (wfTotal() > 0) {
 <div class="head sec">
   <div class="m h">{{ t('left.workflows', { n: wfTotal() }) }}</div>
   <div class="m hint">{{ t('left.workflowsHint') }}</div>
@@ -69,3 +70,4 @@
     <button class="m pg" type="button" [attr.aria-label]="t('left.nextWf')" [disabled]="store.wfPager().nextDisabled" (click)="store.goWfPage(store.wfPager().page + 1)">›</button>
   </div>
 </div>
+}
