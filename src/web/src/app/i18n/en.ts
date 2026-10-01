@@ -72,7 +72,7 @@ export const EN: Record<MsgKey, Message> = {
   'right.missing': '✕ MISSING',
   'right.agentsCount': { one: '{n} agent', other: '{n} agents' },
   'right.skillsCount': { one: '{n} skill', other: '{n} skills' },
-  'right.actions': 'ACTIONS · CREATE',
+  'right.actions': 'ACTIONS',
   'right.inRepo': 'IN REPO:',
   'right.addAgent': 'AGENT',
   'right.addSkill': 'SKILL',

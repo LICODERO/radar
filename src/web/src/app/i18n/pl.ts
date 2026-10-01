@@ -74,7 +74,7 @@ export const PL = {
   'right.missing': '✕ BRAK',
   'right.agentsCount': { one: '{n} agent', few: '{n} agentów', many: '{n} agentów', other: '{n} agentów' },
   'right.skillsCount': { one: '{n} skill', few: '{n} skille', many: '{n} skilli', other: '{n} skilli' },
-  'right.actions': 'AKCJE · TWORZENIE',
+  'right.actions': 'AKCJE',
   'right.inRepo': 'W REPO:',
   'right.addAgent': 'AGENT',
   'right.addSkill': 'SKILL',
