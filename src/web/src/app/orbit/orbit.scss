@@ -4,7 +4,7 @@
 .layer { position: absolute; left: 0; top: 0; width: 720px; height: 720px; pointer-events: none; }
 
 .legend-rings { position: absolute; right: 0; top: 0; text-align: right; font-size: fs(9); letter-spacing: .14em; line-height: 16px; color: $muted; z-index: 5; }
-.view-chip { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 8px; font-size: fs(9); letter-spacing: .14em; color: $muted; z-index: 5; }
+.view-chip { position: absolute; left: 0; top: 0; height: 24px; display: flex; align-items: center; gap: 8px; font-size: fs(9); letter-spacing: .14em; color: $muted; z-index: 5; }
 .view-chip svg { width: 14px; height: 14px; fill: $lime; }
 .avg { font-size: fs(30); }
 // the coverage figure in the middle opens the "how is coverage calculated" dialog

@@ -26,7 +26,9 @@ $row-h: 64px;
 .clock-block { position: absolute; right: 36px; top: 14px; height: $row-h; display: flex; align-items: center; gap: 20px; }
 .clock-text { text-align: right; }
 .clock { font-size: fs(24); font-weight: 500; color: $lime; line-height: 1.2; }
-.last { font-size: fs(9); letter-spacing: .08em; color: $muted; margin-top: 6px; white-space: nowrap; }
+// the clock icon is the "last scan" label (Material Icons "history", Apache 2.0); the full text is in the tooltip
+.last { display: flex; align-items: center; justify-content: flex-end; gap: 6px; font-size: fs(9); letter-spacing: .08em; color: $muted; margin-top: 6px; white-space: nowrap; cursor: default; outline: none; }
+.last svg { width: 14px; height: 14px; fill: $lime; }
 .clock-block button {
   background: $lime; border: 0; color: #0b1006; font-size: fs(11); font-weight: 600; letter-spacing: .14em;
   padding: 14px 16px; cursor: pointer;

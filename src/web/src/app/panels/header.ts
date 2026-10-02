@@ -8,7 +8,7 @@ export function formatScanTime(iso: string | undefined): string {
   if (!iso) return '—';
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return '—';
-  return `${z(d.getHours())}:${z(d.getMinutes())} · ${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`;
+  return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())} ${z(d.getHours())}:${z(d.getMinutes())}`;
 }
 
 @Component({

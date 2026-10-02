@@ -24,6 +24,7 @@ export const EN: Record<MsgKey, Message> = {
   'header.staleRoot': 'RESULTS FROM ANOTHER DIRECTORY',
   'header.now': 'NOW',
   'header.lastScan': 'LAST SCAN {when}',
+  'header.lastScanLabel': 'LAST SCAN',
   'header.scan': 'SCAN',
   'header.rescan': 'SCAN AGAIN',
   'header.scanRunning': 'Scan in progress',

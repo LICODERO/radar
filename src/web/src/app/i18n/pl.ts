@@ -26,6 +26,7 @@ export const PL = {
   'header.staleRoot': 'WYNIKI Z INNEGO KATALOGU',
   'header.now': 'TERAZ',
   'header.lastScan': 'OSTATNI SKAN {when}',
+  'header.lastScanLabel': 'OSTATNI SKAN',
   'header.scan': 'SKANUJ',
   'header.rescan': 'SKANUJ PONOWNIE',
   'header.scanRunning': 'Skan trwa',
