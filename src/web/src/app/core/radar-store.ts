@@ -34,6 +34,7 @@ export interface PendingRun {
   toolFound: boolean;
 }
 
+export type KpiKind = 'repos' | 'agents' | 'skills';
 export const SWITCH_MS = 450;
 export const REPO_PAGE_SIZE = 8;
 
@@ -91,6 +92,8 @@ export class RadarStore {
   readonly itemsKind = signal<PickKind | null>(null);
   /** the list of repos without CLAUDE.md, opened from the gaps tile */
   readonly gapsListOpen = signal(false);
+  /** the list behind the repos, agents or skills tile (like the gaps list behind the gaps tile) */
+  readonly kpiList = signal<KpiKind | null>(null);
   /** the "enable the second brain for this repo" dialog; the id of the repo */
   readonly projectRepoId = signal<string | null>(null);
   readonly vaultReady = computed(() => this.vault()?.state === 'ok');
@@ -305,6 +308,12 @@ export class RadarStore {
   /** Throws ApiError (with `body.code`) when the server refuses; the dialog shows the message. */
   async createVault(path: string): Promise<void> { this.vault.set(await this.api.createVault(path)); }
   async relinkVault(path: string): Promise<void> { this.vault.set(await this.api.relinkVault(path)); }
+
+  openKpiList(kind: KpiKind): void {
+    const count = kind === 'repos' ? this.repos().length : this.repos().reduce((n, r) => n + (kind === 'agents' ? r.agents.length : r.skills.length), 0);
+    if (count > 0) this.kpiList.set(kind);
+  }
+  closeKpiList(): void { this.kpiList.set(null); }
 
   openGapsList(): void { if (this.claudeGaps().length) this.gapsListOpen.set(true); }
   closeGapsList(): void { this.gapsListOpen.set(false); }

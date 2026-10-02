@@ -8,14 +8,15 @@
 .kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .kpi { border: 1px solid; padding: 10px 12px; }
 // tile colours follow the orbit legend: repos white, agents lime, skills violet, gaps magenta
-.kpi.repos { border-color: #ffffff44; }
-.kpi.agents { border-color: #c6ff3d44; }
-.kpi.skills { border-color: #a99bff44; }
-.kpi.bad { border-color: #ff4fa388; }
-// the gaps tile opens the list of gaps; like the other tiles it is plain text when there is nothing to open
+.kpi.repos { border-color: #ffffff44; --tc: #ffffff; }
+.kpi.agents { border-color: #c6ff3d44; --tc: #c6ff3d; }
+.kpi.skills { border-color: #a99bff44; --tc: #a99bff; }
+.kpi.bad { border-color: #ff4fa388; --tc: #ff4fa3; }
+// every tile opens its list (repos, agents, skills, gaps); it is plain text when there is nothing to open
 .tilebtn { background: transparent; text-align: left; font: inherit; color: inherit; cursor: pointer; }
-.tilebtn:hover:not(:disabled), .tilebtn:focus-visible { background: #ff4fa31a; box-shadow: 0 0 16px #ff4fa344; outline: none; }
+.tilebtn:hover:not(:disabled), .tilebtn:focus-visible { background: color-mix(in srgb, var(--tc) 10%, transparent); box-shadow: 0 0 16px color-mix(in srgb, var(--tc) 27%, transparent); outline: none; }
 .tilebtn:disabled { cursor: default; }
+.tilebtn:disabled::after { display: none; } // nothing to open, so no tooltip
 .kl { font-size: fs(9); letter-spacing: .08em; color: $muted; }
 .kv { font-size: fs(38); font-weight: 600; line-height: 1.1; }
 

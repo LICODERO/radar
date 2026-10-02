@@ -1,8 +1,8 @@
 <div class="kpis">
-  <div class="kpi repos"><div class="m kl">{{ t('right.kpi.repos') }}</div><div class="kv" style="color:#ffffff">{{ sum()?.repos ?? 0 }}</div></div>
-  <div class="kpi agents"><div class="m kl">{{ t('right.kpi.agents') }}</div><div class="kv" style="color:#c6ff3d">{{ sum()?.agents ?? 0 }}</div></div>
-  <div class="kpi skills"><div class="m kl">{{ t('right.kpi.skills') }}</div><div class="kv" style="color:#a99bff">{{ sum()?.skills ?? 0 }}</div></div>
-  <button class="kpi bad tilebtn" type="button" [disabled]="!(sum()?.gaps)" [attr.aria-label]="t('right.kpi.gapsOpen')" [attr.title]="t('right.kpi.gapsOpen')" (click)="store.openGapsList()"><div class="m kl" style="color:#ff9cc9">{{ t('right.kpi.gaps') }}</div><div class="kv" style="color:#ff4fa3">{{ sum()?.gaps ?? 0 }}</div></button>
+  <button class="kpi repos tilebtn tip tip-b" type="button" [disabled]="!(sum()?.repos)" [attr.aria-label]="t('right.kpi.reposOpen')" [attr.data-tip]="t('right.kpi.reposOpen')" (click)="store.openKpiList('repos')"><div class="m kl">{{ t('right.kpi.repos') }}</div><div class="kv" style="color:#ffffff">{{ sum()?.repos ?? 0 }}</div></button>
+  <button class="kpi agents tilebtn tip tip-b" type="button" [disabled]="!(sum()?.agents)" [attr.aria-label]="t('right.kpi.agentsOpen')" [attr.data-tip]="t('right.kpi.agentsOpen')" (click)="store.openKpiList('agents')"><div class="m kl">{{ t('right.kpi.agents') }}</div><div class="kv" style="color:#c6ff3d">{{ sum()?.agents ?? 0 }}</div></button>
+  <button class="kpi skills tilebtn tip tip-b" type="button" [disabled]="!(sum()?.skills)" [attr.aria-label]="t('right.kpi.skillsOpen')" [attr.data-tip]="t('right.kpi.skillsOpen')" (click)="store.openKpiList('skills')"><div class="m kl">{{ t('right.kpi.skills') }}</div><div class="kv" style="color:#a99bff">{{ sum()?.skills ?? 0 }}</div></button>
+  <button class="kpi bad tilebtn tip tip-b" type="button" [disabled]="!(sum()?.gaps)" [attr.aria-label]="t('right.kpi.gapsOpen')" [attr.data-tip]="t('right.kpi.gapsOpen')" (click)="store.openGapsList()"><div class="m kl" style="color:#ff9cc9">{{ t('right.kpi.gaps') }}</div><div class="kv" style="color:#ff4fa3">{{ sum()?.gaps ?? 0 }}</div></button>
 </div>
 
 @if (sel(); as s) {

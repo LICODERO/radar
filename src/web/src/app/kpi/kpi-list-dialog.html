@@ -1,0 +1,19 @@
+<div class="backdrop" (click)="store.closeKpiList()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="eyebrow()" [style.--c]="accent()">
+  <div class="head">
+    <div class="m eyebrow">{{ eyebrow() }}</div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('kpiList.close')" (click)="store.closeKpiList()">✕</button>
+  </div>
+  <div class="m hint">{{ hint() }}</div>
+  <div class="list">
+    @for (r of rows(); track r.key) {
+      <button class="row" type="button" (click)="choose(r)">
+        <span class="main">
+          <span class="m name">{{ r.name }}</span>
+          <span class="m sub">{{ r.sub }}</span>
+        </span>
+        <span class="m side" [style.color]="r.sideColor">{{ r.side }}</span>
+      </button>
+    }
+  </div>
+</div>
