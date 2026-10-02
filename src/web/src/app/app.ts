@@ -10,6 +10,7 @@ import { AboutDialog } from './about/about-dialog';
 import { LegendDialog } from './legend/legend-dialog';
 import { GapsListDialog } from './gaps/gaps-list-dialog';
 import { RunConfirm } from './gaps/run-confirm';
+import { Tour } from './tour/tour';
 import { KpiListDialog } from './kpi/kpi-list-dialog';
 import { ItemsDialog } from './items/items-dialog';
 import { ProjectDialog } from './vault/project-dialog';
@@ -23,7 +24,7 @@ import { RightPanel } from './panels/right-panel';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog, RunConfirm, KpiListDialog],
+  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog, RunConfirm, KpiListDialog, Tour],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -48,6 +49,7 @@ export class App {
   @HostListener('document:keydown.escape')
   protected onEscape(): void {
     if (this.store.scan()) return;
+    if (this.store.tourVisible()) { this.store.finishTour(); return; }
     if (this.store.pendingRun()) { this.store.cancelRun(); return; }
     if (this.store.legendOpen()) { this.store.closeLegend(); return; }
     if (this.store.projectRepoId()) { this.store.closeProject(); return; }

@@ -4,7 +4,7 @@
 </div>
 
 <div class="path">
-  <div class="path-row">
+  <div class="path-row" data-tour="scan-path">
     <div class="m label">{{ t('header.scanPath') }}</div>
     @if (editing()) {
       <input class="m path-box path-input" type="text" [attr.aria-label]="t('header.scanPathAria')" placeholder="~/projects"
@@ -39,7 +39,7 @@
       <span aria-hidden="true">{{ lastScan() }}</span>
     </div>
   </div>
-  <button class="m btn-solid tip tip-b tip-r" type="button" [attr.data-tip]="scanTip()" [disabled]="!store.canScan()" (click)="store.startScan()">
+  <button class="m btn-solid tip tip-b tip-r" type="button" data-tour="scan-btn" [attr.data-tip]="scanTip()" [disabled]="!store.canScan()" (click)="store.startScan()">
     {{ hasResult() ? t('header.rescan') : t('header.scan') }}
   </button>
 </div>

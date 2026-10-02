@@ -1,4 +1,4 @@
-<div class="repos" [class.dim]="!store.aiToolScanned()">
+<div class="repos" data-tour="repos" [class.dim]="!store.aiToolScanned()">
 <div class="head">
   <div class="m h">{{ t('left.repos', { n: total() }) }}</div>
   <div class="hint-group">
@@ -43,4 +43,4 @@
 </div>
 
 </div>
-<app-ai-tools class="ai-host" />
+<app-ai-tools class="ai-host" data-tour="tools" />

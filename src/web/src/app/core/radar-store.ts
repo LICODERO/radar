@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AI_TOOLS } from './ai-tools';
 import { EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, buildCommand, countByType } from './commands';
+import { SCAN_STEP, TOUR_STEPS, markTourSeen, tourSeen } from './tour';
 import { ScanPlayback } from './scan-playback';
 import { ScanUiState, applyScanEvent, initialScan } from './scan-state';
 import { I18n } from '../i18n/i18n';
@@ -92,6 +93,11 @@ export class RadarStore {
   readonly itemsKind = signal<PickKind | null>(null);
   /** the list of repos without CLAUDE.md, opened from the gaps tile */
   readonly gapsListOpen = signal(false);
+  /** the first-run tour: on while it is running; hidden (not ended) behind the scan overlay, and it goes on when that scan ends */
+  readonly tourOpen = signal(false);
+  readonly tourIndex = signal(0);
+  readonly tourVisible = computed(() => this.tourOpen() && !this.scan());
+  private tourAwaitsScan = false;
   /** the list behind the repos, agents or skills tile (like the gaps list behind the gaps tile) */
   readonly kpiList = signal<KpiKind | null>(null);
   /** the "enable the second brain for this repo" dialog; the id of the repo */
@@ -207,6 +213,43 @@ export class RadarStore {
     finally { this.cliChecking.set(false); }
   }
 
+  constructor() {
+    // A scan that starts during the folder / SCAN steps ends the first stage of the tour: when it is over, the tour goes on with the results.
+    effect(() => {
+      const scanning = this.scan() !== null;
+      untracked(() => {
+        if (!this.tourOpen()) return;
+        const i = this.tourIndex();
+        if (scanning && i >= 1 && i <= SCAN_STEP) this.tourAwaitsScan = true;
+        else if (!scanning && this.tourAwaitsScan) {
+          this.tourAwaitsScan = false;
+          if (this.result()) this.tourIndex.set(SCAN_STEP + 1);
+        }
+      });
+    });
+  }
+
+  startTour(): void {
+    this.closeAbout();
+    this.tourAwaitsScan = false;
+    this.tourIndex.set(0);
+    this.tourOpen.set(true);
+  }
+
+  tourNext(): void {
+    if (this.tourIndex() >= TOUR_STEPS.length - 1) this.finishTour();
+    else this.tourIndex.update((i) => i + 1);
+  }
+
+  tourBack(): void { this.tourIndex.update((i) => Math.max(0, i - 1)); }
+
+  /** Finishing and skipping are the same: the tour is remembered as seen and does not start by itself again. */
+  finishTour(): void {
+    this.tourOpen.set(false);
+    this.tourAwaitsScan = false;
+    markTourSeen();
+  }
+
   /** Start-up: sample data when ?mock=... is present, otherwise settings + last saved scan from the server. */
   async init(mock: string | null): Promise<void> {
     try {
@@ -225,6 +268,7 @@ export class RadarStore {
       await this.loadVault();
       const running = await this.api.currentScan();
       if (running) await this.attach(running);
+      else if (!this.result() && !tourSeen()) this.startTour(); // a first run: no scan yet and the tour was never seen
     } catch (e) {
       this.error.set(this.messageOf(e, this.i18n.t('store.connect')));
     } finally {

@@ -25,3 +25,5 @@
 .link:hover, .link:focus-visible { text-decoration: underline; }
 
 .privacy { margin: 14px 0 0; font-size: fs(10); line-height: 1.5; letter-spacing: .04em; color: $muted; }
+.tour-btn { margin-top: 14px; padding: 8px 14px; background: #c6ff3d14; border: 1px solid #c6ff3d88; color: $lime; font-size: fs(10); letter-spacing: .12em; cursor: pointer; }
+.tour-btn:hover, .tour-btn:focus-visible { background: #c6ff3d2e; border-color: $lime; outline: none; }

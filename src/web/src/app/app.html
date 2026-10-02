@@ -50,6 +50,7 @@
         @if (store.vaultOpen()) { <app-vault-dialog /> }
         @if (store.projectRepoId()) { <app-project-dialog /> }
         @if (store.scan()) { <app-scan-overlay /> }
+        @if (store.tourVisible()) { <app-tour /> }
       }
     </div>
   </div>

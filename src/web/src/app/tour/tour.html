@@ -1,0 +1,31 @@
+<div class="tour" role="dialog" aria-modal="true" [attr.aria-label]="t('tour.aria')">
+  @if (hole(); as h) {
+    <div class="ring" [class.round]="step().round" [style.left.px]="h.x" [style.top.px]="h.y" [style.width.px]="h.w" [style.height.px]="h.h"></div>
+    @if (step().interactive) {
+      <div class="block" [style.left.px]="0" [style.top.px]="0" [style.width.px]="stageW" [style.height.px]="h.y"></div>
+      <div class="block" [style.left.px]="0" [style.top.px]="h.y + h.h" [style.width.px]="stageW" [style.height.px]="stageH - h.y - h.h"></div>
+      <div class="block" [style.left.px]="0" [style.top.px]="h.y" [style.width.px]="h.x" [style.height.px]="h.h"></div>
+      <div class="block" [style.left.px]="h.x + h.w" [style.top.px]="h.y" [style.width.px]="stageW - h.x - h.w" [style.height.px]="h.h"></div>
+    } @else {
+      <div class="block full"></div>
+    }
+  } @else {
+    <div class="block full dim"></div>
+  }
+
+  <div class="card" [style.left.px]="pos().x" [style.top.px]="pos().y" [style.width.px]="cardW">
+    <div class="m eyebrow">{{ t('tour.step', { n: store.tourIndex() + 1, total: steps.length }) }}</div>
+    <div class="ttl">{{ t(step().title) }}</div>
+    <p class="m txt">{{ t(step().text) }}</p>
+    <div class="foot">
+      <div class="dots" aria-hidden="true">
+        @for (s of steps; track s.id; let i = $index) { <i [class.on]="i === store.tourIndex()" [class.past]="i < store.tourIndex()"></i> }
+      </div>
+      <div class="btns">
+        <button class="m ghost" type="button" (click)="store.finishTour()">{{ t('tour.skip') }}</button>
+        <button class="m ghost" type="button" [disabled]="store.tourIndex() === 0" (click)="store.tourBack()">{{ t('tour.back') }}</button>
+        <button class="m solid" type="button" (click)="store.tourNext()">{{ last() ? t('tour.done') : t('tour.next') }}</button>
+      </div>
+    </div>
+  </div>
+</div>

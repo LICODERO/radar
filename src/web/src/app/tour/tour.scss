@@ -1,0 +1,27 @@
+@use 'tokens' as *;
+
+:host { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; z-index: 90; display: block; animation: fadeIn .25s ease-out both; pointer-events: none; }
+.tour { position: absolute; inset: 0; pointer-events: none; } // clicks only land on the blocks and the card: on an interactive step the hole lets them through
+// the dim is the huge shadow of the ring, so the hole can be round; the blocks only stop clicks (full: the whole stage, otherwise around the hole)
+.ring { position: absolute; box-sizing: border-box; border: 1px solid $lime; border-radius: 6px; box-shadow: 0 0 0 3000px rgba(4, 5, 10, .84), 0 0 22px #c6ff3d66; pointer-events: none; transition: left .25s, top .25s, width .25s, height .25s; }
+.ring.round { border-radius: 50%; }
+.block { position: absolute; pointer-events: auto; }
+.block.full { inset: 0; }
+.block.dim { background: rgba(4, 5, 10, .84); }
+.card { position: absolute; pointer-events: auto; box-sizing: border-box; padding: 16px 18px 14px; background: #070a10; border: 1px solid #c6ff3d88; box-shadow: 0 24px 60px rgba(0, 0, 0, .75); }
+.eyebrow { font-size: fs(9); letter-spacing: .14em; color: $muted; }
+.ttl { margin-top: 6px; font-family: $display; font-size: fs(18); font-weight: 600; color: #fff; }
+.txt { margin: 8px 0 14px; font-size: fs(11); line-height: 1.6; color: #b9c0d6; }
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.dots { display: flex; gap: 5px; }
+.dots i { width: 6px; height: 6px; border-radius: 50%; background: #ffffff26; }
+.dots i.past { background: #c6ff3d66; }
+.dots i.on { background: $lime; box-shadow: 0 0 6px $lime; }
+.btns { display: flex; gap: 6px; }
+button { font-size: fs(10); letter-spacing: .1em; padding: 7px 10px; cursor: pointer; background: transparent; }
+.ghost { border: 1px solid #ffffff33; color: $muted; }
+.ghost:hover:not(:disabled), .ghost:focus-visible { border-color: #ffffff88; color: $text; outline: none; }
+.ghost:disabled { opacity: .4; cursor: default; }
+.solid { border: 1px solid $lime; background: #c6ff3d1f; color: $lime; }
+.solid:hover, .solid:focus-visible { background: #c6ff3d38; outline: none; }
+@media (prefers-reduced-motion: reduce) { .ring { transition: none; } }
