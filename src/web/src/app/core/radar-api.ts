@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { I18n } from '../i18n/i18n';
 import { GapItem, Tool } from './commands';
-import { AgentDraft, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolsInfo, VaultStatus } from './models';
+import { AgentDraft, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus } from './models';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly body?: any) {
@@ -69,6 +69,7 @@ export class RadarApi {
 
   gaps(): Promise<GapItem[]> { return this.call('GET', '/api/gaps'); }
   toolsInfo(): Promise<ToolsInfo> { return this.call('GET', '/api/tools'); }
+  toolStatuses(refresh = false): Promise<ToolStatus[]> { return this.call('GET', `/api/tools/status${refresh ? '?refresh=true' : ''}`); }
 
   /** Opens a terminal in the repo with claude/codex; the server builds the command itself. */
   run(repoId: string, type: string, tool: Tool): Promise<{ launched: boolean; toolFound: boolean }> {
@@ -112,8 +113,9 @@ export class RadarApi {
     });
   }
 
-  async startScan(): Promise<string> {
-    try { return (await this.call<{ id: string }>('POST', '/api/scans')).id; }
+  /** Starts a scan for one AI tool (the server only supports claude so far). */
+  async startScan(tool = 'claude'): Promise<string> {
+    try { return (await this.call<{ id: string }>('POST', '/api/scans', { tool })).id; }
     catch (e) {
       // a scan is already running: attach to it
       if (e instanceof ApiError && e.status === 409 && e.body?.id) return e.body.id;

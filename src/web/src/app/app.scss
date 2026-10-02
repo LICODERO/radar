@@ -28,3 +28,16 @@
 .empty { position: absolute; left: 360px; top: 600px; width: 720px; text-align: center; pointer-events: none; z-index: 6; }
 .ed { font-size: fs(20); font-weight: 600; letter-spacing: .3em; color: #fff; }
 .et { font-size: fs(11); color: $muted; margin-top: 8px; letter-spacing: .06em; }
+
+.dim { opacity: .15; pointer-events: none; transition: opacity .2s; }
+.planned { position: absolute; left: 360px; top: 104px; width: 720px; height: 720px; box-sizing: border-box; padding-top: 296px; text-align: center; background: rgba(4, 5, 10, .93); z-index: 7; }
+.planned .ed { font-size: fs(20); font-weight: 600; letter-spacing: .3em; color: #fff; }
+.planned .et { font-size: fs(11); color: $muted; margin: 8px auto 16px; max-width: 460px; line-height: 1.6; letter-spacing: .06em; }
+.back { padding: 8px 16px; background: #c6ff3d14; border: 1px solid $lime; color: $lime; font-size: fs(10); letter-spacing: .14em; cursor: pointer; }
+.back:hover, .back:focus-visible { background: #c6ff3d2e; outline: none; }
+
+.switching { position: absolute; left: 360px; top: 104px; width: 720px; height: 720px; box-sizing: border-box; padding-top: 320px; text-align: center; background: rgba(4, 5, 10, .93); z-index: 8; }
+.switching .et { margin-top: 14px; font-size: fs(11); letter-spacing: .14em; color: $muted; }
+.spin { display: inline-block; width: 30px; height: 30px; box-sizing: border-box; border: 2px solid #c6ff3d33; border-top-color: $lime; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; border-color: $lime; } }

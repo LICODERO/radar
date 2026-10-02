@@ -10,7 +10,7 @@
         <app-header />
         <app-orbit />
         <app-left-panel />
-        <app-right-panel />
+        <app-right-panel [class.dim]="!store.aiToolScanned()" />
 
         <button class="m legend" type="button" [title]="t('legend.open')" [attr.aria-label]="t('legend.open')" (click)="store.openLegend()"><span class="legend-in">
           <span style="color:#ffffff">◯</span> {{ t('app.legend.repo') }} &nbsp; <span style="color:#c6ff3d">◆</span> {{ t('app.legend.agent') }} &nbsp;
@@ -18,10 +18,22 @@
           <span style="color:#ff4fa3">◌</span> {{ t('app.legend.slot') }}
         </span></button>
         @if (sample()) { <div class="m sample">{{ t('app.sample') }}</div> }
-        @if (!store.loading() && !store.result()) {
+        @if (!store.loading() && !store.result() && store.aiToolScanned()) {
           <div class="empty">
             <div class="ed">{{ t('app.empty.title') }}</div>
             <div class="m et">{{ t('app.empty.text') }}</div>
+          </div>
+        }
+        @if (store.switching()) {
+          <div class="switching" role="status">
+            <i class="spin" aria-hidden="true"></i>
+            <div class="m et">{{ t('ai.loading', { name: store.aiToolMeta().name }) }}</div>
+          </div>
+        } @else if (!store.aiToolScanned()) {
+          <div class="planned">
+            <div class="ed">{{ t('ai.plannedTitle', { name: store.aiToolMeta().name }) }}</div>
+            <div class="m et">{{ t('ai.plannedText', { name: store.aiToolMeta().name }) }}</div>
+            <button class="m back" type="button" (click)="store.selectAiTool('claude')">{{ t('ai.backToClaude') }}</button>
           </div>
         }
         @if (store.file()) { <app-file-pane /> }

@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
+import { AI_TOOLS } from './ai-tools';
+import { EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, buildCommand, countByType } from './commands';
@@ -33,8 +34,8 @@ export interface PendingRun {
   toolFound: boolean;
 }
 
+export const SWITCH_MS = 450;
 export const REPO_PAGE_SIZE = 8;
-export const WF_PAGE_SIZE = 4;
 
 @Injectable({ providedIn: 'root' })
 export class RadarStore {
@@ -53,7 +54,6 @@ export class RadarStore {
   readonly pick = signal<Pick | null>(null);
   readonly tick = signal(0);
   readonly repoPage = signal(0);
-  readonly wfPage = signal(0);
   readonly query = signal('');
 
   /** 'api' = real server, 'mock' = static sample data (?mock=...) */
@@ -73,6 +73,17 @@ export class RadarStore {
   /** the "new agent from a description" panel; the id of the repo it works on */
   readonly composerRepoId = signal<string | null>(null);
   readonly tools = signal<ToolsInfo | null>(null);
+  /** the AI CLI badge (claude, codex, cursor): undefined until the first check ends (and in sample-data mode), null when the check itself failed */
+  readonly cli = signal<ToolStatus[] | null | undefined>(undefined);
+  readonly cliChecking = signal(false);
+  /** whose AI configuration the scan shows: one of the installed tools in AI_TOOLS (only Claude Code is scanned so far) */
+  readonly aiTool = signal('claude');
+  readonly aiToolMeta = computed(() => AI_TOOLS.find((t) => t.id === this.aiTool()) ?? AI_TOOLS[0]);
+  readonly aiToolScanned = computed(() => this.aiToolMeta().scanned);
+  /** true while the view moves to another tool's saved scan (a short loader is shown) */
+  readonly switching = signal(false);
+  /** the last scan of each tool, so switching back needs no new scan */
+  private readonly toolResults = new Map<string, ScanResult>();
   /** second brain: status from the server (null in sample-data mode or when it could not be read) */
   readonly vault = signal<VaultStatus | null>(null);
   readonly vaultOpen = signal(false);
@@ -108,7 +119,7 @@ export class RadarStore {
   readonly gapTotals = computed(() => countByType(this.gapItems()));
   readonly anyGaps = computed(() => (this.result()?.repos ?? []).some((r) => r.gaps.length > 0));
   readonly scanning = computed(() => this.scan()?.status === 'running');
-  readonly canScan = computed(() => this.mode() === 'api' && !!this.settings()?.exists && !this.scanning());
+  readonly canScan = computed(() => this.mode() === 'api' && !!this.settings()?.exists && !this.scanning() && !this.switching() && this.aiToolScanned());
   readonly staleRoot = computed(() => {
     const r = this.result();
     const cfg = this.settings()?.scanPath;
@@ -147,12 +158,6 @@ export class RadarStore {
     return this.filteredRepos().slice(p.page * REPO_PAGE_SIZE, p.page * REPO_PAGE_SIZE + REPO_PAGE_SIZE);
   });
 
-  readonly wfPager = computed(() => buildPager(this.workflows().length, WF_PAGE_SIZE, this.wfPage()));
-  readonly pagedWorkflows = computed(() => {
-    const p = this.wfPager();
-    return this.workflows().slice(p.page * WF_PAGE_SIZE, p.page * WF_PAGE_SIZE + WF_PAGE_SIZE);
-  });
-
   readonly selectedWorkflows = computed(() => {
     const s = this.selected();
     return s ? this.workflows().filter((w) => w.repos.some((x) => x.repoId === s.id)) : [];
@@ -173,6 +178,32 @@ export class RadarStore {
     })
   );
 
+  /** Picks an available tool: shows a loader, then that tool's last scan (or nothing when it has none). It never starts a scan; the SCAN button does, for the picked tool. */
+  async selectAiTool(id: string): Promise<void> {
+    if (!AI_TOOLS.some((t) => t.id === id) || id === this.aiTool() || this.scanning() || this.switching()) return;
+    if (this.mode() === 'api' && this.cli()?.find((x) => x.tool === id)?.found !== true) return;
+    const current = this.result();
+    if (current) this.toolResults.set(this.aiTool(), current);
+    this.switching.set(true);
+    this.aiTool.set(id);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, SWITCH_MS));
+      this.applyResult(this.toolResults.get(id) ?? null);
+      if (this.result()) await this.loadGaps(); else this.gapItems.set([]);
+    } finally {
+      this.switching.set(false);
+    }
+  }
+
+  /** Asks the server which AI CLIs are installed and their versions; `refresh` skips the server's one-minute cache. */
+  async checkCli(refresh = false): Promise<void> {
+    if (this.cliChecking()) return;
+    this.cliChecking.set(true);
+    try { this.cli.set(await this.api.toolStatuses(refresh)); }
+    catch { this.cli.set(null); }
+    finally { this.cliChecking.set(false); }
+  }
+
   /** Start-up: sample data when ?mock=... is present, otherwise settings + last saved scan from the server. */
   async init(mock: string | null): Promise<void> {
     try {
@@ -185,6 +216,7 @@ export class RadarStore {
       this.version.set(await this.api.version());
       this.settings.set(await this.api.settings());
       this.tools.set(await this.api.toolsInfo());
+      void this.checkCli();
       this.applyResult(await this.api.latest());
       await this.loadGaps();
       await this.loadVault();
@@ -203,7 +235,6 @@ export class RadarStore {
     if (!keepSelection || !r || !r.repos.some((x) => x.id === this.selId())) this.selId.set(null);
     this.pick.set(null);
     this.repoPage.set(0);
-    this.wfPage.set(0);
   }
 
   // ---- read-only file preview -------------------------------------------------------------------
@@ -423,7 +454,7 @@ export class RadarStore {
     if (!this.canScan()) return;
     this.notice.set(null);
     try {
-      await this.attach(await this.api.startScan());
+      await this.attach(await this.api.startScan(this.aiTool()));
     } catch (e) {
       this.notice.set(this.messageOf(e, this.i18n.t('store.scanFailed')));
     }
@@ -548,9 +579,5 @@ export class RadarStore {
 
   goRepoPage(p: number): void {
     this.repoPage.set(buildPager(this.filteredRepos().length, REPO_PAGE_SIZE, p).page);
-  }
-
-  goWfPage(p: number): void {
-    this.wfPage.set(buildPager(this.workflows().length, WF_PAGE_SIZE, p).page);
   }
 }

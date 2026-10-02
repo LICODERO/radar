@@ -6,8 +6,14 @@ using Radar.Server.Infrastructure.Localization;
 
 namespace Radar.Server.Features.Scans;
 
+/// <summary>Which AI tool's configuration the scan looks for; absent means Claude Code.</summary>
+public sealed record StartScanRequest(string? Tool);
+
 public static class ScanEndpoints
 {
+    /// <summary>The tools the scanner can look for. Codex, Cursor and Antigravity are planned: they need their own detectors.</summary>
+    public static readonly string[] ScannableTools = ["claude"];
+
     public static void MapScans(this RouteGroupBuilder api)
     {
         api.MapGet("/scan/latest", async (IScanStore scans, RequestMessages m, CancellationToken ct) =>
@@ -16,8 +22,9 @@ public static class ScanEndpoints
             return json is null ? Results.NotFound(new { error = m[Msg.NoScan] }) : Results.Bytes(json, "application/json");
         });
 
-        api.MapPost("/scans", (ScanManager manager, ISettingsStore settings, RequestMessages m) =>
+        api.MapPost("/scans", (StartScanRequest? req, ScanManager manager, ISettingsStore settings, RequestMessages m) =>
         {
+            if (req?.Tool is { } tool && !ScannableTools.Contains(tool, StringComparer.Ordinal)) return Results.BadRequest(new { error = m[Msg.ScanToolUnsupported] });
             var s = SettingsEndpoints.Load(settings);
             if (s.ScanPath is null || !Directory.Exists(s.ScanPath)) return Results.BadRequest(new { error = m[Msg.PickScanDir] });
             var (session, started) = manager.Start(s.ScanPath, s.MaxDepth);

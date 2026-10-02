@@ -102,6 +102,14 @@ export interface ToolsInfo {
   toolPaths?: Record<string, string | null>;
 }
 
+/** `GET /api/tools/{tool}`: is the CLI installed, where, and which version it reports */
+export interface ToolStatus {
+  tool: string;
+  found: boolean;
+  path: string | null;
+  version: string | null;
+}
+
 export interface AgentDraft {
   name: string;
   path: string | null;

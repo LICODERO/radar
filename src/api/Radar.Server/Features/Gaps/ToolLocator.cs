@@ -7,6 +7,9 @@ public interface IToolLocator
     string? Find(string tool);
 
     bool IsAvailable(string tool) => Find(tool) is not null;
+
+    /// <summary>Full path of an installed desktop app bundle (macOS: /Applications/Cursor.app), or null. Apps often have no command on PATH.</summary>
+    string? FindApp(string bundle) => null;
 }
 
 /// <summary>Looks for `claude` / `codex` on PATH (plus a few usual install folders). Only informational: the terminal has its own PATH.</summary>
@@ -29,8 +32,19 @@ public sealed class PathToolLocator : IToolLocator
                     var p = Path.Combine(dir, name);
                     if (File.Exists(p) && (OperatingSystem.IsWindows() || IsExecutable(p))) return p;
                 }
-                catch (ArgumentException) { /* malformed PATH entry */ }
+                catch (Exception e) when (e is ArgumentException or IOException or UnauthorizedAccessException) { /* malformed PATH entry, a broken symlink or an unreadable file: not this one */ }
             }
+        }
+        return null;
+    }
+
+    public string? FindApp(string bundle)
+    {
+        if (!OperatingSystem.IsMacOS()) return null;
+        foreach (var dir in new[] { "/Applications", Path.Combine(AppPaths.Home, "Applications") })
+        {
+            var p = Path.Combine(dir, bundle);
+            if (Directory.Exists(p)) return p;
         }
         return null;
     }

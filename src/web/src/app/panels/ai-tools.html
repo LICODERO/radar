@@ -1,0 +1,27 @@
+<section [attr.aria-label]="t('ai.title')">
+  <div class="head">
+    <div class="m h">{{ t('ai.title') }}</div>
+    <div class="hint-group">
+      <span class="m hint">{{ t('ai.hint') }}</span>
+      <button class="m info-btn tip tip-b tip-r" type="button" [disabled]="store.cliChecking()" [attr.aria-label]="t('ai.recheck')" [attr.data-tip]="t('ai.recheck')" (click)="store.checkCli(true)">↻</button>
+    </div>
+  </div>
+  <div role="radiogroup" [attr.aria-label]="t('ai.pick')">
+    @for (r of rows(); track r.id) {
+      <button class="ai-row" type="button" role="radio" [class]="'ai-row ' + r.state" [class.sel]="r.selected"
+              [attr.aria-checked]="r.selected" [disabled]="r.state !== 'ok'" [title]="r.title" (click)="store.selectAiTool(r.id)">
+        <span class="ai-ico">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path [attr.d]="icons[r.id].path" [attr.fill-rule]="icons[r.id].rule" /></svg>
+        </span>
+        <span class="ai-main">
+          <span class="m ai-name">{{ r.name }}</span>
+          <span class="m ai-sub">{{ r.sub }}</span>
+        </span>
+        <span class="ai-side">
+          <span class="m ai-state"><i class="dot"></i>{{ r.stateText }}</span>
+        </span>
+      </button>
+    }
+  </div>
+  <div class="m ai-note">{{ t('ai.note') }}</div>
+</section>

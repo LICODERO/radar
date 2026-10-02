@@ -26,6 +26,15 @@ public static class GapEndpoints
             toolPaths = Tools.Known.ToDictionary(t => t, locator.Find)
         }));
 
+        // Is each AI CLI (claude, codex, cursor) installed, where, and which version (`--version`). `?refresh=true` skips the one-minute cache.
+        api.MapGet("/tools/status", async (bool? refresh, ToolStatusService status, CancellationToken ct) =>
+            Results.Ok(await status.AllAsync(refresh == true, ct)));
+
+        api.MapGet("/tools/{tool}", async (string tool, bool? refresh, ToolStatusService status, RequestMessages m, CancellationToken ct) =>
+            ToolStatusService.IsKnown(tool)
+                ? Results.Ok(await status.GetAsync(tool, refresh == true, ct))
+                : Results.BadRequest(new { error = m[Msg.UnknownTool] }));
+
         // Opens a terminal in the repo and starts claude/codex there. The command is built on the server from the scan
         // result; the client can only choose repo, gap type and tool, never supply command text.
         api.MapPost("/run", async (RunRequest req, LatestScanCache cache, ITerminalLauncher launcher, IToolLocator locator, RequestMessages m, CancellationToken ct) =>

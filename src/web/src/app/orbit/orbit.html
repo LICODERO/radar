@@ -1,3 +1,7 @@
+<div class="view-chip m" [title]="t('ai.view')">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path [attr.d]="toolIcon().path" [attr.fill-rule]="toolIcon().rule" /></svg>
+  <span>{{ t('ai.view') }} · {{ store.aiToolMeta().name.toUpperCase() }}</span>
+</div>
 <div class="legend-rings m">
   <div><span style="color:#ffffff">R1</span> · {{ t('orbit.r1') }}</div>
   <div><span style="color:#c6ff3d">R2</span> · {{ t('orbit.r2') }}</div>

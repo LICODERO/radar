@@ -1,3 +1,4 @@
+<div class="repos" [class.dim]="!store.aiToolScanned()">
 <div class="head">
   <div class="m h">{{ t('left.repos', { n: total() }) }}</div>
   <div class="hint-group">
@@ -41,33 +42,5 @@
   </div>
 </div>
 
-@if (wfTotal() > 0) {
-<div class="head sec">
-  <div class="m h">{{ t('left.workflows', { n: wfTotal() }) }}</div>
-  <div class="m hint">{{ t('left.workflowsHint') }}</div>
 </div>
-@for (w of store.pagedWorkflows(); track w.id) {
-  <button class="row wf-row" type="button" (click)="store.pickItem({ kind: 'w', name: w.id })"
-          (mouseenter)="hoverWf(w.id)" (mouseleave)="leave()" (focus)="hoverWf(w.id)" (blur)="leave()">
-    <div class="m wno">{{ w.id }}</div>
-    <div>
-      <div class="m wname"><span>{{ w.name }}</span><span class="wn">{{ t('left.wfRepos', { n: w.repos.length }) }}</span></div>
-      <div class="m chain">{{ chain(w.agents, w.description) }}</div>
-    </div>
-  </button>
-}
-<div class="pager wf-pager">
-  <div class="m plabel">{{ t('pager.of', { from: store.wfPager().from, to: store.wfPager().to, total: store.wfPager().total }) }}</div>
-  <div class="pbtns">
-    <button class="m pg" type="button" [attr.aria-label]="t('left.prevWf')" [disabled]="store.wfPager().prevDisabled" (click)="store.goWfPage(store.wfPager().page - 1)">‹</button>
-    @if (store.wfPager().pages.length <= 7) {
-      @for (p of store.wfPager().pages; track p) {
-        <button class="m pg" type="button" [attr.aria-label]="t('left.page', { n: p + 1 })" [class.on]="p === store.wfPager().page" (click)="store.goWfPage(p)">{{ p + 1 }}</button>
-      }
-    } @else {
-      <span class="m pos">{{ store.wfPager().page + 1 }} / {{ store.wfPager().pages.length }}</span>
-    }
-    <button class="m pg" type="button" [attr.aria-label]="t('left.nextWf')" [disabled]="store.wfPager().nextDisabled" (click)="store.goWfPage(store.wfPager().page + 1)">›</button>
-  </div>
-</div>
-}
+<app-ai-tools class="ai-host" />

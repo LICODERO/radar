@@ -12,7 +12,7 @@ public enum Msg
     // settings
     PathRequired, PathInvalid, PathIsRoot, PathMissing,
     // scans
-    PickScanDir, ScanRunning,
+    PickScanDir, ScanRunning, ScanToolUnsupported,
     // files
     FileNotInScan, FileMissing, FileForbidden,
     // run
@@ -92,6 +92,7 @@ public static class Messages
         [Msg.SkillOutdated] = ("Zainstalowany skill jest w starszej wersji. Potwierdź aktualizację.", "The installed skill is an older version. Confirm the update."),
         [Msg.SkillWriteFailed] = ("Nie udało się zapisać skilla.", "Could not write the skill."),
 
+        [Msg.ScanToolUnsupported] = ("Skan dla tego narzędzia AI nie jest jeszcze dostępny. Na razie skanowany jest tylko Claude Code.", "Scanning for this AI tool is not available yet. Only Claude Code is scanned for now."),
         [Msg.ClaudeNotFound] = ("Nie znaleziono polecenia claude w PATH serwera. Zainstaluj Claude Code i zaloguj się.", "The claude command was not found in the server PATH. Install Claude Code and sign in."),
         [Msg.ClaudeStartFailed] = ("Nie udało się uruchomić claude.", "Could not start claude."),
         [Msg.ClaudeExited] = ("claude zakończył się błędem ({0}): {1}", "claude exited with an error ({0}): {1}"),

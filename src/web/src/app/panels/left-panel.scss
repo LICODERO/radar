@@ -1,20 +1,19 @@
 @use 'tokens' as *;
 
-// Both side panels end on the same line (y=824, 720px tall, see right-panel.scss): the workflow pager is pinned to the bottom here,
+// Both side panels end on the same line (y=824, 720px tall, see right-panel.scss): the AI tools section is pinned to the bottom here,
 // the actions to the bottom there. The height is a minimum, so a long list can still push the pager down instead of being clipped.
 :host { position: absolute; left: 36px; top: 104px; width: 300px; min-height: 720px; display: flex; flex-direction: column; }
-.pager.wf-pager { margin-top: auto; padding-top: 8px; } // more specific than .pager below, or its margin-top would win
+app-ai-tools { margin-top: auto; padding-top: 24px; }
+.repos { transition: opacity .2s; }
+.repos.dim { opacity: .18; pointer-events: none; }
 .sr { position: absolute; left: -9999px; }
 
 .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid #c6ff3d44; }
-.head.sec { margin-top: 30px; }
-.head.sec2 { margin-top: 14px; }
 .h { font-size: fs(10); letter-spacing: .06em; color: $lime; white-space: nowrap; }
 .hint { font-size: fs(9); color: $muted; white-space: nowrap; }
 .hint-group { display: flex; align-items: center; gap: 8px; }
 .info-btn { width: 12px; height: 12px; padding: 0; border-radius: 50%; border: 1px solid #c6ff3dcc; background: #c6ff3d14; color: $lime; font-size: fs(7.5); line-height: 1; cursor: pointer; }
 .info-btn:hover, .info-btn:focus-visible { background: #c6ff3d26; border-color: $lime; }
-.sel { color: #fff; }
 
 .search { display: block; margin: 10px 0 12px; }
 .search input { width: 100%; box-sizing: border-box; background: #c6ff3d0d; border: 1px solid #c6ff3d55; color: $text; font-size: fs(11); padding: 7px 10px; outline: none; }
@@ -29,12 +28,6 @@
 .bar > div { height: 4px; }
 .pct { font-size: fs(11); text-align: right; }
 .none { font-size: fs(10); color: $muted; padding: 10px 0; }
-
-.wf-row { min-height: 60px; align-content: start; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; padding: 5px 0; background: transparent; }
-.wno { width: 26px; height: 26px; box-sizing: border-box; border: 1px solid $workflow; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: fs(10); color: $workflow; }
-.wname { display: flex; justify-content: space-between; font-size: fs(12); color: $text; }
-.wn { font-size: fs(9); color: $muted; }
-.chain { font-size: fs(10); line-height: 14px; color: $lime; margin-top: 2px; }
 
 .pager { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
 .plabel { font-size: fs(10); color: $muted; }

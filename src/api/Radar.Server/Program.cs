@@ -34,6 +34,8 @@ builder.Services.AddSingleton<ScanManager>();
 builder.Services.AddSingleton<IFolderPicker>(FolderPickerFactory.ForCurrentOs());
 builder.Services.AddSingleton<ITerminalLauncher>(sp => TerminalLauncherFactory.ForCurrentOs(sp.GetRequiredService<IConfiguration>()["Radar:Terminal"]));
 builder.Services.AddSingleton<IToolLocator, PathToolLocator>();
+builder.Services.AddSingleton<IToolVersionProbe, ProcessToolVersionProbe>();
+builder.Services.AddSingleton<ToolStatusService>();
 builder.Services.AddSingleton<IAgentGenerator, ClaudeCliGenerator>();
 builder.Services.AddSingleton<GenerationGate>();
 builder.Services.AddSingleton<VaultService>();

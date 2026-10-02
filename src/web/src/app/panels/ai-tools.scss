@@ -1,0 +1,30 @@
+@use 'tokens' as *;
+
+:host { display: block; }
+.head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid #c6ff3d44; }
+.h { font-size: fs(10); letter-spacing: .06em; color: $lime; white-space: nowrap; }
+.hint { font-size: fs(9); color: $muted; white-space: nowrap; }
+.hint-group { display: flex; align-items: center; gap: 8px; }
+.info-btn { width: 12px; height: 12px; padding: 0; border-radius: 50%; border: 1px solid #c6ff3dcc; background: #c6ff3d14; color: $lime; font-size: fs(7.5); line-height: 1; cursor: pointer; }
+.info-btn:hover:not(:disabled), .info-btn:focus-visible { background: #c6ff3d26; border-color: $lime; }
+.info-btn:disabled { cursor: progress; opacity: .5; }
+
+// one row per tool, coloured by whether it is installed (lime), missing (magenta) or being checked (amber); only installed ones can be picked
+.ai-row { --c: #{$muted}; display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; height: 50px; box-sizing: border-box; padding: 0 10px 0 12px; text-align: left; color: inherit; background: transparent; border: 0; border-bottom: 1px solid #c6ff3d14; cursor: pointer; transition: background .15s; }
+.ai-row:disabled { cursor: default; }
+.ai-row:hover:not(:disabled), .ai-row:focus-visible { background: #c6ff3d0d; outline: none; }
+.ai-row.sel { background: #c6ff3d1a; box-shadow: inset 2px 0 $lime; }
+.ai-row.ok { --c: #{$lime}; }
+.ai-row.missing { --c: #{$magenta}; }
+.ai-row.checking { --c: #{$amber}; }
+.ai-ico { width: 28px; height: 28px; box-sizing: border-box; display: grid; place-items: center; border-radius: 7px; color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); background: color-mix(in srgb, var(--c) 9%, transparent); }
+.ai-ico svg { width: 16px; height: 16px; fill: currentColor; }
+.ai-name { display: block; font-size: fs(12); color: $text; white-space: nowrap; }
+.ai-sub { display: block; font-size: fs(9); color: $muted; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.ai-side { text-align: right; }
+.ai-state { display: inline-flex; align-items: center; gap: 6px; font-size: fs(9); letter-spacing: .08em; color: var(--c); }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c); box-shadow: 0 0 6px var(--c); }
+.checking .dot { animation: pulse .7s ease-in-out infinite; }
+.ai-note { margin-top: 8px; font-size: fs(9); line-height: 1.5; color: $muted; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none !important; } }

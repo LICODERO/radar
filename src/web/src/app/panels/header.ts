@@ -42,6 +42,7 @@ export class Header {
   protected readonly scanTip = computed(() => {
     if (this.isMock()) return this.t('header.mockTip');
     if (this.store.scanning()) return this.t('header.scanRunning');
+    if (!this.store.aiToolScanned()) return this.t('header.scanPlanned', { name: this.store.aiToolMeta().name });
     if (!this.store.settings()?.exists) return this.t('header.pickFirst');
     return this.t('header.scanTip', { path: this.pathText() });
   });

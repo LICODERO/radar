@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, u
 import { RadarStore } from '../core/radar-store';
 import { I18n } from '../i18n/i18n';
 import { Pick } from '../core/models';
+import { AI_TOOL_ICONS } from '../core/ai-tools';
 import { PopFile, Popover } from './orbit-scene';
 
 @Component({
@@ -14,6 +15,7 @@ export class Orbit {
   protected readonly store = inject(RadarStore);
   protected readonly t = inject(I18n).t;
   protected readonly scene = this.store.scene;
+  protected readonly toolIcon = computed(() => AI_TOOL_ICONS[this.store.aiTool()]);
   protected readonly hasData = computed(() => this.store.repos().length > 0);
   protected readonly avg = computed(() => this.store.result()?.summary.avgCoverage ?? 0);
   /** stroke-dasharray of the coverage arc (circumference of r=66 is ~414.7) */
