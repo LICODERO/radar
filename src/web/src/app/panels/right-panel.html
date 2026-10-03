@@ -10,6 +10,9 @@
     <div class="ch"><div class="m cl">{{ t('right.selected', { initials: s.initials }) }}</div><div class="m cm">{{ s.stack }} · {{ s.coverage.score }}%</div></div>
     <div class="cname">{{ s.name }}</div>
     <div class="m flags" [style.color]="s.claudeMd.exists ? '#a99bff' : '#ff4fa3'">{{ flags() }}</div>
+    @if (s.quality?.score != null) {
+      <button class="m qrow tip" type="button" [style.color]="qualityColor()" [attr.data-tip]="t('right.qualityTip')" (click)="store.openQuality()">{{ qualityText() }} ›</button>
+    }
     @if (store.vaultReady()) {
       <div class="m sb" [class.on]="store.selectedHasVault()">{{ store.selectedHasVault() ? t('right.sbOn') : t('right.sbOff') }}</div>
     }

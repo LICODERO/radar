@@ -65,6 +65,17 @@ public sealed class Frontmatter
         return result;
     }
 
+    /// <summary>The text after the frontmatter block (the whole text when there is none or it is not closed).</summary>
+    public static string BodyOf(string? text)
+    {
+        if (string.IsNullOrEmpty(text)) return string.Empty;
+        var lines = text.Replace("\r\n", "\n").Split('\n');
+        if (lines.Length == 0 || lines[0].Trim() != "---") return string.Join('\n', lines);
+        for (var i = 1; i < lines.Length; i++)
+            if (lines[i].Trim() == "---") return string.Join('\n', lines.Skip(i + 1));
+        return string.Join('\n', lines);
+    }
+
     private static IReadOnlyList<string> SplitList(string s)
     {
         var t = s.Trim();

@@ -134,9 +134,10 @@ public class ScannerTests
         using var t = BuildProjects();
         var r = new RadarScanner().Scan(new ScanOptions(t.Root));
         var json = System.Text.Json.JsonSerializer.Serialize(r, RadarJson.Options);
-        Assert.Contains("\"schemaVersion\":1", json);
+        Assert.Contains("\"schemaVersion\":2", json);
         Assert.Contains("\"claudeMd\":{\"exists\":true", json);
         Assert.Contains("\"avgCoverage\"", json);
+        Assert.Contains("\"quality\":{", json);
         Assert.Contains("\"repoId\"", json);
     }
 

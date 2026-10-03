@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AI_TOOLS } from './ai-tools';
-import { EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
+import { EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanChanges, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, buildCommand, countByType } from './commands';
@@ -100,6 +100,16 @@ export class RadarStore {
   private tourAwaitsScan = false;
   /** the list behind the repos, agents or skills tile (like the gaps list behind the gaps tile) */
   readonly kpiList = signal<KpiKind | null>(null);
+  /** the quality findings of the selected repo's files */
+  readonly qualityOpen = signal(false);
+  /** what changed since the previous scan that differed (null: nothing to compare yet, or sample data) */
+  readonly changes = signal<ScanChanges | null>(null);
+  /** the changes / shared-copies dialog and its open tab */
+  readonly insightsTab = signal<'changes' | 'shared' | null>(null);
+  readonly sharedItems = computed(() => this.result()?.shared ?? []);
+  readonly driftedCount = computed(() => this.sharedItems().filter((s) => s.variants.length > 1).length);
+  /** anything for the insights button to offer */
+  readonly hasInsights = computed(() => this.changes() !== null || this.sharedItems().length > 0);
   /** the "enable the second brain for this repo" dialog; the id of the repo */
   readonly projectRepoId = signal<string | null>(null);
   readonly vaultReady = computed(() => this.vault()?.state === 'ok');
@@ -265,6 +275,7 @@ export class RadarStore {
       void this.checkCli();
       this.applyResult(await this.api.latest());
       await this.loadGaps();
+      await this.loadChanges();
       await this.loadVault();
       const running = await this.api.currentScan();
       if (running) await this.attach(running);
@@ -359,6 +370,27 @@ export class RadarStore {
   }
   closeKpiList(): void { this.kpiList.set(null); }
 
+  openInsights(tab: 'changes' | 'shared'): void { this.insightsTab.set(tab); }
+  closeInsights(): void { this.insightsTab.set(null); }
+
+  /** Best effort: the changes are an extra, so a failure must never get in the way of the scan result. */
+  async loadChanges(): Promise<void> {
+    if (this.mode() === 'mock') { this.changes.set(null); return; }
+    try { this.changes.set(await this.api.changes()); } catch { this.changes.set(null); }
+  }
+
+  openQuality(): void { if (this.selected()?.quality?.files.length) this.qualityOpen.set(true); }
+  closeQuality(): void { this.qualityOpen.set(false); }
+
+  /** "FIX": confirms and runs the improve-files prompt for this repo in Claude Code; without a terminal the commands panel opens instead. */
+  async fixQuality(repoId: string): Promise<void> {
+    this.closeQuality();
+    await this.loadGaps();
+    const item = this.gapItems().find((i) => i.repoId === repoId && i.type === 'weak-files');
+    if (item && this.tools()?.canLaunch === true) this.askRun(item, 'claude');
+    else await this.openGaps();
+  }
+
   openGapsList(): void { if (this.claudeGaps().length) this.gapsListOpen.set(true); }
   closeGapsList(): void { this.gapsListOpen.set(false); }
 
@@ -395,6 +427,7 @@ export class RadarStore {
             this.applyResult(await this.api.latest(), true);
             this.settings.set(await this.api.settings());
             await this.loadGaps();
+            await this.loadChanges();
           } catch { /* the next full scan will catch up */ }
           resolve();
         };
@@ -545,6 +578,7 @@ export class RadarStore {
         this.applyResult(await this.api.latest());
         this.settings.set(await this.api.settings());
         await this.loadGaps();
+        await this.loadChanges();
       } catch (e) {
         this.notice.set(this.messageOf(e, this.i18n.t('store.loadResultFailed')));
       }

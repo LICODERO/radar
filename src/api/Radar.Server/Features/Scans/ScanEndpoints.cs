@@ -22,6 +22,15 @@ public static class ScanEndpoints
             return json is null ? Results.NotFound(new { error = m[Msg.NoScan] }) : Results.Bytes(json, "application/json");
         });
 
+        // What moved since the last scan that looked different (204 when there is nothing to compare yet).
+        api.MapGet("/scan/changes", async (IScanStore scans, LatestScanCache cache, CancellationToken ct) =>
+        {
+            var current = await cache.GetAsync(ct);
+            var previous = await scans.LoadPreviousAsync(ct);
+            if (current is null || previous is null) return Results.NoContent();
+            return ScanDiff.Compute(previous, current) is { } changes ? Results.Ok(changes) : Results.NoContent();
+        });
+
         api.MapPost("/scans", (StartScanRequest? req, ScanManager manager, ISettingsStore settings, RequestMessages m) =>
         {
             if (req?.Tool is { } tool && !ScannableTools.Contains(tool, StringComparer.Ordinal)) return Results.BadRequest(new { error = m[Msg.ScanToolUnsupported] });

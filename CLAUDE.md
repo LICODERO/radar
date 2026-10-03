@@ -29,12 +29,12 @@ npm run build
 node scripts/gen-mock.mjs          # regenerate src/web/public/mock/*.json
 ```
 
-State lives in the data dir (`~/Library/Application Support/RADAR`): `settings.json`, `scan-result.json`.
+State lives in the data dir (`~/Library/Application Support/RADAR`): `settings.json`, `scan-result.json`, `scan-previous.json` (the scan before the latest one that differed; see Domain).
 Override with `Radar__DataDir` (tests and manual experiments must never touch the real one).
 
 ## API (all under /api, loopback only)
 
-`GET session` (token) · `GET/PUT settings` · `POST pick-folder` · `GET scan/latest` · `GET file?repo=&path=` (read-only preview) · `GET gaps` (commands/prompts, server is the single source) · `POST agents/generate` (draft) · `POST agents` (create) · `GET/POST/PUT vault` (second brain status / create / relink) · `GET/POST vault/skill` (status / install the bundled skill) · `POST vault/projects` (second brain for one repo; preview unless `confirm`) · `GET tools` (platform, shell, claude/codex on PATH) · `POST run` · `POST scans` · `GET scans/current` ·
+`GET session` (token) · `GET/PUT settings` · `POST pick-folder` · `GET scan/latest` · `GET scan/changes` (diff against the previous scan, 204 without one) · `GET file?repo=&path=` (read-only preview) · `GET gaps` (commands/prompts, server is the single source) · `POST agents/generate` (draft) · `POST agents` (create) · `GET/POST/PUT vault` (second brain status / create / relink) · `GET/POST vault/skill` (status / install the bundled skill) · `POST vault/projects` (second brain for one repo; preview unless `confirm`) · `GET tools` (platform, shell, claude/codex on PATH) · `POST run` · `POST scans` · `GET scans/current` ·
 `GET scans/{id}/events` (SSE: started, phase, repo-found, repo-scanned, completed, cancelled, error) · `DELETE scans/{id}`.
 `run` opens iTerm2 or Terminal.app (macOS: iTerm2 when it is installed, force one with `Radar__Terminal=terminal|iterm|auto`) or PowerShell (Windows) in the repo and starts `claude`/`codex` with the gap prompt; the client sends only repo id + gap type + tool, the server builds the command (never accept command text from the client). The server finds the tool itself (PATH, the usual install folders and every nvm Node version, newest first) and the terminal runs it by that absolute path, because a new shell only has the nvm default on its PATH (`GET tools` reports it in `toolPaths`); the copyable commands keep the plain name. The session is interactive, the app itself writes nothing into repos.
 `file` only serves paths the latest scan reported for that repo (CLAUDE.md, agents, skills, workflows), `.md` only, max 256 KB, never through a symlink leaving the repo.
@@ -72,7 +72,10 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 - Workflow = per-project procedure for agents (how to code an API, check UI, commit...). Repo-scoped for now: it only relates to the agents/skills of the repo it lives in (orchestrator-level workflows are a later stage). Frontmatter: `name`,
   `description`, `when`, optional `agents` and `skills` (names of the agents/skills the procedure uses; picking a workflow in the UI lights them up). Same `name` across repos aggregates into one node (W1...).
 - Coverage: CLAUDE.md 40 + agents(>=1) 30 + skills(>=1) 30.
-- Gaps: `no-claude-md` (counted in the KPI), `no-agents`, `no-skills`, `workflow-not-linked`.
+- Gaps: `no-claude-md` (counted in the KPI), `no-agents`, `no-skills`, `workflow-not-linked`, `weak-files` (a file scores below 70, see Quality).
+- Quality (`Quality.cs`, schema 2): coverage only says a file exists, quality says whether it is worth anything. Deterministic heuristics per file (CLAUDE.md: thin, too long, no commands, no headings, placeholders, `@`/link/`.claude/` references to files that do not exist, stale; agents: frontmatter, name, description length, tools, thin prompt, duplicate names; skills: frontmatter, description, thin body). A finding is `{ path, code, severity, detail }`; the code is turned into text by the UI (`quality.<code>` in `pl.ts`/`en.ts`) and by `QualityText` for the prompts, so a new code needs both. A file starts at 100 and loses 35/15/5 per error/warning/info; the repo score is the average of its files and does not hide one broken file (the gap looks at single files). Staleness = CLAUDE.md older than the repo's last git write (`.git/logs/HEAD`) by 180+ days; it only reads file times.
+- Shared copies (`SharedItems.cs`): agents/skills with the same name in 2+ repos, grouped by content hash (`AgentInfo.Hash`/`SkillInfo.Hash`, line endings ignored); several hashes = drifted. `Missing` lists repos of the same stack that lack it. Read-only; copying an agent to other repos is not built yet.
+- Scan history: `IScanStore.SaveAsync` keeps the scan it replaces as `scan-previous.json` only when the new one differs in content (`ScanDiff.IsEmpty`), so quick rescans do not wipe the baseline; a different scan directory drops it. The UI shows the diff and the shared copies in `insights/insights-dialog` (bottom-left button).
 
 ## Stages
 

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { limitChips } from '../core/chips';
+import { coverageColor } from '../core/palette';
 import { RadarStore } from '../core/radar-store';
 import { I18n } from '../i18n/i18n';
 
@@ -39,6 +40,14 @@ export class RightPanel {
       : !this.store.vaultReady() ? this.t('right.enableRepoNeedVault')
       : !this.store.selected() ? this.t('right.pickRepoFirst')
       : this.t('right.enableRepoTip', { name: this.selName() }));
+  protected readonly qualityColor = computed(() => coverageColor(this.sel()?.quality?.score ?? 100));
+  protected readonly qualityText = computed(() => {
+    const q = this.sel()?.quality;
+    if (q?.score == null) return '';
+    return q.findings.length > 0
+      ? this.t('right.quality', { score: q.score, n: q.findings.length })
+      : this.t('right.qualityClean', { score: q.score });
+  });
   protected readonly flags = computed(() => {
     const s = this.sel();
     if (!s) return '';

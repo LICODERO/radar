@@ -55,12 +55,13 @@ public sealed class RadarScanner
         var stacks = ordered.GroupBy(r => r.Stack).OrderByDescending(g => g.Count()).ThenBy(g => g.Key).Select(g => g.Key).ToList();
         var summary = new SummaryInfo(
             ordered.Count, agents, skills, workflows.Count, gapList.Count, stacks,
-            ordered.Count == 0 ? 0 : (int)Math.Round(ordered.Average(r => r.Coverage.Score)));
+            ordered.Count == 0 ? 0 : (int)Math.Round(ordered.Average(r => r.Coverage.Score)),
+            ordered.Select(r => r.Quality?.Score).Where(q => q.HasValue).Select(q => q!.Value).ToList() is { Count: > 0 } qs ? (int)Math.Round(qs.Average()) : null);
 
         sw.Stop();
         var result = new ScanResult(
             ScanResult.CurrentSchemaVersion, root, DateTimeOffset.Now, sw.ElapsedMilliseconds, summary,
-            ordered, workflows, gapList, warnings);
+            ordered, workflows, gapList, warnings, SharedItems.Compute(ordered));
 
         progress?.Report(new ScanPhase("done", "ZAKOŃCZONO", 100, workflows.Count));
         progress?.Report(new ScanCompleted(sw.ElapsedMilliseconds, summary));

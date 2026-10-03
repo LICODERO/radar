@@ -1,0 +1,36 @@
+<div class="backdrop" (click)="store.closeQuality()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('quality.aria')">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">{{ t('quality.eyebrow') }}</div>
+      <div class="ttl">{{ t('quality.title', { name: repo()?.name ?? '', score: repo()?.quality?.score ?? 0 }) }}</div>
+    </div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('quality.close')" (click)="store.closeQuality()">✕</button>
+  </div>
+
+  <p class="intro">{{ t('quality.intro') }}</p>
+
+  <div class="list">
+    @for (g of groups(); track g.path) {
+      <div class="file">
+        <div class="frow">
+          <span class="m path">{{ g.path }}</span>
+          <span class="m score" [style.color]="g.color">{{ t('quality.fileScore', { score: g.score }) }}</span>
+          <button class="m btn-ghost open" type="button" (click)="open(g)">{{ t('quality.open') }}</button>
+        </div>
+        @for (f of g.findings; track f.key) {
+          <div class="find" [class]="f.severity"><span class="m mark" aria-hidden="true">{{ f.mark }}</span><span class="txt">{{ f.text }}</span></div>
+        }
+      </div>
+    } @empty {
+      <div class="m none">{{ t('quality.clean') }}</div>
+    }
+  </div>
+
+  <div class="foot">
+    <div class="m legend">{{ t('quality.legend') }}</div>
+    @if (canFix()) {
+      <button class="m btn-solid fix tip" type="button" [attr.data-tip]="t('quality.fixTip')" (click)="store.fixQuality(repo()!.id)">{{ t('quality.fix') }}</button>
+    }
+  </div>
+</div>

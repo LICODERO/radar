@@ -39,7 +39,7 @@ describe('filterItems / countByType', () => {
   });
 
   it('counts per type', () => {
-    expect(countByType(items)).toEqual({ 'no-claude-md': 1, 'no-agents': 1, 'no-skills': 1, 'workflow-not-linked': 0 });
+    expect(countByType(items)).toEqual({ 'no-claude-md': 1, 'no-agents': 1, 'no-skills': 1, 'workflow-not-linked': 0, 'weak-files': 0 });
   });
 });
 

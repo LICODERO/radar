@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "sample": true,
   "scanRoot": "~/projects",
   "scannedAt": "2026-09-29T14:07:00+02:00",
@@ -16,7 +16,8 @@
       "YAML",
       "SQL"
     ],
-    "avgCoverage": 78
+    "avgCoverage": 78,
+    "avgQuality": 93
   },
   "repos": [
     {
@@ -107,7 +108,104 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [
+        "weak-files"
+      ],
+      "quality": {
+        "score": 89,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 55
+          },
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "kind": "agent",
+            "score": 85
+          },
+          {
+            "path": ".claude/agents/test-writer.md",
+            "kind": "agent",
+            "score": 95
+          },
+          {
+            "path": ".claude/agents/migration-helper.md",
+            "kind": "agent",
+            "score": 65
+          },
+          {
+            "path": ".claude/skills/ef-migrations/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/xunit-tests/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/swagger-docs/SKILL.md",
+            "kind": "skill",
+            "score": 85
+          },
+          {
+            "path": ".claude/skills/hangfire-jobs/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/serilog-logging/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/azure-devops-yaml/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-thin",
+            "severity": "warning",
+            "detail": "9"
+          },
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-no-commands",
+            "severity": "warning"
+          },
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-broken-ref",
+            "severity": "warning",
+            "detail": "docs/architecture.md"
+          },
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "code": "agent-short-description",
+            "severity": "warning",
+            "detail": "12"
+          },
+          {
+            "path": ".claude/agents/test-writer.md",
+            "code": "agent-no-tools",
+            "severity": "info"
+          },
+          {
+            "path": ".claude/agents/migration-helper.md",
+            "code": "agent-no-description",
+            "severity": "error"
+          },
+          {
+            "path": ".claude/skills/swagger-docs/SKILL.md",
+            "code": "skill-thin-body",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "orders-front",
@@ -176,7 +274,66 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [
+        "weak-files"
+      ],
+      "quality": {
+        "score": 92,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 100
+          },
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "kind": "agent",
+            "score": 95
+          },
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "kind": "agent",
+            "score": 65
+          },
+          {
+            "path": ".claude/skills/angular-component/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/rxjs-state/SKILL.md",
+            "kind": "skill",
+            "score": 85
+          },
+          {
+            "path": ".claude/skills/dashboard-charts/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/jest-tests/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "code": "agent-no-tools",
+            "severity": "info"
+          },
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "code": "agent-no-description",
+            "severity": "error"
+          },
+          {
+            "path": ".claude/skills/rxjs-state/SKILL.md",
+            "code": "skill-thin-body",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "orders-hangfire",
@@ -224,7 +381,46 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [
+        "weak-files"
+      ],
+      "quality": {
+        "score": 88,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 100
+          },
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "kind": "agent",
+            "score": 65
+          },
+          {
+            "path": ".claude/skills/hangfire-jobs/SKILL.md",
+            "kind": "skill",
+            "score": 85
+          },
+          {
+            "path": ".claude/skills/serilog-logging/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "code": "agent-no-description",
+            "severity": "error"
+          },
+          {
+            "path": ".claude/skills/hangfire-jobs/SKILL.md",
+            "code": "skill-thin-body",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "reports-api",
@@ -297,7 +493,65 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [],
+      "quality": {
+        "score": 96,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 100
+          },
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "kind": "agent",
+            "score": 85
+          },
+          {
+            "path": ".claude/agents/api-docs.md",
+            "kind": "agent",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/ef-migrations/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/xunit-tests/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/swagger-docs/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/serilog-logging/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/excel-export/SKILL.md",
+            "kind": "skill",
+            "score": 85
+          }
+        ],
+        "findings": [
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "code": "agent-short-description",
+            "severity": "warning",
+            "detail": "12"
+          },
+          {
+            "path": ".claude/skills/excel-export/SKILL.md",
+            "code": "skill-thin-body",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "reports-front",
@@ -350,7 +604,44 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [],
+      "quality": {
+        "score": 97,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 85
+          },
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "kind": "agent",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/angular-component/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/dashboard-charts/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/jest-tests/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-no-commands",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "auth-service",
@@ -383,7 +674,30 @@
       },
       "gaps": [
         "no-agents"
-      ]
+      ],
+      "quality": {
+        "score": 93,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 85
+          },
+          {
+            "path": ".claude/skills/serilog-logging/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-thin",
+            "severity": "warning",
+            "detail": "9"
+          }
+        ]
+      }
     },
     {
       "id": "billing-api",
@@ -412,7 +726,12 @@
         "no-claude-md",
         "no-agents",
         "no-skills"
-      ]
+      ],
+      "quality": {
+        "score": null,
+        "files": [],
+        "findings": []
+      }
     },
     {
       "id": "portal-front",
@@ -481,7 +800,60 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [],
+      "quality": {
+        "score": 96,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 85
+          },
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "kind": "agent",
+            "score": 100
+          },
+          {
+            "path": ".claude/agents/test-writer.md",
+            "kind": "agent",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/angular-component/SKILL.md",
+            "kind": "skill",
+            "score": 85
+          },
+          {
+            "path": ".claude/skills/rxjs-state/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/dashboard-charts/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/jest-tests/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-broken-ref",
+            "severity": "warning",
+            "detail": "docs/architecture.md"
+          },
+          {
+            "path": ".claude/skills/angular-component/SKILL.md",
+            "code": "skill-thin-body",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "notify-worker",
@@ -510,7 +882,12 @@
         "no-claude-md",
         "no-agents",
         "no-skills"
-      ]
+      ],
+      "quality": {
+        "score": null,
+        "files": [],
+        "findings": []
+      }
     },
     {
       "id": "infra-pipelines",
@@ -558,7 +935,45 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [],
+      "quality": {
+        "score": 95,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 100
+          },
+          {
+            "path": ".claude/agents/pipeline-fixer.md",
+            "kind": "agent",
+            "score": 80
+          },
+          {
+            "path": ".claude/skills/azure-devops-yaml/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/ef-migrations/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": ".claude/agents/pipeline-fixer.md",
+            "code": "agent-short-description",
+            "severity": "warning",
+            "detail": "12"
+          },
+          {
+            "path": ".claude/agents/pipeline-fixer.md",
+            "code": "agent-no-tools",
+            "severity": "info"
+          }
+        ]
+      }
     },
     {
       "id": "invoices-api",
@@ -622,7 +1037,62 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [
+        "weak-files"
+      ],
+      "quality": {
+        "score": 89,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 85
+          },
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "kind": "agent",
+            "score": 100
+          },
+          {
+            "path": ".claude/agents/test-writer.md",
+            "kind": "agent",
+            "score": 65
+          },
+          {
+            "path": ".claude/skills/ef-migrations/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/xunit-tests/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/swagger-docs/SKILL.md",
+            "kind": "skill",
+            "score": 85
+          }
+        ],
+        "findings": [
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-thin",
+            "severity": "warning",
+            "detail": "9"
+          },
+          {
+            "path": ".claude/agents/test-writer.md",
+            "code": "agent-no-description",
+            "severity": "error"
+          },
+          {
+            "path": ".claude/skills/swagger-docs/SKILL.md",
+            "code": "skill-thin-body",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "invoices-front",
@@ -670,7 +1140,46 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [
+        "weak-files"
+      ],
+      "quality": {
+        "score": 88,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 100
+          },
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "kind": "agent",
+            "score": 65
+          },
+          {
+            "path": ".claude/skills/angular-component/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/jest-tests/SKILL.md",
+            "kind": "skill",
+            "score": 85
+          }
+        ],
+        "findings": [
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "code": "agent-no-description",
+            "severity": "error"
+          },
+          {
+            "path": ".claude/skills/jest-tests/SKILL.md",
+            "code": "skill-thin-body",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "stock-api",
@@ -723,7 +1232,55 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [],
+      "quality": {
+        "score": 91,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 85
+          },
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "kind": "agent",
+            "score": 85
+          },
+          {
+            "path": ".claude/skills/ef-migrations/SKILL.md",
+            "kind": "skill",
+            "score": 85
+          },
+          {
+            "path": ".claude/skills/xunit-tests/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/serilog-logging/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-no-commands",
+            "severity": "warning"
+          },
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "code": "agent-short-description",
+            "severity": "warning",
+            "detail": "12"
+          },
+          {
+            "path": ".claude/skills/ef-migrations/SKILL.md",
+            "code": "skill-thin-body",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "stock-front",
@@ -766,7 +1323,34 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [],
+      "quality": {
+        "score": 98,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 100
+          },
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "kind": "agent",
+            "score": 95
+          },
+          {
+            "path": ".claude/skills/angular-component/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "code": "agent-no-tools",
+            "severity": "info"
+          }
+        ]
+      }
     },
     {
       "id": "clients-api",
@@ -804,7 +1388,35 @@
       },
       "gaps": [
         "no-agents"
-      ]
+      ],
+      "quality": {
+        "score": 95,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 85
+          },
+          {
+            "path": ".claude/skills/xunit-tests/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/serilog-logging/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-broken-ref",
+            "severity": "warning",
+            "detail": "docs/architecture.md"
+          }
+        ]
+      }
     },
     {
       "id": "clients-front",
@@ -837,7 +1449,30 @@
       },
       "gaps": [
         "no-agents"
-      ]
+      ],
+      "quality": {
+        "score": 93,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 85
+          },
+          {
+            "path": ".claude/skills/jest-tests/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-thin",
+            "severity": "warning",
+            "detail": "9"
+          }
+        ]
+      }
     },
     {
       "id": "identity-server",
@@ -885,7 +1520,44 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [],
+      "quality": {
+        "score": 93,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 85
+          },
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "kind": "agent",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/serilog-logging/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/xunit-tests/SKILL.md",
+            "kind": "skill",
+            "score": 85
+          }
+        ],
+        "findings": [
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-no-commands",
+            "severity": "warning"
+          },
+          {
+            "path": ".claude/skills/xunit-tests/SKILL.md",
+            "code": "skill-thin-body",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "gateway-api",
@@ -938,7 +1610,49 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [],
+      "quality": {
+        "score": 96,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 100
+          },
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "kind": "agent",
+            "score": 95
+          },
+          {
+            "path": ".claude/skills/swagger-docs/SKILL.md",
+            "kind": "skill",
+            "score": 85
+          },
+          {
+            "path": ".claude/skills/serilog-logging/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/azure-devops-yaml/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": ".claude/agents/code-reviewer.md",
+            "code": "agent-no-tools",
+            "severity": "info"
+          },
+          {
+            "path": ".claude/skills/swagger-docs/SKILL.md",
+            "code": "skill-thin-body",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "files-service",
@@ -971,7 +1685,23 @@
       },
       "gaps": [
         "no-agents"
-      ]
+      ],
+      "quality": {
+        "score": 100,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/serilog-logging/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": []
+      }
     },
     {
       "id": "audit-worker",
@@ -1000,7 +1730,12 @@
         "no-claude-md",
         "no-agents",
         "no-skills"
-      ]
+      ],
+      "quality": {
+        "score": null,
+        "files": [],
+        "findings": []
+      }
     },
     {
       "id": "admin-front",
@@ -1048,7 +1783,52 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [
+        "weak-files"
+      ],
+      "quality": {
+        "score": 84,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 70
+          },
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "kind": "agent",
+            "score": 65
+          },
+          {
+            "path": ".claude/skills/angular-component/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/jest-tests/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": [
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-thin",
+            "severity": "warning",
+            "detail": "9"
+          },
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-no-commands",
+            "severity": "warning"
+          },
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "code": "agent-no-description",
+            "severity": "error"
+          }
+        ]
+      }
     },
     {
       "id": "shared-ui",
@@ -1096,7 +1876,56 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [],
+      "quality": {
+        "score": 88,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 85
+          },
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "kind": "agent",
+            "score": 80
+          },
+          {
+            "path": ".claude/skills/angular-component/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/dashboard-charts/SKILL.md",
+            "kind": "skill",
+            "score": 85
+          }
+        ],
+        "findings": [
+          {
+            "path": "CLAUDE.md",
+            "code": "claude-md-broken-ref",
+            "severity": "warning",
+            "detail": "docs/architecture.md"
+          },
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "code": "agent-short-description",
+            "severity": "warning",
+            "detail": "12"
+          },
+          {
+            "path": ".claude/agents/angular-refactor.md",
+            "code": "agent-no-tools",
+            "severity": "info"
+          },
+          {
+            "path": ".claude/skills/dashboard-charts/SKILL.md",
+            "code": "skill-thin-body",
+            "severity": "warning"
+          }
+        ]
+      }
     },
     {
       "id": "db-scripts",
@@ -1125,7 +1954,12 @@
         "no-claude-md",
         "no-agents",
         "no-skills"
-      ]
+      ],
+      "quality": {
+        "score": null,
+        "files": [],
+        "findings": []
+      }
     },
     {
       "id": "deploy-templates",
@@ -1173,7 +2007,33 @@
           "skills": 30
         }
       },
-      "gaps": []
+      "gaps": [],
+      "quality": {
+        "score": 100,
+        "files": [
+          {
+            "path": "CLAUDE.md",
+            "kind": "claude-md",
+            "score": 100
+          },
+          {
+            "path": ".claude/agents/pipeline-fixer.md",
+            "kind": "agent",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/azure-devops-yaml/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          },
+          {
+            "path": ".claude/skills/ef-migrations/SKILL.md",
+            "kind": "skill",
+            "score": 100
+          }
+        ],
+        "findings": []
+      }
     }
   ],
   "workflows": [
@@ -1479,5 +2339,398 @@
       "type": "no-claude-md"
     }
   ],
-  "warnings": []
+  "warnings": [],
+  "shared": [
+    {
+      "kind": "agent",
+      "name": "code-reviewer",
+      "variants": [
+        {
+          "hash": "code-reviewer-a",
+          "repos": [
+            "identity-server",
+            "invoices-api",
+            "orders-api",
+            "orders-front",
+            "reports-api"
+          ],
+          "path": ".claude/agents/code-reviewer.md"
+        },
+        {
+          "hash": "code-reviewer-b",
+          "repos": [
+            "gateway-api",
+            "orders-hangfire",
+            "stock-api"
+          ],
+          "path": ".claude/agents/code-reviewer.md"
+        }
+      ],
+      "missing": [
+        "admin-front",
+        "audit-worker",
+        "auth-service",
+        "billing-api",
+        "clients-api",
+        "clients-front",
+        "files-service",
+        "invoices-front",
+        "notify-worker",
+        "portal-front",
+        "reports-front",
+        "shared-ui",
+        "stock-front"
+      ]
+    },
+    {
+      "kind": "skill",
+      "name": "angular-component",
+      "variants": [
+        {
+          "hash": "angular-component-a",
+          "repos": [
+            "admin-front",
+            "orders-front",
+            "portal-front",
+            "shared-ui",
+            "stock-front"
+          ],
+          "path": ".claude/skills/angular-component/SKILL.md"
+        },
+        {
+          "hash": "angular-component-b",
+          "repos": [
+            "invoices-front",
+            "reports-front"
+          ],
+          "path": ".claude/skills/angular-component/SKILL.md"
+        }
+      ],
+      "missing": [
+        "clients-front"
+      ]
+    },
+    {
+      "kind": "agent",
+      "name": "angular-refactor",
+      "variants": [
+        {
+          "hash": "angular-refactor-a",
+          "repos": [
+            "admin-front",
+            "invoices-front",
+            "orders-front",
+            "portal-front",
+            "shared-ui",
+            "stock-front"
+          ],
+          "path": ".claude/agents/angular-refactor.md"
+        },
+        {
+          "hash": "angular-refactor-b",
+          "repos": [
+            "reports-front"
+          ],
+          "path": ".claude/agents/angular-refactor.md"
+        }
+      ],
+      "missing": [
+        "clients-front"
+      ]
+    },
+    {
+      "kind": "skill",
+      "name": "jest-tests",
+      "variants": [
+        {
+          "hash": "jest-tests-a",
+          "repos": [
+            "admin-front",
+            "clients-front",
+            "orders-front",
+            "portal-front"
+          ],
+          "path": ".claude/skills/jest-tests/SKILL.md"
+        },
+        {
+          "hash": "jest-tests-b",
+          "repos": [
+            "invoices-front",
+            "reports-front"
+          ],
+          "path": ".claude/skills/jest-tests/SKILL.md"
+        }
+      ],
+      "missing": [
+        "shared-ui",
+        "stock-front"
+      ]
+    },
+    {
+      "kind": "skill",
+      "name": "xunit-tests",
+      "variants": [
+        {
+          "hash": "xunit-tests-a",
+          "repos": [
+            "clients-api",
+            "identity-server",
+            "orders-api",
+            "stock-api"
+          ],
+          "path": ".claude/skills/xunit-tests/SKILL.md"
+        },
+        {
+          "hash": "xunit-tests-b",
+          "repos": [
+            "invoices-api",
+            "reports-api"
+          ],
+          "path": ".claude/skills/xunit-tests/SKILL.md"
+        }
+      ],
+      "missing": [
+        "audit-worker",
+        "auth-service",
+        "billing-api",
+        "files-service",
+        "gateway-api",
+        "notify-worker",
+        "orders-hangfire"
+      ]
+    },
+    {
+      "kind": "skill",
+      "name": "serilog-logging",
+      "variants": [
+        {
+          "hash": "serilog-logging-a",
+          "repos": [
+            "auth-service",
+            "clients-api",
+            "files-service",
+            "gateway-api",
+            "identity-server",
+            "orders-api",
+            "orders-hangfire",
+            "reports-api",
+            "stock-api"
+          ],
+          "path": ".claude/skills/serilog-logging/SKILL.md"
+        }
+      ],
+      "missing": [
+        "audit-worker",
+        "billing-api",
+        "invoices-api",
+        "notify-worker"
+      ]
+    },
+    {
+      "kind": "skill",
+      "name": "ef-migrations",
+      "variants": [
+        {
+          "hash": "ef-migrations-a",
+          "repos": [
+            "deploy-templates",
+            "infra-pipelines",
+            "invoices-api",
+            "orders-api",
+            "reports-api",
+            "stock-api"
+          ],
+          "path": ".claude/skills/ef-migrations/SKILL.md"
+        }
+      ],
+      "missing": [
+        "audit-worker",
+        "auth-service",
+        "billing-api",
+        "clients-api",
+        "files-service",
+        "gateway-api",
+        "identity-server",
+        "notify-worker",
+        "orders-hangfire"
+      ]
+    },
+    {
+      "kind": "skill",
+      "name": "azure-devops-yaml",
+      "variants": [
+        {
+          "hash": "azure-devops-yaml-a",
+          "repos": [
+            "deploy-templates",
+            "gateway-api",
+            "infra-pipelines",
+            "orders-api"
+          ],
+          "path": ".claude/skills/azure-devops-yaml/SKILL.md"
+        }
+      ],
+      "missing": [
+        "audit-worker",
+        "auth-service",
+        "billing-api",
+        "clients-api",
+        "files-service",
+        "identity-server",
+        "invoices-api",
+        "notify-worker",
+        "orders-hangfire",
+        "reports-api",
+        "stock-api"
+      ]
+    },
+    {
+      "kind": "skill",
+      "name": "dashboard-charts",
+      "variants": [
+        {
+          "hash": "dashboard-charts-a",
+          "repos": [
+            "orders-front",
+            "portal-front",
+            "reports-front",
+            "shared-ui"
+          ],
+          "path": ".claude/skills/dashboard-charts/SKILL.md"
+        }
+      ],
+      "missing": [
+        "admin-front",
+        "clients-front",
+        "invoices-front",
+        "stock-front"
+      ]
+    },
+    {
+      "kind": "skill",
+      "name": "swagger-docs",
+      "variants": [
+        {
+          "hash": "swagger-docs-a",
+          "repos": [
+            "gateway-api",
+            "invoices-api",
+            "orders-api",
+            "reports-api"
+          ],
+          "path": ".claude/skills/swagger-docs/SKILL.md"
+        }
+      ],
+      "missing": [
+        "audit-worker",
+        "auth-service",
+        "billing-api",
+        "clients-api",
+        "files-service",
+        "identity-server",
+        "notify-worker",
+        "orders-hangfire",
+        "stock-api"
+      ]
+    },
+    {
+      "kind": "agent",
+      "name": "test-writer",
+      "variants": [
+        {
+          "hash": "test-writer-a",
+          "repos": [
+            "invoices-api",
+            "orders-api",
+            "portal-front"
+          ],
+          "path": ".claude/agents/test-writer.md"
+        }
+      ],
+      "missing": [
+        "admin-front",
+        "audit-worker",
+        "auth-service",
+        "billing-api",
+        "clients-api",
+        "clients-front",
+        "files-service",
+        "gateway-api",
+        "identity-server",
+        "invoices-front",
+        "notify-worker",
+        "orders-front",
+        "orders-hangfire",
+        "reports-api",
+        "reports-front",
+        "shared-ui",
+        "stock-api",
+        "stock-front"
+      ]
+    },
+    {
+      "kind": "skill",
+      "name": "hangfire-jobs",
+      "variants": [
+        {
+          "hash": "hangfire-jobs-a",
+          "repos": [
+            "orders-api",
+            "orders-hangfire"
+          ],
+          "path": ".claude/skills/hangfire-jobs/SKILL.md"
+        }
+      ],
+      "missing": [
+        "audit-worker",
+        "auth-service",
+        "billing-api",
+        "clients-api",
+        "files-service",
+        "gateway-api",
+        "identity-server",
+        "invoices-api",
+        "notify-worker",
+        "reports-api",
+        "stock-api"
+      ]
+    },
+    {
+      "kind": "agent",
+      "name": "pipeline-fixer",
+      "variants": [
+        {
+          "hash": "pipeline-fixer-a",
+          "repos": [
+            "deploy-templates",
+            "infra-pipelines"
+          ],
+          "path": ".claude/agents/pipeline-fixer.md"
+        }
+      ],
+      "missing": []
+    },
+    {
+      "kind": "skill",
+      "name": "rxjs-state",
+      "variants": [
+        {
+          "hash": "rxjs-state-a",
+          "repos": [
+            "orders-front",
+            "portal-front"
+          ],
+          "path": ".claude/skills/rxjs-state/SKILL.md"
+        }
+      ],
+      "missing": [
+        "admin-front",
+        "clients-front",
+        "invoices-front",
+        "reports-front",
+        "shared-ui",
+        "stock-front"
+      ]
+    }
+  ]
 }

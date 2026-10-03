@@ -27,6 +27,14 @@ public static class RepoAnalyzer
         var claudePath = Path.Combine(repoDir, "CLAUDE.md");
         var claudeExists = File.Exists(claudePath);
         var claudeText = claudeExists ? SafeFs.ReadText(repoDir, claudePath) : null;
+        var findings = new List<QualityFinding>();
+        var qualityFiles = new List<(string Path, string Kind)>();
+        if (claudeText is not null)
+        {
+            qualityFiles.Add(("CLAUDE.md", FileKinds.ClaudeMd));
+            findings.AddRange(Quality.ClaudeMd(repoDir, "CLAUDE.md", claudeText));
+            if (Quality.Stale("CLAUDE.md", SafeFs.LastWriteUtc(repoDir, claudePath), Quality.RepoActivity(repoDir)) is { } stale) findings.Add(stale);
+        }
 
         // agents
         var agents = new List<AgentInfo>();
@@ -38,12 +46,15 @@ public static class RepoAnalyzer
             if (text is null) warnings.Add(new WarningInfo(id, rel, "Nie można odczytać pliku (poza repozytorium lub brak dostępu)."));
             var fm = Frontmatter.Parse(text);
             if (fm.Present && !fm.Valid) warnings.Add(new WarningInfo(id, rel, "Nieprawidłowy frontmatter (brak zamknięcia ---)."));
+            if (text is not null) qualityFiles.Add((rel, FileKinds.Agent));
+            findings.AddRange(Quality.Agent(rel, Path.GetFileNameWithoutExtension(file), text, fm));
             agents.Add(new AgentInfo(
                 fm.Get("name") ?? Path.GetFileNameWithoutExtension(file),
                 fm.Get("description") ?? string.Empty,
                 fm.GetList("tools"),
                 fm.Get("model"),
-                rel));
+                rel,
+                ContentHash.Of(text)));
         }
 
         // skills
@@ -60,7 +71,9 @@ public static class RepoAnalyzer
             if (text is null) warnings.Add(new WarningInfo(id, rel, "Nie można odczytać pliku (poza repozytorium lub brak dostępu)."));
             var fm = Frontmatter.Parse(text);
             if (fm.Present && !fm.Valid) warnings.Add(new WarningInfo(id, rel, "Nieprawidłowy frontmatter (brak zamknięcia ---)."));
-            skills.Add(new SkillInfo(fm.Get("name") ?? dirName, fm.Get("description") ?? string.Empty, rel));
+            if (text is not null) qualityFiles.Add((rel, FileKinds.Skill));
+            findings.AddRange(Quality.Skill(rel, dirName, text, fm));
+            skills.Add(new SkillInfo(fm.Get("name") ?? dirName, fm.Get("description") ?? string.Empty, rel, ContentHash.Of(text)));
         }
 
         // workflows
@@ -90,16 +103,20 @@ public static class RepoAnalyzer
         var (primary, stacks) = StackDetector.Detect(repoDir, ct);
         var coverage = Coverage.Compute(claudeExists, agents.Count, skills.Count);
 
+        findings.AddRange(Quality.DuplicateAgents(agents));
+        var quality = Quality.Summarize(qualityFiles, findings);
+
         var gaps = new List<string>();
         if (!claudeExists) gaps.Add(GapTypes.NoClaudeMd);
         if (agents.Count == 0) gaps.Add(GapTypes.NoAgents);
         if (skills.Count == 0) gaps.Add(GapTypes.NoSkills);
         if (workflows.Any(w => !w.Linked)) gaps.Add(GapTypes.WorkflowNotLinked);
+        if (Quality.IsWeak(quality)) gaps.Add(GapTypes.WeakFiles);
 
         var repo = new RepoInfo(
             id, name, id, InitialsOf(name), primary, stacks,
             new ClaudeMdInfo(claudeExists, "CLAUDE.md"),
-            agents, skills, coverage, gaps);
+            agents, skills, coverage, gaps, quality);
         return new RepoAnalysis(repo, workflows, warnings);
     }
 

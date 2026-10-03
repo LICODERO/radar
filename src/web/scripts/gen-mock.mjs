@@ -72,23 +72,54 @@ const WFS = [
   ['commit', [0, 1, 2, 3, 4, 7, 10], [], 'Przed każdym commitem', 'Jak przygotować i opisać commit: jedno zdanie po angielsku, czas przeszły.']
 ];
 
+const PEN = { error: 35, warning: 15, info: 5 };
+/** deterministic sample findings so the quality UI has something to show; same shape and scoring as the scanner */
+function qualityOf(i, has, ag, sk) {
+  const findings = [];
+  const files = [];
+  if (has) {
+    files.push({ path: 'CLAUDE.md', kind: 'claude-md' });
+    if (i % 5 === 0) findings.push({ path: 'CLAUDE.md', code: 'claude-md-thin', severity: 'warning', detail: '9' });
+    if (i % 4 === 0) findings.push({ path: 'CLAUDE.md', code: 'claude-md-no-commands', severity: 'warning' });
+    if (i % 7 === 0) findings.push({ path: 'CLAUDE.md', code: 'claude-md-broken-ref', severity: 'warning', detail: 'docs/architecture.md' });
+  }
+  ag.forEach((a, k) => {
+    const path = `.claude/agents/${a}.md`;
+    files.push({ path, kind: 'agent' });
+    if ((i + k) % 3 === 0) findings.push({ path, code: 'agent-short-description', severity: 'warning', detail: '12' });
+    if ((i + k) % 4 === 1) findings.push({ path, code: 'agent-no-tools', severity: 'info' });
+    if ((i + k) % 9 === 2) findings.push({ path, code: 'agent-no-description', severity: 'error' });
+  });
+  sk.forEach((s, k) => {
+    const path = `.claude/skills/${s}/SKILL.md`;
+    files.push({ path, kind: 'skill' });
+    if ((i + k) % 5 === 2) findings.push({ path, code: 'skill-thin-body', severity: 'warning' });
+  });
+  if (!files.length) return { score: null, files: [], findings: [] };
+  const scored = files.map((f) => ({ ...f, score: Math.max(0, 100 - findings.filter((x) => x.path === f.path).reduce((a, x) => a + PEN[x.severity], 0)) }));
+  return { score: Math.round(scored.reduce((a, f) => a + f.score, 0) / scored.length), files: scored, findings };
+}
+
 const partsOf = (has, ag, sk) => ({ claudeMd: has ? 40 : 0, agents: ag ? 30 : 0, skills: sk ? 30 : 0 });
 const scoreOf = (p) => p.claudeMd + p.agents + p.skills;
 
 function build(raw, wfs, sample) {
-  const repos = raw.map(([name, , has, stack, initials, ag, sk]) => {
+  const repos = raw.map(([name, , has, stack, initials, ag, sk], i) => {
     const parts = partsOf(has, ag.length, sk.length);
     const gaps = [];
     if (!has) gaps.push('no-claude-md');
     if (!ag.length) gaps.push('no-agents');
     if (!sk.length) gaps.push('no-skills');
+    const quality = qualityOf(i, has, ag, sk);
+    if (quality.files.some((f) => f.score < 70)) gaps.push('weak-files');
     return {
       id: name, name, path: name, initials, stack, stacks: [stack],
       claudeMd: { exists: !!has, path: 'CLAUDE.md' },
       agents: ag.map((a) => ({ name: a, description: AGENTS[a][0], tools: AGENTS[a][1], model: null, path: `.claude/agents/${a}.md` })),
       skills: sk.map((s) => ({ name: s, description: SKILLS[s], path: `.claude/skills/${s}/SKILL.md` })),
       coverage: { score: scoreOf(parts), parts },
-      gaps
+      gaps,
+      quality
     };
   });
   const workflows = wfs.map(([name, mem, agents, when, description], k) => ({
@@ -96,10 +127,29 @@ function build(raw, wfs, sample) {
     repos: mem.filter((i) => repos[i]).map((i) => ({ repoId: repos[i].id, path: `.claude/workflows/${name}.md`, linked: (i + k) % 5 !== 0 })),
     issues: []
   }));
+  // agents/skills with the same name in several repos; a few get a different "content" so the drift view has something to show
+  const holders = new Map();
+  repos.forEach((r, i) => {
+    r.agents.forEach((a) => { const k = 'agent|' + a.name; (holders.get(k) ?? holders.set(k, []).get(k)).push({ repo: r, path: a.path, hash: `${a.name}-${(i + a.name.length) % 5 === 0 ? 'b' : 'a'}` }); });
+    r.skills.forEach((x) => { const k = 'skill|' + x.name; (holders.get(k) ?? holders.set(k, []).get(k)).push({ repo: r, path: x.path, hash: `${x.name}-${(i + x.name.length) % 7 === 0 ? 'b' : 'a'}` }); });
+  });
+  const shared = [...holders.entries()].filter(([, h]) => h.length >= 2).map(([k, h]) => {
+    const [kind, name] = k.split('|');
+    const byHash = new Map();
+    h.forEach((x) => (byHash.get(x.hash) ?? byHash.set(x.hash, []).get(x.hash)).push(x));
+    const variants = [...byHash.entries()].map(([hash, xs]) => {
+      const ids = xs.map((x) => x.repo.id).sort();
+      return { hash, repos: ids, path: xs.find((x) => x.repo.id === ids[0]).path };
+    }).sort((a, b) => b.repos.length - a.repos.length || a.repos[0].localeCompare(b.repos[0]));
+    const held = new Set(h.map((x) => x.repo.id));
+    const stacks = new Set(h.map((x) => x.repo.stack));
+    const missing = repos.filter((r) => !held.has(r.id) && stacks.has(r.stack)).map((r) => r.id).sort();
+    return { kind, name, variants, missing };
+  }).sort((a, b) => (b.variants.length > 1) - (a.variants.length > 1) || b.variants.reduce((n, v) => n + v.repos.length, 0) - a.variants.reduce((n, v) => n + v.repos.length, 0) || a.name.localeCompare(b.name));
   const claudeGaps = repos.filter((r) => !r.claudeMd.exists).map((r) => ({ repoId: r.id, type: 'no-claude-md' }));
   const stacks = [...new Set(repos.map((r) => r.stack))];
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     sample,
     scanRoot: '~/projects',
     scannedAt: '2026-09-29T14:07:00+02:00',
@@ -111,9 +161,10 @@ function build(raw, wfs, sample) {
       workflows: workflows.length,
       gaps: claudeGaps.length,
       stacks,
-      avgCoverage: Math.round(repos.reduce((a, r) => a + r.coverage.score, 0) / repos.length)
+      avgCoverage: Math.round(repos.reduce((a, r) => a + r.coverage.score, 0) / repos.length),
+      avgQuality: Math.round(repos.filter((r) => r.quality.score != null).reduce((a, r, _, l) => a + r.quality.score / l.length, 0))
     },
-    repos, workflows, gaps: claudeGaps, warnings: []
+    repos, workflows, gaps: claudeGaps, warnings: [], shared
   };
 }
 

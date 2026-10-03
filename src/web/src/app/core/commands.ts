@@ -4,7 +4,7 @@ export type Tool = 'claude' | 'codex';
 /** shell flavour of the commands users paste: POSIX (macOS/Linux) or PowerShell (Windows) */
 export type Shell = 'posix' | 'powershell';
 
-export const GAP_ORDER: GapType[] = ['no-claude-md', 'no-agents', 'no-skills', 'workflow-not-linked'];
+export const GAP_ORDER: GapType[] = ['no-claude-md', 'no-agents', 'no-skills', 'workflow-not-linked', 'weak-files'];
 
 /** One command to fill one gap. Prompts and directories come from the server (single source of truth). */
 export interface GapItem {
@@ -41,7 +41,7 @@ export function toScript(shell: Shell, tool: Tool, items: readonly GapItem[], co
 }
 
 export function countByType(items: readonly GapItem[]): Record<GapType, number> {
-  const c: Record<GapType, number> = { 'no-claude-md': 0, 'no-agents': 0, 'no-skills': 0, 'workflow-not-linked': 0 };
+  const c: Record<GapType, number> = { 'no-claude-md': 0, 'no-agents': 0, 'no-skills': 0, 'workflow-not-linked': 0, 'weak-files': 0 };
   for (const i of items) c[i.type]++;
   return c;
 }

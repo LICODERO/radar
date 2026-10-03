@@ -29,6 +29,8 @@
 .cm { font-size: fs(10); color: $muted; }
 .cname { font-size: fs(22); font-weight: 600; color: #fff; margin-top: 6px; word-break: break-word; }
 .flags { font-size: fs(10); margin-top: 2px; }
+.qrow { display: block; background: transparent; border: 0; padding: 0; margin-top: 6px; font-size: fs(10); letter-spacing: .04em; text-align: left; cursor: pointer; }
+.qrow:hover, .qrow:focus-visible { text-decoration: underline; outline: none; }
 .sb { font-size: fs(10); color: $muted; margin-top: 4px; }
 .sb.on { color: $amber; }
 .open { margin-top: 10px; background: transparent; border: 1px solid #c6ff3d88; color: $lime; font-size: fs(10); letter-spacing: .12em; padding: 6px 10px; cursor: pointer; }

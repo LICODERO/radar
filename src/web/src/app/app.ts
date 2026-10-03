@@ -12,6 +12,8 @@ import { GapsListDialog } from './gaps/gaps-list-dialog';
 import { RunConfirm } from './gaps/run-confirm';
 import { Tour } from './tour/tour';
 import { KpiListDialog } from './kpi/kpi-list-dialog';
+import { QualityDialog } from './quality/quality-dialog';
+import { InsightsDialog } from './insights/insights-dialog';
 import { ItemsDialog } from './items/items-dialog';
 import { ProjectDialog } from './vault/project-dialog';
 import { VaultDialog } from './vault/vault-dialog';
@@ -24,7 +26,7 @@ import { RightPanel } from './panels/right-panel';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog, RunConfirm, KpiListDialog, Tour],
+  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog, RunConfirm, KpiListDialog, QualityDialog, InsightsDialog, Tour],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -39,6 +41,15 @@ export class App {
   protected readonly frameH = computed(() => Math.max(this.size().h, BASE_H * this.fit().scale));
   protected readonly left = computed(() => Math.max(0, (this.frameW() - BASE_W * this.fit().scale) / 2));
   protected readonly top = computed(() => Math.max(0, (this.frameH() - BASE_H * this.fit().scale) / 2));
+  protected readonly insightsLabel = computed(() => {
+    const c = this.store.changes();
+    const parts: string[] = [];
+    if (c) parts.push(this.t('insights.btnChanges', { n: c.changed.length + c.fixed.length + c.introduced.length + c.newRepos.length + c.removedRepos.length }));
+    const drift = this.store.driftedCount();
+    if (drift > 0) parts.push(this.t('insights.btnDrift', { n: drift }));
+    else if (this.store.sharedItems().length > 0) parts.push(this.t('insights.btnShared', { n: this.store.sharedItems().length }));
+    return parts.join(' · ') + ' ›';
+  });
   protected readonly sample = computed(() => this.store.result()?.sample === true);
 
   constructor() {
@@ -53,6 +64,8 @@ export class App {
     if (this.store.pendingRun()) { this.store.cancelRun(); return; }
     if (this.store.legendOpen()) { this.store.closeLegend(); return; }
     if (this.store.projectRepoId()) { this.store.closeProject(); return; }
+    if (this.store.insightsTab()) { this.store.closeInsights(); return; }
+    if (this.store.qualityOpen()) { this.store.closeQuality(); return; }
     if (this.store.kpiList()) { this.store.closeKpiList(); return; }
     if (this.store.itemsKind()) { this.store.closeItems(); return; }
     if (this.store.gapsListOpen()) { this.store.closeGapsList(); return; }

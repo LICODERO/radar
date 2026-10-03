@@ -9,10 +9,10 @@ public class AnalyzerTests
     {
         using var t = new FixtureTree();
         var repo = t.Repo("orders-api");
-        t.File("orders-api/CLAUDE.md", "# orders");
-        t.File("orders-api/.claude/agents/code-reviewer.md", "---\nname: code-reviewer\ndescription: Reviews\ntools: Read, Grep\nmodel: sonnet\n---\n");
+        t.File("orders-api/CLAUDE.md", QualityTests.GoodClaudeMd);
+        t.File("orders-api/.claude/agents/code-reviewer.md", QualityTests.GoodAgent("code-reviewer"));
         t.File("orders-api/.claude/agents/plain.md", "no frontmatter");
-        t.File("orders-api/.claude/skills/ef-migrations/SKILL.md", "---\nname: ef-migrations\ndescription: EF\n---\n");
+        t.File("orders-api/.claude/skills/ef-migrations/SKILL.md", QualityTests.GoodSkill("ef-migrations"));
         t.File("orders-api/.claude/skills/empty-dir/README.md", "not a skill");
 
         var a = RepoAnalyzer.Analyze(t.Root, repo);
@@ -29,7 +29,8 @@ public class AnalyzerTests
         Assert.Single(a.Repo.Skills);
         Assert.Equal(".claude/skills/ef-migrations/SKILL.md", a.Repo.Skills[0].Path);
         Assert.Equal(100, a.Repo.Coverage.Score);
-        Assert.Empty(a.Repo.Gaps);
+        // coverage only counts files; the agent without frontmatter is what the quality check objects to
+        Assert.Equal([GapTypes.WeakFiles], a.Repo.Gaps);
     }
 
     [Fact]

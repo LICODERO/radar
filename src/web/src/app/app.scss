@@ -18,6 +18,8 @@
 }
 .about-btn { position: absolute; right: 36px; top: 864px; background: transparent; border: 0; padding: 2px 0; font-size: fs(9); letter-spacing: .12em; color: $muted; cursor: pointer; }
 .about-btn:hover, .about-btn:focus-visible { color: $lime; }
+.insights-btn { position: absolute; left: 36px; top: 864px; background: transparent; border: 0; padding: 2px 0; font-size: fs(9); letter-spacing: .12em; color: $muted; cursor: pointer; }
+.insights-btn:hover, .insights-btn:focus-visible { color: $lime; }
 .legend { position: absolute; left: 0; top: 842px; width: 1440px; height: 26px; padding: 0; border: 0; background: transparent; text-align: center; font-size: fs(10); letter-spacing: .08em; color: $muted; cursor: pointer; }
 // the whole row is clickable, but only the text gets the hover highlight
 .legend-in { display: inline-block; padding: 5px 16px; border: 1px solid transparent; transition: background .15s, border-color .15s; }

@@ -1,4 +1,27 @@
-export type GapType = 'no-claude-md' | 'no-agents' | 'no-skills' | 'workflow-not-linked';
+export type GapType = 'no-claude-md' | 'no-agents' | 'no-skills' | 'workflow-not-linked' | 'weak-files';
+
+export type Severity = 'error' | 'warning' | 'info';
+
+/** One thing wrong with one AI file; `code` is turned into text by the UI (`quality.<code>`), `detail` is the offending value */
+export interface QualityFinding {
+  path: string;
+  code: string;
+  severity: Severity;
+  detail?: string | null;
+}
+
+export interface FileQuality {
+  path: string;
+  kind: 'claude-md' | 'agent' | 'skill';
+  score: number;
+}
+
+/** how good the existing files are (coverage only says they exist); `score` is null when the repo has no AI file; absent in scans before schema 2 */
+export interface QualityInfo {
+  score: number | null;
+  files: FileQuality[];
+  findings: QualityFinding[];
+}
 
 export interface AgentInfo {
   name: string;
@@ -26,6 +49,7 @@ export interface RepoInfo {
   skills: SkillInfo[];
   coverage: { score: number; parts: { claudeMd: number; agents: number; skills: number } };
   gaps: GapType[];
+  quality?: QualityInfo | null;
 }
 
 export interface WorkflowInfo {
@@ -39,6 +63,43 @@ export interface WorkflowInfo {
   /** `agents`/`skills`: what this repo's copy of the workflow names; they are elements of that same repo (absent in older scans) */
   repos: { repoId: string; path: string; linked: boolean; agents?: string[]; skills?: string[] }[];
   issues: string[];
+}
+
+/** what moved since the last scan that looked different (GET /api/scan/changes) */
+export interface RepoChange {
+  repoId: string;
+  name: string;
+  coverageBefore: number;
+  coverageAfter: number;
+  qualityBefore: number | null;
+  qualityAfter: number | null;
+  agentsDelta: number;
+  skillsDelta: number;
+}
+export interface FindingChange { repoId: string; repoName: string; path: string; code: string; severity: Severity; detail?: string | null }
+export interface ScanChanges {
+  previousScannedAt: string;
+  scannedAt: string;
+  avgCoverageBefore: number;
+  avgCoverageAfter: number;
+  avgQualityBefore: number | null;
+  avgQualityAfter: number | null;
+  newRepos: string[];
+  removedRepos: string[];
+  changed: RepoChange[];
+  fixed: FindingChange[];
+  introduced: FindingChange[];
+}
+
+/** one content of a shared agent/skill and the repos that hold it; `path` is the file in the first of them */
+export interface ItemVariant { hash: string; repos: string[]; path: string }
+/** an agent or skill with the same name in two or more repos; several variants mean the copies drifted apart */
+export interface SharedItem {
+  kind: 'agent' | 'skill';
+  name: string;
+  variants: ItemVariant[];
+  /** repos of the same stack as a holder that lack it */
+  missing: string[];
 }
 
 export interface ScanResult {
@@ -55,11 +116,14 @@ export interface ScanResult {
     gaps: number;
     stacks: string[];
     avgCoverage: number;
+    avgQuality?: number | null;
   };
   repos: RepoInfo[];
   workflows: WorkflowInfo[];
   gaps: { repoId: string; type: GapType }[];
   warnings: { repoId: string; path: string; message: string }[];
+  /** absent in scans before schema 2 */
+  shared?: SharedItem[];
 }
 
 export type PickKind = 'a' | 's' | 'w';

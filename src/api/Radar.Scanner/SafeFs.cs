@@ -55,6 +55,13 @@ public static class SafeFs
         catch (Exception e) when (e is UnauthorizedAccessException or IOException) { return null; }
     }
 
+    /// <summary>Last write time of a file inside the root; null when it is outside, missing or unreadable.</summary>
+    public static DateTime? LastWriteUtc(string root, string path)
+    {
+        try { return File.Exists(path) && IsInside(root, path) ? File.GetLastWriteTimeUtc(path) : null; }
+        catch (Exception e) when (e is UnauthorizedAccessException or IOException) { return null; }
+    }
+
     public static IEnumerable<string> EnumerateMarkdown(string dir)
     {
         try
