@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AI_TOOLS } from './ai-tools';
-import { EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanChanges, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
+import { CopyAgentResult, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanChanges, ScanResult, SharedItem, Settings, ToolStatus, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, buildCommand, countByType } from './commands';
@@ -106,6 +106,8 @@ export class RadarStore {
   readonly changes = signal<ScanChanges | null>(null);
   /** the changes / shared-copies dialog and its open tab */
   readonly insightsTab = signal<'changes' | 'shared' | null>(null);
+  /** the agent whose copies are being spread to other repos (the confirm dialog) */
+  readonly copyAgentItem = signal<SharedItem | null>(null);
   readonly sharedItems = computed(() => this.result()?.shared ?? []);
   readonly driftedCount = computed(() => this.sharedItems().filter((s) => s.variants.length > 1).length);
   /** anything for the insights button to offer */
@@ -369,6 +371,16 @@ export class RadarStore {
     if (count > 0) this.kpiList.set(kind);
   }
   closeKpiList(): void { this.kpiList.set(null); }
+
+  openCopyAgent(item: SharedItem): void { this.closeInsights(); this.copyAgentItem.set(item); }
+  closeCopyAgent(): void { this.copyAgentItem.set(null); }
+  planCopyAgent(from: string, name: string, to: string[]): Promise<CopyAgentResult> { return this.api.copyAgent(from, name, to, false); }
+  /** Writes the copies, then rescans quietly so the new agents show up everywhere. */
+  async applyCopyAgent(from: string, name: string, to: string[]): Promise<CopyAgentResult> {
+    const r = await this.api.copyAgent(from, name, to, true);
+    void this.refreshQuiet();
+    return r;
+  }
 
   openInsights(tab: 'changes' | 'shared'): void { this.insightsTab.set(tab); }
   closeInsights(): void { this.insightsTab.set(null); }

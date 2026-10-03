@@ -19,6 +19,7 @@ public enum Msg
     RunUnsupported, UnknownTool, UnknownGap, GapAbsent, RepoOutsideRoot, TerminalFailed,
     // agents
     DescriptionRequired, DescriptionTooLong, GenerationBusy, AgentNameTakenInRepo, ContentRequired, AgentInvalid, AgentExists, WriteForbidden,
+    AgentSourceMissing, CopySourceUnreadable, CopyNoTargets, CopyTooMany,
     // agent file validation
     FileTooBig, FrontmatterMissing, NameInvalid, DescriptionMissing, DescriptionLong, BodyMissing,
     // vault
@@ -67,6 +68,10 @@ public static class Messages
         [Msg.ContentRequired] = ("Brak treści pliku.", "The file content is missing."),
         [Msg.AgentInvalid] = ("Plik agenta jest niepoprawny.", "The agent file is invalid."),
         [Msg.AgentExists] = ("Agent o tej nazwie już istnieje. Zmień nazwę.", "An agent with this name already exists. Change the name."),
+        [Msg.AgentSourceMissing] = ("Nie ma takiego agenta w repozytorium źródłowym.", "The source repository has no such agent."),
+        [Msg.CopySourceUnreadable] = ("Nie można odczytać pliku agenta źródłowego.", "The source agent file cannot be read."),
+        [Msg.CopyNoTargets] = ("Wybierz repozytoria, do których skopiować agenta.", "Choose the repositories to copy the agent to."),
+        [Msg.CopyTooMany] = ("Za dużo repozytoriów naraz (max {0}).", "Too many repositories at once (max {0})."),
         [Msg.WriteForbidden] = ("Zapis w tym katalogu jest zabroniony (dowiązanie poza repozytorium).", "Writing in this directory is not allowed (a link pointing outside the repository)."),
 
         [Msg.FileTooBig] = ("Plik jest za duży (limit 64 KB).", "The file is too large (64 KB limit)."),

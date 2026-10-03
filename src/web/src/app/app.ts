@@ -14,6 +14,7 @@ import { Tour } from './tour/tour';
 import { KpiListDialog } from './kpi/kpi-list-dialog';
 import { QualityDialog } from './quality/quality-dialog';
 import { InsightsDialog } from './insights/insights-dialog';
+import { CopyAgentDialog } from './insights/copy-agent-dialog';
 import { ItemsDialog } from './items/items-dialog';
 import { ProjectDialog } from './vault/project-dialog';
 import { VaultDialog } from './vault/vault-dialog';
@@ -26,7 +27,7 @@ import { RightPanel } from './panels/right-panel';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog, RunConfirm, KpiListDialog, QualityDialog, InsightsDialog, Tour],
+  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog, RunConfirm, KpiListDialog, QualityDialog, InsightsDialog, CopyAgentDialog, Tour],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -64,6 +65,7 @@ export class App {
     if (this.store.pendingRun()) { this.store.cancelRun(); return; }
     if (this.store.legendOpen()) { this.store.closeLegend(); return; }
     if (this.store.projectRepoId()) { this.store.closeProject(); return; }
+    if (this.store.copyAgentItem()) { this.store.closeCopyAgent(); return; }
     if (this.store.insightsTab()) { this.store.closeInsights(); return; }
     if (this.store.qualityOpen()) { this.store.closeQuality(); return; }
     if (this.store.kpiList()) { this.store.closeKpiList(); return; }

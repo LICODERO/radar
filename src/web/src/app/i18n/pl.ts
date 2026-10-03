@@ -516,6 +516,28 @@ export const PL = {
   'insights.variant': 'wersja {letter}',
   'insights.missing': 'brakuje w repo o tym samym stosie: {repos}',
   'insights.noShared': 'Żaden agent ani skill nie występuje w więcej niż jednym repozytorium.',
+  // copy an agent to other repos
+  'copy.open': 'KOPIUJ DO {n}…',
+  'copy.title': 'Kopiowanie agenta {name}',
+  'copy.eyebrow': 'KOPIOWANIE AGENTA DO INNYCH REPOZYTORIÓW',
+  'copy.close': 'Zamknij',
+  'copy.closeBtn': 'ZAMKNIJ',
+  'copy.intro': 'Agent trafi jako nowy plik do wybranych repozytoriów, które go nie mają. Istniejących plików nigdy nie nadpisuję.',
+  'copy.loading': 'Sprawdzam, gdzie można skopiować…',
+  'copy.version': 'Z KTÓREJ WERSJI',
+  'copy.from': 'Źródło: repozytorium {repo}',
+  'copy.into': 'DO REPOZYTORIÓW · {n}',
+  'copy.noneReady': 'Nie ma repozytorium, do którego da się skopiować tego agenta.',
+  'copy.skipped': 'Pominięte (agent o tej nazwie już tam jest lub repo niedostępne): {repos}',
+  'copy.note': 'Po skopiowaniu pliki trzeba zacommitować w każdym repozytorium osobno. R.A.D.A.R. niczego nie commituje.',
+  'copy.confirm': { one: 'SKOPIUJ DO {n} REPO', few: 'SKOPIUJ DO {n} REPO', many: 'SKOPIUJ DO {n} REPO', other: 'SKOPIUJ DO {n} REPO' },
+  'copy.saving': 'Kopiuję…',
+  'copy.cancel': 'ANULUJ',
+  'copy.done': { one: 'Skopiowano do {n} repozytorium.', few: 'Skopiowano do {n} repozytoriów.', many: 'Skopiowano do {n} repozytoriów.', other: 'Skopiowano do {n} repozytoriów.' },
+  'copy.status.created': 'utworzono',
+  'copy.status.skipped': 'pominięto',
+  'copy.planFailed': 'Nie udało się sprawdzić, gdzie można skopiować agenta.',
+  'copy.saveFailed': 'Nie udało się skopiować agenta.',
   'api.serverError': 'Błąd serwera ({status})'
 } as const satisfies Record<string, Message>;
 

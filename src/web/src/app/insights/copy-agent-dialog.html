@@ -1,0 +1,65 @@
+<div class="backdrop" (click)="store.closeCopyAgent()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('copy.title', { name: item()?.name ?? '' })">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">{{ t('copy.eyebrow') }}</div>
+      <div class="ttl">{{ item()?.name }}</div>
+    </div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('copy.close')" (click)="store.closeCopyAgent()">✕</button>
+  </div>
+
+  <div class="body">
+    @if (phase() === 'done') {
+      <p class="lead">{{ t('copy.done', { n: created() }) }}</p>
+      <ul class="m list">
+        @for (r of results(); track r.repoId) {
+          <li [class.bad]="r.status !== 'created'">{{ r.repoId }} · {{ statusText(r) }}</li>
+        }
+      </ul>
+      <div class="btns"><button class="m btn-solid go" type="button" (click)="store.closeCopyAgent()">{{ t('copy.closeBtn') }}</button></div>
+    } @else {
+      <p class="text">{{ t('copy.intro') }}</p>
+
+      @if (phase() === 'loading') { <p class="m wait">{{ t('copy.loading') }}</p> }
+
+      @if (item(); as it) {
+        @if (it.variants.length > 1) {
+          <div class="m lbl">{{ t('copy.version') }}</div>
+          <div class="vers" role="radiogroup">
+            @for (v of it.variants; track v.hash; let i = $index) {
+              <button class="m ver" type="button" role="radio" [class.on]="version() === i" [attr.aria-checked]="version() === i" (click)="pickVersion(i)">
+                {{ t('insights.variant', { letter: letters[i] ?? i + 1 }) }} · {{ v.repos.join(', ') }}
+              </button>
+            }
+          </div>
+        }
+        <p class="m hint">{{ t('copy.from', { repo: source() }) }}</p>
+      }
+
+      @if (readyTargets().length) {
+        <div class="m lbl">{{ t('copy.into', { n: chosen().size }) }}</div>
+        <div class="targets">
+          @for (x of readyTargets(); track x.repoId) {
+            <label class="m target">
+              <input type="checkbox" [checked]="chosen().has(x.repoId)" (change)="toggle(x.repoId)" />
+              <span class="rn">{{ x.repoId }}</span><span class="pth">{{ x.path }}</span>
+            </label>
+          }
+        </div>
+      } @else if (phase() === 'plan') {
+        <p class="m hint">{{ t('copy.noneReady') }}</p>
+      }
+      @if (skipped().length) { <p class="m hint">{{ t('copy.skipped', { repos: skipped().map(s => s.repoId).join(', ') }) }}</p> }
+
+      <p class="m note">{{ t('copy.note') }}</p>
+      @if (error(); as e) { <div class="m err" role="alert">{{ e }}</div> }
+
+      <div class="btns">
+        <button class="m btn-solid go" type="button" [disabled]="phase() !== 'plan' || chosen().size === 0" (click)="confirm()">
+          {{ phase() === 'saving' ? t('copy.saving') : t('copy.confirm', { n: chosen().size }) }}
+        </button>
+        <button class="m btn-ghost" type="button" [disabled]="phase() === 'saving'" (click)="store.closeCopyAgent()">{{ t('copy.cancel') }}</button>
+      </div>
+    }
+  </div>
+</div>

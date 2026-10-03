@@ -1,3 +1,5 @@
+using Radar.Scanner;
+using Radar.Server.Features.Files;
 using Radar.Server.Features.Scans;
 using Radar.Server.Infrastructure.Localization;
 namespace Radar.Server.Features.Agents;
@@ -5,6 +7,9 @@ namespace Radar.Server.Features.Agents;
 public sealed record GenerateAgentRequest(string? RepoId, string? Description);
 
 public sealed record CreateAgentRequest(string? RepoId, string? Content);
+
+/// <param name="Confirm">without it nothing is written: the answer only says what would happen in each repo</param>
+public sealed record CopyAgentRequest(string? FromRepoId, string? Name, string[]? ToRepoIds, bool Confirm);
 
 public static class AgentEndpoints
 {
@@ -55,6 +60,32 @@ public static class AgentEndpoints
             {
                 gate.Leave();
             }
+        });
+
+        // Copies an agent one repo already has into other repos that lack it: the source file is read through the scan's own
+        // validated paths, each target gets a brand-new .claude/agents/<name>.md and nothing is ever overwritten.
+        // Without `confirm` the answer is a plan (what would be created, where the name is already taken).
+        api.MapPost("/agents/copy", async (CopyAgentRequest req, LatestScanCache cache, RequestMessages m, CancellationToken ct) =>
+        {
+            var targetIds = (req.ToRepoIds ?? []).Distinct(StringComparer.Ordinal).ToList();
+            if (targetIds.Count == 0) return Results.BadRequest(new { error = m[Msg.CopyNoTargets] });
+            if (targetIds.Count > AgentCopy.MaxTargets) return Results.BadRequest(new { error = m.T(Msg.CopyTooMany, AgentCopy.MaxTargets) });
+
+            var result = await cache.GetAsync(ct);
+            if (result is null) return Results.NotFound(new { error = m[Msg.NoScan] });
+            var source = result.Repos.FirstOrDefault(r => r.Id == req.FromRepoId);
+            if (source is null) return Results.NotFound(new { error = m[Msg.UnknownRepo] });
+            var agent = source.Agents.FirstOrDefault(a => a.Name.Equals(req.Name, StringComparison.OrdinalIgnoreCase));
+            if (agent is null) return Results.NotFound(new { error = m[Msg.AgentSourceMissing] });
+
+            var read = FileReader.Read(result, source.Id, agent.Path);
+            if (read.Status != FileReadStatus.Ok || read.Content is null || read.Content.Truncated)
+                return Results.Json(new { error = m[Msg.CopySourceUnreadable] }, statusCode: StatusCodes.Status422UnprocessableEntity);
+            var validation = AgentValidator.Validate(read.Content.Content, m.Lang);
+            if (!validation.Valid || validation.Name is null) return Results.BadRequest(new { error = m[Msg.AgentInvalid], errors = validation.Errors });
+
+            var targets = AgentCopy.Run(result, source.Id, validation.Name, read.Content.Content, targetIds, req.Confirm);
+            return Results.Ok(new { name = validation.Name, source = agent.Path, written = req.Confirm, targets });
         });
 
         api.MapPost("/agents", async (CreateAgentRequest req, LatestScanCache cache, RequestMessages m, CancellationToken ct) =>

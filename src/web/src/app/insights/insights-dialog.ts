@@ -10,7 +10,7 @@ const MAX_ROWS = 40;
 interface FindingRow { key: string; repo: string; path: string; text: string }
 interface ChangeRow { key: string; name: string; coverage: string; quality: string | null; items: string | null; up: boolean | null }
 interface VariantRow { key: string; label: string; repos: string; count: number; open: () => void }
-interface SharedRow { key: string; name: string; kind: 'agent' | 'skill'; drifted: boolean; summary: string; variants: VariantRow[]; missing: string | null }
+interface SharedRow { key: string; name: string; kind: 'agent' | 'skill'; drifted: boolean; summary: string; variants: VariantRow[]; missing: string | null; copyCount: number; item: SharedItem }
 
 /**
  * Two views of what is worth coming back for: what changed since the last scan that looked different, and the agents and skills
@@ -82,6 +82,8 @@ export class InsightsDialog {
             repos: v.repos.join(', '), open: () => this.open(v.repos[0], v.path, s.kind)
           }))
         : [],
+      // only agents can be copied (a skill is a folder), and only with the server there to write
+      copyCount: s.kind === 'agent' && this.store.mode() === 'api' ? s.missing.length : 0, item: s,
       missing: s.missing.length ? this.t('insights.missing', { repos: s.missing.slice(0, 6).join(', ') + (s.missing.length > 6 ? ` +${s.missing.length - 6}` : '') }) : null
     };
   }

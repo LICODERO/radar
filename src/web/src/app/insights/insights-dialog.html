@@ -71,7 +71,14 @@
               <button class="m btn-ghost open" type="button" (click)="v.open()">{{ t('quality.open') }}</button>
             </div>
           }
-          @if (s.missing) { <div class="m miss">{{ s.missing }}</div> }
+          @if (s.missing) {
+            <div class="mrow">
+              <span class="m miss">{{ s.missing }}</span>
+              @if (s.copyCount > 0) {
+                <button class="m btn-ghost open copy" type="button" (click)="store.openCopyAgent(s.item)">{{ t('copy.open', { n: s.copyCount }) }}</button>
+              }
+            </div>
+          }
         </div>
       } @empty {
         <div class="m none">{{ t('insights.noShared') }}</div>

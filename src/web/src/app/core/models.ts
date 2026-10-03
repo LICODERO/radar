@@ -65,6 +65,9 @@ export interface WorkflowInfo {
   issues: string[];
 }
 
+export interface CopyTarget { repoId: string; status: 'ready' | 'created' | 'exists' | 'unknown-repo' | 'repo-missing' | 'forbidden'; path?: string | null }
+export interface CopyAgentResult { name: string; source: string; written: boolean; targets: CopyTarget[] }
+
 /** what moved since the last scan that looked different (GET /api/scan/changes) */
 export interface RepoChange {
   repoId: string;

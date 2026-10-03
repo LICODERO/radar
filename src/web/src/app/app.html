@@ -52,6 +52,7 @@
         @if (store.kpiList()) { <app-kpi-list-dialog /> }
         @if (store.qualityOpen()) { <app-quality-dialog /> }
         @if (store.insightsTab()) { <app-insights-dialog /> }
+        @if (store.copyAgentItem()) { <app-copy-agent-dialog /> }
         @if (store.vaultOpen()) { <app-vault-dialog /> }
         @if (store.projectRepoId()) { <app-project-dialog /> }
         @if (store.scan()) { <app-scan-overlay /> }

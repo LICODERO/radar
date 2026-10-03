@@ -48,4 +48,7 @@
 .vrepos { flex: 1; min-width: 0; font-size: fs(10); color: $muted; word-break: break-word; }
 .open { flex: none; background: transparent; border: 1px solid #ffffff33; color: $white; font-size: fs(10); letter-spacing: .1em; padding: 4px 8px; cursor: pointer; }
 .open:hover { border-color: #ffffff88; }
-.miss { margin-top: 6px; padding-left: 16px; font-size: fs(10); color: $muted; }
+.mrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; padding-left: 16px; }
+.miss { font-size: fs(10); color: $muted; min-width: 0; word-break: break-word; }
+.copy { border-color: #c6ff3d88; color: $lime; }
+.copy:hover { background: #c6ff3d14; }

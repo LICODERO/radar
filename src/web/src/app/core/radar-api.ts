@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { I18n } from '../i18n/i18n';
 import { GapItem, Tool } from './commands';
-import { AgentDraft, EnableProjectResult, FileContent, ScanChanges, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus } from './models';
+import { AgentDraft, CopyAgentResult, EnableProjectResult, FileContent, ScanChanges, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus } from './models';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly body?: any) {
@@ -88,6 +88,11 @@ export class RadarApi {
   /** Writes the reviewed file as a brand-new .claude/agents/<name>.md (the server never overwrites). */
   createAgent(repoId: string, content: string): Promise<{ path: string }> {
     return this.call('POST', '/api/agents', { repoId, content });
+  }
+
+  /** Without `confirm` the server only reports where the copy would land; with it, it adds the file to each repo (never overwriting). */
+  copyAgent(fromRepoId: string, name: string, toRepoIds: string[], confirm: boolean): Promise<CopyAgentResult> {
+    return this.call('POST', '/api/agents/copy', { fromRepoId, name, toRepoIds, confirm });
   }
 
   // ---- second brain ----------------------------------------------------------------------------
