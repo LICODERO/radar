@@ -19,10 +19,9 @@
 .tab { background: transparent; border: 0; border-bottom: 2px solid transparent; height: 100%; color: $muted; font-size: fs(10); letter-spacing: .14em; padding: 0 12px; cursor: pointer; }
 .tab:hover { color: #fff; }
 .tab.on { color: $lime; border-bottom-color: $lime; }
-.copy { flex: none; width: 28px; height: 28px; margin-left: 12px; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid #c6ff3d88; cursor: pointer; }
+.copy { flex: none; width: 28px; height: 28px; margin-left: auto; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid #c6ff3d88; cursor: pointer; }
 .copy svg { width: 16px; height: 16px; fill: $lime; }
 .copy:hover, .copy:focus-visible { background: #c6ff3d1a; outline: none; }
-.ro { margin-left: auto; font-size: fs(9); letter-spacing: .1em; color: $muted; }
 
 .body { flex-grow: 1; min-height: 0; overflow: auto; padding: 18px 24px 30px; box-sizing: border-box; }
 .msg { font-size: fs(11); color: $muted; }

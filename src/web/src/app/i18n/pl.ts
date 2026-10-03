@@ -255,7 +255,6 @@ export const PL = {
   'file.close': 'Zamknij podgląd',
   'file.preview': 'PODGLĄD',
   'file.source': 'ŹRÓDŁO',
-  'file.readOnly': 'TYLKO DO ODCZYTU',
   'file.loading': 'Wczytywanie…',
   'file.truncatedNote': 'Plik jest duży ({size}) — pokazano początek.',
   'file.foot': 'MARKDOWN · UTF-8 · {lines} LINII · {chars} ZNAKÓW',

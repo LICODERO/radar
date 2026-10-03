@@ -253,7 +253,6 @@ export const EN: Record<MsgKey, Message> = {
   'file.close': 'Close preview',
   'file.preview': 'PREVIEW',
   'file.source': 'SOURCE',
-  'file.readOnly': 'READ ONLY',
   'file.loading': 'Loading…',
   'file.truncatedNote': 'The file is large ({size}) — showing the beginning.',
   'file.foot': 'MARKDOWN · UTF-8 · {lines} LINES · {chars} CHARACTERS',
