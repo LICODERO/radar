@@ -28,7 +28,8 @@ describe('FilePane copy button', () => {
   it('is offered for an agent and opens the copy dialog for it', () => {
     const { store, el } = open('.claude/agents/reviewer.md');
     const btn = el.querySelector<HTMLButtonElement>('.copy')!;
-    expect(btn.textContent).toContain('COPY TO ANOTHER REPO');
+    expect(btn.getAttribute('aria-label')).toBe('COPY TO ANOTHER REPO');
+    expect(btn.querySelector('svg')).not.toBeNull();
     btn.click();
     expect(store.copyAgentRef()).toEqual({ repoId: 'shop', name: 'reviewer' });
   });
