@@ -1,0 +1,14 @@
+@use 'tokens' as *;
+
+:host { position: absolute; left: 440px; top: 124px; width: 560px; z-index: 12; display: block; animation: fadeIn .3s ease-out both; pointer-events: none; }
+.toast { pointer-events: auto; display: flex; align-items: stretch; border: 1px solid #c6ff3d88; background: #0a0f08ee; box-shadow: 0 8px 30px rgba(0, 0, 0, .6); }
+.toast.bad { border-color: #ffb84d99; background: #140e04ee; }
+.main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 7px 12px; background: transparent; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.main:hover, .main:focus-visible { background: #c6ff3d10; outline: none; }
+.lbl { flex: none; font-size: fs(9); letter-spacing: .12em; color: $muted; }
+.txt { flex: 1; min-width: 0; font-size: fs(11); color: $lime; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bad .txt { color: $amber; }
+.go { flex: none; font-size: fs(10); letter-spacing: .1em; color: $white; }
+.x { flex: none; width: 30px; background: transparent; border: 0; border-left: 1px solid #ffffff1a; color: $muted; font-size: fs(11); cursor: pointer; }
+.x:hover { color: $white; }
+@media (prefers-reduced-motion: reduce) { :host { animation: none; } }

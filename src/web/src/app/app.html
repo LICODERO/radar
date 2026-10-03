@@ -43,6 +43,7 @@
         }
         <button class="m about-btn" type="button" [title]="t('about.open')" [attr.aria-label]="t('about.open')" (click)="store.openAbout()">{{ footer() }}</button>
         @if (store.gapsOpen()) { <app-gap-panel /> }
+        @if (store.changesToast() && !store.scan()) { <app-changes-toast /> }
         @if (store.pendingRun()) { <app-run-confirm /> }
         @if (store.coverageInfoOpen()) { <app-coverage-info /> }
         @if (store.aboutOpen()) { <app-about-dialog /> }

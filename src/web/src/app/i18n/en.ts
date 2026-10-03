@@ -536,5 +536,15 @@ export const EN: Record<MsgKey, Message> = {
   'copy.status.skipped': 'skipped',
   'copy.planFailed': 'Could not check where the agent can be copied.',
   'copy.saveFailed': 'Could not copy the agent.',
+  // toast after a scan
+  'toast.label': 'SINCE LAST SCAN',
+  'toast.details': 'DETAILS',
+  'toast.open': 'Show changes since the last scan',
+  'toast.dismiss': 'Dismiss',
+  'toast.fixed': { one: '{n} fixed', other: '{n} fixed' },
+  'toast.introduced': { one: '{n} new finding', other: '{n} new findings' },
+  'toast.newRepos': { one: '{n} new repo', other: '{n} new repos' },
+  'toast.coverage': 'coverage {from}% → {to}%',
+  'toast.generic': 'changes in agents or skills',
   'api.serverError': 'Server error ({status})'
 };

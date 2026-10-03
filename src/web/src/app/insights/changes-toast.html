@@ -1,0 +1,8 @@
+<div class="toast" role="status" [class.bad]="bad()">
+  <button class="m main" type="button" [attr.aria-label]="t('toast.open')" (click)="open()">
+    <span class="lbl">{{ t('toast.label') }}</span>
+    <span class="txt">{{ text() }}</span>
+    <span class="go">{{ t('toast.details') }} ›</span>
+  </button>
+  <button class="m x" type="button" [attr.aria-label]="t('toast.dismiss')" (click)="store.dismissChangesToast()">✕</button>
+</div>

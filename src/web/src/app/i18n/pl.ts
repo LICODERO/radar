@@ -538,6 +538,16 @@ export const PL = {
   'copy.status.skipped': 'pominięto',
   'copy.planFailed': 'Nie udało się sprawdzić, gdzie można skopiować agenta.',
   'copy.saveFailed': 'Nie udało się skopiować agenta.',
+  // toast after a scan
+  'toast.label': 'OD OSTATNIEGO SKANU',
+  'toast.details': 'SZCZEGÓŁY',
+  'toast.open': 'Pokaż zmiany od ostatniego skanu',
+  'toast.dismiss': 'Zamknij',
+  'toast.fixed': { one: '{n} naprawione', few: '{n} naprawione', many: '{n} naprawionych', other: '{n} naprawionych' },
+  'toast.introduced': { one: '{n} nowa uwaga', few: '{n} nowe uwagi', many: '{n} nowych uwag', other: '{n} nowych uwag' },
+  'toast.newRepos': { one: '{n} nowe repo', few: '{n} nowe repo', many: '{n} nowych repo', other: '{n} nowych repo' },
+  'toast.coverage': 'pokrycie {from}% → {to}%',
+  'toast.generic': 'zmiany w agentach lub skillach',
   'api.serverError': 'Błąd serwera ({status})'
 } as const satisfies Record<string, Message>;
 

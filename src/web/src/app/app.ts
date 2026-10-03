@@ -15,6 +15,7 @@ import { KpiListDialog } from './kpi/kpi-list-dialog';
 import { QualityDialog } from './quality/quality-dialog';
 import { InsightsDialog } from './insights/insights-dialog';
 import { CopyAgentDialog } from './insights/copy-agent-dialog';
+import { ChangesToast } from './insights/changes-toast';
 import { ItemsDialog } from './items/items-dialog';
 import { ProjectDialog } from './vault/project-dialog';
 import { VaultDialog } from './vault/vault-dialog';
@@ -27,7 +28,7 @@ import { RightPanel } from './panels/right-panel';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog, RunConfirm, KpiListDialog, QualityDialog, InsightsDialog, CopyAgentDialog, Tour],
+  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog, RunConfirm, KpiListDialog, QualityDialog, InsightsDialog, CopyAgentDialog, ChangesToast, Tour],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

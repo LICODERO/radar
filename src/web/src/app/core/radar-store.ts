@@ -106,6 +106,9 @@ export class RadarStore {
   readonly changes = signal<ScanChanges | null>(null);
   /** the changes / shared-copies dialog and its open tab */
   readonly insightsTab = signal<'changes' | 'shared' | null>(null);
+  /** a one-line summary of what a scan just changed, shown for a few seconds; null when nothing (new) happened */
+  readonly changesToast = signal<ScanChanges | null>(null);
+  private lastToastSignature = '';
   /** the agent whose copies are being spread to other repos (the confirm dialog) */
   readonly copyAgentItem = signal<SharedItem | null>(null);
   readonly sharedItems = computed(() => this.result()?.shared ?? []);
@@ -278,6 +281,7 @@ export class RadarStore {
       this.applyResult(await this.api.latest());
       await this.loadGaps();
       await this.loadChanges();
+      this.lastToastSignature = this.changesSignature(); // what was already there at start-up is not news
       await this.loadVault();
       const running = await this.api.currentScan();
       if (running) await this.attach(running);
@@ -371,6 +375,22 @@ export class RadarStore {
     if (count > 0) this.kpiList.set(kind);
   }
   closeKpiList(): void { this.kpiList.set(null); }
+
+  dismissChangesToast(): void { this.changesToast.set(null); }
+
+  /** After a scan the user started: announce the changes, but not the same ones twice (a rescan keeps the older baseline). */
+  private announceChanges(): void {
+    const c = this.changes();
+    const signature = this.changesSignature();
+    if (!c || signature === this.lastToastSignature) return;
+    this.lastToastSignature = signature;
+    this.changesToast.set(c);
+  }
+
+  private changesSignature(): string {
+    const c = this.changes();
+    return c ? [c.previousScannedAt, c.fixed.length, c.introduced.length, c.changed.length, c.newRepos.length, c.removedRepos.length].join('|') : '';
+  }
 
   openCopyAgent(item: SharedItem): void { this.closeInsights(); this.copyAgentItem.set(item); }
   closeCopyAgent(): void { this.copyAgentItem.set(null); }
@@ -591,6 +611,7 @@ export class RadarStore {
         this.settings.set(await this.api.settings());
         await this.loadGaps();
         await this.loadChanges();
+        this.announceChanges();
       } catch (e) {
         this.notice.set(this.messageOf(e, this.i18n.t('store.loadResultFailed')));
       }
