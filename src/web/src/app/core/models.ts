@@ -68,32 +68,6 @@ export interface WorkflowInfo {
 export interface CopyTarget { repoId: string; status: 'ready' | 'created' | 'exists' | 'unknown-repo' | 'repo-missing' | 'forbidden'; path?: string | null }
 export interface CopyAgentResult { name: string; source: string; written: boolean; targets: CopyTarget[] }
 
-/** what moved since the last scan that looked different (GET /api/scan/changes) */
-export interface RepoChange {
-  repoId: string;
-  name: string;
-  coverageBefore: number;
-  coverageAfter: number;
-  qualityBefore: number | null;
-  qualityAfter: number | null;
-  agentsDelta: number;
-  skillsDelta: number;
-}
-export interface FindingChange { repoId: string; repoName: string; path: string; code: string; severity: Severity; detail?: string | null }
-export interface ScanChanges {
-  previousScannedAt: string;
-  scannedAt: string;
-  avgCoverageBefore: number;
-  avgCoverageAfter: number;
-  avgQualityBefore: number | null;
-  avgQualityAfter: number | null;
-  newRepos: string[];
-  removedRepos: string[];
-  changed: RepoChange[];
-  fixed: FindingChange[];
-  introduced: FindingChange[];
-}
-
 /** one content of a shared agent/skill and the repos that hold it; `path` is the file in the first of them */
 export interface ItemVariant { hash: string; repos: string[]; path: string }
 /** an agent or skill with the same name in two or more repos; several variants mean the copies drifted apart */

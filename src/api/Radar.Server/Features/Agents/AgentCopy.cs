@@ -8,7 +8,7 @@ public sealed record CopyTarget(string RepoId, string Status, string? Path);
 /// <summary>Copies a validated agent file into other scanned repos through <see cref="AgentWriter"/>, so it can only ever add a new file.</summary>
 public static class AgentCopy
 {
-    public const int MaxTargets = 50;
+    public const int MaxTargets = 100;
 
     public static IReadOnlyList<CopyTarget> Run(ScanResult result, string sourceRepoId, string name, string content, IReadOnlyList<string> targetIds, bool write)
     {

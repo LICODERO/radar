@@ -15,7 +15,7 @@
 - Detects the tech stack heuristically (.NET, Angular, Node, YAML, SQL).
 - Computes AI coverage per repository and overall, and lists gaps (for example a missing `CLAUDE.md`).
 - Rates the quality of the files that exist, not just their presence: a thin or stale `CLAUDE.md`, one that points at files which are gone, agents without a usable description, skills that cannot be triggered. Checks are local heuristics; Claude Code can fix what they find.
-- Shows what changed since the previous scan, and which agents and skills live in several repositories with copies that drifted apart. An agent can be copied to the repositories that lack it, after you confirm; existing files are never overwritten.
+- After a rescan it tells you whether and how the average coverage changed. It also shows which agents and skills live in several repositories with copies that drifted apart, and lets you copy an agent from its panel to other repositories after you confirm; existing files are never overwritten.
 - Shows everything in an "Orbit" HUD: repositories, agents, skills and workflows on concentric rings, with relations highlighted on selection.
 - Lets you preview and edit markdown files in a side panel and create missing ones from templates.
 - Generates ready-to-copy commands for Claude Code and Codex CLI for each gap.

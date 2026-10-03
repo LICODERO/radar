@@ -82,7 +82,7 @@ public class AgentCopyTests : IDisposable
     {
         await StartAsync();
         Assert.Equal(HttpStatusCode.BadRequest, (await Copy(new { fromRepoId = "a-api", name = "reviewer", toRepoIds = Array.Empty<string>() })).StatusCode);
-        Assert.Equal(HttpStatusCode.BadRequest, (await Copy(new { fromRepoId = "a-api", name = "reviewer", toRepoIds = Enumerable.Range(0, 51).Select(i => "r" + i).ToArray() })).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await Copy(new { fromRepoId = "a-api", name = "reviewer", toRepoIds = Enumerable.Range(0, 101).Select(i => "r" + i).ToArray() })).StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, (await Copy(new { fromRepoId = "nope", name = "reviewer", toRepoIds = new[] { "b-api" } })).StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, (await Copy(new { fromRepoId = "a-api", name = "ghost", toRepoIds = new[] { "b-api" } })).StatusCode);
     }

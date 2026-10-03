@@ -19,17 +19,12 @@
 .list { margin: 8px 0 0; padding-left: 20px; font-size: fs(13); line-height: 1.7; color: $text; }
 .list .bad { color: $muted; }
 
-.vers { display: flex; flex-direction: column; gap: 6px; }
-.ver { text-align: left; background: transparent; border: 1px solid #ffffff22; color: #c3c8db; font-size: fs(12); padding: 8px 12px; cursor: pointer; }
-.ver:hover, .ver:focus-visible { border-color: #c6ff3d66; outline: none; }
-.ver.on { border-color: $lime; color: $lime; background: #c6ff3d0d; }
-
 .targets { max-height: 240px; overflow: auto; border: 1px solid #ffffff14; scrollbar-width: thin; scrollbar-color: #c6ff3d55 transparent; }
 .target { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid #ffffff0f; cursor: pointer; font-size: fs(12); }
 .target:hover { background: #c6ff3d0a; }
 .target input { accent-color: $lime; }
 .rn { color: #fff; }
-.pth { margin-left: auto; color: $muted; font-size: fs(10); word-break: break-all; }
+.stack { margin-left: auto; color: $muted; font-size: fs(10); }
 
 .btns { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
 button.btn-ghost, button.btn-solid { font-size: fs(13); letter-spacing: .14em; padding: 11px 18px; cursor: pointer; }

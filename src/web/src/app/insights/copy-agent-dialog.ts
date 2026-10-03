@@ -6,9 +6,12 @@ import { I18n } from '../i18n/i18n';
 
 type Phase = 'loading' | 'plan' | 'saving' | 'done' | 'error';
 
+/** the most repos one copy goes to (the server's limit) */
+const MAX_TARGETS = 100;
+
 /**
- * Spreads an agent that some repos have to the repos that lack it. The server first reports where a copy can go (nothing is written),
- * the user picks the repos and the version, and only the confirm button writes: new files, never overwriting.
+ * Copies one agent into other repos, opened from the agent's file pane. The server first reports where a copy can go (nothing is
+ * written), the user ticks the repos, and only the confirm button writes: new files, never overwriting. Nothing is ticked by default.
  */
 @Component({
   selector: 'app-copy-agent-dialog',
@@ -20,31 +23,39 @@ export class CopyAgentDialog {
   protected readonly store = inject(RadarStore);
   protected readonly t = inject(I18n).t;
 
-  protected readonly item = computed(() => this.store.copyAgentItem());
+  protected readonly ref = computed(() => this.store.copyAgentRef());
+  protected readonly source = computed(() => this.store.repos().find((r) => r.id === this.ref()?.repoId) ?? null);
   protected readonly phase = signal<Phase>('loading');
   protected readonly error = signal<string | null>(null);
-  /** version (index into the item's variants) the copies are made from; the most widespread one is first */
-  protected readonly version = signal(0);
   protected readonly targets = signal<CopyTarget[]>([]);
   protected readonly chosen = signal<ReadonlySet<string>>(new Set());
   protected readonly results = signal<CopyTarget[]>([]);
 
-  protected readonly source = computed(() => this.item()?.variants[this.version()]?.repos[0] ?? '');
+  /** repos other than the source that have no agent of this name, the ones with the source's stack first */
+  private readonly candidates = computed(() => {
+    const src = this.source();
+    const name = this.ref()?.name.toLowerCase();
+    if (!src || !name) return [];
+    return this.store.repos()
+      .filter((r) => r.id !== src.id && !r.agents.some((a) => a.name.toLowerCase() === name))
+      .sort((a, b) => Number(b.stack === src.stack) - Number(a.stack === src.stack) || a.name.localeCompare(b.name))
+      .slice(0, MAX_TARGETS);
+  });
+  protected readonly stackOf = computed(() => new Map(this.store.repos().map((r) => [r.id, r.stack])));
   protected readonly readyTargets = computed(() => this.targets().filter((x) => x.status === 'ready'));
   protected readonly skipped = computed(() => this.targets().filter((x) => x.status !== 'ready'));
-  protected readonly letters = 'ABCDEFGHIJ';
 
   constructor() {
     void this.load();
   }
 
   private async load(): Promise<void> {
-    const item = this.item();
-    if (!item) return;
+    const ref = this.ref();
+    const ids = this.candidates().map((r) => r.id);
+    if (!ref) return;
+    if (ids.length === 0) { this.phase.set('plan'); return; }
     try {
-      const plan = await this.store.planCopyAgent(this.source(), item.name, item.missing);
-      this.targets.set(plan.targets);
-      this.chosen.set(new Set(plan.targets.filter((x) => x.status === 'ready').map((x) => x.repoId)));
+      this.targets.set((await this.store.planCopyAgent(ref.repoId, ref.name, ids)).targets);
       this.phase.set('plan');
     } catch (e) {
       this.error.set(e instanceof ApiError ? e.message : this.t('copy.planFailed'));
@@ -58,18 +69,14 @@ export class CopyAgentDialog {
     this.chosen.set(next);
   }
 
-  protected pickVersion(i: number): void {
-    this.version.set(i);
-  }
-
   protected async confirm(): Promise<void> {
-    const item = this.item();
+    const ref = this.ref();
     const ids = this.readyTargets().map((x) => x.repoId).filter((id) => this.chosen().has(id));
-    if (!item || ids.length === 0 || this.phase() !== 'plan') return;
+    if (!ref || ids.length === 0 || this.phase() !== 'plan') return;
     this.error.set(null);
     this.phase.set('saving');
     try {
-      this.results.set((await this.store.applyCopyAgent(this.source(), item.name, ids)).targets);
+      this.results.set((await this.store.applyCopyAgent(ref.repoId, ref.name, ids)).targets);
       this.phase.set('done');
     } catch (e) {
       this.error.set(e instanceof ApiError ? e.message : this.t('copy.saveFailed'));

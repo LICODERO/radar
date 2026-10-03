@@ -1,0 +1,5 @@
+<div class="toast" role="status" [class]="'toast ' + kind()">
+  <span class="m lbl">{{ t('toast.label') }}</span>
+  <span class="m txt">{{ text() }}</span>
+  <button class="m x" type="button" [attr.aria-label]="t('toast.dismiss')" (click)="store.dismissCoverageToast()">✕</button>
+</div>

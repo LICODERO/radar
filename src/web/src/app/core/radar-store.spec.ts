@@ -337,3 +337,35 @@ describe('second brain', () => {
     expect(store.selectedHasVault()).toBe(false);
   });
 });
+
+describe('coverage after a scan', () => {
+  const result = (avg: number, root = '/p') => ({ scanRoot: root, repos: [], workflows: [], gaps: [], summary: { avgCoverage: avg } }) as unknown as ScanResult;
+
+  async function scanFrom(before: ScanResult | null, after: ScanResult) {
+    const { api, store } = setup(async (p) => settings(p));
+    (api as unknown as Record<string, unknown>)['latest'] = vi.fn(async () => after);
+    (api as unknown as Record<string, unknown>)['settings'] = vi.fn(async () => settings('/p'));
+    store.settings.set(settings('/p'));
+    store.mode.set('api');
+    if (before) store.result.set(before);
+    await store.startScan();
+    await store['onEvent']('completed', {});
+    return store;
+  }
+
+  it('reports how the average coverage moved over the scan the user ran', async () => {
+    expect((await scanFrom(result(42), result(50))).coverageToast()).toEqual({ from: 42, to: 50 });
+  });
+
+  it('reports "no change" too', async () => {
+    expect((await scanFrom(result(50), result(50))).coverageToast()).toEqual({ from: 50, to: 50 });
+  });
+
+  it('says nothing on a first scan', async () => {
+    expect((await scanFrom(null, result(50))).coverageToast()).toBeNull();
+  });
+
+  it('says nothing when the scanned directory changed', async () => {
+    expect((await scanFrom(result(42, '/old'), result(50, '/p'))).coverageToast()).toBeNull();
+  });
+});

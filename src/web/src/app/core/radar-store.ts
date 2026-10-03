@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AI_TOOLS } from './ai-tools';
-import { CopyAgentResult, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanChanges, ScanResult, SharedItem, Settings, ToolStatus, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
+import { CopyAgentResult, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, buildCommand, countByType } from './commands';
@@ -102,19 +102,18 @@ export class RadarStore {
   readonly kpiList = signal<KpiKind | null>(null);
   /** the quality findings of the selected repo's files */
   readonly qualityOpen = signal(false);
-  /** what changed since the previous scan that differed (null: nothing to compare yet, or sample data) */
-  readonly changes = signal<ScanChanges | null>(null);
-  /** the changes / shared-copies dialog and its open tab */
-  readonly insightsTab = signal<'changes' | 'shared' | null>(null);
-  /** a one-line summary of what a scan just changed, shown for a few seconds; null when nothing (new) happened */
-  readonly changesToast = signal<ScanChanges | null>(null);
-  private lastToastSignature = '';
-  /** the agent whose copies are being spread to other repos (the confirm dialog) */
-  readonly copyAgentItem = signal<SharedItem | null>(null);
+  /** the shared-copies view (agents and skills that live in several repos) */
+  readonly insightsOpen = signal(false);
+  /** how the average coverage moved over the scan the user just ran; shown for a few seconds */
+  readonly coverageToast = signal<{ from: number; to: number } | null>(null);
+  /** average coverage before the running scan, when there is something to compare with (same directory) */
+  private coverageBefore: { root: string; avg: number } | null = null;
+  /** the agent being copied to other repos (the confirm dialog) */
+  readonly copyAgentRef = signal<{ repoId: string; name: string } | null>(null);
   readonly sharedItems = computed(() => this.result()?.shared ?? []);
   readonly driftedCount = computed(() => this.sharedItems().filter((s) => s.variants.length > 1).length);
   /** anything for the insights button to offer */
-  readonly hasInsights = computed(() => this.changes() !== null || this.sharedItems().length > 0);
+  readonly hasInsights = computed(() => this.sharedItems().length > 0);
   /** the "enable the second brain for this repo" dialog; the id of the repo */
   readonly projectRepoId = signal<string | null>(null);
   readonly vaultReady = computed(() => this.vault()?.state === 'ok');
@@ -280,8 +279,6 @@ export class RadarStore {
       void this.checkCli();
       this.applyResult(await this.api.latest());
       await this.loadGaps();
-      await this.loadChanges();
-      this.lastToastSignature = this.changesSignature(); // what was already there at start-up is not news
       await this.loadVault();
       const running = await this.api.currentScan();
       if (running) await this.attach(running);
@@ -376,24 +373,19 @@ export class RadarStore {
   }
   closeKpiList(): void { this.kpiList.set(null); }
 
-  dismissChangesToast(): void { this.changesToast.set(null); }
+  dismissCoverageToast(): void { this.coverageToast.set(null); }
 
-  /** After a scan the user started: announce the changes, but not the same ones twice (a rescan keeps the older baseline). */
-  private announceChanges(): void {
-    const c = this.changes();
-    const signature = this.changesSignature();
-    if (!c || signature === this.lastToastSignature) return;
-    this.lastToastSignature = signature;
-    this.changesToast.set(c);
+  /** Called when a scan the user started has delivered its result: says how the coverage moved (also when it did not). */
+  private announceCoverage(): void {
+    const before = this.coverageBefore;
+    this.coverageBefore = null;
+    const r = this.result();
+    if (!before || !r || r.scanRoot !== before.root) return;
+    this.coverageToast.set({ from: before.avg, to: r.summary.avgCoverage });
   }
 
-  private changesSignature(): string {
-    const c = this.changes();
-    return c ? [c.previousScannedAt, c.fixed.length, c.introduced.length, c.changed.length, c.newRepos.length, c.removedRepos.length].join('|') : '';
-  }
-
-  openCopyAgent(item: SharedItem): void { this.closeInsights(); this.copyAgentItem.set(item); }
-  closeCopyAgent(): void { this.copyAgentItem.set(null); }
+  openCopyAgent(repoId: string, name: string): void { this.copyAgentRef.set({ repoId, name }); }
+  closeCopyAgent(): void { this.copyAgentRef.set(null); }
   planCopyAgent(from: string, name: string, to: string[]): Promise<CopyAgentResult> { return this.api.copyAgent(from, name, to, false); }
   /** Writes the copies, then rescans quietly so the new agents show up everywhere. */
   async applyCopyAgent(from: string, name: string, to: string[]): Promise<CopyAgentResult> {
@@ -402,14 +394,8 @@ export class RadarStore {
     return r;
   }
 
-  openInsights(tab: 'changes' | 'shared'): void { this.insightsTab.set(tab); }
-  closeInsights(): void { this.insightsTab.set(null); }
-
-  /** Best effort: the changes are an extra, so a failure must never get in the way of the scan result. */
-  async loadChanges(): Promise<void> {
-    if (this.mode() === 'mock') { this.changes.set(null); return; }
-    try { this.changes.set(await this.api.changes()); } catch { this.changes.set(null); }
-  }
+  openInsights(): void { this.insightsOpen.set(true); }
+  closeInsights(): void { this.insightsOpen.set(false); }
 
   openQuality(): void { if (this.selected()?.quality?.files.length) this.qualityOpen.set(true); }
   closeQuality(): void { this.qualityOpen.set(false); }
@@ -459,7 +445,6 @@ export class RadarStore {
             this.applyResult(await this.api.latest(), true);
             this.settings.set(await this.api.settings());
             await this.loadGaps();
-            await this.loadChanges();
           } catch { /* the next full scan will catch up */ }
           resolve();
         };
@@ -571,6 +556,9 @@ export class RadarStore {
   async startScan(): Promise<void> {
     if (!this.canScan()) return;
     this.notice.set(null);
+    const r = this.result();
+    this.coverageBefore = r && !r.sample ? { root: r.scanRoot, avg: r.summary.avgCoverage } : null;
+    this.coverageToast.set(null);
     try {
       await this.attach(await this.api.startScan(this.aiTool()));
     } catch (e) {
@@ -610,8 +598,7 @@ export class RadarStore {
         this.applyResult(await this.api.latest());
         this.settings.set(await this.api.settings());
         await this.loadGaps();
-        await this.loadChanges();
-        this.announceChanges();
+        this.announceCoverage();
       } catch (e) {
         this.notice.set(this.messageOf(e, this.i18n.t('store.loadResultFailed')));
       }

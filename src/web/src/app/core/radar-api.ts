@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { I18n } from '../i18n/i18n';
 import { GapItem, Tool } from './commands';
-import { AgentDraft, CopyAgentResult, EnableProjectResult, FileContent, ScanChanges, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus } from './models';
+import { AgentDraft, CopyAgentResult, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus } from './models';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly body?: any) {
@@ -62,9 +62,6 @@ export class RadarApi {
     try { return await this.call<ScanResult>('GET', '/api/scan/latest'); }
     catch (e) { if (e instanceof ApiError && e.status === 404) return null; throw e; }
   }
-
-  /** null (204) while there is no earlier, different scan to compare with */
-  async changes(): Promise<ScanChanges | null> { return (await this.call<ScanChanges | null>('GET', '/api/scan/changes')) ?? null; }
 
   readFile(repo: string, path: string): Promise<FileContent> {
     return this.call('GET', `/api/file?repo=${encodeURIComponent(repo)}&path=${encodeURIComponent(path)}`);

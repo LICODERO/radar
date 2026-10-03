@@ -1,89 +1,30 @@
 <div class="backdrop" (click)="store.closeInsights()"></div>
 <div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('insights.aria')">
   <div class="head">
-    <div class="tabs" role="tablist">
-      <button class="m tabbtn" type="button" role="tab" [class.on]="tab() === 'changes'" [attr.aria-selected]="tab() === 'changes'" (click)="store.openInsights('changes')">{{ t('insights.tabChanges') }}</button>
-      <button class="m tabbtn" type="button" role="tab" [class.on]="tab() === 'shared'" [attr.aria-selected]="tab() === 'shared'" (click)="store.openInsights('shared')">{{ t('insights.tabShared') }}</button>
-    </div>
+    <div class="m title">{{ t('insights.title') }}</div>
     <button class="m btn-ghost x" type="button" [attr.aria-label]="t('insights.close')" (click)="store.closeInsights()">✕</button>
   </div>
 
   <div class="body">
-    @if (tab() === 'changes') {
-      @if (changes(); as c) {
-        <p class="intro">{{ t('insights.sinceIntro', { when: since() }) }}</p>
-        <div class="kpis">
-          <div class="kpi"><div class="m kl">{{ t('insights.avgCoverage') }}</div><div class="m kv" [class]="deltaCoverage()?.cls">{{ deltaCoverage()?.text }}</div></div>
-          @if (deltaQuality(); as q) {
-            <div class="kpi"><div class="m kl">{{ t('insights.avgQuality') }}</div><div class="m kv" [class]="q.cls">{{ q.text }}</div></div>
-          }
+    <p class="intro">{{ t('insights.sharedIntro') }}</p>
+    @for (s of shared(); track s.key) {
+      <div class="item" [class.drift]="s.drifted">
+        <div class="irow">
+          <span class="m iname" [class.agent]="s.kind === 'agent'" [class.skill]="s.kind === 'skill'">{{ s.kind === 'agent' ? '◆' : '●' }} {{ s.name }}</span>
+          <span class="m isum" [class.warn]="s.drifted">{{ s.summary }}</span>
         </div>
-
-        @if (fixed().length) {
-          <div class="m sec good">{{ t('insights.fixed', { n: c.fixed.length }) }}</div>
-          @for (f of fixed(); track f.key) {
-            <div class="find"><span class="m mark good" aria-hidden="true">✓</span><span class="txt"><span class="m repo">{{ f.repo }}</span> <span class="m path">{{ f.path }}</span><br />{{ f.text }}</span></div>
-          }
-          @if (fixedMore()) { <div class="m more">{{ t('insights.more', { n: fixedMore() }) }}</div> }
-        }
-        @if (introduced().length) {
-          <div class="m sec bad">{{ t('insights.introduced', { n: c.introduced.length }) }}</div>
-          @for (f of introduced(); track f.key) {
-            <div class="find"><span class="m mark bad" aria-hidden="true">▲</span><span class="txt"><span class="m repo">{{ f.repo }}</span> <span class="m path">{{ f.path }}</span><br />{{ f.text }}</span></div>
-          }
-          @if (introducedMore()) { <div class="m more">{{ t('insights.more', { n: introducedMore() }) }}</div> }
-        }
-        @if (changed().length) {
-          <div class="m sec">{{ t('insights.changedRepos', { n: c.changed.length }) }}</div>
-          @for (r of changed(); track r.key) {
-            <div class="crow">
-              <span class="m cname">{{ r.name }}</span>
-              <span class="m cvals" [class.up]="r.up === true" [class.down]="r.up === false">
-                {{ t('insights.coverageShort') }} {{ r.coverage }}@if (r.quality) { · {{ t('insights.qualityShort') }} {{ r.quality }} }@if (r.items) { · {{ r.items }} }
-              </span>
-            </div>
-          }
-          @if (changedMore()) { <div class="m more">{{ t('insights.more', { n: changedMore() }) }}</div> }
-        }
-        @if (c.newRepos.length) {
-          <div class="m sec">{{ t('insights.newRepos', { n: c.newRepos.length }) }}</div>
-          <div class="m list">{{ c.newRepos.join(', ') }}</div>
-        }
-        @if (c.removedRepos.length) {
-          <div class="m sec">{{ t('insights.removedRepos', { n: c.removedRepos.length }) }}</div>
-          <div class="m list">{{ c.removedRepos.join(', ') }}</div>
-        }
-      } @else {
-        <div class="m none">{{ t('insights.noHistory') }}</div>
-      }
-    } @else {
-      <p class="intro">{{ t('insights.sharedIntro') }}</p>
-      @for (s of shared(); track s.key) {
-        <div class="item" [class.drift]="s.drifted">
-          <div class="irow">
-            <span class="m iname" [class.agent]="s.kind === 'agent'" [class.skill]="s.kind === 'skill'">{{ s.kind === 'agent' ? '◆' : '●' }} {{ s.name }}</span>
-            <span class="m isum" [class.warn]="s.drifted">{{ s.summary }}</span>
+        @for (v of s.variants; track v.key) {
+          <div class="vrow">
+            <span class="m vlabel">{{ v.label }} · {{ v.count }}</span>
+            <span class="m vrepos">{{ v.repos }}</span>
+            <button class="m btn-ghost open" type="button" (click)="v.open()">{{ t('quality.open') }}</button>
           </div>
-          @for (v of s.variants; track v.key) {
-            <div class="vrow">
-              <span class="m vlabel">{{ v.label }} · {{ v.count }}</span>
-              <span class="m vrepos">{{ v.repos }}</span>
-              <button class="m btn-ghost open" type="button" (click)="v.open()">{{ t('quality.open') }}</button>
-            </div>
-          }
-          @if (s.missing) {
-            <div class="mrow">
-              <span class="m miss">{{ s.missing }}</span>
-              @if (s.copyCount > 0) {
-                <button class="m btn-ghost open copy" type="button" (click)="store.openCopyAgent(s.item)">{{ t('copy.open', { n: s.copyCount }) }}</button>
-              }
-            </div>
-          }
-        </div>
-      } @empty {
-        <div class="m none">{{ t('insights.noShared') }}</div>
-      }
-      @if (sharedMore()) { <div class="m more">{{ t('insights.more', { n: sharedMore() }) }}</div> }
+        }
+        @if (s.missing) { <div class="m miss">{{ s.missing }}</div> }
+      </div>
+    } @empty {
+      <div class="m none">{{ t('insights.noShared') }}</div>
     }
+    @if (sharedMore()) { <div class="m more">{{ t('insights.more', { n: sharedMore() }) }}</div> }
   </div>
 </div>

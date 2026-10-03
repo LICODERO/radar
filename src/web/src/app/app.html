@@ -39,11 +39,11 @@
         @if (store.file()) { <app-file-pane /> }
         @if (store.composerRepoId()) { <app-agent-composer /> }
         @if (store.hasInsights() && store.aiToolScanned()) {
-          <button class="m insights-btn" type="button" [attr.aria-label]="t('insights.open')" (click)="store.openInsights(store.changes() ? 'changes' : 'shared')">{{ insightsLabel() }}</button>
+          <button class="m insights-btn" type="button" [attr.aria-label]="t('insights.open')" (click)="store.openInsights()">{{ insightsLabel() }}</button>
         }
         <button class="m about-btn" type="button" [title]="t('about.open')" [attr.aria-label]="t('about.open')" (click)="store.openAbout()">{{ footer() }}</button>
         @if (store.gapsOpen()) { <app-gap-panel /> }
-        @if (store.changesToast() && !store.scan()) { <app-changes-toast /> }
+        @if (store.coverageToast() && !store.scan()) { <app-coverage-toast /> }
         @if (store.pendingRun()) { <app-run-confirm /> }
         @if (store.coverageInfoOpen()) { <app-coverage-info /> }
         @if (store.aboutOpen()) { <app-about-dialog /> }
@@ -52,8 +52,8 @@
         @if (store.gapsListOpen()) { <app-gaps-list-dialog /> }
         @if (store.kpiList()) { <app-kpi-list-dialog /> }
         @if (store.qualityOpen()) { <app-quality-dialog /> }
-        @if (store.insightsTab()) { <app-insights-dialog /> }
-        @if (store.copyAgentItem()) { <app-copy-agent-dialog /> }
+        @if (store.insightsOpen()) { <app-insights-dialog /> }
+        @if (store.copyAgentRef()) { <app-copy-agent-dialog /> }
         @if (store.vaultOpen()) { <app-vault-dialog /> }
         @if (store.projectRepoId()) { <app-project-dialog /> }
         @if (store.scan()) { <app-scan-overlay /> }

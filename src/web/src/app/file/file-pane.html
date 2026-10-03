@@ -10,6 +10,9 @@
 <div class="tabs">
   <button class="m tab" type="button" [class.on]="f().mode === 'preview'" (click)="store.setFileMode('preview')">{{ t('file.preview') }}</button>
   <button class="m tab" type="button" [class.on]="f().mode === 'source'" (click)="store.setFileMode('source')">{{ t('file.source') }}</button>
+  @if (canCopy()) {
+    <button class="m btn-ghost copy tip tip-b" type="button" [attr.data-tip]="t('file.copyAgentTip')" (click)="store.openCopyAgent(f().repoId, agent()!.name)">{{ t('file.copyAgent') }}</button>
+  }
   <div class="m ro">{{ t('file.readOnly') }}</div>
 </div>
 
