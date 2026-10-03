@@ -47,14 +47,14 @@
 @for (k of scene().skills; track k.key) {
   <button class="snode" type="button" [attr.aria-label]="k.label" (click)="pickSkill(k.repoId, k.name)"
           (mouseenter)="hoverSkill(k.repoId, k.name)" (mouseleave)="leave()" (focus)="hoverSkill(k.repoId, k.name)" (blur)="leave()"
-          [style.left.px]="k.left" [style.top.px]="k.top" [style.width.px]="k.hit" [style.height.px]="k.hit" [style.opacity]="k.op">
+          [style.left.px]="k.left" [style.top.px]="k.top" [style.width.px]="k.hit" [style.height.px]="k.hit" [style.opacity]="k.op" [style.pointer-events]="k.off ? 'none' : null" [attr.tabindex]="k.off ? -1 : null">
     <span [style.width.px]="k.sz" [style.height.px]="k.sz" [style.box-shadow]="'0 0 ' + k.glowPx + 'px #a99bff'"></span>
   </button>
 }
 @for (a of scene().agents; track a.key) {
   <button class="anode" type="button" [attr.aria-label]="a.label" (click)="pickAgent(a.repoId, a.name)"
           (mouseenter)="hoverAgent(a.repoId, a.name)" (mouseleave)="leave()" (focus)="hoverAgent(a.repoId, a.name)" (blur)="leave()"
-          [style.left.px]="a.left" [style.top.px]="a.top" [style.width.px]="a.hit" [style.height.px]="a.hit" [style.opacity]="a.op">
+          [style.left.px]="a.left" [style.top.px]="a.top" [style.width.px]="a.hit" [style.height.px]="a.hit" [style.opacity]="a.op" [style.pointer-events]="a.off ? 'none' : null" [attr.tabindex]="a.off ? -1 : null">
     <span [style.width.px]="a.sz" [style.height.px]="a.sz" [style.box-shadow]="'0 0 ' + a.glowPx + 'px #c6ff3d'"></span>
   </button>
 }
@@ -63,7 +63,7 @@
           (mouseenter)="hoverWf(w.id)" (mouseleave)="leave()" (focus)="hoverWf(w.id)" (blur)="leave()"
           [style.left.px]="w.left" [style.top.px]="w.top" [style.width.px]="w.size" [style.height.px]="w.size"
           [style.border-color]="w.color" [style.color]="w.color" [style.box-shadow]="'0 0 ' + w.glowPx + 'px ' + w.color"
-          [style.font-size]="w.size >= 24 ? null : '0'">{{ w.id }}</button>
+          [style.font-size]="w.size >= 24 ? null : '0'" [style.opacity]="w.off ? 0 : null" [style.pointer-events]="w.off ? 'none' : null" [attr.tabindex]="w.off ? -1 : null">{{ w.id }}</button>
 }
 
 @if (scene().halo; as h) {
@@ -81,7 +81,7 @@
           [style.left.px]="n.left" [style.top.px]="n.top" [style.width.px]="n.size" [style.height.px]="n.size"
           [style.border]="'1px ' + (n.dashed ? 'dashed ' : 'solid ') + n.color" [style.color]="n.color"
           [style.box-shadow]="'0 0 ' + n.glowPx + 'px ' + n.glow" [style.opacity]="n.op"
-          [style.font-size]="n.labels ? null : '0'">{{ n.initials }}</button>
+          [style.font-size]="n.labels ? null : '0'" [style.pointer-events]="n.off ? 'none' : null" [attr.tabindex]="n.off ? -1 : null">{{ n.initials }}</button>
 }
 
 @if (scene().tip; as t) {

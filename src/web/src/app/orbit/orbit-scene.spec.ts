@@ -50,7 +50,41 @@ describe('buildScene', () => {
   });
 
   it('adds empty slots for missing agents and skills', () => {
-    expect(buildScene(base).slots).toHaveLength(1 + 2 + 1 - 1); // beta: skills; gamma: agents + skills
+    expect(buildScene({ ...base, selId: null }).slots).toHaveLength(1 + 2 + 1 - 1); // beta: skills; gamma: agents + skills
+  });
+
+  describe('with a repo selected', () => {
+    it('fades out other repos, their elements, unrelated workflows, spokes and slots', () => {
+      const s = buildScene({ ...base, selId: 'gamma' });
+      expect(s.repos.filter((r) => !r.off).map((r) => r.id)).toEqual(['gamma']);
+      expect(s.agents.every((a) => a.off && a.op === 0)).toBe(true);
+      expect(s.skills.every((k) => k.off)).toBe(true);
+      expect(s.wfs.every((w) => w.off)).toBe(true);
+      expect(s.spokes).toHaveLength(1);
+      expect(s.slots).toHaveLength(2);
+    });
+
+    it('keeps the selected repo, its workflows and the repos related to a pick', () => {
+      const s = buildScene({ ...base, pick: { kind: 'a', repoId: 'alpha', name: 'a1' } });
+      expect(s.repos.filter((r) => !r.off).map((r) => r.id)).toEqual(['alpha', 'beta']);
+      expect(s.agents.filter((a) => !a.off).map((a) => a.key)).toEqual(['aalphaa1', 'aalphaa2', 'abetaa1']);
+      expect(s.wfs.map((w) => w.off)).toEqual([false, true]);
+    });
+
+    it('grows the picked element and greys out the other elements of the repo', () => {
+      const s = buildScene({ ...base, pick: { kind: 'a', repoId: 'alpha', name: 'a1' } });
+      const a1 = s.agents.find((a) => a.key === 'aalphaa1')!;
+      const a2 = s.agents.find((a) => a.key === 'aalphaa2')!;
+      expect(a1.sz).toBeGreaterThan(a2.sz);
+      expect(a1.op).toBe(1);
+      expect(a2.op).toBeLessThan(0.4);
+      expect(s.skills[0].op).toBeLessThan(0.4);
+    });
+
+    it('hides nothing while no repo is selected', () => {
+      const s = buildScene({ ...base, selId: null });
+      expect([...s.repos, ...s.agents, ...s.skills, ...s.wfs].some((n) => n.off)).toBe(false);
+    });
   });
 
   it('lights up workflows of the selected repo', () => {

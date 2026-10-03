@@ -8,6 +8,7 @@ import { PopFile, Popover } from './orbit-scene';
 @Component({
   selector: 'app-orbit',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '(click)': 'backgroundClick($event)' },
   templateUrl: './orbit.html',
   styleUrl: './orbit.scss'
 })
@@ -54,6 +55,12 @@ export class Orbit {
 
   protected dragEnd(e: PointerEvent): void {
     if (this.drag?.id === e.pointerId) this.drag = null;
+  }
+
+  /** a click on the empty orbit, outside the highlighted nodes and the popover, leaves the focused view */
+  protected backgroundClick(e: MouseEvent): void {
+    if ((e.target as HTMLElement).closest('button, .pop')) return;
+    if (this.store.selId() || this.store.pick()) this.store.clearSelection();
   }
 
   protected pickAgent(repoId: string, name: string): void { this.store.pickItem({ kind: 'a', repoId, name }); }

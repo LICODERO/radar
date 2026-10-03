@@ -30,6 +30,7 @@ export interface RepoNode {
   glow: string;
   glowPx: number;
   op: number;
+  off: boolean;
   label: string;
 }
 export interface ElementNode {
@@ -41,6 +42,7 @@ export interface ElementNode {
   hit: number;
   sz: number;
   op: number;
+  off: boolean;
   glowPx: number;
   label: string;
 }
@@ -51,6 +53,7 @@ export interface WfNode {
   size: number;
   color: string;
   glowPx: number;
+  off: boolean;
   label: string;
 }
 export interface SceneLine extends LineGeom {
@@ -139,6 +142,8 @@ export function buildScene(inp: SceneInput): Scene {
     return names.some((x) => x.toLowerCase() === name.toLowerCase());
   };
 
+  // with a repo selected, everything that is not connected to it (and to the current pick) fades out so nothing overlaps
+  const focus = sel >= 0;
   const spokes: LineGeom[] = [];
   const slots: { left: number; top: number }[] = [];
   const agents: ElementNode[] = [];
@@ -147,7 +152,7 @@ export function buildScene(inp: SceneInput): Scene {
   repos.forEach((r, i) => {
     const isSel = i === sel;
     const ang = rl.angleOf(i);
-    if (detailed) spokes.push(lineBetween(polar(66, ang), polar(330, ang)));
+    if (detailed && (!focus || isSel)) spokes.push(lineBetween(polar(66, ang), polar(330, ang)));
     const dim = matches && !matches.has(r.id) ? 0.4 : 1;
 
     const place = (
@@ -165,13 +170,18 @@ export function buildScene(inp: SceneInput): Scene {
         const used = wfUses(kind, r.id, it.name);
         const on = isSel || used || (pick && pick.kind === kind && pick.name === it.name);
         const hot = isP(kind, r.id, it.name) || isH(kind, r.id, it.name);
-        const hit = isSel ? hitSel : dense ? hitDense : hitNorm;
+        const off = focus && !on;
+        const picked = isP(kind, r.id, it.name);
+        // a picked agent or skill grows; the rest of the view is greyed out so the picked one stands out
+        const grey = !!pick && pick.kind !== 'w' && !picked && !(pick.kind === kind && pick.name === it.name);
+        const sz = (isSel ? sizes.sel : dense ? sizes.dense : sizes.norm) * (picked ? 1.5 : 1);
+        const hit = Math.max(isSel ? hitSel : dense ? hitDense : hitNorm, picked ? sz + 6 : 0);
         const node: ElementNode = {
           key: kind + r.id + it.name, repoId: r.id, name: it.name,
           left: q[0] - hit / 2, top: q[1] - hit / 2, hit,
-          sz: isSel ? sizes.sel : dense ? sizes.dense : sizes.norm,
-          op: (on ? 1 : 0.4) * dim,
-          glowPx: hot ? (kind === 'a' ? 18 : 16) : used ? 10 : isSel ? (kind === 'a' ? 8 : 6) : 0,
+          sz,
+          op: off ? 0 : (grey ? 0.25 : on ? 1 : 0.4) * dim, off,
+          glowPx: picked ? 24 : hot ? (kind === 'a' ? 18 : 16) : used ? 10 : isSel ? (kind === 'a' ? 8 : 6) : 0,
           label: (kind === 'a' ? 'Agent ' : 'Skill ') + it.name + ' · ' + r.name
         };
         (kind === 'a' ? agents : skills).push(node);
@@ -180,7 +190,7 @@ export function buildScene(inp: SceneInput): Scene {
     place(r.agents, 'a', R2, 5, 3, 8, { sel: 11, norm: 9, dense: 5 }, 18, 6, 14);
     place(r.skills, 's', R3, 2.3, 1.6, 3.4, { sel: 7, norm: 5, dense: 3 }, 14, 5, 10);
 
-    if (detailed) {
+    if (detailed && (!focus || isSel)) {
       if (r.agents.length === 0) { const q = polar(R2, ang); slots.push({ left: q[0] - 5.5, top: q[1] - 5.5 }); }
       if (r.skills.length === 0) { const q = polar(R3, ang); slots.push({ left: q[0] - 5.5, top: q[1] - 5.5 }); }
     }
@@ -192,9 +202,10 @@ export function buildScene(inp: SceneInput): Scene {
     centers.set('w' + w.id, q);
     const lit = (!empty && w.repos.some((x) => x.repoId === selRepo?.id)) || isP('w', undefined, w.id);
     const hot = isP('w', undefined, w.id) || isH('w', undefined, w.id);
+    const off = focus && !lit;
     return {
       id: w.id, left: q[0] - wl.size / 2, top: q[1] - wl.size / 2, size: wl.size,
-      color: lit ? COLOR.workflow : COLOR.workflowDim, glowPx: hot ? 16 : lit ? 8 : 0, label: t('orbit.workflowLabel', { name: w.name })
+      color: lit ? COLOR.workflow : COLOR.workflowDim, glowPx: hot ? 16 : lit ? 8 : 0, off, label: t('orbit.workflowLabel', { name: w.name })
     };
   });
 
@@ -236,6 +247,7 @@ export function buildScene(inp: SceneInput): Scene {
     const isSel = i === sel;
     const hov = isH('r', undefined, r.id);
     const matched = !matches || matches.has(r.id);
+    const off = focus && !isSel && !rel.has(r.id);
     const lit = (!pick || isSel || rel.has(r.id)) && matched;
     return {
       id: r.id, initials: r.initials, labels: rl.labels,
@@ -243,7 +255,7 @@ export function buildScene(inp: SceneInput): Scene {
       color: coverageColor(r.coverage.score), dashed: !r.claudeMd.exists,
       glow: r.claudeMd.exists ? 'rgba(198,255,61,.6)' : 'rgba(255,79,163,.7)',
       glowPx: isSel || hov ? 16 : pick && rel.has(r.id) ? 14 : 3,
-      op: lit ? 1 : matched ? 0.3 : 0.15,
+      op: off ? 0 : lit ? 1 : matched ? 0.3 : 0.15, off,
       label: t('orbit.repoLabel', { name: r.name, score: r.coverage.score })
     };
   });
