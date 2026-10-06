@@ -24,7 +24,7 @@
           }
         </div>
       }
-      <div class="m sum"><span>{{ t('info.total') }}</span><span>100</span></div>
+      <div class="m sum"><span>{{ t('info.total') }}</span><span>{{ earnedTotal() ?? '–' }}/{{ maxScore }}</span></div>
     </div>
 
     <ul class="notes">

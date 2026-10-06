@@ -21,7 +21,15 @@ export class CoverageInfo {
   protected readonly avg = computed(() => this.store.result()?.summary.avgCoverage ?? 0);
   protected readonly repo = this.store.selected;
 
-  /** the four scoring parts; when a repo is selected, also what it earned */
+  /** the most a repo can earn */
+  protected readonly maxScore = COVERAGE_PARTS.reduce((n, p) => n + COVERAGE_WEIGHTS[p], 0);
+  /** what the selected repo really earned, or null when no repo is selected (the table only explains the scoring then) */
+  protected readonly earnedTotal = computed(() => {
+    const parts = this.repo()?.coverage.parts;
+    return parts ? COVERAGE_PARTS.reduce((n, p) => n + parts[p], 0) : null;
+  });
+
+  /** the scoring parts; when a repo is selected, also what it earned */
   protected readonly rows = computed(() => {
     const parts = this.repo()?.coverage.parts;
     return COVERAGE_PARTS.map((p: CoveragePart) => ({
