@@ -26,26 +26,22 @@
 .etext { font-size: fs(10); line-height: 1.5; color: $muted; margin-top: 6px; }
 .ch { display: flex; justify-content: space-between; align-items: center; }
 .cl { font-size: fs(10); letter-spacing: .08em; color: $lime; }
-.cm { font-size: fs(10); color: $muted; }
+.cm { display: flex; align-items: center; gap: 10px; font-size: fs(10); color: $muted; }
 .cname { font-size: fs(22); font-weight: 600; color: #fff; margin-top: 6px; word-break: break-word; }
 .flags { font-size: fs(10); margin-top: 2px; }
-.qbar { display: block; width: 100%; background: transparent; border: 0; padding: 0; margin-top: 8px; text-align: left; cursor: pointer; }
-.qbar::after { max-width: 230px; }
-.qtop { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 4px; font-size: fs(10); letter-spacing: .04em; }
-.ql { color: $muted; }
-.qtrack { display: block; height: 4px; background: #ffffff1a; }
-.qfill { display: block; height: 100%; }
-.qbar:hover .qfill, .qbar:focus-visible .qfill { filter: brightness(1.25); }
-.qbar:focus-visible { outline: 1px solid #ffffff55; outline-offset: 3px; }
+.qchip { display: inline-flex; align-items: center; gap: 4px; background: transparent; border: 0; padding: 0; font: inherit; cursor: pointer; }
+.qchip::after { max-width: 230px; }
+.qchip svg { width: 14px; height: 14px; fill: currentColor; }
+.qchip:hover, .qchip:focus-visible { text-decoration: underline; outline: none; }
 .sb { font-size: fs(10); color: $muted; margin-top: 4px; }
 .sb.on { color: $amber; }
-.openrow { display: flex; gap: 8px; align-items: stretch; }
-.loc { flex: none; width: 34px; margin-top: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid #c6ff3d88; cursor: pointer; }
-.loc::after { max-width: 230px; }
-.loc svg { width: 16px; height: 16px; fill: $lime; }
-.loc:hover:not(:disabled), .loc:focus-visible { background: #c6ff3d1a; outline: none; }
-.loc:disabled { opacity: .5; cursor: default; }
-.open { margin-top: 10px; background: transparent; border: 1px solid #c6ff3d88; color: $lime; font-size: fs(10); letter-spacing: .12em; padding: 6px 10px; cursor: pointer; }
+.openrow { display: flex; gap: 8px; align-items: stretch; height: 34px; margin-top: 10px; }
+.openrow .ib { margin-top: 0; }
+.ib { flex: none; width: 34px; margin-top: 10px; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid #c6ff3d88; cursor: pointer; }
+.ib::after { max-width: 230px; }
+.ib svg { width: 16px; height: 16px; fill: $lime; }
+.ib:hover:not(:disabled), .ib:focus-visible { background: #c6ff3d1a; outline: none; }
+.ib:disabled { opacity: .5; cursor: default; }
 .sec { font-size: fs(9); letter-spacing: .08em; color: $muted; margin-top: 14px; margin-bottom: 6px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chipx { background: transparent; font-size: fs(10); padding: 3px 7px; cursor: pointer; }

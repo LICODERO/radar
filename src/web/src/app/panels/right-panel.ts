@@ -55,6 +55,7 @@ export class RightPanel {
       ? this.t('right.quality', { score: q.score, n: q.findings.length })
       : this.t('right.qualityClean', { score: q.score });
   });
+  protected readonly qualityTip = computed(() => `${this.t('right.qualityLabel')} ${this.qualityText()}. ${this.t('right.qualityTip')}`);
   protected readonly flags = computed(() => {
     const s = this.sel();
     if (!s) return '';
