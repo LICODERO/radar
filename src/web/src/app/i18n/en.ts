@@ -63,6 +63,7 @@ export const EN: Record<MsgKey, Message> = {
   'right.noSkills': 'no skills',
   'right.noWorkflows': 'no workflows',
   'right.flags': 'CLAUDE.md {claude} · {agents} · {skills}',
+  'right.createClaudeTip': 'No CLAUDE.md: click to create it. I will ask for confirmation first.',
   'right.missing': '✕ MISSING',
   'right.agentsCount': { one: '{n} agent', other: '{n} agents' },
   'right.skillsCount': { one: '{n} skill', other: '{n} skills' },

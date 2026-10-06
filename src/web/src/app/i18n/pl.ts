@@ -65,6 +65,7 @@ export const PL = {
   'right.noSkills': 'brak skilli',
   'right.noWorkflows': 'brak workflowów',
   'right.flags': 'CLAUDE.md {claude} · {agents} · {skills}',
+  'right.createClaudeTip': 'Brak CLAUDE.md: kliknij, żeby go utworzyć. Zapytam o potwierdzenie.',
   'right.missing': '✕ BRAK',
   'right.agentsCount': { one: '{n} agent', few: '{n} agentów', many: '{n} agentów', other: '{n} agentów' },
   'right.skillsCount': { one: '{n} skill', few: '{n} skille', many: '{n} skilli', other: '{n} skilli' },

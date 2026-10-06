@@ -8,7 +8,9 @@
 @if (sel(); as s) {
   <div class="card">
     <div class="ch"><div class="m cl">{{ t('right.selected', { initials: s.initials }) }}</div><div class="m cm">
-        <span>{{ s.coverage.score }}%</span>
+        <button class="hb tip tip-r" type="button" [disabled]="isMock()" [attr.aria-label]="t('right.local')" [attr.data-tip]="t('right.localTip')" (click)="store.openLocalFile()">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h11v2H3v-2zm0-2h11V6H3v2zm0 8h7v-2H3v2zm15.01-3.13l.71-.71c.39-.39 1.02-.39 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-.71.71-2.12-2.12zm-.71.71l-5.3 5.3V21h2.12l5.3-5.3-2.12-2.13z" /></svg>
+        </button>
         @if (s.quality?.score != null) {
           <button class="qchip tip tip-r" type="button" [style.color]="qualityColor()" [attr.aria-label]="t('right.qualityLabel') + ' ' + s.quality?.score + '%'" [attr.data-tip]="qualityTip()" (click)="store.openQuality()">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" /></svg>{{ s.quality?.score }}%
@@ -16,20 +18,13 @@
         }
       </div></div>
     <div class="cname">{{ s.name }}</div>
-    <div class="m flags" [style.color]="s.claudeMd.exists ? '#a99bff' : '#ff4fa3'">{{ flags() }}</div>
+    <div class="m flags" [style.color]="s.claudeMd.exists ? '#a99bff' : '#ff4fa3'">
+      <button class="clink tip tip-l" type="button" [disabled]="!s.claudeMd.exists && isMock()" [attr.data-tip]="s.claudeMd.exists ? t('right.openClaude') : t('right.createClaudeTip')"
+              (click)="s.claudeMd.exists ? store.openFile(s.id, s.claudeMd.path, 'CLAUDE.md', '#c6ff3d') : store.createClaudeMd(s.id)">CLAUDE.md</button>{{ flagsRest() }}
+    </div>
     @if (store.vaultReady()) {
       <div class="m sb" [class.on]="store.selectedHasVault()">{{ store.selectedHasVault() ? t('right.sbOn') : t('right.sbOff') }}</div>
     }
-    <div class="openrow">
-      @if (s.claudeMd.exists) {
-        <button class="ib tip tip-l" type="button" [attr.aria-label]="t('right.openClaude')" [attr.data-tip]="t('right.openClaude')" (click)="store.openFile(s.id, s.claudeMd.path, 'CLAUDE.md', '#c6ff3d')">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" /></svg>
-        </button>
-      }
-      <button class="ib tip tip-l" type="button" [disabled]="isMock()" [attr.aria-label]="t('right.local')" [attr.data-tip]="t('right.localTip')" (click)="store.openLocalFile()">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h11v2H3v-2zm0-2h11V6H3v2zm0 8h7v-2H3v2zm15.01-3.13l.71-.71c.39-.39 1.02-.39 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-.71.71-2.12-2.12zm-.71.71l-5.3 5.3V21h2.12l5.3-5.3-2.12-2.13z" /></svg>
-      </button>
-    </div>
 
     <div class="m sec">{{ t('right.agents', { n: s.agents.length }) }}</div>
     <div class="chips">

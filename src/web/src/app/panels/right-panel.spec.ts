@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ScanResult } from '../core/models';
 import { RadarStore } from '../core/radar-store';
 import { I18n } from '../i18n/i18n';
@@ -24,36 +24,55 @@ function open(r: ReturnType<typeof repo>) {
 }
 
 describe('RightPanel selected-repo card', () => {
-  it('shows the coverage and a clickable quality chip instead of the stack name', () => {
+  it('shows the local instructions button and a clickable quality chip, without the stack name or the coverage text', () => {
     const { store, el } = open(repo({ score: 78, findings: [{ path: 'CLAUDE.md', code: 'x', severity: 'warning' }], files: [{ path: 'CLAUDE.md', kind: 'claude-md', score: 78 }] } as never));
     const head = el.querySelector('.cm')!;
     expect(head.textContent).not.toContain('.NET');
-    expect(head.textContent?.replace(/\s+/g, '')).toBe('85%78%');
+    expect(head.textContent?.replace(/\s+/g, '')).toBe('78%');
     const chip = el.querySelector<HTMLButtonElement>('.qchip')!;
     expect(chip.querySelector('svg')).not.toBeNull();
     expect(chip.getAttribute('data-tip')).toContain('FILE QUALITY 78% · 1');
     chip.click();
     expect(store.qualityOpen()).toBe(true);
+    expect(el.querySelector('.qtrack, [role=progressbar], .openrow')).toBeNull();
   });
 
-  it('has no quality chip and no progress bar when there is nothing to rate', () => {
+  it('has no quality chip when there is nothing to rate', () => {
     const { el } = open(repo({ score: null, findings: [] }));
     expect(el.querySelector('.qchip')).toBeNull();
-    expect(el.querySelector('.qtrack, [role=progressbar]')).toBeNull();
+    expect(el.querySelector('.hb')).not.toBeNull();
   });
 
-  it('opens CLAUDE.md and the local instructions from icon buttons', () => {
+  it('opens the local instructions from the icon button in the header', () => {
     const { store, el } = open(repo({ score: 90, findings: [] }));
-    const [claude, local] = Array.from(el.querySelectorAll<HTMLButtonElement>('.openrow .ib'));
-    expect(claude.getAttribute('aria-label')).toBe('OPEN CLAUDE.md');
-    expect(claude.textContent?.trim()).toBe('');
-    expect(local.getAttribute('aria-label')).toBe('LOCAL INSTRUCTIONS');
-    local.click();
+    const btn = el.querySelector<HTMLButtonElement>('.cm .hb')!;
+    expect(btn.getAttribute('aria-label')).toBe('LOCAL INSTRUCTIONS');
+    expect(btn.textContent?.trim()).toBe('');
+    btn.click();
     expect(store.localFileRepoId()).toBe('app');
   });
 
-  it('offers only the local instructions when there is no CLAUDE.md', () => {
-    const { el } = open(repo({ score: null, findings: [] }, false));
-    expect(el.querySelectorAll('.openrow .ib').length).toBe(1);
+  it('makes CLAUDE.md a violet link that opens the file', () => {
+    const { store, el } = open(repo({ score: 90, findings: [] }));
+    const flags = el.querySelector<HTMLElement>('.flags')!;
+    const link = flags.querySelector<HTMLButtonElement>('.clink')!;
+    expect(link.textContent?.trim()).toBe('CLAUDE.md');
+    expect(flags.style.color).toBe('rgb(169, 155, 255)');
+    expect(flags.textContent).toContain('✓');
+    const openFile = vi.spyOn(store, 'openFile').mockResolvedValue();
+    link.click();
+    expect(openFile).toHaveBeenCalledWith('app', 'CLAUDE.md', 'CLAUDE.md', '#c6ff3d');
+  });
+
+  it('makes a missing CLAUDE.md a red link that starts the creation flow', () => {
+    const { store, el } = open(repo({ score: null, findings: [] }, false));
+    const flags = el.querySelector<HTMLElement>('.flags')!;
+    expect(flags.style.color).toBe('rgb(255, 79, 163)');
+    expect(flags.textContent).toContain('MISSING');
+    const create = vi.spyOn(store, 'createClaudeMd').mockResolvedValue();
+    const link = flags.querySelector<HTMLButtonElement>('.clink')!;
+    expect(link.getAttribute('data-tip')).toContain('click to create it');
+    link.click();
+    expect(create).toHaveBeenCalledWith('app');
   });
 });
