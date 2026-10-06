@@ -5,9 +5,9 @@
 .public { color: $muted; border-color: #ffffff33; }
 .private { color: $white; border-color: #e6e9f299; background: #e6e9f214; }
 .untracked { color: $muted; border-color: #ffffff55; border-style: dashed; }
-.ico { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; box-sizing: border-box; border: 1px solid; cursor: default; }
-.ico svg { width: 16px; height: 16px; fill: currentColor; }
-.ico.public { color: $muted; border-color: #ffffff33; }
-.ico.private { color: $white; border-color: #e6e9f299; background: #e6e9f214; }
-.ico.untracked { color: $muted; border-color: #ffffff55; border-style: dashed; }
+.ico { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; box-sizing: border-box; cursor: default; }
+.ico svg { width: 13px; height: 13px; fill: currentColor; }
+.ico.public { color: $muted; }
+.ico.private { color: $white; }
+.ico.untracked { color: $muted; }
 :host-context(.vis-btn) .tag { cursor: pointer; }
