@@ -100,6 +100,8 @@ function qualityOf(i, has, ag, sk) {
   return { score: Math.round(scored.reduce((a, f) => a + f.score, 0) / scored.length), files: scored, findings };
 }
 
+// mostly committed, some kept private, a few not decided yet (so every tag shows up in the sample data)
+const visOf = (i, name) => { const n = (i + name.length) % 7; return n === 0 ? 'private' : n === 3 ? 'untracked' : 'public'; };
 const partsOf = (has, ag, sk) => ({ claudeMd: has ? 40 : 0, agents: ag ? 30 : 0, skills: sk ? 30 : 0 });
 const scoreOf = (p) => p.claudeMd + p.agents + p.skills;
 
@@ -115,8 +117,8 @@ function build(raw, wfs, sample) {
     return {
       id: name, name, path: name, initials, stack, stacks: [stack],
       claudeMd: { exists: !!has, path: 'CLAUDE.md' },
-      agents: ag.map((a) => ({ name: a, description: AGENTS[a][0], tools: AGENTS[a][1], model: null, path: `.claude/agents/${a}.md` })),
-      skills: sk.map((s) => ({ name: s, description: SKILLS[s], path: `.claude/skills/${s}/SKILL.md` })),
+      agents: ag.map((a) => ({ name: a, description: AGENTS[a][0], tools: AGENTS[a][1], model: null, path: `.claude/agents/${a}.md`, visibility: visOf(i, a) })),
+      skills: sk.map((s) => ({ name: s, description: SKILLS[s], path: `.claude/skills/${s}/SKILL.md`, visibility: visOf(i, s) })),
       coverage: { score: scoreOf(parts), parts },
       gaps,
       quality
@@ -124,7 +126,7 @@ function build(raw, wfs, sample) {
   });
   const workflows = wfs.map(([name, mem, agents, when, description], k) => ({
     id: `W${k + 1}`, name, description, when, agents,
-    repos: mem.filter((i) => repos[i]).map((i) => ({ repoId: repos[i].id, path: `.claude/workflows/${name}.md`, linked: (i + k) % 5 !== 0 })),
+    repos: mem.filter((i) => repos[i]).map((i) => ({ repoId: repos[i].id, path: `.claude/workflows/${name}.md`, linked: (i + k) % 5 !== 0, visibility: visOf(i, name) })),
     issues: []
   }));
   // agents/skills with the same name in several repos; a few get a different "content" so the drift view has something to show

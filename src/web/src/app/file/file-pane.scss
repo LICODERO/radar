@@ -12,6 +12,7 @@
 .badge { border: 1px solid; font-size: fs(10); font-weight: 600; padding: 4px 6px; letter-spacing: .1em; }
 .ttl { flex-grow: 1; min-width: 0; }
 .kind { font-size: fs(9); letter-spacing: .2em; }
+.vis { margin-left: 8px; letter-spacing: normal; }
 .path { font-size: fs(12); color: $text; word-break: break-all; margin-top: 2px; }
 .x { background: transparent; border: 1px solid #ffffff33; color: $white; width: 26px; height: 26px; font-size: fs(12); cursor: pointer; padding: 0; }
 

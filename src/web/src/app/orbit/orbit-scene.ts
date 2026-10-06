@@ -1,5 +1,5 @@
 import { COLOR, coverageColor } from '../core/palette';
-import { Hover, Pick, RepoInfo, WorkflowInfo } from '../core/models';
+import { Hover, Pick, RepoInfo, Visibility, WorkflowInfo } from '../core/models';
 import { Lang, translate } from '../i18n/i18n';
 import {
   LineGeom, Pt, R1, R2, R3, R4, REPO_START_DEG, WF_START_DEG,
@@ -71,6 +71,8 @@ export interface PopFile {
 }
 export interface Popover {
   file: PopFile | null;
+  /** git's view of the item (the open copy for a workflow) */
+  visibility?: Visibility | null;
   left: number;
   top: number;
   color: string;
@@ -297,19 +299,19 @@ export function buildScene(inp: SceneInput): Scene {
       const repo = repos[idx.get(pick.repoId ?? '') ?? -1];
       if (pick.kind === 'a') {
         const a = repo?.agents.find((x) => x.name === pick.name);
-        pop = { ...base, file: a && repo ? { repoId: repo.id, path: a.path, kind: t('orbit.kindAgent'), color: '#c6ff3d' } : null,
+        pop = { ...base, file: a && repo ? { repoId: repo.id, path: a.path, kind: t('orbit.kindAgent'), color: '#c6ff3d' } : null, visibility: a?.visibility,
           kind: t('orbit.kindAgent'), color: '#c6ff3d', title: pick.name, desc: a?.description ?? '',
           rows: [{ k: t('orbit.rowPath'), v: `${repo?.path}/${a?.path}` }, { k: t('orbit.rowTools'), v: a?.tools.join(' · ') || '—' }, { k: t('orbit.rowUsedIn'), v: usedTxt }] };
       } else if (pick.kind === 's') {
         const s = repo?.skills.find((x) => x.name === pick.name);
-        pop = { ...base, file: s && repo ? { repoId: repo.id, path: s.path, kind: t('orbit.kindSkill'), color: '#a99bff' } : null,
+        pop = { ...base, file: s && repo ? { repoId: repo.id, path: s.path, kind: t('orbit.kindSkill'), color: '#a99bff' } : null, visibility: s?.visibility,
           kind: t('orbit.kindSkill'), color: '#a99bff', title: pick.name, desc: s?.description ?? '',
           rows: [{ k: t('orbit.rowPath'), v: `${repo?.path}/${s?.path}` }, { k: t('orbit.rowUsedIn'), v: usedTxt }] };
       } else {
         const w = workflows.find((x) => x.id === pick.name);
         // open the copy from the selected repo when it has one, otherwise the first repo that does
         const ref = w?.repos.find((x) => x.repoId === selRepo?.id) ?? w?.repos[0];
-        if (w) pop = { ...base, file: ref ? { repoId: ref.repoId, path: ref.path, kind: t('orbit.kindWorkflow') + ' ' + w.id, color: COLOR.workflow } : null,
+        if (w) pop = { ...base, file: ref ? { repoId: ref.repoId, path: ref.path, kind: t('orbit.kindWorkflow') + ' ' + w.id, color: COLOR.workflow } : null, visibility: ref?.visibility,
           kind: t('orbit.kindWorkflow') + ' ' + w.id, color: COLOR.workflow, title: w.name, desc: w.description,
           rows: [{ k: t('orbit.rowWhen'), v: w.when || '—' }, { k: t('orbit.rowSteps'), v: w.agents.length ? w.agents.join(' → ') : t('orbit.noAgentsWf') },
             ...(w.skills?.length ? [{ k: t('orbit.rowSkills'), v: w.skills.join(' · ') }] : []),

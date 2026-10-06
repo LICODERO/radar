@@ -101,6 +101,12 @@ describe('buildScene', () => {
     expect(s.pop?.rows.find((r) => r.k === 'ŚCIEŻKA')!.v).toBe('alpha/.claude/agents/a1.md');
   });
 
+  it('carries the git visibility of a picked agent into the popover', () => {
+    const repos = base.repos.map((r) => (r.id === 'alpha' ? { ...r, agents: r.agents.map((a) => (a.name === 'a1' ? { ...a, visibility: 'private' as const } : a)) } : r));
+    expect(buildScene({ ...base, repos, pick: { kind: 'a', repoId: 'alpha', name: 'a1' } }).pop?.visibility).toBe('private');
+    expect(buildScene({ ...base, pick: { kind: 'a', repoId: 'alpha', name: 'a1' } }).pop?.visibility).toBeUndefined();
+  });
+
   it('describes a workflow without agents as a plain procedure', () => {
     const s = buildScene({ ...base, pick: { kind: 'w', name: 'W1' } });
     expect(s.pop?.rows.find((r) => r.k === 'KROKI')!.v).toContain('bez agentów');

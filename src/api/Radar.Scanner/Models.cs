@@ -9,10 +9,11 @@ public static class GapTypes
     public const string WeakFiles = "weak-files";
 }
 
+/// <param name="Visibility">one of <see cref="Visibilities"/>; null when the scan did not check git</param>
 /// <param name="Hash">short hash of the file content (line endings and outer blanks ignored), to tell copies of the same agent apart across repos</param>
-public sealed record AgentInfo(string Name, string Description, IReadOnlyList<string> Tools, string? Model, string Path, string? Hash = null);
+public sealed record AgentInfo(string Name, string Description, IReadOnlyList<string> Tools, string? Model, string Path, string? Hash = null, string? Visibility = null);
 
-public sealed record SkillInfo(string Name, string Description, string Path, string? Hash = null);
+public sealed record SkillInfo(string Name, string Description, string Path, string? Hash = null, string? Visibility = null);
 
 public sealed record ClaudeMdInfo(bool Exists, string Path);
 
@@ -60,7 +61,7 @@ public sealed record RepoInfo(
 
 /// <param name="Agents">agents this repo's copy of the workflow names (they are elements of that same repo)</param>
 /// <param name="Skills">skills this repo's copy of the workflow names</param>
-public sealed record WorkflowRepoRef(string RepoId, string Path, bool Linked, IReadOnlyList<string> Agents, IReadOnlyList<string> Skills);
+public sealed record WorkflowRepoRef(string RepoId, string Path, bool Linked, IReadOnlyList<string> Agents, IReadOnlyList<string> Skills, string? Visibility = null);
 
 public sealed record WorkflowInfo(
     string Id,

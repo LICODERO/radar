@@ -67,4 +67,13 @@ describe('ItemsDialog', () => {
     store.openItems('a');
     expect(store.itemsKind()).toBeNull();
   });
+
+  it('tags each agent with its git visibility, and nothing for scans that predate it', async () => {
+    const { el, store, fixture } = await open('a');
+    expect(el.querySelector('.tag')).toBeNull();
+    store.result.set({ repos: [{ ...repo, agents: [{ ...agents[0], visibility: 'private' }, { ...agents[1], visibility: 'public' }] }], workflows, gaps: [] } as unknown as ScanResult);
+    fixture.detectChanges();
+    const tags = Array.from(el.querySelectorAll('.tag')).map((t) => t.textContent?.trim());
+    expect(tags).toEqual(['PRIVATE', 'PUBLIC']);
+  });
 });

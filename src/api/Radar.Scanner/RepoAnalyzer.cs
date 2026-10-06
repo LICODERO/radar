@@ -1,7 +1,7 @@
 namespace Radar.Scanner;
 
 /// <summary>A workflow file as found in one repo, before aggregation across repos.</summary>
-public sealed record RawWorkflow(string RepoId, string Name, string Description, string When, IReadOnlyList<string> Agents, IReadOnlyList<string> Skills, string Path, bool Linked);
+public sealed record RawWorkflow(string RepoId, string Name, string Description, string When, IReadOnlyList<string> Agents, IReadOnlyList<string> Skills, string Path, bool Linked, string? Visibility = null);
 
 public sealed record RepoAnalysis(RepoInfo Repo, IReadOnlyList<RawWorkflow> Workflows, IReadOnlyList<WarningInfo> Warnings);
 
@@ -99,6 +99,16 @@ public static class RepoAnalyzer
                 rel,
                 linked));
         }
+
+        // visibility: shared (tracked), hidden (ignored) or not decided (untracked)
+        var queries = agents.Select(a => new VisibilityQuery("a:" + a.Path, a.Path, a.Path))
+            .Concat(skills.Select(k => new VisibilityQuery("s:" + k.Path, k.Path[..^"/SKILL.md".Length], k.Path)))
+            .Concat(workflows.Select(w => new VisibilityQuery("w:" + w.Path, w.Path, w.Path)))
+            .ToList();
+        var visibility = GitVisibility.Resolve(repoDir, queries);
+        agents = agents.Select(a => a with { Visibility = visibility[("a:" + a.Path)] }).ToList();
+        skills = skills.Select(k => k with { Visibility = visibility[("s:" + k.Path)] }).ToList();
+        workflows = workflows.Select(w => w with { Visibility = visibility[("w:" + w.Path)] }).ToList();
 
         var (primary, stacks) = StackDetector.Detect(repoDir, ct);
         var coverage = Coverage.Compute(claudeExists, agents.Count, skills.Count);

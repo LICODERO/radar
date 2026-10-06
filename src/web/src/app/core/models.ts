@@ -1,5 +1,8 @@
 export type GapType = 'no-claude-md' | 'no-agents' | 'no-skills' | 'workflow-not-linked' | 'weak-files';
 
+/** git's view of an agent, skill or workflow: tracked = public, ignored = private, not tracked and not ignored = untracked (shows up in git changes); unknown = git could not tell */
+export type Visibility = 'public' | 'private' | 'untracked' | 'unknown';
+
 export type Severity = 'error' | 'warning' | 'info';
 
 /** One thing wrong with one AI file; `code` is turned into text by the UI (`quality.<code>`), `detail` is the offending value */
@@ -29,12 +32,15 @@ export interface AgentInfo {
   tools: string[];
   model?: string | null;
   path: string;
+  /** absent in scans made before visibility was added */
+  visibility?: Visibility | null;
 }
 
 export interface SkillInfo {
   name: string;
   description: string;
   path: string;
+  visibility?: Visibility | null;
 }
 
 export interface RepoInfo {
@@ -61,7 +67,7 @@ export interface WorkflowInfo {
   /** skills the workflow uses (optional `skills:` frontmatter; absent in older scans) */
   skills?: string[];
   /** `agents`/`skills`: what this repo's copy of the workflow names; they are elements of that same repo (absent in older scans) */
-  repos: { repoId: string; path: string; linked: boolean; agents?: string[]; skills?: string[] }[];
+  repos: { repoId: string; path: string; linked: boolean; agents?: string[]; skills?: string[]; visibility?: Visibility | null }[];
   issues: string[];
 }
 

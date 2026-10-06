@@ -43,7 +43,8 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/code-reviewer.md"
+          "path": ".claude/agents/code-reviewer.md",
+          "visibility": "public"
         },
         {
           "name": "test-writer",
@@ -54,7 +55,8 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/test-writer.md"
+          "path": ".claude/agents/test-writer.md",
+          "visibility": "public"
         },
         {
           "name": "migration-helper",
@@ -65,39 +67,46 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/migration-helper.md"
+          "path": ".claude/agents/migration-helper.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "ef-migrations",
           "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
-          "path": ".claude/skills/ef-migrations/SKILL.md"
+          "path": ".claude/skills/ef-migrations/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "xunit-tests",
           "description": "Konwencje testów xUnit i szablony mocków.",
-          "path": ".claude/skills/xunit-tests/SKILL.md"
+          "path": ".claude/skills/xunit-tests/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "swagger-docs",
           "description": "Zasady opisu endpointów i modeli w Swagger.",
-          "path": ".claude/skills/swagger-docs/SKILL.md"
+          "path": ".claude/skills/swagger-docs/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "hangfire-jobs",
           "description": "Wzorce zadań cyklicznych i kolejek Hangfire.",
-          "path": ".claude/skills/hangfire-jobs/SKILL.md"
+          "path": ".claude/skills/hangfire-jobs/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "serilog-logging",
           "description": "Jednolity format logów strukturalnych.",
-          "path": ".claude/skills/serilog-logging/SKILL.md"
+          "path": ".claude/skills/serilog-logging/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "azure-devops-yaml",
           "description": "Szablony pipeline i zmienne środowiskowe.",
-          "path": ".claude/skills/azure-devops-yaml/SKILL.md"
+          "path": ".claude/skills/azure-devops-yaml/SKILL.md",
+          "visibility": "untracked"
         }
       ],
       "coverage": {
@@ -230,7 +239,8 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/code-reviewer.md"
+          "path": ".claude/agents/code-reviewer.md",
+          "visibility": "private"
         },
         {
           "name": "angular-refactor",
@@ -241,29 +251,34 @@
             "Grep"
           ],
           "model": null,
-          "path": ".claude/agents/angular-refactor.md"
+          "path": ".claude/agents/angular-refactor.md",
+          "visibility": "untracked"
         }
       ],
       "skills": [
         {
           "name": "angular-component",
           "description": "Struktura i nazewnictwo komponentów Angular.",
-          "path": ".claude/skills/angular-component/SKILL.md"
+          "path": ".claude/skills/angular-component/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "rxjs-state",
           "description": "Wzorce zarządzania stanem w RxJS.",
-          "path": ".claude/skills/rxjs-state/SKILL.md"
+          "path": ".claude/skills/rxjs-state/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "dashboard-charts",
           "description": "Standardy wykresów i kafelków w dashboardach.",
-          "path": ".claude/skills/dashboard-charts/SKILL.md"
+          "path": ".claude/skills/dashboard-charts/SKILL.md",
+          "visibility": "untracked"
         },
         {
           "name": "jest-tests",
           "description": "Konwencje testów jednostkowych frontendu.",
-          "path": ".claude/skills/jest-tests/SKILL.md"
+          "path": ".claude/skills/jest-tests/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -358,19 +373,22 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/code-reviewer.md"
+          "path": ".claude/agents/code-reviewer.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "hangfire-jobs",
           "description": "Wzorce zadań cyklicznych i kolejek Hangfire.",
-          "path": ".claude/skills/hangfire-jobs/SKILL.md"
+          "path": ".claude/skills/hangfire-jobs/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "serilog-logging",
           "description": "Jednolity format logów strukturalnych.",
-          "path": ".claude/skills/serilog-logging/SKILL.md"
+          "path": ".claude/skills/serilog-logging/SKILL.md",
+          "visibility": "untracked"
         }
       ],
       "coverage": {
@@ -445,7 +463,8 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/code-reviewer.md"
+          "path": ".claude/agents/code-reviewer.md",
+          "visibility": "public"
         },
         {
           "name": "api-docs",
@@ -455,34 +474,40 @@
             "Edit"
           ],
           "model": null,
-          "path": ".claude/agents/api-docs.md"
+          "path": ".claude/agents/api-docs.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "ef-migrations",
           "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
-          "path": ".claude/skills/ef-migrations/SKILL.md"
+          "path": ".claude/skills/ef-migrations/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "xunit-tests",
           "description": "Konwencje testów xUnit i szablony mocków.",
-          "path": ".claude/skills/xunit-tests/SKILL.md"
+          "path": ".claude/skills/xunit-tests/SKILL.md",
+          "visibility": "private"
         },
         {
           "name": "swagger-docs",
           "description": "Zasady opisu endpointów i modeli w Swagger.",
-          "path": ".claude/skills/swagger-docs/SKILL.md"
+          "path": ".claude/skills/swagger-docs/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "serilog-logging",
           "description": "Jednolity format logów strukturalnych.",
-          "path": ".claude/skills/serilog-logging/SKILL.md"
+          "path": ".claude/skills/serilog-logging/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "excel-export",
           "description": "Eksport raportów do Excela.",
-          "path": ".claude/skills/excel-export/SKILL.md"
+          "path": ".claude/skills/excel-export/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -576,24 +601,28 @@
             "Grep"
           ],
           "model": null,
-          "path": ".claude/agents/angular-refactor.md"
+          "path": ".claude/agents/angular-refactor.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "angular-component",
           "description": "Struktura i nazewnictwo komponentów Angular.",
-          "path": ".claude/skills/angular-component/SKILL.md"
+          "path": ".claude/skills/angular-component/SKILL.md",
+          "visibility": "private"
         },
         {
           "name": "dashboard-charts",
           "description": "Standardy wykresów i kafelków w dashboardach.",
-          "path": ".claude/skills/dashboard-charts/SKILL.md"
+          "path": ".claude/skills/dashboard-charts/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "jest-tests",
           "description": "Konwencje testów jednostkowych frontendu.",
-          "path": ".claude/skills/jest-tests/SKILL.md"
+          "path": ".claude/skills/jest-tests/SKILL.md",
+          "visibility": "private"
         }
       ],
       "coverage": {
@@ -661,7 +690,8 @@
         {
           "name": "serilog-logging",
           "description": "Jednolity format logów strukturalnych.",
-          "path": ".claude/skills/serilog-logging/SKILL.md"
+          "path": ".claude/skills/serilog-logging/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -756,7 +786,8 @@
             "Grep"
           ],
           "model": null,
-          "path": ".claude/agents/angular-refactor.md"
+          "path": ".claude/agents/angular-refactor.md",
+          "visibility": "public"
         },
         {
           "name": "test-writer",
@@ -767,29 +798,34 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/test-writer.md"
+          "path": ".claude/agents/test-writer.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "angular-component",
           "description": "Struktura i nazewnictwo komponentów Angular.",
-          "path": ".claude/skills/angular-component/SKILL.md"
+          "path": ".claude/skills/angular-component/SKILL.md",
+          "visibility": "untracked"
         },
         {
           "name": "rxjs-state",
           "description": "Wzorce zarządzania stanem w RxJS.",
-          "path": ".claude/skills/rxjs-state/SKILL.md"
+          "path": ".claude/skills/rxjs-state/SKILL.md",
+          "visibility": "untracked"
         },
         {
           "name": "dashboard-charts",
           "description": "Standardy wykresów i kafelków w dashboardach.",
-          "path": ".claude/skills/dashboard-charts/SKILL.md"
+          "path": ".claude/skills/dashboard-charts/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "jest-tests",
           "description": "Konwencje testów jednostkowych frontendu.",
-          "path": ".claude/skills/jest-tests/SKILL.md"
+          "path": ".claude/skills/jest-tests/SKILL.md",
+          "visibility": "untracked"
         }
       ],
       "coverage": {
@@ -912,19 +948,22 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/pipeline-fixer.md"
+          "path": ".claude/agents/pipeline-fixer.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "azure-devops-yaml",
           "description": "Szablony pipeline i zmienne środowiskowe.",
-          "path": ".claude/skills/azure-devops-yaml/SKILL.md"
+          "path": ".claude/skills/azure-devops-yaml/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "ef-migrations",
           "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
-          "path": ".claude/skills/ef-migrations/SKILL.md"
+          "path": ".claude/skills/ef-migrations/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -998,7 +1037,8 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/code-reviewer.md"
+          "path": ".claude/agents/code-reviewer.md",
+          "visibility": "public"
         },
         {
           "name": "test-writer",
@@ -1009,24 +1049,28 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/test-writer.md"
+          "path": ".claude/agents/test-writer.md",
+          "visibility": "private"
         }
       ],
       "skills": [
         {
           "name": "ef-migrations",
           "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
-          "path": ".claude/skills/ef-migrations/SKILL.md"
+          "path": ".claude/skills/ef-migrations/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "xunit-tests",
           "description": "Konwencje testów xUnit i szablony mocków.",
-          "path": ".claude/skills/xunit-tests/SKILL.md"
+          "path": ".claude/skills/xunit-tests/SKILL.md",
+          "visibility": "private"
         },
         {
           "name": "swagger-docs",
           "description": "Zasady opisu endpointów i modeli w Swagger.",
-          "path": ".claude/skills/swagger-docs/SKILL.md"
+          "path": ".claude/skills/swagger-docs/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -1117,19 +1161,22 @@
             "Grep"
           ],
           "model": null,
-          "path": ".claude/agents/angular-refactor.md"
+          "path": ".claude/agents/angular-refactor.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "angular-component",
           "description": "Struktura i nazewnictwo komponentów Angular.",
-          "path": ".claude/skills/angular-component/SKILL.md"
+          "path": ".claude/skills/angular-component/SKILL.md",
+          "visibility": "private"
         },
         {
           "name": "jest-tests",
           "description": "Konwencje testów jednostkowych frontendu.",
-          "path": ".claude/skills/jest-tests/SKILL.md"
+          "path": ".claude/skills/jest-tests/SKILL.md",
+          "visibility": "private"
         }
       ],
       "coverage": {
@@ -1204,24 +1251,28 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/code-reviewer.md"
+          "path": ".claude/agents/code-reviewer.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "ef-migrations",
           "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
-          "path": ".claude/skills/ef-migrations/SKILL.md"
+          "path": ".claude/skills/ef-migrations/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "xunit-tests",
           "description": "Konwencje testów xUnit i szablony mocków.",
-          "path": ".claude/skills/xunit-tests/SKILL.md"
+          "path": ".claude/skills/xunit-tests/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "serilog-logging",
           "description": "Jednolity format logów strukturalnych.",
-          "path": ".claude/skills/serilog-logging/SKILL.md"
+          "path": ".claude/skills/serilog-logging/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -1305,14 +1356,16 @@
             "Grep"
           ],
           "model": null,
-          "path": ".claude/agents/angular-refactor.md"
+          "path": ".claude/agents/angular-refactor.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "angular-component",
           "description": "Struktura i nazewnictwo komponentów Angular.",
-          "path": ".claude/skills/angular-component/SKILL.md"
+          "path": ".claude/skills/angular-component/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -1370,12 +1423,14 @@
         {
           "name": "xunit-tests",
           "description": "Konwencje testów xUnit i szablony mocków.",
-          "path": ".claude/skills/xunit-tests/SKILL.md"
+          "path": ".claude/skills/xunit-tests/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "serilog-logging",
           "description": "Jednolity format logów strukturalnych.",
-          "path": ".claude/skills/serilog-logging/SKILL.md"
+          "path": ".claude/skills/serilog-logging/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -1436,7 +1491,8 @@
         {
           "name": "jest-tests",
           "description": "Konwencje testów jednostkowych frontendu.",
-          "path": ".claude/skills/jest-tests/SKILL.md"
+          "path": ".claude/skills/jest-tests/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -1497,19 +1553,22 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/code-reviewer.md"
+          "path": ".claude/agents/code-reviewer.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "serilog-logging",
           "description": "Jednolity format logów strukturalnych.",
-          "path": ".claude/skills/serilog-logging/SKILL.md"
+          "path": ".claude/skills/serilog-logging/SKILL.md",
+          "visibility": "untracked"
         },
         {
           "name": "xunit-tests",
           "description": "Konwencje testów xUnit i szablony mocków.",
-          "path": ".claude/skills/xunit-tests/SKILL.md"
+          "path": ".claude/skills/xunit-tests/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -1582,24 +1641,28 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/code-reviewer.md"
+          "path": ".claude/agents/code-reviewer.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "swagger-docs",
           "description": "Zasady opisu endpointów i modeli w Swagger.",
-          "path": ".claude/skills/swagger-docs/SKILL.md"
+          "path": ".claude/skills/swagger-docs/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "serilog-logging",
           "description": "Jednolity format logów strukturalnych.",
-          "path": ".claude/skills/serilog-logging/SKILL.md"
+          "path": ".claude/skills/serilog-logging/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "azure-devops-yaml",
           "description": "Szablony pipeline i zmienne środowiskowe.",
-          "path": ".claude/skills/azure-devops-yaml/SKILL.md"
+          "path": ".claude/skills/azure-devops-yaml/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -1672,7 +1735,8 @@
         {
           "name": "serilog-logging",
           "description": "Jednolity format logów strukturalnych.",
-          "path": ".claude/skills/serilog-logging/SKILL.md"
+          "path": ".claude/skills/serilog-logging/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -1760,19 +1824,22 @@
             "Grep"
           ],
           "model": null,
-          "path": ".claude/agents/angular-refactor.md"
+          "path": ".claude/agents/angular-refactor.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "angular-component",
           "description": "Struktura i nazewnictwo komponentów Angular.",
-          "path": ".claude/skills/angular-component/SKILL.md"
+          "path": ".claude/skills/angular-component/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "jest-tests",
           "description": "Konwencje testów jednostkowych frontendu.",
-          "path": ".claude/skills/jest-tests/SKILL.md"
+          "path": ".claude/skills/jest-tests/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -1853,19 +1920,22 @@
             "Grep"
           ],
           "model": null,
-          "path": ".claude/agents/angular-refactor.md"
+          "path": ".claude/agents/angular-refactor.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "angular-component",
           "description": "Struktura i nazewnictwo komponentów Angular.",
-          "path": ".claude/skills/angular-component/SKILL.md"
+          "path": ".claude/skills/angular-component/SKILL.md",
+          "visibility": "untracked"
         },
         {
           "name": "dashboard-charts",
           "description": "Standardy wykresów i kafelków w dashboardach.",
-          "path": ".claude/skills/dashboard-charts/SKILL.md"
+          "path": ".claude/skills/dashboard-charts/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -1984,19 +2054,22 @@
             "Bash"
           ],
           "model": null,
-          "path": ".claude/agents/pipeline-fixer.md"
+          "path": ".claude/agents/pipeline-fixer.md",
+          "visibility": "public"
         }
       ],
       "skills": [
         {
           "name": "azure-devops-yaml",
           "description": "Szablony pipeline i zmienne środowiskowe.",
-          "path": ".claude/skills/azure-devops-yaml/SKILL.md"
+          "path": ".claude/skills/azure-devops-yaml/SKILL.md",
+          "visibility": "public"
         },
         {
           "name": "ef-migrations",
           "description": "Kroki tworzenia i weryfikacji migracji Entity Framework.",
-          "path": ".claude/skills/ef-migrations/SKILL.md"
+          "path": ".claude/skills/ef-migrations/SKILL.md",
+          "visibility": "public"
         }
       ],
       "coverage": {
@@ -2050,22 +2123,26 @@
         {
           "repoId": "orders-api",
           "path": ".claude/workflows/pr-review.md",
-          "linked": false
+          "linked": false,
+          "visibility": "public"
         },
         {
           "repoId": "orders-front",
           "path": ".claude/workflows/pr-review.md",
-          "linked": true
+          "linked": true,
+          "visibility": "untracked"
         },
         {
           "repoId": "orders-hangfire",
           "path": ".claude/workflows/pr-review.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "reports-api",
           "path": ".claude/workflows/pr-review.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         }
       ],
       "issues": []
@@ -2084,12 +2161,14 @@
         {
           "repoId": "orders-api",
           "path": ".claude/workflows/db-migration.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "infra-pipelines",
           "path": ".claude/workflows/db-migration.md",
-          "linked": false
+          "linked": false,
+          "visibility": "private"
         }
       ],
       "issues": []
@@ -2108,17 +2187,20 @@
         {
           "repoId": "orders-front",
           "path": ".claude/workflows/front-refactor.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "reports-front",
           "path": ".claude/workflows/front-refactor.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "portal-front",
           "path": ".claude/workflows/front-refactor.md",
-          "linked": true
+          "linked": true,
+          "visibility": "private"
         }
       ],
       "issues": []
@@ -2137,17 +2219,20 @@
         {
           "repoId": "orders-api",
           "path": ".claude/workflows/api-release.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "reports-api",
           "path": ".claude/workflows/api-release.md",
-          "linked": true
+          "linked": true,
+          "visibility": "private"
         },
         {
           "repoId": "infra-pipelines",
           "path": ".claude/workflows/api-release.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         }
       ],
       "issues": []
@@ -2165,17 +2250,20 @@
         {
           "repoId": "reports-api",
           "path": ".claude/workflows/security-scan.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "invoices-api",
           "path": ".claude/workflows/security-scan.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "gateway-api",
           "path": ".claude/workflows/security-scan.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         }
       ],
       "issues": []
@@ -2193,22 +2281,26 @@
         {
           "repoId": "reports-api",
           "path": ".claude/workflows/docs-sync.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "invoices-api",
           "path": ".claude/workflows/docs-sync.md",
-          "linked": false
+          "linked": false,
+          "visibility": "public"
         },
         {
           "repoId": "stock-api",
           "path": ".claude/workflows/docs-sync.md",
-          "linked": true
+          "linked": true,
+          "visibility": "private"
         },
         {
           "repoId": "gateway-api",
           "path": ".claude/workflows/docs-sync.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         }
       ],
       "issues": []
@@ -2227,22 +2319,26 @@
         {
           "repoId": "orders-api",
           "path": ".claude/workflows/hotfix.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "orders-hangfire",
           "path": ".claude/workflows/hotfix.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "infra-pipelines",
           "path": ".claude/workflows/hotfix.md",
-          "linked": false
+          "linked": false,
+          "visibility": "public"
         },
         {
           "repoId": "deploy-templates",
           "path": ".claude/workflows/hotfix.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         }
       ],
       "issues": []
@@ -2260,17 +2356,20 @@
         {
           "repoId": "orders-front",
           "path": ".claude/workflows/e2e-tests.md",
-          "linked": true
+          "linked": true,
+          "visibility": "untracked"
         },
         {
           "repoId": "portal-front",
           "path": ".claude/workflows/e2e-tests.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "admin-front",
           "path": ".claude/workflows/e2e-tests.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         }
       ],
       "issues": []
@@ -2285,37 +2384,44 @@
         {
           "repoId": "orders-api",
           "path": ".claude/workflows/commit.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "orders-front",
           "path": ".claude/workflows/commit.md",
-          "linked": true
+          "linked": true,
+          "visibility": "private"
         },
         {
           "repoId": "orders-hangfire",
           "path": ".claude/workflows/commit.md",
-          "linked": false
+          "linked": false,
+          "visibility": "public"
         },
         {
           "repoId": "reports-api",
           "path": ".claude/workflows/commit.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         },
         {
           "repoId": "reports-front",
           "path": ".claude/workflows/commit.md",
-          "linked": true
+          "linked": true,
+          "visibility": "untracked"
         },
         {
           "repoId": "portal-front",
           "path": ".claude/workflows/commit.md",
-          "linked": false
+          "linked": false,
+          "visibility": "public"
         },
         {
           "repoId": "invoices-api",
           "path": ".claude/workflows/commit.md",
-          "linked": true
+          "linked": true,
+          "visibility": "public"
         }
       ],
       "issues": []

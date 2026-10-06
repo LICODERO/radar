@@ -19,4 +19,23 @@ public static class MarkedBlock
         if (s < 0 || e < 0 || e < s) return null;
         return text[..s] + block + text[(e + end.Length)..];
     }
+
+    /// <summary>
+    /// Cuts the block between <paramref name="start"/> and <paramref name="end"/> (markers included, with the blank line before it).
+    /// Returns the text unchanged when there is no block and null when the markers are damaged.
+    /// </summary>
+    public static string? Remove(string? text, string start, string end)
+    {
+        if (string.IsNullOrEmpty(text)) return text;
+        var s = text.IndexOf(start, StringComparison.Ordinal);
+        var e = text.IndexOf(end, StringComparison.Ordinal);
+        if (s < 0 && e < 0) return text;
+        if (s < 0 || e < 0 || e < s) return null;
+        var after = e + end.Length;
+        if (after < text.Length && text[after] == '\r') after++;
+        if (after < text.Length && text[after] == '\n') after++;
+        return text[..s].TrimEnd('\r', '\n') is { Length: > 0 } before
+            ? before + (text.Contains("\r\n") ? "\r\n" : "\n") + text[after..]
+            : text[after..];
+    }
 }

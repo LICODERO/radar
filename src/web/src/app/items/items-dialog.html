@@ -11,7 +11,7 @@
   <div class="list">
     @for (r of rows(); track r.name) {
       <button class="row" type="button" (click)="choose(r)">
-        <span class="m name">{{ r.name }}</span>
+        <span class="m name">{{ r.name }} <app-visibility-tag class="vis" [visibility]="r.visibility" /></span>
         <span class="m desc">{{ r.text || t('items.noDescription') }}</span>
       </button>
     }

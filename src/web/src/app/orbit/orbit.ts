@@ -3,10 +3,12 @@ import { RadarStore } from '../core/radar-store';
 import { I18n } from '../i18n/i18n';
 import { Pick } from '../core/models';
 import { AI_TOOL_ICONS } from '../core/ai-tools';
+import { VisibilityTag } from '../shared/visibility-tag';
 import { PopFile, Popover } from './orbit-scene';
 
 @Component({
   selector: 'app-orbit',
+  imports: [VisibilityTag],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(click)': 'backgroundClick($event)' },
   templateUrl: './orbit.html',

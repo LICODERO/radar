@@ -1,7 +1,7 @@
 <div class="head">
   <div class="m badge" [style.border-color]="f().color" [style.color]="f().color">MD</div>
   <div class="ttl">
-    <div class="m kind" [style.color]="f().color">{{ f().kind }} · {{ f().repoName }}</div>
+    <div class="m kind" [style.color]="f().color">{{ f().kind }} · {{ f().repoName }} <app-visibility-tag class="vis" [visibility]="visibility()" /></div>
     <div class="m path">{{ f().path }}</div>
   </div>
   <button #closeBtn class="m btn-ghost x" type="button" [attr.aria-label]="t('file.close')" (click)="store.closeFile()">✕</button>
