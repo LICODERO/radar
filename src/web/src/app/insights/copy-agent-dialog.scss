@@ -32,3 +32,4 @@ button.btn-ghost, button.btn-solid { font-size: fs(13); letter-spacing: .14em; p
 .btns .btn-ghost:hover:not(:disabled) { background: #c6ff3d14; }
 .btns .go { background: $lime; border: 0; color: #0b1006; font-weight: 600; }
 .btns button:disabled { opacity: .5; cursor: default; }
+.files { margin: 0; padding: 8px 12px; max-height: 120px; overflow: auto; list-style: none; border: 1px solid #ffffff14; font-size: fs(12); line-height: 1.6; color: $text; }

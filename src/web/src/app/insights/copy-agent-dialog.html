@@ -1,8 +1,8 @@
 <div class="backdrop" (click)="store.closeCopyAgent()"></div>
-<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('copy.title', { name: ref()?.name ?? '' })">
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t(kind() === 'skill' ? 'copy.titleSkill' : 'copy.title', { name: ref()?.name ?? '' })">
   <div class="head">
     <div>
-      <div class="m eyebrow">{{ t('copy.eyebrow') }}</div>
+      <div class="m eyebrow">{{ t(kind() === 'skill' ? 'copy.eyebrowSkill' : 'copy.eyebrow') }}</div>
       <div class="ttl">{{ ref()?.name }}</div>
     </div>
     <button class="m btn-ghost x" type="button" [attr.aria-label]="t('copy.close')" (click)="store.closeCopyAgent()">✕</button>
@@ -18,7 +18,14 @@
       </ul>
       <div class="btns"><button class="m btn-solid go" type="button" (click)="store.closeCopyAgent()">{{ t('copy.closeBtn') }}</button></div>
     } @else {
-      <p class="text">{{ t('copy.intro', { repo: source()?.name ?? '' }) }}</p>
+      <p class="text">{{ t(kind() === 'skill' ? 'copy.introSkill' : 'copy.intro', { repo: source()?.name ?? '' }) }}</p>
+      @if (kind() === 'skill' && skillFiles().length) {
+        <div class="m lbl">{{ t('copy.skillFiles', { n: skillFiles().length, kb: kb() }) }}</div>
+        <ul class="m files">@for (f of skillFiles(); track f) { <li>{{ f }}</li> }</ul>
+        @if (leftOut().length) {
+          <p class="m hint">{{ t('copy.leftOut') }} {{ leftOutText() }}</p>
+        }
+      }
 
       @if (phase() === 'loading') { <p class="m wait">{{ t('copy.loading') }}</p> }
 

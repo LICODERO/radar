@@ -20,6 +20,8 @@ public enum Msg
     // agents
     DescriptionRequired, DescriptionTooLong, GenerationBusy, AgentNameTakenInRepo, ContentRequired, AgentInvalid, AgentExists, WriteForbidden,
     AgentSourceMissing, CopySourceUnreadable, CopyNoTargets, CopyTooMany,
+    // skills
+    SkillSourceMissing, SkillSourceInvalid, SkillTooManyFiles, SkillTooBigToCopy, SkillSourceUnreadable,
     // agent file validation
     FileTooBig, FrontmatterMissing, NameInvalid, DescriptionMissing, DescriptionLong, BodyMissing,
     // visibility
@@ -75,6 +77,12 @@ public static class Messages
         [Msg.CopyNoTargets] = ("Wybierz repozytoria, do których skopiować agenta.", "Choose the repositories to copy the agent to."),
         [Msg.CopyTooMany] = ("Za dużo repozytoriów naraz (max {0}).", "Too many repositories at once (max {0})."),
         [Msg.WriteForbidden] = ("Zapis w tym katalogu jest zabroniony (dowiązanie poza repozytorium).", "Writing in this directory is not allowed (a link pointing outside the repository)."),
+
+        [Msg.SkillSourceMissing] = ("Nie ma takiego skilla w repozytorium źródłowym.", "The source repository has no such skill."),
+        [Msg.SkillSourceInvalid] = ("Skill źródłowy jest niepoprawny (brak SKILL.md z frontmatterem albo zła nazwa folderu).", "The source skill is invalid (no SKILL.md with frontmatter, or a bad folder name)."),
+        [Msg.SkillTooManyFiles] = ("Skill ma za dużo plików, żeby go skopiować (max {0}).", "The skill has too many files to copy (max {0})."),
+        [Msg.SkillTooBigToCopy] = ("Skill jest za duży, żeby go skopiować (max {0} KB łącznie).", "The skill is too large to copy (max {0} KB in total)."),
+        [Msg.SkillSourceUnreadable] = ("Nie można odczytać plików skilla źródłowego.", "The source skill files cannot be read."),
 
         [Msg.FileTooBig] = ("Plik jest za duży (limit 64 KB).", "The file is too large (64 KB limit)."),
         [Msg.FrontmatterMissing] = ("Brak poprawnego frontmattera: plik ma zaczynać się od bloku --- ... ---.", "Missing valid frontmatter: the file must start with a --- ... --- block."),

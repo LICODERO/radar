@@ -88,6 +88,11 @@ export class RadarApi {
     return this.call('POST', '/api/agents', { repoId, content, visibility });
   }
 
+  /** The same for a whole skill folder (limits: files, size; symlinks and binary files outside scripts/ are skipped and reported). */
+  copySkill(fromRepoId: string, name: string, toRepoIds: string[], confirm: boolean, visibility: 'private' | 'public' = 'public'): Promise<CopyAgentResult> {
+    return this.call('POST', '/api/skills/copy', { fromRepoId, name, toRepoIds, confirm, visibility });
+  }
+
   /** Without `confirm` the server only reports where the copy would land; with it, it adds the file to each repo (never overwriting). */
   copyAgent(fromRepoId: string, name: string, toRepoIds: string[], confirm: boolean, visibility: 'private' | 'public' = 'public'): Promise<CopyAgentResult> {
     return this.call('POST', '/api/agents/copy', { fromRepoId, name, toRepoIds, confirm, visibility });

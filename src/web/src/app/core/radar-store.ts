@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AI_TOOLS } from './ai-tools';
-import { CopyAgentResult, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, Visibility, VisibilityOutcome, WorkflowInfo } from './models';
+import { CopyAgentResult, CopyKind, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, Visibility, VisibilityOutcome, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, buildCommand, countByType } from './commands';
@@ -109,7 +109,7 @@ export class RadarStore {
   /** average coverage before the running scan, when there is something to compare with (same directory) */
   private coverageBefore: { root: string; avg: number } | null = null;
   /** the agent being copied to other repos (the confirm dialog) */
-  readonly copyAgentRef = signal<{ repoId: string; name: string } | null>(null);
+  readonly copyAgentRef = signal<{ repoId: string; name: string; kind: CopyKind } | null>(null);
   /** the item whose public/private state is being changed (the confirm dialog); `current` is what the scan saw */
   readonly visibilityRef = signal<{ repoId: string; path: string; current: Visibility } | null>(null);
   readonly sharedItems = computed(() => this.result()?.shared ?? []);
@@ -386,12 +386,14 @@ export class RadarStore {
     this.coverageToast.set({ from: before.avg, to: r.summary.avgCoverage });
   }
 
-  openCopyAgent(repoId: string, name: string): void { this.copyAgentRef.set({ repoId, name }); }
+  openCopyAgent(repoId: string, name: string, kind: CopyKind = 'agent'): void { this.copyAgentRef.set({ repoId, name, kind }); }
   closeCopyAgent(): void { this.copyAgentRef.set(null); }
-  planCopyAgent(from: string, name: string, to: string[], visibility: 'private' | 'public' = 'private'): Promise<CopyAgentResult> { return this.api.copyAgent(from, name, to, false, visibility); }
+  planCopyAgent(from: string, name: string, to: string[], visibility: 'private' | 'public' = 'private', kind: CopyKind = 'agent'): Promise<CopyAgentResult> {
+    return kind === 'skill' ? this.api.copySkill(from, name, to, false, visibility) : this.api.copyAgent(from, name, to, false, visibility);
+  }
   /** Writes the copies, then rescans quietly so the new agents show up everywhere. */
-  async applyCopyAgent(from: string, name: string, to: string[], visibility: 'private' | 'public' = 'private'): Promise<CopyAgentResult> {
-    const r = await this.api.copyAgent(from, name, to, true, visibility);
+  async applyCopyAgent(from: string, name: string, to: string[], visibility: 'private' | 'public' = 'private', kind: CopyKind = 'agent'): Promise<CopyAgentResult> {
+    const r = kind === 'skill' ? await this.api.copySkill(from, name, to, true, visibility) : await this.api.copyAgent(from, name, to, true, visibility);
     void this.refreshQuiet();
     return r;
   }

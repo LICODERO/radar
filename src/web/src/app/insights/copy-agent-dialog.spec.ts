@@ -39,7 +39,7 @@ async function open() {
 describe('CopyAgentDialog', () => {
   it('asks about every repo that lacks the agent, the source stack first, and ticks nothing by itself', async () => {
     const { el, planSpy } = await open();
-    expect(planSpy).toHaveBeenCalledWith('a-api', 'reviewer', ['b-api', 'd-api', 'z-front'], 'private');
+    expect(planSpy).toHaveBeenCalledWith('a-api', 'reviewer', ['b-api', 'd-api', 'z-front'], 'private', 'agent');
     expect([...el.querySelectorAll('.target .rn')].map((e) => e.textContent)).toEqual(['b-api', 'z-front']);   // d-api is reported as taken
     expect([...el.querySelectorAll<HTMLInputElement>('.target input')].some((i) => i.checked)).toBe(false);
     expect(el.textContent).toContain('d-api');
@@ -54,7 +54,7 @@ describe('CopyAgentDialog', () => {
     el.querySelector<HTMLButtonElement>('.go')!.click();
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(applySpy).toHaveBeenCalledWith('a-api', 'reviewer', ['z-front'], 'private');
+    expect(applySpy).toHaveBeenCalledWith('a-api', 'reviewer', ['z-front'], 'private', 'agent');
     expect(el.textContent).toContain('Copied to 1 repository.');
   });
 
@@ -66,12 +66,12 @@ describe('CopyAgentDialog', () => {
     el.querySelectorAll<HTMLButtonElement>('app-visibility-picker .opt')[1].click();
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(planSpy).toHaveBeenLastCalledWith('a-api', 'reviewer', ['b-api', 'd-api', 'z-front'], 'public');
+    expect(planSpy).toHaveBeenLastCalledWith('a-api', 'reviewer', ['b-api', 'd-api', 'z-front'], 'public', 'agent');
     el.querySelectorAll<HTMLInputElement>('.target input')[0].click();
     fixture.detectChanges();
     el.querySelector<HTMLButtonElement>('.go')!.click();
     await fixture.whenStable();
-    expect(applySpy).toHaveBeenCalledWith('a-api', 'reviewer', ['b-api'], 'public');
+    expect(applySpy).toHaveBeenCalledWith('a-api', 'reviewer', ['b-api'], 'public', 'agent');
   });
 
   it('names the repos where a private copy cannot be hidden and does not offer them', async () => {
@@ -84,6 +84,28 @@ describe('CopyAgentDialog', () => {
     expect([...el.querySelectorAll('.target .rn')].map((e) => e.textContent)).toEqual(['b-api']);
     expect(el.textContent).toContain('cannot be hidden from git there');
     expect(el.textContent).toContain('z-front');
+  });
+
+  it('copies a skill: asks for skills, lists the files that travel and what is left out', async () => {
+    TestBed.configureTestingModule({ providers: [provideHttpClient()] });
+    TestBed.inject(I18n).setLang('en');
+    const store = TestBed.inject(RadarStore);
+    const withSkill = (id: string, skills: string[]) => ({ ...repo(id, '.NET', []), skills: skills.map((n) => ({ name: n, description: n, path: `.claude/skills/${n}/SKILL.md` })) });
+    store.result.set({ repos: [withSkill('a-api', ['deploy']), withSkill('b-api', []), withSkill('c-api', ['deploy'])], workflows: [], gaps: [] } as unknown as ScanResult);
+    const planSpy = vi.spyOn(store, 'planCopyAgent').mockResolvedValue({
+      name: 'deploy', source: '.claude/skills/deploy/SKILL.md', written: false, files: ['SKILL.md', 'scripts/run.sh'], bytes: 4096,
+      skipped: [{ path: 'logo.png', reason: 'binary' }], targets: [{ repoId: 'b-api', status: 'ready' }]
+    });
+    store.openCopyAgent('a-api', 'deploy', 'skill');
+    const fixture = TestBed.createComponent(CopyAgentDialog);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(planSpy).toHaveBeenCalledWith('a-api', 'deploy', ['b-api'], 'private', 'skill');   // c-api already has it
+    expect(el.textContent).toContain('COPY SKILL TO ANOTHER REPO');
+    expect(el.textContent).toContain('SKILL FILES · 2 · 4 KB');
+    expect(el.textContent).toContain('scripts/run.sh');
+    expect(el.textContent).toContain('logo.png (binary file outside scripts/)');
   });
 
   it('says so when every other repo already has the agent', async () => {

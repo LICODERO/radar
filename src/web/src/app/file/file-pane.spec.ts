@@ -31,12 +31,18 @@ describe('FilePane copy button', () => {
     expect(btn.getAttribute('aria-label')).toBe('COPY TO ANOTHER REPO');
     expect(btn.querySelector('svg')).not.toBeNull();
     btn.click();
-    expect(store.copyAgentRef()).toEqual({ repoId: 'shop', name: 'reviewer' });
+    expect(store.copyAgentRef()).toEqual({ repoId: 'shop', name: 'reviewer', kind: 'agent' });
   });
 
-  it('is not offered for a skill, CLAUDE.md or without the server', () => {
-    expect(open('.claude/skills/pdf/SKILL.md').el.querySelector('.copy')).toBeNull();
-    TestBed.resetTestingModule();
+  it('is offered for a skill too and opens the copy dialog for the whole skill', () => {
+    const { store, el } = open('.claude/skills/pdf/SKILL.md');
+    const btn = el.querySelector<HTMLButtonElement>('.copy')!;
+    expect(btn.getAttribute('aria-label')).toBe('COPY SKILL TO ANOTHER REPO');
+    btn.click();
+    expect(store.copyAgentRef()).toEqual({ repoId: 'shop', name: 'pdf', kind: 'skill' });
+  });
+
+  it('is not offered for CLAUDE.md or without the server', () => {
     expect(open('CLAUDE.md').el.querySelector('.copy')).toBeNull();
     TestBed.resetTestingModule();
     expect(open('.claude/agents/reviewer.md', 'mock').el.querySelector('.copy')).toBeNull();

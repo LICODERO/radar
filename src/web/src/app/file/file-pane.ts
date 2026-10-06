@@ -35,7 +35,13 @@ export class FilePane {
     const v = this.visibility();
     return this.store.mode() === 'api' && !this.store.scanning() && (v === 'public' || v === 'private' || v === 'untracked');
   });
-  protected readonly canCopy = computed(() => this.store.mode() === 'api' && !!this.agent() && this.f().status === 'ready' && !this.store.scanning());
+  /** the skill this file is (its SKILL.md), when it is one of the scanned repo's skills */
+  protected readonly skill = computed(() => {
+    const f = this.store.file();
+    const repo = f ? this.store.repos().find((r) => r.id === f.repoId) : undefined;
+    return f && repo ? repo.skills.find((s) => s.path === f.path) ?? null : null;
+  });
+  protected readonly canCopy = computed(() => this.store.mode() === 'api' && (!!this.agent() || !!this.skill()) && this.f().status === 'ready' && !this.store.scanning());
   protected readonly lines = computed(() => (this.f().text ? this.f().text.split('\n').length : 0));
   protected readonly closeBtn = viewChild<ElementRef<HTMLButtonElement>>('closeBtn');
 
@@ -46,6 +52,15 @@ export class FilePane {
       const btn = this.closeBtn();
       if (btn) queueMicrotask(() => btn.nativeElement.focus({ preventScroll: true }));
     });
+  }
+
+  protected copy(): void {
+    const f = this.store.file();
+    if (!f) return;
+    const a = this.agent();
+    const s = this.skill();
+    if (a) this.store.openCopyAgent(f.repoId, a.name);
+    else if (s) this.store.openCopyAgent(f.repoId, s.name, 'skill');
   }
 
   protected changeVisibility(): void {

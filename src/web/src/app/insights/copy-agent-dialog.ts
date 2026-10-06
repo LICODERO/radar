@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { CopyTarget } from '../core/models';
+import { CopyAgentResult, CopyTarget } from '../core/models';
 import { ApiError } from '../core/radar-api';
 import { RadarStore } from '../core/radar-store';
 import { I18n } from '../i18n/i18n';
+import { MsgKey } from '../i18n/pl';
 import { NewVisibility, VisibilityPicker } from '../shared/visibility-picker';
 
 type Phase = 'loading' | 'plan' | 'saving' | 'done' | 'error';
@@ -26,12 +27,19 @@ export class CopyAgentDialog {
   protected readonly t = inject(I18n).t;
 
   protected readonly ref = computed(() => this.store.copyAgentRef());
+  protected readonly kind = computed(() => this.ref()?.kind ?? 'agent');
   protected readonly source = computed(() => this.store.repos().find((r) => r.id === this.ref()?.repoId) ?? null);
   protected readonly phase = signal<Phase>('loading');
   protected readonly error = signal<string | null>(null);
   protected readonly targets = signal<CopyTarget[]>([]);
   protected readonly chosen = signal<ReadonlySet<string>>(new Set());
   protected readonly results = signal<CopyTarget[]>([]);
+  protected readonly plan = signal<CopyAgentResult | null>(null);
+  /** what travels with a skill: files and what was left out */
+  protected readonly skillFiles = computed(() => this.plan()?.files ?? []);
+  protected readonly leftOut = computed(() => this.plan()?.skipped ?? []);
+  protected readonly leftOutText = computed(() => this.leftOut().map((x) => `${x.path} (${this.t(('copy.reason.' + x.reason) as MsgKey)})`).join(', '));
+  protected readonly kb = computed(() => Math.max(1, Math.round((this.plan()?.bytes ?? 0) / 1024)));
   protected readonly visibility = signal<NewVisibility>('private');
 
   /** repos other than the source that have no agent of this name, the ones with the source's stack first */
@@ -40,7 +48,7 @@ export class CopyAgentDialog {
     const name = this.ref()?.name.toLowerCase();
     if (!src || !name) return [];
     return this.store.repos()
-      .filter((r) => r.id !== src.id && !r.agents.some((a) => a.name.toLowerCase() === name))
+      .filter((r) => r.id !== src.id && !(this.kind() === 'skill' ? r.skills : r.agents).some((a) => a.name.toLowerCase() === name))
       .sort((a, b) => Number(b.stack === src.stack) - Number(a.stack === src.stack) || a.name.localeCompare(b.name))
       .slice(0, MAX_TARGETS);
   });
@@ -67,7 +75,9 @@ export class CopyAgentDialog {
     if (!ref) return;
     if (ids.length === 0) { this.phase.set('plan'); return; }
     try {
-      this.targets.set((await this.store.planCopyAgent(ref.repoId, ref.name, ids, this.visibility())).targets);
+      const plan = await this.store.planCopyAgent(ref.repoId, ref.name, ids, this.visibility(), ref.kind);
+      this.plan.set(plan);
+      this.targets.set(plan.targets);
       this.phase.set('plan');
     } catch (e) {
       this.error.set(e instanceof ApiError ? e.message : this.t('copy.planFailed'));
@@ -88,7 +98,7 @@ export class CopyAgentDialog {
     this.error.set(null);
     this.phase.set('saving');
     try {
-      this.results.set((await this.store.applyCopyAgent(ref.repoId, ref.name, ids, this.visibility())).targets);
+      this.results.set((await this.store.applyCopyAgent(ref.repoId, ref.name, ids, this.visibility(), ref.kind)).targets);
       this.phase.set('done');
     } catch (e) {
       this.error.set(e instanceof ApiError ? e.message : this.t('copy.saveFailed'));

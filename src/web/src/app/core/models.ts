@@ -85,7 +85,10 @@ export interface VisibilityOutcome {
 }
 
 export interface CopyTarget { repoId: string; status: 'ready' | 'created' | 'exists' | 'unknown-repo' | 'repo-missing' | 'forbidden' | 'cannot-hide'; path?: string | null; hidden?: boolean }
-export interface CopyAgentResult { name: string; source: string; written: boolean; targets: CopyTarget[] }
+export interface SkippedFile { path: string; reason: 'symlink' | 'binary' | 'unreadable' }
+/** what a copy did or would do; for a skill `files`/`bytes`/`skipped` describe the folder that travels */
+export interface CopyAgentResult { name: string; source: string; written: boolean; targets: CopyTarget[]; files?: string[]; bytes?: number; skipped?: SkippedFile[] }
+export type CopyKind = 'agent' | 'skill';
 
 /** one content of a shared agent/skill and the repos that hold it; `path` is the file in the first of them */
 export interface ItemVariant { hash: string; repos: string[]; path: string }
