@@ -506,7 +506,7 @@ export const PL = {
   'composer.workflow.generateFailed': 'Nie udało się wygenerować workflow.',
   'composer.workflow.editorAria': 'Treść pliku workflow',
   'right.local': 'INSTRUKCJE LOKALNE',
-  'right.localTip': 'Mówi Claude’owi o prywatnych workflow i AGENTS.md w pliku CLAUDE.local.md, którego nie widzi git. Najpierw pokażę, co zapiszę.',
+  'right.localTip': 'Instrukcje dla Claude’a w CLAUDE.local.md (ukryte przed gitem)',
   'local.title': 'Instrukcje lokalne · {repo}',
   'local.eyebrow': 'INSTRUKCJE LOKALNE DLA CLAUDE’A',
   'local.close': 'Zamknij',

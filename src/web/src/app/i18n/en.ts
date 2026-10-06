@@ -504,7 +504,7 @@ export const EN: Record<MsgKey, Message> = {
   'composer.workflow.generateFailed': 'Could not generate the workflow.',
   'composer.workflow.editorAria': 'Workflow file content',
   'right.local': 'LOCAL INSTRUCTIONS',
-  'right.localTip': 'Tells Claude about private workflows and AGENTS.md in CLAUDE.local.md, which git does not see. I show what I will write first.',
+  'right.localTip': 'Instructions for Claude in CLAUDE.local.md (hidden from git)',
   'local.title': 'Local instructions · {repo}',
   'local.eyebrow': 'LOCAL INSTRUCTIONS FOR CLAUDE',
   'local.close': 'Close',
