@@ -562,8 +562,9 @@ export const EN: Record<MsgKey, Message> = {
   'gapsList.createTip': 'Runs Claude Code in {repo} to create CLAUDE.md. You will be asked to confirm first.',
   // quality of the AI files
   'gap.weak-files': 'WEAK FILES',
-  'right.quality': 'FILE QUALITY {score}% · {n}',
-  'right.qualityClean': 'FILE QUALITY {score}% · no findings',
+  'right.qualityLabel': 'FILE QUALITY',
+  'right.quality': '{score}% · {n}',
+  'right.qualityClean': '{score}% · no findings',
   'right.qualityTip': 'Show what is wrong with this repo’s AI files',
   'quality.eyebrow': 'FILE QUALITY',
   'quality.title': '{name}: {score}%',

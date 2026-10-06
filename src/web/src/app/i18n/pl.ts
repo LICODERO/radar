@@ -564,8 +564,9 @@ export const PL = {
   'gapsList.createTip': 'Uruchomi Claude Code w {repo}, żeby utworzyć CLAUDE.md. Najpierw poprosimy o potwierdzenie.',
   // quality of the AI files
   'gap.weak-files': 'SŁABE PLIKI',
-  'right.quality': 'JAKOŚĆ PLIKÓW {score}% · {n}',
-  'right.qualityClean': 'JAKOŚĆ PLIKÓW {score}% · bez uwag',
+  'right.qualityLabel': 'JAKOŚĆ PLIKÓW',
+  'right.quality': '{score}% · {n}',
+  'right.qualityClean': '{score}% · bez uwag',
   'right.qualityTip': 'Pokaż, co jest nie tak z plikami AI tego repozytorium',
   'quality.eyebrow': 'JAKOŚĆ PLIKÓW',
   'quality.title': '{name}: {score}%',

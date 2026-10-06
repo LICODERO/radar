@@ -11,7 +11,10 @@
     <div class="cname">{{ s.name }}</div>
     <div class="m flags" [style.color]="s.claudeMd.exists ? '#a99bff' : '#ff4fa3'">{{ flags() }}</div>
     @if (s.quality?.score != null) {
-      <button class="m qrow tip" type="button" [style.color]="qualityColor()" [attr.data-tip]="t('right.qualityTip')" (click)="store.openQuality()">{{ qualityText() }} ›</button>
+      <button class="m qbar tip tip-l" type="button" [attr.data-tip]="t('right.qualityTip')" (click)="store.openQuality()">
+        <span class="qtop"><span class="ql">{{ t('right.qualityLabel') }}</span><span class="qv" [style.color]="qualityColor()">{{ qualityText() }} ›</span></span>
+        <span class="qtrack" role="progressbar" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="s.quality?.score" [attr.aria-label]="t('right.qualityLabel')"><span class="qfill" [style.width.%]="s.quality?.score" [style.background]="qualityColor()"></span></span>
+      </button>
     }
     @if (store.vaultReady()) {
       <div class="m sb" [class.on]="store.selectedHasVault()">{{ store.selectedHasVault() ? t('right.sbOn') : t('right.sbOff') }}</div>
@@ -20,7 +23,9 @@
       @if (s.claudeMd.exists) {
         <button class="m btn-ghost open" type="button" (click)="store.openFile(s.id, s.claudeMd.path, 'CLAUDE.md', '#c6ff3d')">{{ t('right.openClaude') }}</button>
       }
-      <button class="m btn-ghost open tip tip-l" type="button" [disabled]="isMock()" [attr.data-tip]="t('right.localTip')" (click)="store.openLocalFile()">{{ t('right.local') }}</button>
+      <button class="loc tip tip-r" type="button" [disabled]="isMock()" [attr.aria-label]="t('right.local')" [attr.data-tip]="t('right.localTip')" (click)="store.openLocalFile()">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10h11v2H3v-2zm0-2h11V6H3v2zm0 8h7v-2H3v2zm15.01-3.13l.71-.71c.39-.39 1.02-.39 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-.71.71-2.12-2.12zm-.71.71l-5.3 5.3V21h2.12l5.3-5.3-2.12-2.13z" /></svg>
+      </button>
     </div>
 
     <div class="m sec">{{ t('right.agents', { n: s.agents.length }) }}</div>
