@@ -1,6 +1,6 @@
-/** A card shows at most `limit` chips; with more, it shows `shown` of them and a "+N" tile that opens the full list. */
-export const CHIPS_SHOWN = 5;
-export const CHIPS_LIMIT = 6;
+/** A card shows at most three chips per category; with more, it shows three and a "+N" tile that opens the full list, so the card never needs to scroll. */
+export const CHIPS_SHOWN = 3;
+export const CHIPS_LIMIT = 3;
 
 export interface Chips<T> {
   visible: T[];

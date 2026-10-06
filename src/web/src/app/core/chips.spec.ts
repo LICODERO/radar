@@ -16,11 +16,13 @@ describe('limitChips', () => {
     expect(r.extra).toBe(CHIPS_LIMIT + 1 - CHIPS_SHOWN);
   });
 
-  it('never leaves a tile that stands for a single item that would have fit', () => {
+  it('shows three chips and a tile for everything beyond them, so a card never grows with the number of items', () => {
+    expect(CHIPS_SHOWN).toBe(3);
     for (let n = 0; n <= 40; n++) {
       const r = limitChips(items(n));
+      expect(r.visible.length).toBe(Math.min(n, 3));
+      expect(r.extra).toBe(Math.max(0, n - 3));
       expect(r.visible.length + r.extra).toBe(n);
-      if (r.extra > 0) expect(r.extra).toBeGreaterThanOrEqual(2);
     }
   });
 });

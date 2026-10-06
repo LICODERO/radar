@@ -53,7 +53,7 @@
 .sb.on { color: $amber; }
 .sec { font-size: fs(9); letter-spacing: .08em; color: $muted; margin-top: 14px; margin-bottom: 6px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chipx { background: transparent; font-size: fs(10); padding: 3px 7px; cursor: pointer; }
+.chipx { background: transparent; font-size: fs(10); padding: 3px 7px; cursor: pointer; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 span.chipx { cursor: default; }
 .chipx.more { font-weight: 600; }
 
