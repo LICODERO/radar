@@ -94,7 +94,7 @@
 @if (scene().pop; as p) {
   <div class="pop" [style.left.px]="p.left + popOffset().x" [style.top.px]="p.top + popOffset().y" [style.border-color]="p.color" [style.animation]="scene().popAnim + ' .35s ease-out both'">
     <div class="pop-head" [title]="t('orbit.drag')" (pointerdown)="dragStart($event, p)" (pointermove)="dragMove($event)" (pointerup)="dragEnd($event)" (pointercancel)="dragEnd($event)">
-      <div class="m kind" [style.color]="p.color">{{ p.kind }} <app-visibility-tag class="vis" [visibility]="p.visibility" /></div>
+      <div class="m kind" [style.color]="p.color">{{ p.kind }} <app-visibility-tag class="vis" compact side="l" [visibility]="p.visibility" /></div>
       <button class="m btn-ghost close" type="button" [attr.aria-label]="t('orbit.close')" (click)="store.closePop()">✕</button>
     </div>
     <div class="pop-title">{{ p.title }}</div>

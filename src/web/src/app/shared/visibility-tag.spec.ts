@@ -35,6 +35,22 @@ describe('VisibilityTag', () => {
     expect(tag.classList.contains('tip-r')).toBe(false);
   });
 
+  it('can be an icon with the word in its tooltip', () => {
+    TestBed.resetTestingModule();
+    TestBed.inject(I18n).setLang('en');
+    const fixture = TestBed.createComponent(VisibilityTag);
+    fixture.componentRef.setInput('visibility', 'private');
+    fixture.componentRef.setInput('compact', true);
+    fixture.detectChanges();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('.tag')).toBeNull();
+    const ico = el.querySelector('.ico.private')!;
+    expect(ico.querySelector('svg path')).not.toBeNull();
+    expect(ico.getAttribute('aria-label')).toBe('PRIVATE');
+    expect(ico.getAttribute('data-tip')).toContain('PRIVATE – Only on your machine');
+    expect(ico.textContent?.trim()).toBe('');
+  });
+
   it('shows nothing when git could not tell or the scan predates visibility', () => {
     expect(render('unknown').querySelector('.tag')).toBeNull();
     expect(render(null).querySelector('.tag')).toBeNull();
