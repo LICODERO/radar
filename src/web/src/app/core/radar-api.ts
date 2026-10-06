@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { I18n } from '../i18n/i18n';
 import { GapItem, Tool } from './commands';
-import { AgentDraft, CopyAgentResult, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus, VisibilityOutcome, ItemKind } from './models';
+import { AgentDraft, CopyAgentResult, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus, VisibilityOutcome, ItemKind, LocalPlan } from './models';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly body?: any) {
@@ -111,6 +111,11 @@ export class RadarApi {
   /** Without `confirm` the server only plans the change; with it, it edits .git/info/exclude (and takes a tracked file out of the index). */
   setVisibility(repoId: string, path: string, visibility: 'private' | 'public', confirm: boolean): Promise<VisibilityOutcome> {
     return this.call('POST', '/api/visibility', { repoId, path, visibility, confirm });
+  }
+
+  /** Plans (or with `confirm` writes) what keeps Claude informed: the private workflow index and the AGENTS.md import in CLAUDE.local.md, optionally the public workflows in CLAUDE.md. */
+  localFile(repoId: string, includePublic: boolean, confirm: boolean): Promise<LocalPlan> {
+    return this.call('POST', '/api/local-file', { repoId, includePublic, confirm });
   }
 
   // ---- second brain ----------------------------------------------------------------------------

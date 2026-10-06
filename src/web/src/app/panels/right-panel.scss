@@ -33,6 +33,7 @@
 .qrow:hover, .qrow:focus-visible { text-decoration: underline; outline: none; }
 .sb { font-size: fs(10); color: $muted; margin-top: 4px; }
 .sb.on { color: $amber; }
+.openrow { display: flex; gap: 8px; flex-wrap: wrap; }
 .open { margin-top: 10px; background: transparent; border: 1px solid #c6ff3d88; color: $lime; font-size: fs(10); letter-spacing: .12em; padding: 6px 10px; cursor: pointer; }
 .sec { font-size: fs(9); letter-spacing: .08em; color: $muted; margin-top: 14px; margin-bottom: 6px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }

@@ -87,3 +87,20 @@ public class VisibilityTests
         Assert.Equal(Visibilities.Untracked, wf.Repos.Single().Visibility);
     }
 }
+
+public class LocalLinkTests
+{
+    [Fact]
+    public void A_workflow_named_in_CLAUDE_local_md_counts_as_linked()
+    {
+        using var t = new FixtureTree();
+        var repo = t.Repo("app");
+        t.File("app/CLAUDE.md", "# App\n");
+        t.File("app/CLAUDE.local.md", "- `scratch` File: `.claude/workflows/scratch.md`\n");
+        t.File("app/.claude/workflows/scratch.md", "---\nname: scratch\n---\nx");
+        t.File("app/.claude/workflows/other.md", "---\nname: other\n---\nx");
+        var a = RepoAnalyzer.Analyze(t.Root, repo);
+        Assert.True(a.Workflows.Single(w => w.Name == "scratch").Linked);
+        Assert.False(a.Workflows.Single(w => w.Name == "other").Linked);
+    }
+}

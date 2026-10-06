@@ -27,6 +27,8 @@ public static class RepoAnalyzer
         var claudePath = Path.Combine(repoDir, "CLAUDE.md");
         var claudeExists = File.Exists(claudePath);
         var claudeText = claudeExists ? SafeFs.ReadText(repoDir, claudePath) : null;
+        var localPath = Path.Combine(repoDir, "CLAUDE.local.md");
+        var localText = File.Exists(localPath) ? SafeFs.ReadText(repoDir, localPath) : null;
         var findings = new List<QualityFinding>();
         var qualityFiles = new List<(string Path, string Kind)>();
         if (claudeText is not null)
@@ -86,9 +88,9 @@ public static class RepoAnalyzer
             var text = SafeFs.ReadText(repoDir, file);
             var fm = Frontmatter.Parse(text);
             if (fm.Present && !fm.Valid) warnings.Add(new WarningInfo(id, rel, "Nieprawidłowy frontmatter (brak zamknięcia ---)."));
-            var linked = claudeText is not null
-                && (claudeText.Contains(rel, StringComparison.OrdinalIgnoreCase)
-                    || claudeText.Contains("workflows/" + fileName, StringComparison.OrdinalIgnoreCase));
+            // a workflow is linked when CLAUDE.md or the private CLAUDE.local.md points at it, so Claude is told it exists
+            var linked = new[] { claudeText, localText }.Any(t => t is not null
+                && (t.Contains(rel, StringComparison.OrdinalIgnoreCase) || t.Contains("workflows/" + fileName, StringComparison.OrdinalIgnoreCase)));
             workflows.Add(new RawWorkflow(
                 id,
                 fm.Get("name") ?? Path.GetFileNameWithoutExtension(file),

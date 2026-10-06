@@ -55,6 +55,7 @@
         @if (store.insightsOpen()) { <app-insights-dialog /> }
         @if (store.copyAgentRef()) { <app-copy-agent-dialog /> }
         @if (store.visibilityRef()) { <app-visibility-dialog /> }
+        @if (store.localFileRepoId()) { <app-local-file-dialog /> }
         @if (store.vaultOpen()) { <app-vault-dialog /> }
         @if (store.projectRepoId()) { <app-project-dialog /> }
         @if (store.scan()) { <app-scan-overlay /> }

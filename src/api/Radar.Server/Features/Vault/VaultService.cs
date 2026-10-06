@@ -144,6 +144,9 @@ public sealed partial class VaultService(ISettingsStore settings)
                 current = File.ReadAllText(claudeLocal);
             }
             var updated = MarkedBlock.Upsert(current, BlockStart, BlockEnd, block);
+            // a CLAUDE.local.md makes Claude stop reading AGENTS.md on its own, so the import has to come with it
+            if (updated is not null && LocalFile.LocalBlocks.NeedsAgentsImport(repoDir))
+                updated = MarkedBlock.Upsert(updated, LocalFile.LocalBlocks.AgentsStart, LocalFile.LocalBlocks.AgentsEnd, LocalFile.LocalBlocks.AgentsImport);
             if (updated is null) return new EnableResult(EnableOutcome.BlockDamaged, plan);
             if (updated != current) File.WriteAllText(claudeLocal, updated, new UTF8Encoding(false));
         }
@@ -164,6 +167,7 @@ public sealed partial class VaultService(ISettingsStore settings)
         - Project folder: `{projectDir}`
 
         Start with `{Path.Combine(vault, VaultFiles.IndexMain)}` (how to use the vault), then `{Path.Combine(projectDir, VaultFiles.ProjectIndex)}`. `raw/` is read-only.
+        Use the `radar-second-brain` skill, when it is available, to add a source to the vault, answer a question from it or check it.
         """;
 
     /// <summary>A repo name as a folder name: letters, digits, dot, underscore and dash only.</summary>

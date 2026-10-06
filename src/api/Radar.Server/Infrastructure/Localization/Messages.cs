@@ -20,6 +20,8 @@ public enum Msg
     // agents
     DescriptionRequired, DescriptionTooLong, GenerationBusy, AgentNameTakenInRepo, ContentRequired, AgentInvalid, AgentExists, WriteForbidden,
     AgentSourceMissing, CopySourceUnreadable, CopyNoTargets, CopyTooMany,
+    // local instructions
+    LocalFileBlocked, LocalFileWriteFailed,
     // new skill / workflow
     ItemKindInvalid, ItemDescriptionRequired, ItemNameTaken, ItemExists,
     // skills
@@ -79,6 +81,9 @@ public static class Messages
         [Msg.CopyNoTargets] = ("Wybierz repozytoria, do których skopiować agenta.", "Choose the repositories to copy the agent to."),
         [Msg.CopyTooMany] = ("Za dużo repozytoriów naraz (max {0}).", "Too many repositories at once (max {0})."),
         [Msg.WriteForbidden] = ("Zapis w tym katalogu jest zabroniony (dowiązanie poza repozytorium).", "Writing in this directory is not allowed (a link pointing outside the repository)."),
+
+        [Msg.LocalFileBlocked] = ("Nie mogę bezpiecznie zapisać instrukcji lokalnych w tym repozytorium.", "Cannot safely write the local instructions in this repository."),
+        [Msg.LocalFileWriteFailed] = ("Nie udało się zapisać plików instrukcji. Zmiany zostały cofnięte.", "Could not write the instruction files. The changes were rolled back."),
 
         [Msg.ItemKindInvalid] = ("Nieznany rodzaj elementu (skill albo workflow).", "Unknown item kind (skill or workflow)."),
         [Msg.ItemDescriptionRequired] = ("Opisz własnymi słowami, co ma robić ten element.", "Describe in your own words what this item should do."),

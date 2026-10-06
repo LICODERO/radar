@@ -1,0 +1,58 @@
+<div class="backdrop" (click)="store.closeLocalFile()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('local.title', { repo: repo()?.name ?? '' })">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">{{ t('local.eyebrow') }}</div>
+      <div class="ttl">{{ repo()?.name }}</div>
+    </div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('local.close')" (click)="store.closeLocalFile()">✕</button>
+  </div>
+
+  <div class="body">
+    @if (phase() === 'done') {
+      <p class="lead">{{ t('local.done') }}</p>
+    } @else {
+      <p class="text">{{ t('local.intro') }}</p>
+      @if (phase() === 'loading') { <p class="m wait">{{ t('local.loading') }}</p> }
+    }
+
+    @if (plan(); as p) {
+      @if (p.blocked) {
+        <div class="m warn" role="alert">{{ blockedText(p.blocked) }}</div>
+      } @else if (p.parts.length === 0 && phase() !== 'done') {
+        <p class="m hint nothing">{{ t('local.nothing') }}</p>
+      } @else {
+        <div class="m lbl">{{ phase() === 'done' ? t('local.didLabel') : t('local.willLabel') }}</div>
+        <ul class="parts">
+          @for (part of p.parts; track part.id) {
+            <li>
+              <div class="m ph"><span class="pt">{{ partTitle(part) }}</span><span class="pa">{{ actionText(part) }} · {{ part.file }}</span></div>
+              @if (part.text) { <pre class="m block">{{ part.text }}</pre> }
+            </li>
+          }
+        </ul>
+      }
+      @for (n of p.notes; track n) { <p class="m note">{{ noteText(n) }}</p> }
+    }
+
+    @if (canOfferPublic()) {
+      <label class="m pub">
+        <input type="checkbox" [checked]="includePublic()" [disabled]="phase() === 'saving' || phase() === 'done'" (change)="togglePublic()" />
+        <span>{{ t('local.includePublic') }}<span class="sub">{{ t('local.includePublicHint') }}</span></span>
+      </label>
+    }
+
+    @if (error(); as e) { <div class="m err" role="alert">{{ e }}</div> }
+
+    <div class="btns">
+      @if (phase() === 'done') {
+        <button class="m btn-solid go" type="button" (click)="store.closeLocalFile()">{{ t('local.closeBtn') }}</button>
+      } @else {
+        <button class="m btn-solid go" type="button" [disabled]="phase() !== 'plan' || !actionable()" (click)="confirm()">
+          {{ phase() === 'saving' ? t('local.saving') : t('local.confirm') }}
+        </button>
+        <button class="m btn-ghost" type="button" [disabled]="phase() === 'saving'" (click)="store.closeLocalFile()">{{ t('local.cancel') }}</button>
+      }
+    </div>
+  </div>
+</div>

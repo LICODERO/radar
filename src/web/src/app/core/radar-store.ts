@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AI_TOOLS } from './ai-tools';
-import { CopyAgentResult, CopyKind, ItemKind, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, Visibility, VisibilityOutcome, WorkflowInfo } from './models';
+import { CopyAgentResult, CopyKind, ItemKind, LocalPlan, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, Visibility, VisibilityOutcome, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, buildCommand, countByType } from './commands';
@@ -114,6 +114,8 @@ export class RadarStore {
   readonly copyAgentRef = signal<{ repoId: string; name: string; kind: CopyKind } | null>(null);
   /** the item whose public/private state is being changed (the confirm dialog); `current` is what the scan saw */
   readonly visibilityRef = signal<{ repoId: string; path: string; current: Visibility } | null>(null);
+  /** the repo whose local instructions (CLAUDE.local.md) are being set up (the confirm dialog) */
+  readonly localFileRepoId = signal<string | null>(null);
   readonly sharedItems = computed(() => this.result()?.shared ?? []);
   readonly driftedCount = computed(() => this.sharedItems().filter((s) => s.variants.length > 1).length);
   /** anything for the insights button to offer */
@@ -407,6 +409,19 @@ export class RadarStore {
   /** Applies the change, then rescans quietly so every tag shows the new state. */
   async applyVisibility(repoId: string, path: string, target: 'private' | 'public'): Promise<VisibilityOutcome> {
     const r = await this.api.setVisibility(repoId, path, target, true);
+    void this.refreshQuiet();
+    return r;
+  }
+
+  openLocalFile(): void {
+    const id = this.selected()?.id;
+    if (id && this.mode() === 'api') this.localFileRepoId.set(id);
+  }
+  closeLocalFile(): void { this.localFileRepoId.set(null); }
+  planLocalFile(repoId: string, includePublic: boolean): Promise<LocalPlan> { return this.api.localFile(repoId, includePublic, false); }
+  /** Writes the files, then rescans quietly (a workflow named in CLAUDE.local.md counts as linked). */
+  async applyLocalFile(repoId: string, includePublic: boolean): Promise<LocalPlan> {
+    const r = await this.api.localFile(repoId, includePublic, true);
     void this.refreshQuiet();
     return r;
   }

@@ -16,9 +16,12 @@
     @if (store.vaultReady()) {
       <div class="m sb" [class.on]="store.selectedHasVault()">{{ store.selectedHasVault() ? t('right.sbOn') : t('right.sbOff') }}</div>
     }
-    @if (s.claudeMd.exists) {
-      <button class="m btn-ghost open" type="button" (click)="store.openFile(s.id, s.claudeMd.path, 'CLAUDE.md', '#c6ff3d')">{{ t('right.openClaude') }}</button>
-    }
+    <div class="openrow">
+      @if (s.claudeMd.exists) {
+        <button class="m btn-ghost open" type="button" (click)="store.openFile(s.id, s.claudeMd.path, 'CLAUDE.md', '#c6ff3d')">{{ t('right.openClaude') }}</button>
+      }
+      <button class="m btn-ghost open tip tip-r" type="button" [disabled]="isMock()" [attr.data-tip]="t('right.localTip')" (click)="store.openLocalFile()">{{ t('right.local') }}</button>
+    </div>
 
     <div class="m sec">{{ t('right.agents', { n: s.agents.length }) }}</div>
     <div class="chips">

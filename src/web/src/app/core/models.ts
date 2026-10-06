@@ -84,6 +84,17 @@ export interface VisibilityOutcome {
   visibility: Visibility;
 }
 
+/** one change of the local instructions: id = exclude | agents-md | workflows-local | workflows-public; action = create | update | remove */
+export interface LocalPart { id: 'exclude' | 'agents-md' | 'workflows-local' | 'workflows-public'; file: string; action: 'create' | 'update' | 'remove' | 'unchanged'; text?: string | null }
+export interface LocalPlan {
+  parts: LocalPart[];
+  blocked: 'no-git' | 'local-tracked' | 'exclude-damaged' | 'local-damaged' | 'claude-damaged' | 'forbidden' | 'too-big' | null;
+  notes: ('agents-md-not-imported' | 'no-claude-md')[];
+  /** public workflows CLAUDE.md does not mention yet */
+  publicCandidates: number;
+  applied: boolean;
+}
+
 export interface CopyTarget { repoId: string; status: 'ready' | 'created' | 'exists' | 'unknown-repo' | 'repo-missing' | 'forbidden' | 'cannot-hide'; path?: string | null; hidden?: boolean }
 export interface SkippedFile { path: string; reason: 'symlink' | 'binary' | 'unreadable' }
 /** what a copy did or would do; for a skill `files`/`bytes`/`skipped` describe the folder that travels */
