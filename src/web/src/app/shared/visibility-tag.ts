@@ -9,7 +9,7 @@ import { MsgKey } from '../i18n/pl';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (shown(); as v) {
-      <span class="m tag tip tip-b tip-r" [class]="v.state" [attr.data-tip]="v.tip">{{ v.label }}</span>
+      <span class="m tag tip tip-b" [class]="v.state + (side() === 'l' ? ' tip-l' : ' tip-r')" [attr.data-tip]="v.tip">{{ v.label }}</span>
     }
   `,
   styleUrl: './visibility-tag.scss'
@@ -17,6 +17,8 @@ import { MsgKey } from '../i18n/pl';
 export class VisibilityTag {
   protected readonly t = inject(I18n).t;
   readonly visibility = input<Visibility | null | undefined>(null);
+  /** which edge the tooltip hangs from: `r` grows to the left (for tags near the right edge), `l` grows to the right */
+  readonly side = input<'l' | 'r'>('r');
   protected readonly shown = computed(() => {
     const v = this.visibility();
     if (v !== 'public' && v !== 'private' && v !== 'untracked') return null;

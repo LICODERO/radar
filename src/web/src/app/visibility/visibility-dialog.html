@@ -10,9 +10,9 @@
 
   <div class="body">
     <div class="flow">
-      <app-visibility-tag [visibility]="ref()?.current" />
+      <app-visibility-tag side="l" [visibility]="ref()?.current" />
       <span class="m arrow">→</span>
-      <app-visibility-tag [visibility]="phase() === 'done' ? outcome()?.visibility : target()" />
+      <app-visibility-tag side="l" [visibility]="phase() === 'done' ? outcome()?.visibility : target()" />
     </div>
 
     @if (phase() === 'done') {

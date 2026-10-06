@@ -22,6 +22,19 @@ describe('VisibilityTag', () => {
     expect(render('private').querySelector('.tag')?.getAttribute('data-tip')).toContain('never reaches a commit');
   });
 
+  it('hangs the tooltip from the right edge by default and from the left edge on request', () => {
+    expect(render('public').querySelector('.tag')?.classList.contains('tip-r')).toBe(true);
+    TestBed.resetTestingModule();
+    TestBed.inject(I18n).setLang('en');
+    const fixture = TestBed.createComponent(VisibilityTag);
+    fixture.componentRef.setInput('visibility', 'public');
+    fixture.componentRef.setInput('side', 'l');
+    fixture.detectChanges();
+    const tag = (fixture.nativeElement as HTMLElement).querySelector('.tag')!;
+    expect(tag.classList.contains('tip-l')).toBe(true);
+    expect(tag.classList.contains('tip-r')).toBe(false);
+  });
+
   it('shows nothing when git could not tell or the scan predates visibility', () => {
     expect(render('unknown').querySelector('.tag')).toBeNull();
     expect(render(null).querySelector('.tag')).toBeNull();
