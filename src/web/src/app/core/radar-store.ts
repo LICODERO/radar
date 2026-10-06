@@ -388,10 +388,10 @@ export class RadarStore {
 
   openCopyAgent(repoId: string, name: string): void { this.copyAgentRef.set({ repoId, name }); }
   closeCopyAgent(): void { this.copyAgentRef.set(null); }
-  planCopyAgent(from: string, name: string, to: string[]): Promise<CopyAgentResult> { return this.api.copyAgent(from, name, to, false); }
+  planCopyAgent(from: string, name: string, to: string[], visibility: 'private' | 'public' = 'private'): Promise<CopyAgentResult> { return this.api.copyAgent(from, name, to, false, visibility); }
   /** Writes the copies, then rescans quietly so the new agents show up everywhere. */
-  async applyCopyAgent(from: string, name: string, to: string[]): Promise<CopyAgentResult> {
-    const r = await this.api.copyAgent(from, name, to, true);
+  async applyCopyAgent(from: string, name: string, to: string[], visibility: 'private' | 'public' = 'private'): Promise<CopyAgentResult> {
+    const r = await this.api.copyAgent(from, name, to, true, visibility);
     void this.refreshQuiet();
     return r;
   }

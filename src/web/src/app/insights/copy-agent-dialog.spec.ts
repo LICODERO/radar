@@ -39,7 +39,7 @@ async function open() {
 describe('CopyAgentDialog', () => {
   it('asks about every repo that lacks the agent, the source stack first, and ticks nothing by itself', async () => {
     const { el, planSpy } = await open();
-    expect(planSpy).toHaveBeenCalledWith('a-api', 'reviewer', ['b-api', 'd-api', 'z-front']);
+    expect(planSpy).toHaveBeenCalledWith('a-api', 'reviewer', ['b-api', 'd-api', 'z-front'], 'private');
     expect([...el.querySelectorAll('.target .rn')].map((e) => e.textContent)).toEqual(['b-api', 'z-front']);   // d-api is reported as taken
     expect([...el.querySelectorAll<HTMLInputElement>('.target input')].some((i) => i.checked)).toBe(false);
     expect(el.textContent).toContain('d-api');
@@ -54,8 +54,36 @@ describe('CopyAgentDialog', () => {
     el.querySelector<HTMLButtonElement>('.go')!.click();
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(applySpy).toHaveBeenCalledWith('a-api', 'reviewer', ['z-front']);
+    expect(applySpy).toHaveBeenCalledWith('a-api', 'reviewer', ['z-front'], 'private');
     expect(el.textContent).toContain('Copied to 1 repository.');
+  });
+
+  it('copies privately by default and plans again when the user picks public', async () => {
+    const { el, planSpy, applySpy, fixture } = await open();
+    expect(el.querySelector('app-visibility-picker .opt.on')?.textContent).toContain('PRIVATE');
+    expect(el.textContent).toContain('The copies are private');
+
+    el.querySelectorAll<HTMLButtonElement>('app-visibility-picker .opt')[1].click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(planSpy).toHaveBeenLastCalledWith('a-api', 'reviewer', ['b-api', 'd-api', 'z-front'], 'public');
+    el.querySelectorAll<HTMLInputElement>('.target input')[0].click();
+    fixture.detectChanges();
+    el.querySelector<HTMLButtonElement>('.go')!.click();
+    await fixture.whenStable();
+    expect(applySpy).toHaveBeenCalledWith('a-api', 'reviewer', ['b-api'], 'public');
+  });
+
+  it('names the repos where a private copy cannot be hidden and does not offer them', async () => {
+    const { el, planSpy, fixture } = await open();
+    planSpy.mockResolvedValue({ ...plan(['b-api', 'z-front']), targets: [{ repoId: 'b-api', status: 'ready' }, { repoId: 'z-front', status: 'cannot-hide' }] });
+    el.querySelectorAll<HTMLButtonElement>('app-visibility-picker .opt')[1].click();
+    el.querySelectorAll<HTMLButtonElement>('app-visibility-picker .opt')[0].click();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect([...el.querySelectorAll('.target .rn')].map((e) => e.textContent)).toEqual(['b-api']);
+    expect(el.textContent).toContain('cannot be hidden from git there');
+    expect(el.textContent).toContain('z-front');
   });
 
   it('says so when every other repo already has the agent', async () => {

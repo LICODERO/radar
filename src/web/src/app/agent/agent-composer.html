@@ -12,7 +12,7 @@
     <div class="ok">
       <div class="okt">{{ t('agent.saved') }}</div>
       <div class="m okp">{{ savedPath() }}</div>
-      <div class="m okn">{{ t('agent.savedNote') }} {{ rescanning() ? t('agent.rescanning') : t('agent.rescanned') }}</div>
+      <div class="m okn">{{ savedHidden() ? t('agent.savedPrivateNote') : t('agent.savedNote') }} {{ rescanning() ? t('agent.rescanning') : t('agent.rescanned') }}</div>
       <div class="btns">
         <button class="m btn-solid go" type="button" [disabled]="rescanning()" (click)="openSaved()">{{ t('agent.openFile') }}</button>
         <button class="m btn-ghost" type="button" (click)="another()">{{ t('agent.another') }}</button>
@@ -73,6 +73,8 @@
           @for (p of problems(); track p) { <li>{{ p }}</li> }
         </ul>
       }
+
+      <app-visibility-picker [(value)]="visibility" [disabled]="busy()" />
 
       <div class="btns save">
         <button class="m btn-solid go" type="button" [disabled]="!canSave()" (click)="save()">{{ phase() === 'saving' ? t('agent.saving') : t('agent.save') }}</button>

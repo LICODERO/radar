@@ -3,6 +3,7 @@ import { CopyTarget } from '../core/models';
 import { ApiError } from '../core/radar-api';
 import { RadarStore } from '../core/radar-store';
 import { I18n } from '../i18n/i18n';
+import { NewVisibility, VisibilityPicker } from '../shared/visibility-picker';
 
 type Phase = 'loading' | 'plan' | 'saving' | 'done' | 'error';
 
@@ -15,6 +16,7 @@ const MAX_TARGETS = 100;
  */
 @Component({
   selector: 'app-copy-agent-dialog',
+  imports: [VisibilityPicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './copy-agent-dialog.html',
   styleUrl: './copy-agent-dialog.scss'
@@ -30,6 +32,7 @@ export class CopyAgentDialog {
   protected readonly targets = signal<CopyTarget[]>([]);
   protected readonly chosen = signal<ReadonlySet<string>>(new Set());
   protected readonly results = signal<CopyTarget[]>([]);
+  protected readonly visibility = signal<NewVisibility>('private');
 
   /** repos other than the source that have no agent of this name, the ones with the source's stack first */
   private readonly candidates = computed(() => {
@@ -43,10 +46,19 @@ export class CopyAgentDialog {
   });
   protected readonly stackOf = computed(() => new Map(this.store.repos().map((r) => [r.id, r.stack])));
   protected readonly readyTargets = computed(() => this.targets().filter((x) => x.status === 'ready'));
-  protected readonly skipped = computed(() => this.targets().filter((x) => x.status !== 'ready'));
+  protected readonly skipped = computed(() => this.targets().filter((x) => x.status !== 'ready' && x.status !== 'cannot-hide'));
+  protected readonly unhideable = computed(() => this.targets().filter((x) => x.status === 'cannot-hide'));
 
   constructor() {
     void this.load();
+  }
+
+  protected async setVisibility(v: NewVisibility): Promise<void> {
+    if (v === this.visibility() || this.phase() === 'saving') return;
+    this.visibility.set(v);
+    this.chosen.set(new Set());
+    this.phase.set('loading');
+    await this.load();
   }
 
   private async load(): Promise<void> {
@@ -55,7 +67,7 @@ export class CopyAgentDialog {
     if (!ref) return;
     if (ids.length === 0) { this.phase.set('plan'); return; }
     try {
-      this.targets.set((await this.store.planCopyAgent(ref.repoId, ref.name, ids)).targets);
+      this.targets.set((await this.store.planCopyAgent(ref.repoId, ref.name, ids, this.visibility())).targets);
       this.phase.set('plan');
     } catch (e) {
       this.error.set(e instanceof ApiError ? e.message : this.t('copy.planFailed'));
@@ -76,7 +88,7 @@ export class CopyAgentDialog {
     this.error.set(null);
     this.phase.set('saving');
     try {
-      this.results.set((await this.store.applyCopyAgent(ref.repoId, ref.name, ids)).targets);
+      this.results.set((await this.store.applyCopyAgent(ref.repoId, ref.name, ids, this.visibility())).targets);
       this.phase.set('done');
     } catch (e) {
       this.error.set(e instanceof ApiError ? e.message : this.t('copy.saveFailed'));
@@ -85,7 +97,8 @@ export class CopyAgentDialog {
   }
 
   protected statusText(r: CopyTarget): string {
-    return r.status === 'created' ? this.t('copy.status.created') : this.t('copy.status.skipped');
+    if (r.status === 'cannot-hide') return this.t('copy.status.cannotHide');
+    return r.status === 'created' ? this.t(r.hidden ? 'copy.status.createdPrivate' : 'copy.status.created') : this.t('copy.status.skipped');
   }
 
   protected created(): number {

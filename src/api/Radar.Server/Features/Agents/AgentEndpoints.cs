@@ -1,15 +1,18 @@
 using Radar.Scanner;
 using Radar.Server.Features.Files;
+using Radar.Server.Features.Gaps;
+using Radar.Server.Features.Visibility;
 using Radar.Server.Features.Scans;
 using Radar.Server.Infrastructure.Localization;
 namespace Radar.Server.Features.Agents;
 
 public sealed record GenerateAgentRequest(string? RepoId, string? Description);
 
-public sealed record CreateAgentRequest(string? RepoId, string? Content);
+/// <param name="Visibility">private puts the new file on the repo's private list (.git/info/exclude); omitted or public leaves it as git sees it</param>
+public sealed record CreateAgentRequest(string? RepoId, string? Content, string? Visibility = null);
 
 /// <param name="Confirm">without it nothing is written: the answer only says what would happen in each repo</param>
-public sealed record CopyAgentRequest(string? FromRepoId, string? Name, string[]? ToRepoIds, bool Confirm);
+public sealed record CopyAgentRequest(string? FromRepoId, string? Name, string[]? ToRepoIds, bool Confirm, string? Visibility = null);
 
 public static class AgentEndpoints
 {
@@ -84,7 +87,7 @@ public static class AgentEndpoints
             var validation = AgentValidator.Validate(read.Content.Content, m.Lang);
             if (!validation.Valid || validation.Name is null) return Results.BadRequest(new { error = m[Msg.AgentInvalid], errors = validation.Errors });
 
-            var targets = AgentCopy.Run(result, source.Id, validation.Name, read.Content.Content, targetIds, req.Confirm);
+            var targets = AgentCopy.Run(result, source.Id, validation.Name, read.Content.Content, targetIds, req.Confirm, req.Visibility == Visibilities.Private);
             return Results.Ok(new { name = validation.Name, source = agent.Path, written = req.Confirm, targets });
         });
 
@@ -102,10 +105,26 @@ public static class AgentEndpoints
             if (AgentWriter.Exists(result, repo, validation.Name))
                 return Results.Json(new { error = m[Msg.AgentExists] }, statusCode: StatusCodes.Status409Conflict);
 
+            var hide = req.Visibility == Visibilities.Private;
+            var relative = $".claude/agents/{validation.Name}.md";
+            var dir = GapCommands.DirOf(result, repo);
+            // private: the file has to be hideable before it exists, so git never offers it for commit
+            if (hide && Directory.Exists(dir) && ItemVisibility.Hide(dir, relative, false, apply: false) is { } why)
+                return Results.Json(new { error = m[Msg.VisibilityCannotHide], blocked = why }, statusCode: StatusCodes.Status409Conflict);
+
             var written = AgentWriter.WriteNew(result, repo, validation.Name, req.Content);
+            if (hide && written.Status == WriteStatus.Created)
+            {
+                try { if (ItemVisibility.Hide(dir, relative, false, apply: true) is not null) throw new VisibilityFailure(Msg.VisibilityCannotHide); }
+                catch (VisibilityFailure e)
+                {
+                    try { File.Delete(Path.Combine(dir, ".claude", "agents", validation.Name + ".md")); } catch (IOException) { /* we created it a moment ago */ }
+                    return Results.Json(new { error = m.T(e.Key, e.Args) }, statusCode: StatusCodes.Status409Conflict);
+                }
+            }
             return written.Status switch
             {
-                WriteStatus.Created => Results.Created($"/api/file?repo={Uri.EscapeDataString(repo.Id)}&path={Uri.EscapeDataString(written.RelativePath!)}", new { path = written.RelativePath }),
+                WriteStatus.Created => Results.Created($"/api/file?repo={Uri.EscapeDataString(repo.Id)}&path={Uri.EscapeDataString(written.RelativePath!)}", new { path = written.RelativePath, hidden = hide }),
                 WriteStatus.Exists => Results.Json(new { error = m[Msg.AgentExists] }, statusCode: StatusCodes.Status409Conflict),
                 WriteStatus.RepoMissing => Results.NotFound(new { error = m[Msg.RepoDirMissing] }),
                 _ => Results.Json(new { error = m[Msg.WriteForbidden] }, statusCode: StatusCodes.Status403Forbidden)

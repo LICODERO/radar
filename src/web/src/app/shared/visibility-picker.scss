@@ -1,0 +1,11 @@
+@use 'tokens' as *;
+
+:host { display: block; margin-top: 16px; }
+.lbl { font-size: fs(11); letter-spacing: .16em; color: $muted; margin-bottom: 6px; }
+.opts { display: flex; gap: 10px; }
+.opt { flex: 1; display: flex; flex-direction: column; gap: 4px; text-align: left; padding: 10px 12px; background: transparent; border: 1px solid #ffffff2a; color: $text; cursor: pointer; }
+.opt:hover:not(:disabled) { border-color: #ffffff66; }
+.opt.on { border-color: $white; background: #e6e9f214; }
+.opt:disabled { opacity: .6; cursor: default; }
+.n { font-size: fs(12); letter-spacing: .14em; color: #fff; }
+.d { font-size: fs(11); line-height: 1.45; color: #a3a9bf; }

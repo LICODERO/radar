@@ -145,4 +145,19 @@ public static class ItemVisibility
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException) { /* best effort */ }
     }
+
+    /// <summary>
+    /// Puts a path that is not in a scan yet (a file or folder the app is about to create) on the private list.
+    /// Returns null on success (or when <paramref name="apply"/> is false and it would work), otherwise the reason: no-git | exclude-damaged.
+    /// </summary>
+    public static string? Hide(string repoDir, string relativePath, bool isDirectory, bool apply)
+    {
+        var file = GitExclude.ResolveFile(repoDir);
+        if (file is null) return "no-git";
+        var old = File.Exists(file) ? File.ReadAllText(file) : null;
+        var text = GitExclude.Add(old, GitExclude.Entry(relativePath, isDirectory));
+        if (text is null) return "exclude-damaged";
+        if (apply && text != old) WriteExclude(file, text);
+        return null;
+    }
 }

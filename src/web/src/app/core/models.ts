@@ -84,7 +84,7 @@ export interface VisibilityOutcome {
   visibility: Visibility;
 }
 
-export interface CopyTarget { repoId: string; status: 'ready' | 'created' | 'exists' | 'unknown-repo' | 'repo-missing' | 'forbidden'; path?: string | null }
+export interface CopyTarget { repoId: string; status: 'ready' | 'created' | 'exists' | 'unknown-repo' | 'repo-missing' | 'forbidden' | 'cannot-hide'; path?: string | null; hidden?: boolean }
 export interface CopyAgentResult { name: string; source: string; written: boolean; targets: CopyTarget[] }
 
 /** one content of a shared agent/skill and the repos that hold it; `path` is the file in the first of them */

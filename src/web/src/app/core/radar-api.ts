@@ -83,13 +83,14 @@ export class RadarApi {
   }
 
   /** Writes the reviewed file as a brand-new .claude/agents/<name>.md (the server never overwrites). */
-  createAgent(repoId: string, content: string): Promise<{ path: string }> {
-    return this.call('POST', '/api/agents', { repoId, content });
+  /** `visibility: 'private'` also puts the new file on the repo's private list (.git/info/exclude); the server refuses when it cannot. */
+  createAgent(repoId: string, content: string, visibility: 'private' | 'public' = 'public'): Promise<{ path: string; hidden?: boolean }> {
+    return this.call('POST', '/api/agents', { repoId, content, visibility });
   }
 
   /** Without `confirm` the server only reports where the copy would land; with it, it adds the file to each repo (never overwriting). */
-  copyAgent(fromRepoId: string, name: string, toRepoIds: string[], confirm: boolean): Promise<CopyAgentResult> {
-    return this.call('POST', '/api/agents/copy', { fromRepoId, name, toRepoIds, confirm });
+  copyAgent(fromRepoId: string, name: string, toRepoIds: string[], confirm: boolean, visibility: 'private' | 'public' = 'public'): Promise<CopyAgentResult> {
+    return this.call('POST', '/api/agents/copy', { fromRepoId, name, toRepoIds, confirm, visibility });
   }
 
   /** Without `confirm` the server only plans the change; with it, it edits .git/info/exclude (and takes a tracked file out of the index). */

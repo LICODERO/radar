@@ -23,7 +23,7 @@ public enum Msg
     // agent file validation
     FileTooBig, FrontmatterMissing, NameInvalid, DescriptionMissing, DescriptionLong, BodyMissing,
     // visibility
-    VisibilityBadTarget, VisibilityWriteFailed, VisibilityGitFailed,
+    VisibilityBadTarget, VisibilityWriteFailed, VisibilityGitFailed, VisibilityCannotHide,
     // vault
     VaultNotReady, VaultNotEmpty, VaultInsideRepo, VaultAlready, VaultNotAVault, VaultTooNew, VaultWriteFailed,
     ProjectNameTaken, ClaudeLocalForbidden, ClaudeLocalDamaged,
@@ -86,6 +86,8 @@ public static class Messages
         [Msg.VisibilityBadTarget] = ("Widoczność może być tylko publiczna albo prywatna.", "Visibility can only be public or private."),
         [Msg.VisibilityWriteFailed] = ("Nie udało się zapisać listy prywatnych plików (.git/info/exclude).", "Could not write the private list (.git/info/exclude)."),
         [Msg.VisibilityGitFailed] = ("Git odmówił zmiany: {0}", "Git refused the change: {0}"),
+
+        [Msg.VisibilityCannotHide] = ("Nie mogę ukryć nowego pliku przed gitem (brak gita, uszkodzony blok w .git/info/exclude), więc go nie tworzę. Wybierz publiczny albo to napraw.", "Cannot hide the new file from git (no git, or a damaged block in .git/info/exclude), so I am not creating it. Pick public, or fix that."),
 
         [Msg.VaultNotReady] = ("Second brain nie jest skonfigurowany albo jego folder jest niedostępny.", "The second brain is not set up, or its folder is unavailable."),
         [Msg.VaultNotEmpty] = ("Wybrany folder nie jest pusty. Wskaż pusty lub nowy folder.", "The chosen folder is not empty. Choose an empty or new folder."),

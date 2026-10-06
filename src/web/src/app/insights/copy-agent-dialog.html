@@ -35,9 +35,11 @@
       } @else if (phase() === 'plan') {
         <p class="m hint">{{ t('copy.noneReady') }}</p>
       }
+      @if (unhideable().length) { <p class="m hint">{{ t('copy.cannotHide', { repos: unhideable().map(s => s.repoId).join(', ') }) }}</p> }
       @if (skipped().length) { <p class="m hint">{{ t('copy.skipped', { repos: skipped().map(s => s.repoId).join(', ') }) }}</p> }
 
-      <p class="m note">{{ t('copy.note') }}</p>
+      <app-visibility-picker [value]="visibility()" (valueChange)="setVisibility($event)" [disabled]="phase() === 'saving'" />
+      <p class="m note">{{ visibility() === 'private' ? t('copy.notePrivate') : t('copy.note') }}</p>
       @if (error(); as e) { <div class="m err" role="alert">{{ e }}</div> }
 
       <div class="btns">

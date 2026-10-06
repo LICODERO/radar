@@ -4,6 +4,7 @@ import { ApiError, RadarApi } from '../core/radar-api';
 import { RadarStore } from '../core/radar-store';
 import { I18n } from '../i18n/i18n';
 import { MdView } from '../shared/md-view';
+import { NewVisibility, VisibilityPicker } from '../shared/visibility-picker';
 
 type Phase = 'input' | 'generating' | 'draft' | 'saving' | 'saved';
 
@@ -11,7 +12,7 @@ const MAX_DESCRIPTION = 2000;
 
 @Component({
   selector: 'app-agent-composer',
-  imports: [MdView],
+  imports: [MdView, VisibilityPicker],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './agent-composer.html',
   styleUrl: './agent-composer.scss'
@@ -31,6 +32,8 @@ export class AgentComposer {
   protected readonly serverErrors = signal<string[]>([]);
   protected readonly cost = signal<number | null>(null);
   protected readonly savedPath = signal<string | null>(null);
+  protected readonly visibility = signal<NewVisibility>('private');
+  protected readonly savedHidden = signal(false);
   protected readonly rescanning = signal(false);
 
   protected readonly repo = computed(() => this.store.repos().find((r) => r.id === this.store.composerRepoId()) ?? null);
@@ -89,8 +92,9 @@ export class AgentComposer {
     this.error.set(null);
     this.phase.set('saving');
     try {
-      const r = await this.api.createAgent(repo.id, this.content());
+      const r = await this.api.createAgent(repo.id, this.content(), this.visibility());
       this.savedPath.set(r.path);
+      this.savedHidden.set(!!r.hidden);
       this.phase.set('saved');
       this.rescanning.set(true);
       await this.store.refreshQuiet();
