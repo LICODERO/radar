@@ -56,15 +56,13 @@ export class RightPanel {
       : this.t('right.qualityClean', { score: q.score });
   });
   protected readonly qualityTip = computed(() => `${this.t('right.qualityLabel')} ${this.qualityText()}. ${this.t('right.qualityTip')}`);
-  /** the flags line without its leading CLAUDE.md, which is a button of its own */
+  /** the text of the CLAUDE.md link: its name, or the words that it is missing */
+  protected readonly claudeLabel = computed(() => (this.sel()?.claudeMd.exists ? 'CLAUDE.md' : this.t('right.noClaudeMd')));
+  /** the rest of the flags line, after the CLAUDE.md link */
   protected readonly flagsRest = computed(() => {
     const s = this.sel();
     if (!s) return '';
-    const all = this.t('right.flags', {
-      claude: s.claudeMd.exists ? '✓' : this.t('right.missing'),
-      agents: this.t('right.agentsCount', { n: s.agents.length }),
-      skills: this.t('right.skillsCount', { n: s.skills.length })
-    });
-    return all.replace(/^CLAUDE\.md/, '');
+    const counts = `${this.t('right.agentsCount', { n: s.agents.length })} · ${this.t('right.skillsCount', { n: s.skills.length })}`;
+    return s.claudeMd.exists ? ` ✓ · ${counts}` : ` · ${counts}`;
   });
 }

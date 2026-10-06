@@ -64,14 +64,16 @@ describe('RightPanel selected-repo card', () => {
     expect(openFile).toHaveBeenCalledWith('app', 'CLAUDE.md', 'CLAUDE.md', '#c6ff3d');
   });
 
-  it('makes a missing CLAUDE.md a red link that starts the creation flow', () => {
+  it('makes a missing CLAUDE.md a red link that says so and starts the creation flow', () => {
     const { store, el } = open(repo({ score: null, findings: [] }, false));
     const flags = el.querySelector<HTMLElement>('.flags')!;
-    expect(flags.style.color).toBe('rgb(255, 79, 163)');
-    expect(flags.textContent).toContain('MISSING');
-    const create = vi.spyOn(store, 'createClaudeMd').mockResolvedValue();
     const link = flags.querySelector<HTMLButtonElement>('.clink')!;
+    expect(flags.style.color).toBe('rgb(255, 79, 163)');
+    expect(link.textContent?.trim()).toBe('NO CLAUDE.MD');
+    expect(flags.textContent).not.toContain('✕');
+    expect(flags.textContent?.replace(/\s+/g, ' ').trim()).toBe('NO CLAUDE.MD · 0 agents · 0 skills');
     expect(link.getAttribute('data-tip')).toContain('click to create it');
+    const create = vi.spyOn(store, 'createClaudeMd').mockResolvedValue();
     link.click();
     expect(create).toHaveBeenCalledWith('app');
   });

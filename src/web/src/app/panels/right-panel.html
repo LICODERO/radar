@@ -26,7 +26,7 @@
     <div class="cname">{{ s.name }}</div>
     <div class="m flags" [style.color]="s.claudeMd.exists ? '#a99bff' : '#ff4fa3'">
       <button class="clink tip tip-l" type="button" [disabled]="!s.claudeMd.exists && isMock()" [attr.data-tip]="s.claudeMd.exists ? t('right.openClaude') : t('right.createClaudeTip')"
-              (click)="s.claudeMd.exists ? store.openFile(s.id, s.claudeMd.path, 'CLAUDE.md', '#c6ff3d') : store.createClaudeMd(s.id)">CLAUDE.md</button>{{ flagsRest() }}
+              (click)="s.claudeMd.exists ? store.openFile(s.id, s.claudeMd.path, 'CLAUDE.md', '#c6ff3d') : store.createClaudeMd(s.id)">{{ claudeLabel() }}</button>{{ flagsRest() }}
     </div>
     @if (store.vaultReady()) {
       <div class="m sb" [class.on]="store.selectedHasVault()">{{ store.selectedHasVault() ? t('right.sbOn') : t('right.sbOff') }}</div>
