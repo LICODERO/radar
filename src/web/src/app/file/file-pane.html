@@ -2,9 +2,9 @@
   <div class="m badge" [style.border-color]="f().color" [style.color]="f().color">MD</div>
   <div class="ttl">
     <div class="m kind" [style.color]="f().color">{{ f().kind }} · {{ f().repoName }} @if (canChangeVisibility()) {
-        <button class="vis vis-btn" type="button" [attr.aria-label]="t('visibility.change')" (click)="changeVisibility()"><app-visibility-tag [visibility]="visibility()" /></button>
+        <button class="vis vis-btn" type="button" [attr.aria-label]="t('visibility.change')" (click)="changeVisibility()"><app-visibility-tag compact [visibility]="visibility()" /></button>
       } @else {
-        <app-visibility-tag class="vis" [visibility]="visibility()" />
+        <app-visibility-tag class="vis" compact [visibility]="visibility()" />
       }
     </div>
     <div class="m path">{{ f().path }}</div>
