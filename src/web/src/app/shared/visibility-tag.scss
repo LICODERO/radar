@@ -1,6 +1,6 @@
 @use 'tokens' as *;
 
-:host { display: inline-block; }
+:host { display: inline-flex; align-items: center; }
 .tag { cursor: default; user-select: none; display: inline-block; font-size: fs(9); letter-spacing: .14em; padding: 2px 6px; border: 1px solid; line-height: 1.3; white-space: nowrap; }
 .tag.public { color: $muted; border-color: #ffffff33; }
 .tag.private { color: $white; border-color: #e6e9f299; background: #e6e9f214; }

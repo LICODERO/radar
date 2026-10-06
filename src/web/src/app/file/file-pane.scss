@@ -11,8 +11,8 @@
 .head { padding: 14px 18px 12px; border-bottom: 1px solid #c6ff3d33; display: flex; align-items: flex-start; gap: 12px; }
 .badge { border: 1px solid; font-size: fs(10); font-weight: 600; padding: 4px 6px; letter-spacing: .1em; }
 .ttl { flex-grow: 1; min-width: 0; }
-.kind { font-size: fs(9); letter-spacing: .2em; }
-.vis { margin-left: 2px; letter-spacing: normal; vertical-align: middle; }
+.kind { display: flex; align-items: center; font-size: fs(9); letter-spacing: .2em; }
+.vis { margin-left: 2px; letter-spacing: normal; display: inline-flex; align-items: center; }
 .vis-btn { background: transparent; border: 0; padding: 0; cursor: pointer; font: inherit; }
 .vis-btn:hover app-visibility-tag, .vis-btn:focus-visible app-visibility-tag { filter: brightness(1.4); }
 .vis-btn:focus-visible { outline: 1px solid #ffffff88; outline-offset: 2px; }

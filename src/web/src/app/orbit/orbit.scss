@@ -42,8 +42,8 @@
 .pop { position: absolute; width: 240px; box-sizing: border-box; z-index: 9; background: $panel; border: 1px solid; padding: 12px 14px 14px; box-shadow: 0 10px 40px rgba(0, 0, 0, .7); }
 .pop-head { display: flex; justify-content: space-between; align-items: center; cursor: grab; touch-action: none; user-select: none; }
 .pop-head:active { cursor: grabbing; }
-.kind { font-size: fs(9); letter-spacing: .2em; }
-.vis { margin-left: 2px; letter-spacing: normal; vertical-align: middle; }
+.kind { display: flex; align-items: center; font-size: fs(9); letter-spacing: .2em; }
+.vis { margin-left: 2px; letter-spacing: normal; }
 .close { background: transparent; border: 1px solid #ffffff33; color: $white; width: 22px; height: 22px; font-size: fs(11); cursor: pointer; padding: 0; }
 .pop-title { font-size: fs(19); font-weight: 600; color: #fff; margin-top: 4px; }
 .pop-desc { font-size: fs(12); line-height: 1.4; color: #c3c8db; margin-top: 6px; }
