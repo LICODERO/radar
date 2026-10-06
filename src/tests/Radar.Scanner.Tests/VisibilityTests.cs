@@ -76,6 +76,62 @@ public class VisibilityTests
         Assert.Empty(GitVisibility.Resolve(repo, []));
     }
 
+    private static string Agent(string name) => $"---\nname: {name}\ndescription: Does {name} work carefully\n---\nBody of the agent {name}.";
+
+    [Fact]
+    public void A_public_and_a_private_item_with_the_same_name_are_a_conflict()
+    {
+        using var t = new FixtureTree();
+        var repo = RealRepo(t, "app");
+        t.File("app/.claude/agents/code-reviewer.md", Agent("Reviewer"));          // committed: public
+        t.File("app/.claude/agents/mine.md", Agent("reviewer"));                    // hidden: private (same name, other case)
+        t.File("app/.claude/skills/deploy/SKILL.md", "---\nname: deploy\ndescription: Deploys it\n---\nx");
+        t.File("app/.claude/skills/deploy-local/SKILL.md", "---\nname: deploy\ndescription: Deploys it locally\n---\nx");
+        t.File("app/.claude/workflows/ship.md", "---\nname: ship\n---\nx");
+        Git(repo, "add", ".claude/agents/code-reviewer.md", ".claude/skills/deploy", ".claude/workflows");
+        Git(repo, "commit", "-q", "-m", "init");
+        File.WriteAllText(Path.Combine(repo, ".git", "info", "exclude"), "/.claude/agents/mine.md\n/.claude/skills/deploy-local/\n");
+
+        var c = RepoAnalyzer.Analyze(t.Root, repo).Repo.NameConflicts!;
+        Assert.Equal(["agent", "skill"], c.Select(x => x.Kind).ToArray());
+        var agent = c.Single(x => x.Kind == "agent");
+        Assert.Equal([".claude/agents/code-reviewer.md", ".claude/agents/mine.md"], agent.Items.Select(i => i.Path).ToArray());
+        Assert.Equal([Visibilities.Public, Visibilities.Private], agent.Items.Select(i => i.Visibility).ToArray());
+        Assert.Equal([".claude/skills/deploy/SKILL.md", ".claude/skills/deploy-local/SKILL.md"], c.Single(x => x.Kind == "skill").Items.Select(i => i.Path).ToArray());
+    }
+
+    [Fact]
+    public void An_untracked_item_counts_as_local_and_a_workflow_can_conflict_too()
+    {
+        using var t = new FixtureTree();
+        var repo = RealRepo(t, "app");
+        t.File("app/.claude/workflows/ship.md", "---\nname: ship\n---\nx");
+        t.File("app/.claude/workflows/ship-new.md", "---\nname: ship\n---\nx");
+        Git(repo, "add", ".claude/workflows/ship.md");
+        Git(repo, "commit", "-q", "-m", "init");
+        var c = RepoAnalyzer.Analyze(t.Root, repo).Repo.NameConflicts!;
+        var wf = Assert.Single(c);
+        Assert.Equal("workflow", wf.Kind);
+        Assert.Equal([Visibilities.Public, Visibilities.Untracked], wf.Items.Select(i => i.Visibility).ToArray());
+    }
+
+    [Fact]
+    public void Duplicates_with_the_same_visibility_or_unknown_visibility_are_not_conflicts()
+    {
+        using var t = new FixtureTree();
+        var shared = RealRepo(t, "shared");
+        t.File("shared/.claude/agents/a.md", Agent("twin"));
+        t.File("shared/.claude/agents/b.md", Agent("twin"));
+        Git(shared, "add", ".claude/agents");
+        Git(shared, "commit", "-q", "-m", "init");
+        Assert.Empty(RepoAnalyzer.Analyze(t.Root, shared).Repo.NameConflicts!);
+
+        var fake = t.Repo("fake");
+        t.File("fake/.claude/agents/a.md", Agent("twin"));
+        t.File("fake/.claude/agents/b.md", Agent("twin"));
+        Assert.Empty(RepoAnalyzer.Analyze(t.Root, fake).Repo.NameConflicts!);
+    }
+
     [Fact]
     public void The_aggregated_workflow_keeps_the_visibility_per_repo()
     {

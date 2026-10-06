@@ -116,6 +116,8 @@ export class RadarStore {
   readonly visibilityRef = signal<{ repoId: string; path: string; current: Visibility } | null>(null);
   /** the repo whose local instructions (CLAUDE.local.md) are being set up (the confirm dialog) */
   readonly localFileRepoId = signal<string | null>(null);
+  /** the repo whose name conflicts (shared vs local file with the same name) are shown in a dialog */
+  readonly conflictRepoId = signal<string | null>(null);
   readonly sharedItems = computed(() => this.result()?.shared ?? []);
   readonly driftedCount = computed(() => this.sharedItems().filter((s) => s.variants.length > 1).length);
   /** anything for the insights button to offer */
@@ -425,6 +427,9 @@ export class RadarStore {
     void this.refreshQuiet();
     return r;
   }
+
+  openConflicts(repoId: string): void { this.conflictRepoId.set(repoId); }
+  closeConflicts(): void { this.conflictRepoId.set(null); }
 
   openInsights(): void { this.insightsOpen.set(true); }
   closeInsights(): void { this.insightsOpen.set(false); }

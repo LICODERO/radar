@@ -71,3 +71,23 @@ describe('FilePane visibility button', () => {
     expect(open('CLAUDE.md').el.querySelector('.tools .vis-b, .tools .vis-s')).toBeNull();
   });
 });
+
+describe('FilePane name conflict button', () => {
+  it('appears only for a file that shares its name with a file of another visibility, and opens the dialog', () => {
+    expect(open('.claude/agents/reviewer.md').el.querySelector('.tools .warn')).toBeNull();
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({ providers: [provideHttpClient()] });
+    TestBed.inject(I18n).setLang('en');
+    const store = TestBed.inject(RadarStore);
+    store.mode.set('api');
+    const withConflict = { ...repo, nameConflicts: [{ kind: 'agent', name: 'reviewer', items: [{ path: '.claude/agents/reviewer.md', visibility: 'private' }, { path: '.claude/agents/other.md', visibility: 'public' }] }] };
+    store.result.set({ repos: [withConflict], workflows: [], gaps: [] } as unknown as ScanResult);
+    store.file.set({ repoId: 'shop', repoName: 'shop', path: '.claude/agents/reviewer.md', kind: 'Agent', color: '#c6ff3d', status: 'ready', text: '# x', truncated: false, bytes: 3, error: null, mode: 'preview' });
+    const fixture = TestBed.createComponent(FilePane);
+    fixture.detectChanges();
+    const btn = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('.tools .warn')!;
+    expect(btn).not.toBeNull();
+    btn.click();
+    expect(store.conflictRepoId()).toBe('shop');
+  });
+});

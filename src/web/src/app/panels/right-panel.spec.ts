@@ -75,4 +75,16 @@ describe('RightPanel selected-repo card', () => {
     link.click();
     expect(create).toHaveBeenCalledWith('app');
   });
+
+  it('warns about name conflicts with a button that opens the conflict dialog, and only then', () => {
+    const none = open(repo({ score: 90, findings: [] }));
+    expect(none.el.querySelector('.hb.warn')).toBeNull();
+    TestBed.resetTestingModule();
+    const r = { ...repo({ score: 90, findings: [] }), nameConflicts: [{ kind: 'agent', name: 'x', items: [{ path: 'a', visibility: 'public' }, { path: 'b', visibility: 'private' }] }] };
+    const { store, el } = open(r as never);
+    const warn = el.querySelector<HTMLButtonElement>('.cm .hb.warn')!;
+    expect(warn.getAttribute('data-tip')).toContain('Name conflicts: 1');
+    warn.click();
+    expect(store.conflictRepoId()).toBe('app');
+  });
 });

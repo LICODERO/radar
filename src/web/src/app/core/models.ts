@@ -43,6 +43,10 @@ export interface SkillInfo {
   visibility?: Visibility | null;
 }
 
+export interface ConflictItem { path: string; visibility: Visibility }
+/** an agent, skill or workflow name used by a shared file and a local one in the same repo: Claude sees both and may take the wrong one */
+export interface NameConflict { kind: 'agent' | 'skill' | 'workflow'; name: string; items: ConflictItem[] }
+
 export interface RepoInfo {
   id: string;
   name: string;
@@ -56,6 +60,8 @@ export interface RepoInfo {
   coverage: { score: number; parts: { claudeMd: number; agents: number; skills: number } };
   gaps: GapType[];
   quality?: QualityInfo | null;
+  /** absent in scans made before conflicts were detected */
+  nameConflicts?: NameConflict[] | null;
 }
 
 export interface WorkflowInfo {

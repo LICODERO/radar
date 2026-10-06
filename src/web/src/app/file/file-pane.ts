@@ -32,6 +32,12 @@ export class FilePane {
       ?? this.store.workflows().flatMap((w) => w.repos).find((x) => x.repoId === f.repoId && x.path === f.path)?.visibility
       ?? null;
   });
+  /** the open file is one of several with the same name and different visibility */
+  protected readonly inConflict = computed(() => {
+    const f = this.store.file();
+    const repo = f ? this.store.repos().find((r) => r.id === f.repoId) : undefined;
+    return !!f && !!repo?.nameConflicts?.some((c) => c.items.some((i) => i.path === f.path));
+  });
   /** the state to show, or null when git could not tell (nothing is shown then) */
   protected readonly shownVisibility = computed(() => {
     const v = this.visibility();

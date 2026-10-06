@@ -128,7 +128,7 @@ public static class RepoAnalyzer
         var repo = new RepoInfo(
             id, name, id, InitialsOf(name), primary, stacks,
             new ClaudeMdInfo(claudeExists, "CLAUDE.md"),
-            agents, skills, coverage, gaps, quality);
+            agents, skills, coverage, gaps, quality, NameConflicts.Compute(agents, skills, workflows));
         return new RepoAnalysis(repo, workflows, warnings);
     }
 

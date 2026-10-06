@@ -1,0 +1,47 @@
+<div class="backdrop" (click)="store.closeConflicts()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('conflict.title', { repo: repo()?.name ?? '' })">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">{{ t('conflict.eyebrow') }}</div>
+      <div class="ttl">{{ repo()?.name }}</div>
+    </div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('conflict.close')" (click)="store.closeConflicts()">✕</button>
+  </div>
+
+  <div class="body">
+    <p class="text">{{ t('conflict.intro') }}</p>
+
+    @for (c of conflicts(); track key(c)) {
+      <section class="conf">
+        <div class="m ch"><span class="ck" [style.color]="color(c)">{{ label(c) }}</span><span class="cn">{{ c.name }}</span></div>
+        <ul class="items">
+          @for (i of c.items; track i.path) {
+            <li [class.kept]="kept(c) === i.path">
+              <div class="row">
+                <app-visibility-tag compact side="l" [visibility]="i.visibility" />
+                <span class="m path">{{ i.path }}</span>
+              </div>
+              <div class="acts">
+                <button class="m btn-ghost sm" type="button" (click)="open(c, i)">{{ t('conflict.open') }}</button>
+                <button class="m btn-ghost sm keepbtn" type="button" [class.on]="kept(c) === i.path" (click)="choose(c, i)">{{ kept(c) === i.path ? t('conflict.keeping') : t('conflict.keep') }}</button>
+              </div>
+            </li>
+          }
+        </ul>
+
+        @if (kept(c)) {
+          <div class="m lbl">{{ t('conflict.remove') }}</div>
+          <pre class="m cmd">{{ script(c) }}</pre>
+          <button class="m btn-ghost sm" type="button" (click)="copy(c)">{{ copied() === key(c) ? t('conflict.copied') : t('conflict.copy') }}</button>
+          @if (hasShared(c)) { <p class="m note">{{ t('conflict.noteShared') }}</p> }
+          @else { <p class="m hint">{{ t('conflict.noteLocal') }}</p> }
+        }
+      </section>
+    } @empty {
+      <p class="m hint">{{ t('conflict.none') }}</p>
+    }
+
+    <p class="m hint foot">{{ t('conflict.rename') }}</p>
+    <div class="btns"><button class="m btn-solid go" type="button" (click)="store.closeConflicts()">{{ t('conflict.closeBtn') }}</button></div>
+  </div>
+</div>

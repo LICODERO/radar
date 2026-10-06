@@ -34,6 +34,9 @@
 .cname { font-size: fs(22); font-weight: 600; color: #fff; margin-top: 6px; word-break: break-word; }
 .flags { font-size: fs(10); margin-top: 2px; }
 .hb { flex: none; width: 24px; height: 24px; padding: 0; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: 1px solid #c6ff3d88; cursor: pointer; }
+.hb.warn { border-color: #ffb84d99; }
+.hb.warn svg { fill: $amber; }
+.hb.warn:hover, .hb.warn:focus-visible { background: #ffb84d1a; }
 .hb::after { max-width: 230px; }
 .hb svg { width: 14px; height: 14px; fill: $lime; }
 .hb:hover:not(:disabled), .hb:focus-visible { background: #c6ff3d1a; outline: none; }

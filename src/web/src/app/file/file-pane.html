@@ -12,6 +12,11 @@
   <button class="m tab" type="button" [class.on]="f().mode === 'preview'" (click)="store.setFileMode('preview')">{{ t('file.preview') }}</button>
   <button class="m tab" type="button" [class.on]="f().mode === 'source'" (click)="store.setFileMode('source')">{{ t('file.source') }}</button>
   <div class="tools">
+    @if (inConflict()) {
+      <button class="vis-b warn tip tip-b tip-r" type="button" [attr.aria-label]="t('conflict.eyebrow')" [attr.data-tip]="t('conflict.fileTip')" (click)="store.openConflicts(f().repoId)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" /></svg>
+      </button>
+    }
     @if (shownVisibility(); as v) {
       @if (canChangeVisibility()) {
         <button class="vis-b tip tip-b tip-r" type="button" [attr.aria-label]="t('visibility.change')" [attr.data-tip]="visibilityTip()" (click)="changeVisibility()">

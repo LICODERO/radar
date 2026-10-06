@@ -23,6 +23,9 @@
 .vis-s { display: inline-flex; }
 .vis-b, .copy { flex: none; width: 28px; height: 28px; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid #c6ff3d88; cursor: pointer; }
 .vis-b:hover, .vis-b:focus-visible { background: #c6ff3d1a; outline: none; }
+.vis-b.warn { border-color: #ffb84d99; }
+.vis-b.warn svg { width: 16px; height: 16px; fill: $amber; }
+.vis-b.warn:hover, .vis-b.warn:focus-visible { background: #ffb84d1a; }
 .copy svg { width: 16px; height: 16px; fill: $lime; }
 .copy:hover, .copy:focus-visible { background: #c6ff3d1a; outline: none; }
 

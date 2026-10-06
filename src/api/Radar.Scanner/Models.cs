@@ -57,7 +57,8 @@ public sealed record RepoInfo(
     IReadOnlyList<SkillInfo> Skills,
     CoverageInfo Coverage,
     IReadOnlyList<string> Gaps,
-    QualityInfo? Quality = null);
+    QualityInfo? Quality = null,
+    IReadOnlyList<NameConflict>? NameConflicts = null);
 
 /// <param name="Agents">agents this repo's copy of the workflow names (they are elements of that same repo)</param>
 /// <param name="Skills">skills this repo's copy of the workflow names</param>
