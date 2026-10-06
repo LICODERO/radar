@@ -36,3 +36,9 @@ button.btn-ghost, button.btn-solid { font-size: fs(13); letter-spacing: .14em; p
 .btns .btn-ghost:hover:not(:disabled) { background: #ffb84d14; }
 .btns .go { background: $accent; border: 0; color: #140d02; font-weight: 600; }
 .btns button:disabled { opacity: .5; cursor: default; }
+.acc { display: flex; gap: 10px; align-items: flex-start; font-size: fs(13); line-height: 1.5; color: $text; cursor: pointer; }
+.acc input { margin-top: 3px; accent-color: $accent; }
+.acc .sub { display: block; color: $muted; font-size: fs(12); }
+button.sm { margin-top: 8px; font-size: fs(11); padding: 6px 10px; letter-spacing: .12em; cursor: pointer; background: transparent; border: 1px solid #ffb84d88; color: $accent; }
+button.sm:hover:not(:disabled) { background: #ffb84d14; }
+button.sm:disabled { opacity: .5; cursor: default; }

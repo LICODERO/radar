@@ -130,8 +130,8 @@ export class RadarApi {
     return (await this.call<{ skill: SkillStatus }>('POST', '/api/vault/skill', { update })).skill;
   }
   /** Without `confirm` the server only returns what it would write. */
-  enableProject(repoId: string, confirm: boolean): Promise<EnableProjectResult> {
-    return this.call('POST', '/api/vault/projects', { repoId, confirm });
+  enableProject(repoId: string, confirm: boolean, allowAccess = false): Promise<EnableProjectResult> {
+    return this.call('POST', '/api/vault/projects', { repoId, confirm, allowAccess });
   }
 
   private abortable<T>(source: Observable<T>, signal: AbortSignal): Promise<T> {

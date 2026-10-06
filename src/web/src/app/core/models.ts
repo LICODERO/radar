@@ -234,6 +234,15 @@ export interface ProjectPlan {
   alreadyEnabled: boolean;
   /** whether git ignores CLAUDE.local.md in the repo; absent when git could not tell */
   gitIgnored?: boolean | null;
+  /** what letting Claude read the vault without a prompt would do in this repo; absent when it was not asked for */
+  access?: AccessPlan | null;
+}
+
+export interface AccessPlan {
+  path: string;
+  action: 'create' | 'update' | 'unchanged';
+  blocked?: 'no-git' | 'tracked' | 'exclude-damaged' | 'settings-invalid' | 'forbidden' | null;
+  excludeEntry?: string | null;
 }
 
 export interface EnableProjectResult {

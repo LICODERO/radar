@@ -326,12 +326,12 @@ describe('second brain', () => {
     expect(store.selectedHasVault()).toBe(false);
 
     const preview = await store.planProject('a');
-    expect(api.enableProject).toHaveBeenLastCalledWith('a', false);
+    expect(api.enableProject).toHaveBeenLastCalledWith('a', false, false);
     expect(preview.applied).toBe(false);
     expect(store.selectedHasVault()).toBe(false);
 
     await store.applyProject('a');
-    expect(api.enableProject).toHaveBeenLastCalledWith('a', true);
+    expect(api.enableProject).toHaveBeenLastCalledWith('a', true, false);
     expect(store.selectedHasVault()).toBe(true);
     store.selectRepo('b');
     expect(store.selectedHasVault()).toBe(false);

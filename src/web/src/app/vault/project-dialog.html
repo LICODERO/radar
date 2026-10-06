@@ -12,6 +12,7 @@
     @if (phase() === 'done') {
       <p class="lead">{{ t('project.done') }}</p>
       <p class="text">{{ t('project.doneText', { path: plan()?.claudeLocalPath ?? '' }) }}</p>
+      @if (access()) { <p class="m hint good">{{ t('project.access.done') }}</p> }
       <div class="btns">
         <button class="m btn-solid go" type="button" (click)="store.closeProject()">{{ t('project.closeBtn') }}</button>
       </div>
@@ -46,12 +47,39 @@
 
         <div class="m lbl">{{ t('project.block') }}</div>
         <pre class="m block">{{ p.block }}</pre>
+
+        <div class="m lbl">{{ t('project.access.label') }}</div>
+        <label class="m acc">
+          <input type="checkbox" [checked]="allowAccess()" [disabled]="phase() === 'saving' || phase() === 'done'" (change)="toggleAccess()" />
+          <span>{{ t('project.access.option') }}<span class="sub">{{ t('project.access.hint') }}</span></span>
+        </label>
+        @if (access(); as a) {
+          @if (a.blocked) {
+            <p class="m warn" role="alert">{{ blockedText(a.blocked) }}</p>
+          } @else if (a.action === 'unchanged') {
+            <p class="m hint good">{{ t('project.access.done') }}</p>
+          } @else {
+            <p class="m hint path">{{ (a.action === 'create' ? t('project.access.create', { path: a.path }) : t('project.access.update', { path: a.path })) }}</p>
+            @if (a.excludeEntry) { <p class="m hint">{{ t('project.access.exclude', { entry: a.excludeEntry }) }}</p> }
+          }
+        }
+
+        @if (skill(); as k) {
+          <div class="m lbl">{{ t('project.skill.label') }}</div>
+          <p class="m hint" [class.good]="k.state === 'up-to-date'">{{ k.name }}: {{ skillText() }}</p>
+          @if (k.state === 'not-installed') {
+            <p class="m hint">{{ t('project.skill.why') }}</p>
+            <button class="m btn-ghost sm" type="button" [disabled]="skillBusy()" (click)="installSkill(false)">{{ t('project.skill.install') }}</button>
+          } @else if (k.state === 'outdated') {
+            <button class="m btn-ghost sm" type="button" [disabled]="skillBusy()" (click)="installSkill(true)">{{ t('project.skill.update') }}</button>
+          }
+        }
       }
 
       @if (error(); as e) { <div class="m err" role="alert">{{ e }}</div> }
 
       <div class="btns">
-        <button class="m btn-solid go" type="button" [disabled]="phase() !== 'plan'" (click)="confirm()">
+        <button class="m btn-solid go" type="button" [disabled]="phase() !== 'plan' || !!accessBlocked()" (click)="confirm()">
           {{ phase() === 'saving' ? t('project.saving') : (plan()?.alreadyEnabled ? t('project.confirmRefresh') : t('project.confirm')) }}
         </button>
         <button class="m btn-ghost" type="button" [disabled]="phase() === 'saving'" (click)="store.closeProject()">{{ t('project.cancel') }}</button>

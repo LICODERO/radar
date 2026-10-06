@@ -8,7 +8,8 @@ public sealed record VaultPathRequest(string? Path);
 
 public sealed record InstallSkillRequest(bool Update = false);
 
-public sealed record EnableProjectRequest(string? RepoId, bool Confirm = false);
+/// <param name="AllowAccess">also lets Claude read the vault without a prompt in this repo (.claude/settings.local.json, kept out of git)</param>
+public sealed record EnableProjectRequest(string? RepoId, bool Confirm = false, bool AllowAccess = false);
 
 public static class VaultEndpoints
 {
@@ -58,7 +59,7 @@ public static class VaultEndpoints
             var repo = scan.Repos.FirstOrDefault(r => r.Id == req.RepoId);
             if (repo is null) return Results.NotFound(new { error = m[Msg.UnknownRepo] });
 
-            var r = vault.Enable(scan, repo, req.Confirm);
+            var r = vault.Enable(scan, repo, req.Confirm, req.AllowAccess);
             return r.Outcome switch
             {
                 EnableOutcome.Ok => Results.Json(new { applied = r.Applied, plan = PlanView(r.Plan!), vault = View(vault.GetStatus()) },
@@ -69,6 +70,7 @@ public static class VaultEndpoints
                 EnableOutcome.NameTaken => Conflict(m[Msg.ProjectNameTaken]),
                 EnableOutcome.Forbidden => Results.Json(new { error = m[Msg.ClaudeLocalForbidden] }, statusCode: StatusCodes.Status403Forbidden),
                 EnableOutcome.BlockDamaged => Conflict(m[Msg.ClaudeLocalDamaged]),
+                EnableOutcome.AccessBlocked => Conflict(m[Msg.VaultAccessBlocked], r.Plan?.Access?.Blocked),
                 _ => Results.Json(new { error = m[Msg.VaultWriteFailed] }, statusCode: StatusCodes.Status500InternalServerError)
             };
         });
@@ -125,7 +127,8 @@ public static class VaultEndpoints
         claudeLocalExists = p.ClaudeLocalExists,
         block = p.Block,
         alreadyEnabled = p.AlreadyEnabled,
-        gitIgnored = p.GitIgnored
+        gitIgnored = p.GitIgnored,
+        access = p.Access
     };
 
     private static string ToKebab(string pascal) =>

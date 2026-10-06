@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
-import { EnableProjectResult, ProjectPlan, ScanResult, VaultStatus } from '../core/models';
+import { EnableProjectResult, ProjectPlan, ScanResult, SkillStatus, VaultStatus } from '../core/models';
 import { ApiError, RadarApi } from '../core/radar-api';
 import { RadarStore } from '../core/radar-store';
 import { I18n } from '../i18n/i18n';
@@ -14,9 +14,13 @@ const plan = (extra: Partial<ProjectPlan> = {}): ProjectPlan => ({
 });
 const result = (applied: boolean, p: ProjectPlan): EnableProjectResult => ({ applied, plan: p, vault: { ...vault, projects: applied ? [{ name: 'api', repoId: 'api' }] : [] } });
 
-async function open(p: ProjectPlan) {
+const skillStatus = (state: SkillStatus['state']): SkillStatus => ({ name: 'radar-second-brain', state, path: '/home/me/.claude/skills/radar-second-brain/SKILL.md', pathDisplay: '~/.claude/skills/radar-second-brain/SKILL.md', availableVersion: 1, installedVersion: state === 'not-installed' ? null : 1 });
+
+async function open(p: ProjectPlan, skill: SkillStatus['state'] = 'up-to-date') {
   const api = {
-    enableProject: vi.fn(async (_id: string, confirm: boolean) => result(confirm, p))
+    enableProject: vi.fn(async (_id: string, confirm: boolean, _access: boolean) => result(confirm, p)),
+    skill: vi.fn(async () => skillStatus(skill)),
+    installSkill: vi.fn(async () => skillStatus('up-to-date'))
   };
   TestBed.configureTestingModule({ providers: [provideHttpClient(), { provide: RadarApi, useValue: api }] });
   TestBed.inject(I18n).setLang('en');
@@ -38,7 +42,7 @@ describe('ProjectDialog', () => {
   it('shows what would be written before anything is saved', async () => {
     const { el, api } = await open(plan());
     expect(api.enableProject).toHaveBeenCalledTimes(1);
-    expect(api.enableProject).toHaveBeenCalledWith('api', false);
+    expect(api.enableProject).toHaveBeenCalledWith('api', false, true);
     // the vault part is shown relative to the vault folder
     expect(el.textContent).toContain('api/raw');
     expect(el.textContent).not.toContain('/data/brain/api/raw');
@@ -70,7 +74,7 @@ describe('ProjectDialog', () => {
     await settle();
     await settle();
 
-    expect(api.enableProject).toHaveBeenLastCalledWith('api', true);
+    expect(api.enableProject).toHaveBeenLastCalledWith('api', true, true);
     expect(el.textContent).toContain('Second brain is on');
     expect(store.selectedHasVault()).toBe(true);
   });
@@ -103,5 +107,65 @@ describe('ProjectDialog', () => {
     await fixture.whenStable();
     fixture.detectChanges();
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('The second brain is not set up.');
+  });
+
+  it('offers to let Claude read the vault without asking, on by default, and plans again when it is unticked', async () => {
+    const access = { path: '.claude/settings.local.json', action: 'create' as const, excludeEntry: '/.claude/settings.local.json' };
+    const { el, api, settle } = await open(plan({ access }));
+    await settle();
+    const box = el.querySelector<HTMLInputElement>('.acc input')!;
+    expect(box.checked).toBe(true);
+    expect(el.textContent).toContain('I will create .claude/settings.local.json with the vault folder.');
+    expect(el.textContent).toContain('/.claude/settings.local.json in .git/info/exclude');
+    box.click();
+    await settle();
+    expect(api.enableProject).toHaveBeenLastCalledWith('api', false, false);
+  });
+
+  it('says so when Claude can already read the vault, and when only a block can be reported', async () => {
+    const done = await open(plan({ access: { path: '.claude/settings.local.json', action: 'unchanged' } }));
+    await done.settle();
+    expect(done.el.textContent).toContain('Claude can already read the vault without asking in this repository.');
+    TestBed.resetTestingModule();
+
+    const upd = await open(plan({ access: { path: '.claude/settings.local.json', action: 'update' } }));
+    await upd.settle();
+    expect(upd.el.textContent).toContain('I will add the vault folder to .claude/settings.local.json');
+  });
+
+  it('refuses to save while the access step is blocked and explains why', async () => {
+    const { el, settle, button } = await open(plan({ access: { path: '.claude/settings.local.json', action: 'update', blocked: 'tracked' } }));
+    await settle();
+    expect(el.querySelector('[role="alert"]')?.textContent).toContain('already tracked by git');
+    expect((button('SAVE') ?? button('ENABLE') ?? el.querySelector('.go')) as HTMLButtonElement).toHaveProperty('disabled', true);
+  });
+
+  it('shows the skill state and installs it when it is missing', async () => {
+    const { el, api, settle, button } = await open(plan(), 'not-installed');
+    await settle();
+    expect(el.textContent).toContain('radar-second-brain: not installed');
+    expect(el.textContent).toContain('Without the skill Claude does not know');
+    button('INSTALL THE SKILL')!.click();
+    await settle();
+    expect(api.installSkill).toHaveBeenCalledWith(false);
+    expect(el.textContent).toContain('installed ✓');
+    expect(button('INSTALL THE SKILL')).toBeUndefined();
+  });
+
+  it('only reports a skill that is already installed', async () => {
+    const { el, settle, button } = await open(plan(), 'up-to-date');
+    await settle();
+    expect(el.textContent).toContain('installed ✓');
+    expect(button('INSTALL THE SKILL')).toBeUndefined();
+  });
+
+  it('mentions the access in the done screen when it was granted', async () => {
+    const { el, settle, button } = await open(plan({ access: { path: '.claude/settings.local.json', action: 'create' } }));
+    await settle();
+    (el.querySelector('.go') as HTMLButtonElement).click();
+    await settle();
+    expect(el.textContent).toContain('Second brain is on');
+    expect(el.textContent).toContain('Claude can already read the vault without asking in this repository.');
+    expect(button('CLOSE')).toBeDefined();
   });
 });

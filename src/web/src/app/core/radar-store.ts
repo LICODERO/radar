@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AI_TOOLS } from './ai-tools';
-import { CopyAgentResult, CopyKind, ItemKind, LocalPlan, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, Visibility, VisibilityOutcome, WorkflowInfo } from './models';
+import { CopyAgentResult, CopyKind, ItemKind, LocalPlan, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus, Visibility, VisibilityOutcome, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, buildCommand, countByType } from './commands';
@@ -458,11 +458,13 @@ export class RadarStore {
     this.projectRepoId.set(id);
   }
   closeProject(): void { this.projectRepoId.set(null); }
+  loadSkill(): Promise<SkillStatus> { return this.api.skill(); }
+  installSkill(update: boolean): Promise<SkillStatus> { return this.api.installSkill(update); }
 
-  planProject(repoId: string): Promise<EnableProjectResult> { return this.api.enableProject(repoId, false); }
+  planProject(repoId: string, allowAccess = false): Promise<EnableProjectResult> { return this.api.enableProject(repoId, false, allowAccess); }
 
-  async applyProject(repoId: string): Promise<EnableProjectResult> {
-    const r = await this.api.enableProject(repoId, true);
+  async applyProject(repoId: string, allowAccess = false): Promise<EnableProjectResult> {
+    const r = await this.api.enableProject(repoId, true, allowAccess);
     this.vault.set(r.vault);
     return r;
   }

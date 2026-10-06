@@ -31,11 +31,12 @@ public enum VaultOutcome { Ok, PathInvalid, PathIsRoot, FolderMissing, InsideRep
 
 public sealed record VaultResult(VaultOutcome Outcome, VaultStatus? Status = null);
 
-public enum EnableOutcome { Ok, VaultNotReady, RepoMissing, RepoOutsideRoot, NameTaken, Forbidden, BlockDamaged, WriteFailed }
+public enum EnableOutcome { Ok, VaultNotReady, RepoMissing, RepoOutsideRoot, NameTaken, Forbidden, BlockDamaged, WriteFailed, AccessBlocked }
 
 /// <param name="Creates">vault paths that do not exist yet and would be created</param>
 /// <param name="GitIgnored">whether git ignores CLAUDE.local.md in the repo; null when git could not tell</param>
-public sealed record ProjectPlan(string VaultDir, IReadOnlyList<string> Creates, string ClaudeLocalPath, bool ClaudeLocalExists, string Block, bool AlreadyEnabled, bool? GitIgnored);
+/// <param name="Access">what letting Claude read the vault without a prompt would do in this repo; null when the user did not ask for it</param>
+public sealed record ProjectPlan(string VaultDir, IReadOnlyList<string> Creates, string ClaudeLocalPath, bool ClaudeLocalExists, string Block, bool AlreadyEnabled, bool? GitIgnored, AccessPlan? Access = null);
 
 public sealed record EnableResult(EnableOutcome Outcome, ProjectPlan? Plan = null, bool Applied = false);
 
@@ -101,7 +102,7 @@ public sealed partial class VaultService(ISettingsStore settings)
     /// block in the repo's CLAUDE.local.md that says where the vault is. Without <paramref name="apply"/> nothing is written
     /// and the plan is returned for the user to confirm.
     /// </summary>
-    public EnableResult Enable(ScanResult scan, RepoInfo repo, bool apply)
+    public EnableResult Enable(ScanResult scan, RepoInfo repo, bool apply, bool allowAccess = false)
     {
         var status = GetStatus();
         if (!status.IsOk || status.Path is null) return new EnableResult(EnableOutcome.VaultNotReady);
@@ -127,9 +128,12 @@ public sealed partial class VaultService(ISettingsStore settings)
         if (!File.Exists(indexFile)) creates.Add(indexFile);
 
         var block = BlockText(vault, projectDir);
+        var access = allowAccess ? VaultAccess.Plan(repoDir, vault) : null;
         var plan = new ProjectPlan(projectDir, creates, claudeLocal, claudeLocalExists, block, existingId == repo.Id && creates.Count == 0,
-            GitIgnore.IsIgnored(repoDir, "CLAUDE.local.md"));
+            GitIgnore.IsIgnored(repoDir, "CLAUDE.local.md"), access);
         if (!apply) return new EnableResult(EnableOutcome.Ok, plan);
+        // nothing is written when the extra step cannot be done safely: the user decides again
+        if (access?.Blocked is not null) return new EnableResult(EnableOutcome.AccessBlocked, plan);
 
         try
         {
@@ -152,7 +156,13 @@ public sealed partial class VaultService(ISettingsStore settings)
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException) { return new EnableResult(EnableOutcome.WriteFailed, plan); }
 
-        return new EnableResult(EnableOutcome.Ok, plan with { Creates = [], AlreadyEnabled = true }, Applied: true);
+        if (access is not null)
+        {
+            try { VaultAccess.Apply(repoDir, vault, access); }
+            catch (Exception e) when (e is VaultAccessFailure or IOException or UnauthorizedAccessException) { return new EnableResult(EnableOutcome.WriteFailed, plan); }
+        }
+
+        return new EnableResult(EnableOutcome.Ok, plan with { Creates = [], AlreadyEnabled = true, Access = access is null ? null : access with { Action = "unchanged", ExcludeEntry = null } }, Applied: true);
     }
 
     // ---- helpers ------------------------------------------------------------------------------

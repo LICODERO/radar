@@ -88,14 +88,11 @@ public static class LocalFileService
         string? excludeEntry = null;
         if (writesLocal)
         {
-            var state = GitVisibility.Resolve(repoDir, [new VisibilityQuery("l", LocalName, LocalName)])["l"];
-            if (state == Visibilities.Unknown) return Blocked("no-git");
-            if (state == Visibilities.Public) return Blocked("local-tracked");
-            if (state == Visibilities.Untracked)
+            var guard = PrivateFileGuard.Check(repoDir, LocalName);
+            if (guard.Blocked is not null) return Blocked(guard.Blocked == "tracked" ? "local-tracked" : guard.Blocked);
+            if (guard.ExcludeEntry is not null)
             {
-                var why = ItemVisibility.Hide(repoDir, LocalName, false, apply: false);
-                if (why is not null) return Blocked(why);
-                excludeEntry = GitExclude.Entry(LocalName, false);
+                excludeEntry = guard.ExcludeEntry;
                 parts.Insert(0, new LocalPart("exclude", ".git/info/exclude", "update", excludeEntry));
             }
         }
@@ -110,9 +107,9 @@ public static class LocalFileService
         {
             if (excludeEntry is not null)
             {
-                var file = GitExclude.ResolveFile(repoDir);
+                var file = PrivateFileGuard.ExcludeFile(repoDir);
                 var old = file is not null && File.Exists(file) ? File.ReadAllText(file) : null;
-                if (ItemVisibility.Hide(repoDir, LocalName, false, apply: true) is not null) throw new IOException("cannot hide");
+                PrivateFileGuard.Apply(repoDir, LocalName);
                 if (file is not null) undo.Add(() => Restore(file, old));
             }
             if (newLocal != localText) { Write(localPath, newLocal!); undo.Add(() => Restore(localPath, localText)); }

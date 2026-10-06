@@ -32,7 +32,7 @@ public enum Msg
     VisibilityBadTarget, VisibilityWriteFailed, VisibilityGitFailed, VisibilityCannotHide,
     // vault
     VaultNotReady, VaultNotEmpty, VaultInsideRepo, VaultAlready, VaultNotAVault, VaultTooNew, VaultWriteFailed,
-    ProjectNameTaken, ClaudeLocalForbidden, ClaudeLocalDamaged,
+    ProjectNameTaken, ClaudeLocalForbidden, ClaudeLocalDamaged, VaultAccessBlocked,
     SkillLinked, SkillForeign, SkillModified, SkillOutdated, SkillWriteFailed,
     // claude CLI
     ClaudeNotFound, ClaudeStartFailed, ClaudeExited, ClaudeTimeout, ClaudeUnexpected, ClaudeReportedError, ClaudeEmpty
@@ -119,6 +119,7 @@ public static class Messages
         [Msg.ProjectNameTaken] = ("Inny projekt używa już folderu o tej nazwie w second brain.", "Another project already uses a folder with this name in the second brain."),
         [Msg.ClaudeLocalForbidden] = ("Nie można zapisać CLAUDE.local.md (dowiązanie poza repozytorium albo katalog).", "CLAUDE.local.md cannot be written (a link outside the repository, or a directory)."),
         [Msg.ClaudeLocalDamaged] = ("Znaczniki bloku second brain w CLAUDE.local.md są uszkodzone. Popraw je ręcznie.", "The second brain block markers in CLAUDE.local.md are damaged. Fix them by hand."),
+        [Msg.VaultAccessBlocked] = ("Nie mogę bezpiecznie zapisać uprawnienia do vaulta w .claude/settings.local.json (zły JSON, plik śledzony przez git albo brak gita). Niczego nie zapisałem. Odznacz tę opcję albo napraw plik.", "Cannot safely save the vault access in .claude/settings.local.json (invalid JSON, a file tracked by git, or no git). Nothing was written. Untick that option or fix the file."),
         [Msg.SkillLinked] = ("Skill jest dowiązaniem symbolicznym (np. do ai-toolkit). R.A.D.A.R. go nie zmienia.", "The skill is a symbolic link (for example to ai-toolkit). R.A.D.A.R. leaves it alone."),
         [Msg.SkillForeign] = ("W tym miejscu jest już inny skill o tej nazwie. R.A.D.A.R. go nie nadpisze.", "A different skill with this name is already there. R.A.D.A.R. will not overwrite it."),
         [Msg.SkillModified] = ("Skill został zmieniony ręcznie. R.A.D.A.R. go nie nadpisze.", "The skill was edited by hand. R.A.D.A.R. will not overwrite it."),
