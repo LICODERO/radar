@@ -20,7 +20,11 @@
 .kl { font-size: fs(9); letter-spacing: .08em; color: $muted; }
 .kv { font-size: fs(38); font-weight: 600; line-height: 1.1; }
 
-.card { margin-top: 18px; border: 1px solid #c6ff3d44; padding: 14px 14px 16px; background: #c6ff3d08; flex: 0 1 auto; min-height: 0; overflow-x: hidden; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #c6ff3d66 transparent; }
+.card { margin-top: 18px; border: 1px solid #c6ff3d44; padding: 14px 14px 0; background: #c6ff3d08; flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; }
+// the header (name, flags, buttons) stays put and does not clip its tooltips; only the lists below it scroll
+.chead { flex: none; }
+.cbody { flex: 1 1 auto; min-height: 0; overflow-x: hidden; overflow-y: auto; padding-bottom: 16px; scrollbar-width: thin; scrollbar-color: #c6ff3d66 transparent; }
+.sec.first { margin-top: 12px; }
 .card.empty { border-style: dashed; border-color: #ffffff33; background: transparent; }
 .etitle { font-size: fs(15); font-weight: 600; color: $text; margin-top: 8px; }
 .etext { font-size: fs(10); line-height: 1.5; color: $muted; margin-top: 6px; }

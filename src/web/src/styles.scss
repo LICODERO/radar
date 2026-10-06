@@ -43,7 +43,7 @@ button.x::after, button.close::after { transform: translate(-50%, -50%) rotate(-
 .tip { position: relative; }
 .tip::after {
   content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translate(-50%, 4px);
-  white-space: normal; width: max-content; max-width: 280px; line-height: 1.45; background: $panel; border: 1px solid #c6ff3d88; color: $text; font-family: $mono;
+  white-space: normal; text-align: left; width: max-content; max-width: 280px; line-height: 1.45; background: $panel; border: 1px solid #c6ff3d88; color: $text; font-family: $mono;
   font-size: fs(11.5); font-weight: 400; letter-spacing: .04em; padding: 6px 10px; opacity: 0; pointer-events: none;
   transition: opacity .18s, transform .18s; z-index: 20;
 }
