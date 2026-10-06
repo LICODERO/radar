@@ -7,7 +7,7 @@ namespace Radar.Scanner;
 /// <summary>Runs the git CLI in a repository. Returns null when git is missing, hangs or cannot be started; callers treat that as "unknown".</summary>
 public static class GitProcess
 {
-    public sealed record Output(int ExitCode, string Text);
+    public sealed record Output(int ExitCode, string Text, string Error = "");
 
     public static Output? Run(string repoDir, IEnumerable<string> args, string? stdin = null, int timeoutMs = 5000)
     {
@@ -28,18 +28,18 @@ public static class GitProcess
             using var process = Process.Start(info);
             if (process is null) return null;
             var stdout = process.StandardOutput.ReadToEndAsync();
-            _ = process.StandardError.ReadToEndAsync();
+            var stderr = process.StandardError.ReadToEndAsync();
             if (stdin is not null)
             {
                 process.StandardInput.Write(stdin);
                 process.StandardInput.Close();
             }
-            if (!process.WaitForExit(timeoutMs) || !stdout.Wait(timeoutMs))
+            if (!process.WaitForExit(timeoutMs) || !stdout.Wait(timeoutMs) || !stderr.Wait(timeoutMs))
             {
                 try { process.Kill(true); } catch (InvalidOperationException) { /* already gone */ }
                 return null;
             }
-            return new Output(process.ExitCode, stdout.Result);
+            return new Output(process.ExitCode, stdout.Result, stderr.Result);
         }
         catch (Exception e) when (e is Win32Exception or InvalidOperationException or IOException) { return null; }
     }

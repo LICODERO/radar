@@ -8,6 +8,7 @@ using Radar.Server.Features.Scans;
 using Radar.Server.Features.Session;
 using Radar.Server.Features.Settings;
 using Radar.Server.Features.Vault;
+using Radar.Server.Features.Visibility;
 using Radar.Server.Infrastructure.Security;
 using Radar.Server.Infrastructure.Storage;
 using Radar.Server.Infrastructure.Localization;
@@ -53,6 +54,7 @@ api.MapScans();
 api.MapFiles();
 api.MapGaps();
 api.MapAgents();
+api.MapVisibility();
 api.MapVault();
 
 // ---- static UI ------------------------------------------------------------------------------

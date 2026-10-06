@@ -54,6 +54,7 @@
         @if (store.qualityOpen()) { <app-quality-dialog /> }
         @if (store.insightsOpen()) { <app-insights-dialog /> }
         @if (store.copyAgentRef()) { <app-copy-agent-dialog /> }
+        @if (store.visibilityRef()) { <app-visibility-dialog /> }
         @if (store.vaultOpen()) { <app-vault-dialog /> }
         @if (store.projectRepoId()) { <app-project-dialog /> }
         @if (store.scan()) { <app-scan-overlay /> }

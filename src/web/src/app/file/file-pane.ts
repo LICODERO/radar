@@ -31,6 +31,10 @@ export class FilePane {
       ?? this.store.workflows().flatMap((w) => w.repos).find((x) => x.repoId === f.repoId && x.path === f.path)?.visibility
       ?? null;
   });
+  protected readonly canChangeVisibility = computed(() => {
+    const v = this.visibility();
+    return this.store.mode() === 'api' && !this.store.scanning() && (v === 'public' || v === 'private' || v === 'untracked');
+  });
   protected readonly canCopy = computed(() => this.store.mode() === 'api' && !!this.agent() && this.f().status === 'ready' && !this.store.scanning());
   protected readonly lines = computed(() => (this.f().text ? this.f().text.split('\n').length : 0));
   protected readonly closeBtn = viewChild<ElementRef<HTMLButtonElement>>('closeBtn');
@@ -42,6 +46,12 @@ export class FilePane {
       const btn = this.closeBtn();
       if (btn) queueMicrotask(() => btn.nativeElement.focus({ preventScroll: true }));
     });
+  }
+
+  protected changeVisibility(): void {
+    const f = this.store.file();
+    const v = this.visibility();
+    if (f && v) this.store.openVisibility(f.repoId, f.path, v);
   }
 
   protected size(bytes: number): string {

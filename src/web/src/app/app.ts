@@ -15,6 +15,7 @@ import { KpiListDialog } from './kpi/kpi-list-dialog';
 import { QualityDialog } from './quality/quality-dialog';
 import { InsightsDialog } from './insights/insights-dialog';
 import { CopyAgentDialog } from './insights/copy-agent-dialog';
+import { VisibilityDialog } from './visibility/visibility-dialog';
 import { CoverageToast } from './insights/coverage-toast';
 import { ItemsDialog } from './items/items-dialog';
 import { ProjectDialog } from './vault/project-dialog';
@@ -28,7 +29,7 @@ import { RightPanel } from './panels/right-panel';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog, RunConfirm, KpiListDialog, QualityDialog, InsightsDialog, CopyAgentDialog, CoverageToast, Tour],
+  imports: [Header, Orbit, LeftPanel, RightPanel, ScanOverlay, FilePane, GapPanel, AgentComposer, CoverageInfo, AboutDialog, LegendDialog, VaultDialog, ProjectDialog, ItemsDialog, GapsListDialog, RunConfirm, KpiListDialog, QualityDialog, InsightsDialog, CopyAgentDialog, VisibilityDialog, CoverageToast, Tour],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -61,6 +62,7 @@ export class App {
     if (this.store.pendingRun()) { this.store.cancelRun(); return; }
     if (this.store.legendOpen()) { this.store.closeLegend(); return; }
     if (this.store.projectRepoId()) { this.store.closeProject(); return; }
+    if (this.store.visibilityRef()) { this.store.closeVisibility(); return; }
     if (this.store.copyAgentRef()) { this.store.closeCopyAgent(); return; }
     if (this.store.insightsOpen()) { this.store.closeInsights(); return; }
     if (this.store.qualityOpen()) { this.store.closeQuality(); return; }

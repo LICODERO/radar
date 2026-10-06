@@ -1,0 +1,32 @@
+@use 'tokens' as *;
+
+:host { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; z-index: 61; display: block; animation: fadeIn .25s ease-out both; }
+.backdrop { position: absolute; inset: 0; background: rgba(4, 5, 10, .8); }
+.dlg { position: absolute; left: 380px; top: 130px; width: 680px; max-height: 680px; box-sizing: border-box; display: flex; flex-direction: column; background: #070a10; border: 1px solid #e6e9f255; box-shadow: 0 30px 80px rgba(0, 0, 0, .8); }
+.head { display: flex; justify-content: space-between; align-items: flex-start; padding: 18px 24px 14px; border-bottom: 1px solid #ffffff1f; }
+.eyebrow { font-size: fs(11); letter-spacing: .2em; color: $muted; }
+.ttl { font-size: fs(16); font-weight: 600; color: $white; margin-top: 4px; word-break: break-all; }
+.x { background: transparent; border: 1px solid #ffffff33; color: $white; width: 28px; height: 28px; font-size: fs(13.5); cursor: pointer; padding: 0; flex: none; }
+.x:hover { border-color: #ffffff88; }
+.body { padding: 16px 24px 24px; overflow: auto; }
+.flow { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.arrow { color: $muted; font-size: fs(14); }
+.lead { margin: 0 0 8px; font-size: fs(15); font-weight: 600; color: $white; }
+.text { margin: 0; font-size: fs(14); line-height: 1.55; color: #c3c8db; }
+.lbl { margin: 18px 0 6px; font-size: fs(11); letter-spacing: .16em; color: $muted; }
+.hint { margin: 8px 0 0; font-size: fs(13); line-height: 1.55; color: #a3a9bf; }
+.wait { margin: 14px 0 0; font-size: fs(13); color: $muted; }
+.changes { list-style: none; margin: 0; padding: 0; border: 1px solid #ffffff14; }
+.changes li { display: flex; flex-direction: column; gap: 4px; padding: 9px 12px; border-bottom: 1px solid #ffffff0f; }
+.changes li:last-child { border-bottom: 0; }
+.what { font-size: fs(11); color: $muted; }
+code { font-size: fs(12); color: $text; word-break: break-all; background: #ffffff0a; padding: 3px 6px; }
+.note { margin: 14px 0 0; padding: 9px 12px; font-size: fs(12); line-height: 1.5; color: $amber; border: 1px solid #ffb84d55; background: #ffb84d0d; }
+.err { margin-top: 14px; font-size: fs(13); line-height: 1.5; color: #ff9cc9; }
+
+.btns { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
+button.btn-ghost, button.btn-solid { font-size: fs(13); letter-spacing: .14em; padding: 11px 18px; cursor: pointer; }
+.btns .btn-ghost { background: transparent; border: 1px solid #e6e9f288; color: $white; }
+.btns .btn-ghost:hover:not(:disabled) { background: #e6e9f214; }
+.btns .go { background: $white; border: 0; color: #0b1006; font-weight: 600; }
+.btns button:disabled { opacity: .5; cursor: default; }

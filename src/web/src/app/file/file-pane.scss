@@ -13,6 +13,9 @@
 .ttl { flex-grow: 1; min-width: 0; }
 .kind { font-size: fs(9); letter-spacing: .2em; }
 .vis { margin-left: 8px; letter-spacing: normal; }
+.vis-btn { background: transparent; border: 0; padding: 0; cursor: pointer; font: inherit; }
+.vis-btn:hover app-visibility-tag, .vis-btn:focus-visible app-visibility-tag { filter: brightness(1.4); }
+.vis-btn:focus-visible { outline: 1px solid #ffffff88; outline-offset: 2px; }
 .path { font-size: fs(12); color: $text; word-break: break-all; margin-top: 2px; }
 .x { background: transparent; border: 1px solid #ffffff33; color: $white; width: 26px; height: 26px; font-size: fs(12); cursor: pointer; padding: 0; }
 

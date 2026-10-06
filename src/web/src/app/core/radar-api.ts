@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { I18n } from '../i18n/i18n';
 import { GapItem, Tool } from './commands';
-import { AgentDraft, CopyAgentResult, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus } from './models';
+import { AgentDraft, CopyAgentResult, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus, VisibilityOutcome } from './models';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly body?: any) {
@@ -90,6 +90,11 @@ export class RadarApi {
   /** Without `confirm` the server only reports where the copy would land; with it, it adds the file to each repo (never overwriting). */
   copyAgent(fromRepoId: string, name: string, toRepoIds: string[], confirm: boolean): Promise<CopyAgentResult> {
     return this.call('POST', '/api/agents/copy', { fromRepoId, name, toRepoIds, confirm });
+  }
+
+  /** Without `confirm` the server only plans the change; with it, it edits .git/info/exclude (and takes a tracked file out of the index). */
+  setVisibility(repoId: string, path: string, visibility: 'private' | 'public', confirm: boolean): Promise<VisibilityOutcome> {
+    return this.call('POST', '/api/visibility', { repoId, path, visibility, confirm });
   }
 
   // ---- second brain ----------------------------------------------------------------------------

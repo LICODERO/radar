@@ -1,0 +1,53 @@
+<div class="backdrop" (click)="store.closeVisibility()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('visibility.title')">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">{{ t('visibility.title') }}</div>
+      <div class="ttl">{{ ref()?.path }}</div>
+    </div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('visibility.close')" (click)="store.closeVisibility()">✕</button>
+  </div>
+
+  <div class="body">
+    <div class="flow">
+      <app-visibility-tag [visibility]="ref()?.current" />
+      <span class="m arrow">→</span>
+      <app-visibility-tag [visibility]="phase() === 'done' ? outcome()?.visibility : target()" />
+    </div>
+
+    @if (phase() === 'done') {
+      <p class="lead">{{ target() === 'private' ? t('visibility.doneHidden') : t('visibility.doneShared') }}</p>
+    } @else {
+      <p class="text">{{ target() === 'private' ? t('visibility.introPrivate') : t('visibility.introPublic') }}</p>
+      @if (phase() === 'loading') { <p class="m wait">{{ t('visibility.loading') }}</p> }
+    }
+
+    @if (outcome(); as o) {
+      @if (o.blocked) {
+        <div class="m err" role="alert">{{ blockedText(o.blocked) }}</div>
+      } @else if (o.changes.length === 0 && phase() !== 'done') {
+        <p class="m hint">{{ t('visibility.nothing') }}</p>
+      } @else {
+        <div class="m lbl">{{ phase() === 'done' ? t('visibility.done') : t('visibility.willDo') }}</div>
+        <ul class="changes">
+          @for (c of o.changes; track $index) {
+            <li><span class="m what">{{ changeText(c.kind) }}</span><code>{{ c.text }}</code></li>
+          }
+        </ul>
+        @for (n of notes(); track n) { <p class="m note">{{ noteText(n) }}</p> }
+      }
+    }
+    @if (error(); as e) { <div class="m err" role="alert">{{ e }}</div> }
+
+    <div class="btns">
+      @if (phase() === 'done') {
+        <button class="m btn-solid go" type="button" (click)="store.closeVisibility()">{{ t('visibility.closeBtn') }}</button>
+      } @else {
+        <button class="m btn-solid go" type="button" [disabled]="phase() !== 'plan' || !actionable()" (click)="confirm()">
+          {{ phase() === 'saving' ? t('visibility.saving') : target() === 'private' ? t('visibility.confirmPrivate') : t('visibility.confirmPublic') }}
+        </button>
+        <button class="m btn-ghost" type="button" [disabled]="phase() === 'saving'" (click)="store.closeVisibility()">{{ t('visibility.cancel') }}</button>
+      }
+    </div>
+  </div>
+</div>

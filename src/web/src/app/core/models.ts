@@ -71,6 +71,19 @@ export interface WorkflowInfo {
   issues: string[];
 }
 
+export interface VisibilityChange { kind: 'exclude-add' | 'exclude-remove' | 'git-rm-cached'; text: string }
+/** what changing an item's visibility does (a plan unless `applied`); `blocked` says why nothing can be done */
+export interface VisibilityOutcome {
+  path: string;
+  current: Visibility;
+  target: 'private' | 'public';
+  changes: VisibilityChange[];
+  blocked: 'no-git' | 'exclude-damaged' | 'other-rule' | null;
+  notes: ('commit-removal' | 'commit-to-share')[];
+  applied: boolean;
+  visibility: Visibility;
+}
+
 export interface CopyTarget { repoId: string; status: 'ready' | 'created' | 'exists' | 'unknown-repo' | 'repo-missing' | 'forbidden'; path?: string | null }
 export interface CopyAgentResult { name: string; source: string; written: boolean; targets: CopyTarget[] }
 

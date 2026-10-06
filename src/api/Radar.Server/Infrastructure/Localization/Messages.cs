@@ -22,6 +22,8 @@ public enum Msg
     AgentSourceMissing, CopySourceUnreadable, CopyNoTargets, CopyTooMany,
     // agent file validation
     FileTooBig, FrontmatterMissing, NameInvalid, DescriptionMissing, DescriptionLong, BodyMissing,
+    // visibility
+    VisibilityBadTarget, VisibilityWriteFailed, VisibilityGitFailed,
     // vault
     VaultNotReady, VaultNotEmpty, VaultInsideRepo, VaultAlready, VaultNotAVault, VaultTooNew, VaultWriteFailed,
     ProjectNameTaken, ClaudeLocalForbidden, ClaudeLocalDamaged,
@@ -80,6 +82,10 @@ public static class Messages
         [Msg.DescriptionMissing] = ("Pole description jest wymagane (min. 10 znaków): kiedy używać agenta.", "The description field is required (min. 10 characters): when to use the agent."),
         [Msg.DescriptionLong] = ("Pole description jest za długie (max 1024 znaki).", "The description field is too long (max 1024 characters)."),
         [Msg.BodyMissing] = ("Brak treści instrukcji po frontmatterze.", "No instructions after the frontmatter."),
+
+        [Msg.VisibilityBadTarget] = ("Widoczność może być tylko publiczna albo prywatna.", "Visibility can only be public or private."),
+        [Msg.VisibilityWriteFailed] = ("Nie udało się zapisać listy prywatnych plików (.git/info/exclude).", "Could not write the private list (.git/info/exclude)."),
+        [Msg.VisibilityGitFailed] = ("Git odmówił zmiany: {0}", "Git refused the change: {0}"),
 
         [Msg.VaultNotReady] = ("Second brain nie jest skonfigurowany albo jego folder jest niedostępny.", "The second brain is not set up, or its folder is unavailable."),
         [Msg.VaultNotEmpty] = ("Wybrany folder nie jest pusty. Wskaż pusty lub nowy folder.", "The chosen folder is not empty. Choose an empty or new folder."),
