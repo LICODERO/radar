@@ -69,8 +69,8 @@
 </div>
 <div class="acts">
   <button class="m act tip tip-l" type="button" [disabled]="!canCompose()" [attr.data-tip]="agentTip()" (click)="store.openComposer()" style="color:#c6ff3d;border-color:#c6ff3d66;background:#c6ff3d0d"><span class="plus">+</span><span class="lbl">{{ t('right.addAgent') }}</span></button>
-  <button class="m act tip" type="button" disabled [attr.data-tip]="t('right.nextVersion')" style="color:#a99bff;border-color:#a99bff66;background:#a99bff0d"><span class="plus">+</span><span class="lbl">{{ t('right.addSkill') }}</span></button>
-  <button class="m act tip tip-r" type="button" disabled [attr.data-tip]="t('right.nextVersion')" style="color:#4dd6ff;border-color:#4dd6ff66;background:#4dd6ff0d"><span class="plus">+</span><span class="lbl">{{ t('right.addWorkflow') }}</span></button>
+  <button class="m act tip" type="button" [disabled]="!canCompose()" [attr.data-tip]="itemTip('skill')" (click)="store.openComposer('skill')" style="color:#a99bff;border-color:#a99bff66;background:#a99bff0d"><span class="plus">+</span><span class="lbl">{{ t('right.addSkill') }}</span></button>
+  <button class="m act tip tip-r" type="button" [disabled]="!canCompose()" [attr.data-tip]="itemTip('workflow')" (click)="store.openComposer('workflow')" style="color:#4dd6ff;border-color:#4dd6ff66;background:#4dd6ff0d"><span class="plus">+</span><span class="lbl">{{ t('right.addWorkflow') }}</span></button>
 </div>
 <div class="acts vault">
   <button class="m btn-ghost tip tip-l" type="button" [class.warn]="vaultState() !== 'ok'" [disabled]="isMock()" [attr.data-tip]="vaultTip()" (click)="store.openVault()">{{ t('right.vault') }}</button>

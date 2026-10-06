@@ -89,6 +89,8 @@ export interface SkippedFile { path: string; reason: 'symlink' | 'binary' | 'unr
 /** what a copy did or would do; for a skill `files`/`bytes`/`skipped` describe the folder that travels */
 export interface CopyAgentResult { name: string; source: string; written: boolean; targets: CopyTarget[]; files?: string[]; bytes?: number; skipped?: SkippedFile[] }
 export type CopyKind = 'agent' | 'skill';
+/** what the composer drafts: an agent, a skill (its own folder) or a workflow */
+export type ItemKind = 'agent' | 'skill' | 'workflow';
 
 /** one content of a shared agent/skill and the repos that hold it; `path` is the file in the first of them */
 export interface ItemVariant { hash: string; repos: string[]; path: string }

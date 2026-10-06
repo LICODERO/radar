@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { I18n } from '../i18n/i18n';
 import { GapItem, Tool } from './commands';
-import { AgentDraft, CopyAgentResult, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus, VisibilityOutcome } from './models';
+import { AgentDraft, CopyAgentResult, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus, VisibilityOutcome, ItemKind } from './models';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly body?: any) {
@@ -82,10 +82,20 @@ export class RadarApi {
     return this.abortable(this.http.post<AgentDraft>('/api/agents/generate', { repoId, description }, { headers: this.headers(token) }), signal);
   }
 
-  /** Writes the reviewed file as a brand-new .claude/agents/<name>.md (the server never overwrites). */
   /** `visibility: 'private'` also puts the new file on the repo's private list (.git/info/exclude); the server refuses when it cannot. */
   createAgent(repoId: string, content: string, visibility: 'private' | 'public' = 'public'): Promise<{ path: string; hidden?: boolean }> {
     return this.call('POST', '/api/agents', { repoId, content, visibility });
+  }
+
+  /** Drafts a skill or a workflow file from a description (same contract as for agents; nothing is written). */
+  async generateItem(kind: Exclude<ItemKind, 'agent'>, repoId: string, description: string, signal: AbortSignal): Promise<AgentDraft> {
+    const token = await this.ensureToken();
+    return this.abortable(this.http.post<AgentDraft>('/api/items/generate', { kind, repoId, description }, { headers: this.headers(token) }), signal);
+  }
+
+  /** Writes the reviewed skill (as .claude/skills/<name>/SKILL.md) or workflow (.claude/workflows/<name>.md); never overwrites. */
+  createItem(kind: Exclude<ItemKind, 'agent'>, repoId: string, content: string, visibility: 'private' | 'public' = 'public'): Promise<{ path: string; hidden?: boolean }> {
+    return this.call('POST', '/api/items', { kind, repoId, content, visibility });
   }
 
   /** The same for a whole skill folder (limits: files, size; symlinks and binary files outside scripts/ are skipped and reported). */

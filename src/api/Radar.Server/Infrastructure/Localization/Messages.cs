@@ -20,6 +20,8 @@ public enum Msg
     // agents
     DescriptionRequired, DescriptionTooLong, GenerationBusy, AgentNameTakenInRepo, ContentRequired, AgentInvalid, AgentExists, WriteForbidden,
     AgentSourceMissing, CopySourceUnreadable, CopyNoTargets, CopyTooMany,
+    // new skill / workflow
+    ItemKindInvalid, ItemDescriptionRequired, ItemNameTaken, ItemExists,
     // skills
     SkillSourceMissing, SkillSourceInvalid, SkillTooManyFiles, SkillTooBigToCopy, SkillSourceUnreadable,
     // agent file validation
@@ -78,6 +80,11 @@ public static class Messages
         [Msg.CopyTooMany] = ("Za dużo repozytoriów naraz (max {0}).", "Too many repositories at once (max {0})."),
         [Msg.WriteForbidden] = ("Zapis w tym katalogu jest zabroniony (dowiązanie poza repozytorium).", "Writing in this directory is not allowed (a link pointing outside the repository)."),
 
+        [Msg.ItemKindInvalid] = ("Nieznany rodzaj elementu (skill albo workflow).", "Unknown item kind (skill or workflow)."),
+        [Msg.ItemDescriptionRequired] = ("Opisz własnymi słowami, co ma robić ten element.", "Describe in your own words what this item should do."),
+        [Msg.ItemNameTaken] = ("Element o tej nazwie już istnieje w tym repozytorium. Zmień nazwę.", "An item with this name already exists in this repository. Change the name."),
+        [Msg.ItemExists] = ("Element o tej nazwie już istnieje. Zmień nazwę.", "An item with this name already exists. Change the name."),
+
         [Msg.SkillSourceMissing] = ("Nie ma takiego skilla w repozytorium źródłowym.", "The source repository has no such skill."),
         [Msg.SkillSourceInvalid] = ("Skill źródłowy jest niepoprawny (brak SKILL.md z frontmatterem albo zła nazwa folderu).", "The source skill is invalid (no SKILL.md with frontmatter, or a bad folder name)."),
         [Msg.SkillTooManyFiles] = ("Skill ma za dużo plików, żeby go skopiować (max {0}).", "The skill has too many files to copy (max {0})."),
@@ -87,7 +94,7 @@ public static class Messages
         [Msg.FileTooBig] = ("Plik jest za duży (limit 64 KB).", "The file is too large (64 KB limit)."),
         [Msg.FrontmatterMissing] = ("Brak poprawnego frontmattera: plik ma zaczynać się od bloku --- ... ---.", "Missing valid frontmatter: the file must start with a --- ... --- block."),
         [Msg.NameInvalid] = ("Pole name musi być małymi literami, cyframi i myślnikami (np. migration-reviewer), 2-64 znaki.", "The name field must use lowercase letters, digits and hyphens (e.g. migration-reviewer), 2-64 characters."),
-        [Msg.DescriptionMissing] = ("Pole description jest wymagane (min. 10 znaków): kiedy używać agenta.", "The description field is required (min. 10 characters): when to use the agent."),
+        [Msg.DescriptionMissing] = ("Pole description jest wymagane (min. 10 znaków): kiedy tego używać.", "The description field is required (min. 10 characters): when to use it."),
         [Msg.DescriptionLong] = ("Pole description jest za długie (max 1024 znaki).", "The description field is too long (max 1024 characters)."),
         [Msg.BodyMissing] = ("Brak treści instrukcji po frontmatterze.", "No instructions after the frontmatter."),
 

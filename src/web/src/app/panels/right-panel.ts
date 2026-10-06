@@ -22,6 +22,13 @@ export class RightPanel {
     : !this.store.selected()
       ? this.t('right.pickRepoFirst')
       : this.t('right.newAgentTip', { name: this.selName() }));
+  protected itemTip(kind: 'skill' | 'workflow'): string {
+    return this.store.mode() === 'mock'
+      ? this.t('right.needServer')
+      : !this.store.selected()
+        ? this.t('right.pickRepoFirst')
+        : this.t(kind === 'skill' ? 'right.newSkillTip' : 'right.newWorkflowTip', { name: this.selName() });
+  }
   protected readonly agentChips = computed(() => limitChips(this.sel()?.agents ?? []));
   protected readonly skillChips = computed(() => limitChips(this.sel()?.skills ?? []));
   protected readonly workflowChips = computed(() => limitChips(this.store.selectedWorkflows()));

@@ -120,7 +120,8 @@ public static class AgentWriter
         repo.Agents.Any(a => a.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
         || File.Exists(Path.Combine(GapCommands.DirOf(result, repo), ".claude", "agents", name + ".md"));
 
-    public static WriteResult WriteNew(ScanResult result, RepoInfo repo, string name, string content)
+    /// <param name="folder">the .claude subfolder: agents (default) or workflows</param>
+    public static WriteResult WriteNew(ScanResult result, RepoInfo repo, string name, string content, string folder = "agents")
     {
         if (!AgentValidator.IsValidName(name)) throw new ArgumentException("Invalid agent name", nameof(name));
 
@@ -130,7 +131,7 @@ public static class AgentWriter
         if (!SafeFs.IsInside(root, repoDir)) return new WriteResult(WriteStatus.Forbidden);
 
         var claudeDir = Path.Combine(repoDir, ".claude");
-        var agentsDir = Path.Combine(claudeDir, "agents");
+        var agentsDir = Path.Combine(claudeDir, folder);
         // an existing .claude or agents directory that leads out of the repo through a symlink is refused
         if ((Directory.Exists(claudeDir) && !SafeFs.IsInside(repoDir, claudeDir))
             || (Directory.Exists(agentsDir) && !SafeFs.IsInside(repoDir, agentsDir)))
@@ -154,6 +155,6 @@ public static class AgentWriter
         {
             return new WriteResult(WriteStatus.Exists);
         }
-        return new WriteResult(WriteStatus.Created, $".claude/agents/{name}.md");
+        return new WriteResult(WriteStatus.Created, $".claude/{folder}/{name}.md");
     }
 }

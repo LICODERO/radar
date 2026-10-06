@@ -1,7 +1,7 @@
 <div class="head">
   <div class="m badge">+</div>
   <div class="ttl">
-    <div class="m kind">{{ t('agent.new', { repo: repo()?.name ?? '' }) }}</div>
+    <div class="m kind">{{ x('new', { repo: repo()?.name ?? '' }) }}</div>
     <div class="m path">{{ targetPath() }}</div>
   </div>
   <button class="m btn-ghost x" type="button" [attr.aria-label]="t('agent.close')" (click)="close()">✕</button>
@@ -20,14 +20,14 @@
       </div>
     </div>
   } @else {
-    <label class="lbl" for="desc">{{ t('agent.descLabel') }}</label>
+    <label class="lbl" for="desc">{{ x('descLabel') }}</label>
     <textarea #desc id="desc" class="m desc" rows="5" [value]="description()" [disabled]="busy()" [maxLength]="max"
-              [placeholder]="t('agent.descPlaceholder')"
+              [placeholder]="x('descPlaceholder')"
               (input)="onDescription($event)"></textarea>
     <div class="m count">{{ description().length }} / {{ max }}</div>
 
     <div class="m privacy">
-      {{ t('agent.privacy', { claude: 'claude', stack: repo()?.stack ?? '', agents: existing().length ? existing().join(', ') : t('agent.none') }) }}
+      {{ x('privacy', { claude: 'claude', stack: repo()?.stack ?? '', agents: existing().length ? existing().join(', ') : t('agent.none') }) }}
     </div>
     @if (claudeMissing()) {
       <div class="m warn">{{ t('agent.claudeMissing') }}</div>
@@ -36,7 +36,7 @@
     <div class="btns">
       @if (phase() === 'generating') {
         <button class="m btn-ghost" type="button" (click)="stop()">{{ t('agent.stop') }}</button>
-        <span class="m wait">{{ t('agent.wait') }}</span>
+        <span class="m wait">{{ x('wait') }}</span>
       } @else {
         <button class="m btn-solid go" type="button" [disabled]="!canGenerate() || busy()" (click)="generate()">
           {{ content() ? t('agent.regenerate') : t('agent.generate') }}
@@ -63,7 +63,7 @@
         <button class="m tab" type="button" [class.on]="mode() === 'edit'" (click)="mode.set('edit')">{{ t('agent.editor') }}</button>
       </div>
       @if (mode() === 'edit') {
-        <textarea class="m editor" spellcheck="false" [value]="content()" [disabled]="busy()" (input)="onContent($event)" [attr.aria-label]="t('agent.editorAria')"></textarea>
+        <textarea class="m editor" spellcheck="false" [value]="content()" [disabled]="busy()" (input)="onContent($event)" [attr.aria-label]="x('editorAria')"></textarea>
       } @else {
         <div class="preview"><app-md-view [text]="content()" /></div>
       }

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AI_TOOLS } from './ai-tools';
-import { CopyAgentResult, CopyKind, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, Visibility, VisibilityOutcome, WorkflowInfo } from './models';
+import { CopyAgentResult, CopyKind, ItemKind, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, ToolStatus, ToolsInfo, VaultStatus, Visibility, VisibilityOutcome, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, buildCommand, countByType } from './commands';
@@ -74,6 +74,8 @@ export class RadarStore {
   readonly coverageInfoOpen = signal(false);
   /** the "new agent from a description" panel; the id of the repo it works on */
   readonly composerRepoId = signal<string | null>(null);
+  /** what the open composer drafts */
+  readonly composerKind = signal<ItemKind>('agent');
   readonly tools = signal<ToolsInfo | null>(null);
   /** the AI CLI badge (claude, codex, cursor): undefined until the first check ends (and in sample-data mode), null when the check itself failed */
   readonly cli = signal<ToolStatus[] | null | undefined>(undefined);
@@ -332,10 +334,11 @@ export class RadarStore {
   }
 
   // ---- new agent composer -------------------------------------------------------------------
-  openComposer(): void {
+  openComposer(kind: ItemKind = 'agent'): void {
     const id = this.selected()?.id;
     if (!id || this.mode() === 'mock') return;
     this.closeFile();
+    this.composerKind.set(kind);
     this.composerRepoId.set(id);
   }
 

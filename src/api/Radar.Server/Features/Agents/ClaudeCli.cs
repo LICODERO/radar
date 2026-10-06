@@ -6,7 +6,11 @@ using Radar.Server.Infrastructure.Localization;
 
 namespace Radar.Server.Features.Agents;
 
-public sealed record AgentGenerationRequest(string Description, string Stack, IReadOnlyList<string> ExistingAgents);
+/// <param name="Kind">agent (default) | skill | workflow</param>
+/// <param name="ExistingSkills">names of the repo's skills (to avoid duplicates, or for a workflow to refer to)</param>
+/// <param name="ExistingWorkflows">names of the repo's workflows</param>
+public sealed record AgentGenerationRequest(string Description, string Stack, IReadOnlyList<string> ExistingAgents, string Kind = "agent",
+    IReadOnlyList<string>? ExistingSkills = null, IReadOnlyList<string>? ExistingWorkflows = null);
 
 public sealed record GeneratedText(string Text, decimal? CostUsd);
 
@@ -50,7 +54,7 @@ public sealed class ClaudeCliGenerator(IToolLocator locator, IConfiguration conf
         Directory.CreateDirectory(workDir);
         try
         {
-            return await RunAsync(exe, workDir, AgentPrompt.Build(request.Description, request.Stack, request.ExistingAgents), ct);
+            return await RunAsync(exe, workDir, Items.ItemPrompt.SystemFor(request.Kind), Items.ItemPrompt.Build(request), ct);
         }
         finally
         {
@@ -58,7 +62,7 @@ public sealed class ClaudeCliGenerator(IToolLocator locator, IConfiguration conf
         }
     }
 
-    private async Task<GeneratedText> RunAsync(string exe, string workDir, string prompt, CancellationToken ct)
+    private async Task<GeneratedText> RunAsync(string exe, string workDir, string systemPrompt, string prompt, CancellationToken ct)
     {
         var args = new List<string>
         {
@@ -66,7 +70,7 @@ public sealed class ClaudeCliGenerator(IToolLocator locator, IConfiguration conf
             // do not load the user's MCP servers and user-level settings: they add ~12k tokens (about 5 cents) and
             // send private configuration along with every call; the call runs in an empty temp dir, so only "project" is harmless
             "--strict-mcp-config", "--setting-sources", "project",
-            "--max-budget-usd", "0.5", "--system-prompt", AgentPrompt.SystemPrompt
+            "--max-budget-usd", "0.5", "--system-prompt", systemPrompt
         };
         var model = config["Radar:AgentModel"];
         if (!string.IsNullOrWhiteSpace(model)) { args.Add("--model"); args.Add(model); }

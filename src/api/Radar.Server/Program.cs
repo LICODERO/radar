@@ -4,6 +4,7 @@ using Radar.Scanner;
 using Radar.Server.Features.Agents;
 using Radar.Server.Features.Files;
 using Radar.Server.Features.Gaps;
+using Radar.Server.Features.Items;
 using Radar.Server.Features.Scans;
 using Radar.Server.Features.Session;
 using Radar.Server.Features.Settings;
@@ -57,6 +58,7 @@ api.MapGaps();
 api.MapAgents();
 api.MapVisibility();
 api.MapSkills();
+api.MapItems();
 api.MapVault();
 
 // ---- static UI ------------------------------------------------------------------------------
