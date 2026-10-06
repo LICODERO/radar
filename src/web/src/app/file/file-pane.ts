@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef, computed, effect, inject, viewChild } from '@angular/core';
 import { RadarStore } from '../core/radar-store';
 import { I18n } from '../i18n/i18n';
+import { MsgKey } from '../i18n/pl';
 import { MdView } from '../shared/md-view';
 import { VisibilityTag } from '../shared/visibility-tag';
 
@@ -30,6 +31,15 @@ export class FilePane {
       ?? repo.skills.find((s) => s.path === f.path)?.visibility
       ?? this.store.workflows().flatMap((w) => w.repos).find((x) => x.repoId === f.repoId && x.path === f.path)?.visibility
       ?? null;
+  });
+  /** the state to show, or null when git could not tell (nothing is shown then) */
+  protected readonly shownVisibility = computed(() => {
+    const v = this.visibility();
+    return v === 'public' || v === 'private' || v === 'untracked' ? v : null;
+  });
+  protected readonly visibilityTip = computed(() => {
+    const v = this.shownVisibility();
+    return v ? `${this.t(('visibility.' + v) as MsgKey)} – ${this.t(('visibility.' + v + '.tip') as MsgKey)} ${this.t('visibility.changeHint')}` : '';
   });
   protected readonly canChangeVisibility = computed(() => {
     const v = this.visibility();

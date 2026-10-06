@@ -10,7 +10,7 @@ import { MsgKey } from '../i18n/pl';
   template: `
     @if (shown(); as v) {
       @if (compact()) {
-        <span class="ico tip tip-b" [class]="v.state + (side() === 'l' ? ' tip-l' : ' tip-r')" role="img" [attr.aria-label]="v.label" [attr.data-tip]="v.label + ' – ' + v.tip">
+        <span class="ico" [class]="v.state + (tip() ? ' tip tip-b ' + (side() === 'l' ? 'tip-l' : 'tip-r') : '')" role="img" [attr.aria-label]="v.label" [attr.data-tip]="tip() ? v.label + ' – ' + v.tip : null">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             @switch (v.state) {
               @case ('private') { <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" /> }
@@ -32,6 +32,8 @@ export class VisibilityTag {
   /** which edge the tooltip hangs from: `r` grows to the left (for tags near the right edge), `l` grows to the right */
   readonly side = input<'l' | 'r'>('r');
   /** an icon (lock, people, crossed-out eye: git does not watch it) instead of the word, for tight places; the tooltip then carries the word too */
+  /** the icon's own tooltip; off when a button around it carries the tooltip */
+  readonly tip = input(true, { transform: booleanAttribute });
   readonly compact = input(false, { transform: booleanAttribute });
   protected readonly shown = computed(() => {
     const v = this.visibility();

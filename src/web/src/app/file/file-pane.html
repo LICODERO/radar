@@ -1,11 +1,7 @@
 <div class="head">
   <div class="m badge" [style.border-color]="f().color" [style.color]="f().color">MD</div>
   <div class="ttl">
-    <div class="m kind" [style.color]="f().color">{{ f().kind }} · {{ f().repoName }} @if (canChangeVisibility()) {
-        <button class="vis vis-btn" type="button" [attr.aria-label]="t('visibility.change')" (click)="changeVisibility()"><app-visibility-tag compact [visibility]="visibility()" /></button>
-      } @else {
-        <app-visibility-tag class="vis" compact [visibility]="visibility()" />
-      }
+    <div class="m kind" [style.color]="f().color">{{ f().kind }} · {{ f().repoName }}
     </div>
     <div class="m path">{{ f().path }}</div>
   </div>
@@ -15,11 +11,22 @@
 <div class="tabs">
   <button class="m tab" type="button" [class.on]="f().mode === 'preview'" (click)="store.setFileMode('preview')">{{ t('file.preview') }}</button>
   <button class="m tab" type="button" [class.on]="f().mode === 'source'" (click)="store.setFileMode('source')">{{ t('file.source') }}</button>
-  @if (canCopy()) {
-    <button class="copy tip tip-b tip-r" type="button" [attr.aria-label]="t(skill() ? 'file.copySkill' : 'file.copyAgent')" [attr.data-tip]="t(skill() ? 'file.copySkillTip' : 'file.copyAgentTip')" (click)="copy()">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" /></svg>
-    </button>
-  }
+  <div class="tools">
+    @if (shownVisibility(); as v) {
+      @if (canChangeVisibility()) {
+        <button class="vis-b tip tip-b tip-r" type="button" [attr.aria-label]="t('visibility.change')" [attr.data-tip]="visibilityTip()" (click)="changeVisibility()">
+          <app-visibility-tag compact [tip]="false" [visibility]="v" />
+        </button>
+      } @else {
+        <span class="vis-s"><app-visibility-tag compact side="r" [visibility]="v" /></span>
+      }
+    }
+    @if (canCopy()) {
+      <button class="copy tip tip-b tip-r" type="button" [attr.aria-label]="t(skill() ? 'file.copySkill' : 'file.copyAgent')" [attr.data-tip]="t(skill() ? 'file.copySkillTip' : 'file.copyAgentTip')" (click)="copy()">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" /></svg>
+      </button>
+    }
+  </div>
 </div>
 
 <div class="body">

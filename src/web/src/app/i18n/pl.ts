@@ -544,6 +544,7 @@ export const PL = {
   'local.blocked.too-big': 'CLAUDE.local.md lub CLAUDE.md jest za duży (ponad 1 MB), więc go nie ruszam.',
   'local.note.agents-md-not-imported': 'Repozytorium ma AGENTS.md, a CLAUDE.md go nie importuje, więc Claude go nie czyta. Dodaj do CLAUDE.md linię @AGENTS.md.',
   'local.note.no-claude-md': 'Repozytorium nie ma CLAUDE.md, więc publicznych workflow nie mam gdzie dopisać. Najpierw utwórz CLAUDE.md.',
+  'visibility.changeHint': 'Kliknij, aby zmienić.',
   'items.noDescription': 'brak opisu',
   'right.kpi.gapsOpen': 'Pokaż listę luk',
   'right.kpi.reposOpen': 'Pokaż listę repozytoriów',

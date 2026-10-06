@@ -10,4 +10,4 @@
 .ico.public { color: $muted; }
 .ico.private { color: $white; }
 .ico.untracked { color: $muted; }
-:host-context(.vis-btn) .tag, :host-context(.vis-btn) .ico { cursor: pointer; }
+:host-context(button) .ico { cursor: pointer; }

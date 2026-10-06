@@ -8,7 +8,7 @@ import { FilePane } from './file-pane';
 
 const repo = {
   id: 'shop', name: 'shop', initials: 'SH', stack: '.NET', coverage: { score: 70 }, claudeMd: { exists: true, path: 'CLAUDE.md' }, gaps: [],
-  agents: [{ name: 'reviewer', description: 'r', tools: [], path: '.claude/agents/reviewer.md' }],
+  agents: [{ name: 'reviewer', description: 'r', tools: [], path: '.claude/agents/reviewer.md', visibility: 'private' }],
   skills: [{ name: 'pdf', description: 'p', path: '.claude/skills/pdf/SKILL.md' }]
 };
 
@@ -46,5 +46,28 @@ describe('FilePane copy button', () => {
     expect(open('CLAUDE.md').el.querySelector('.copy')).toBeNull();
     TestBed.resetTestingModule();
     expect(open('.claude/agents/reviewer.md', 'mock').el.querySelector('.copy')).toBeNull();
+  });
+});
+
+describe('FilePane visibility button', () => {
+  it('sits next to the copy button, carries the tooltip and opens the visibility dialog', () => {
+    const { store, el } = open('.claude/agents/reviewer.md');
+    const btn = el.querySelector<HTMLButtonElement>('.tools .vis-b')!;
+    expect(btn.nextElementSibling?.classList.contains('copy')).toBe(true);
+    expect(btn.querySelector('.ico.private')).not.toBeNull();
+    expect(btn.querySelector('.ico')?.getAttribute('data-tip')).toBeNull();           // the button carries the tooltip, not the icon
+    expect(btn.getAttribute('data-tip')).toContain('PRIVATE – Only on your machine');
+    expect(btn.getAttribute('data-tip')).toContain('Click to change.');
+    btn.click();
+    expect(store.visibilityRef()).toEqual({ repoId: 'shop', path: '.claude/agents/reviewer.md', current: 'private' });
+  });
+
+  it('is only an icon without the server, and absent for files git has no state for', () => {
+    expect(open('.claude/agents/reviewer.md', 'mock').el.querySelector('.tools .vis-b')).toBeNull();
+    TestBed.resetTestingModule();
+    const { el } = open('.claude/agents/reviewer.md', 'mock');
+    expect(el.querySelector('.tools .vis-s .ico')).not.toBeNull();
+    TestBed.resetTestingModule();
+    expect(open('CLAUDE.md').el.querySelector('.tools .vis-b, .tools .vis-s')).toBeNull();
   });
 });

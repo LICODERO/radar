@@ -542,6 +542,7 @@ export const EN: Record<MsgKey, Message> = {
   'local.blocked.too-big': 'CLAUDE.local.md or CLAUDE.md is too large (over 1 MB), so I leave it alone.',
   'local.note.agents-md-not-imported': 'The repository has an AGENTS.md that CLAUDE.md does not import, so Claude does not read it. Add the line @AGENTS.md to CLAUDE.md.',
   'local.note.no-claude-md': 'The repository has no CLAUDE.md, so there is nowhere to list the public workflows. Create CLAUDE.md first.',
+  'visibility.changeHint': 'Click to change.',
   'items.noDescription': 'no description',
   'right.kpi.gapsOpen': 'Show the list of gaps',
   'right.kpi.reposOpen': 'Show the list of repositories',
