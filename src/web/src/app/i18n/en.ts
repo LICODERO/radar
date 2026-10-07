@@ -346,7 +346,7 @@ export const EN: Record<MsgKey, Message> = {
   'right.vaultTip.none': 'Set up the second brain (project knowledge outside the repositories)',
   'right.vaultTip.ok': 'Second brain: {path}',
   'right.vaultTip.missing': 'The second brain folder is unavailable. Point to it again',
-  'right.flow': 'FLOW BETWEEN REPOS ›',
+  'right.flow': 'FLOW BETWEEN REPOS',
   'right.flowTip': 'Mark which repo calls which and describe the authentication',
   'right.enableRepo': '+ FOR THIS REPO',
   'right.enableRepoTip': 'Turn the second brain on for {name}',
@@ -673,8 +673,6 @@ export const EN: Record<MsgKey, Message> = {
   'toast.down': 'Coverage fell: {from}% → {to}% (−{d} pts)',
   'toast.same': 'Coverage unchanged: {to}%',
   // flow between repos
-  'flow.btn': 'FLOW BETWEEN REPOS ›',
-  'flow.open': 'Open the repo flow wizard',
   'flow.eyebrow': 'FLOW BETWEEN REPOSITORIES',
   'flow.title': 'Who talks to whom',
   'flow.close': 'Close',

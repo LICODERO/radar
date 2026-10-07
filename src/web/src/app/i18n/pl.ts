@@ -348,7 +348,7 @@ export const PL = {
   'right.vaultTip.none': 'Skonfiguruj second brain (wiedza o projektach poza repozytoriami)',
   'right.vaultTip.ok': 'Second brain: {path}',
   'right.vaultTip.missing': 'Folder second brain jest niedostępny. Wskaż go ponownie',
-  'right.flow': 'PRZEPŁYW MIĘDZY REPO ›',
+  'right.flow': 'PRZEPŁYW MIĘDZY REPO',
   'right.flowTip': 'Zaznacz, które repo wywołuje które, i opisz uwierzytelnianie',
   'right.enableRepo': '+ DLA TEGO REPO',
   'right.enableRepoTip': 'Włącz second brain dla {name}',
@@ -675,8 +675,6 @@ export const PL = {
   'toast.down': 'Pokrycie spadło: {from}% → {to}% (−{d} pkt)',
   'toast.same': 'Pokrycie bez zmian: {to}%',
   // flow between repos
-  'flow.btn': 'PRZEPŁYW MIĘDZY REPO ›',
-  'flow.open': 'Otwórz kreator przepływu między repozytoriami',
   'flow.eyebrow': 'PRZEPŁYW MIĘDZY REPOZYTORIAMI',
   'flow.title': 'Kto z kim rozmawia',
   'flow.close': 'Zamknij',

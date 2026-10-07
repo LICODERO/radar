@@ -41,9 +41,6 @@
         @if (store.hasInsights() && store.aiToolScanned()) {
           <button class="m insights-btn" type="button" [attr.aria-label]="t('insights.open')" (click)="store.openInsights()">{{ insightsLabel() }}</button>
         }
-        @if (store.mode() === 'api' && store.repos().length > 1) {
-          <button class="m flow-btn" type="button" [attr.aria-label]="t('flow.open')" (click)="store.openFlow()">{{ t('flow.btn') }}</button>
-        }
         <button class="m about-btn" type="button" [title]="t('about.open')" [attr.aria-label]="t('about.open')" (click)="store.openAbout()">{{ footer() }}</button>
         @if (store.gapsOpen()) { <app-gap-panel /> }
         @if (store.coverageToast() && !store.scan()) { <app-coverage-toast /> }
