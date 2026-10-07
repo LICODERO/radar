@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, firstValueFrom } from 'rxjs';
 import { I18n } from '../i18n/i18n';
 import { GapItem, Tool } from './commands';
-import { AgentDraft, CopyAgentResult, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus, VisibilityOutcome, ItemKind, LocalPlan } from './models';
+import { AgentDraft, CopyAgentResult, EnableProjectResult, FileContent, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus, VisibilityOutcome, ItemKind, LocalPlan, FlowRule, FlowPlan } from './models';
 
 export class ApiError extends Error {
   constructor(message: string, readonly status: number, readonly body?: any) {
@@ -117,6 +117,11 @@ export class RadarApi {
   localFile(repoId: string, includePublic: boolean, confirm: boolean): Promise<LocalPlan> {
     return this.call('POST', '/api/local-file', { repoId, includePublic, confirm });
   }
+
+  /** The flow rules found in the repos' relations files. */
+  async flowRules(): Promise<FlowRule[]> { return (await this.call<{ relations: FlowRule[] }>('GET', '/api/relations')).relations; }
+  /** The whole set of rules wanted afterwards; without `confirm` the server only plans, with it it writes the files of every repo involved. */
+  saveFlowRules(relations: FlowRule[], confirm: boolean): Promise<FlowPlan> { return this.call('POST', '/api/relations', { relations, confirm }); }
 
   // ---- second brain ----------------------------------------------------------------------------
   vault(): Promise<VaultStatus> { return this.call('GET', '/api/vault'); }

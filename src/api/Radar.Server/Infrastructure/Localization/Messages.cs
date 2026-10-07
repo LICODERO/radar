@@ -22,6 +22,8 @@ public enum Msg
     AgentSourceMissing, CopySourceUnreadable, CopyNoTargets, CopyTooMany,
     // local instructions
     LocalFileBlocked, LocalFileWriteFailed,
+    // repo relations
+    RelationInvalid, RelationsBlocked, RelationsWriteFailed,
     // new skill / workflow
     ItemKindInvalid, ItemDescriptionRequired, ItemNameTaken, ItemExists,
     // skills
@@ -83,6 +85,9 @@ public static class Messages
         [Msg.WriteForbidden] = ("Zapis w tym katalogu jest zabroniony (dowiązanie poza repozytorium).", "Writing in this directory is not allowed (a link pointing outside the repository)."),
 
         [Msg.LocalFileBlocked] = ("Nie mogę bezpiecznie zapisać instrukcji lokalnych w tym repozytorium.", "Cannot safely write the local instructions in this repository."),
+        [Msg.RelationInvalid] = ("Nieprawidłowa reguła przepływu: {0}", "Invalid flow rule: {0}"),
+        [Msg.RelationsBlocked] = ("Nie mogę bezpiecznie zapisać reguł przepływu w repozytorium {0}.", "Cannot safely write the flow rules in the repository {0}."),
+        [Msg.RelationsWriteFailed] = ("Nie udało się zapisać reguł przepływu. Zmiany zostały cofnięte.", "Could not write the flow rules. The changes were rolled back."),
         [Msg.LocalFileWriteFailed] = ("Nie udało się zapisać plików instrukcji. Zmiany zostały cofnięte.", "Could not write the instruction files. The changes were rolled back."),
 
         [Msg.ItemKindInvalid] = ("Nieznany rodzaj elementu (skill albo workflow).", "Unknown item kind (skill or workflow)."),

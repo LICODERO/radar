@@ -1,0 +1,107 @@
+<div class="backdrop" (click)="store.closeFlow()"></div>
+<div class="dlg" role="dialog" aria-modal="true" [attr.aria-label]="t('flow.title')">
+  <div class="head">
+    <div>
+      <div class="m eyebrow">{{ t('flow.eyebrow') }}</div>
+      <div class="ttl">{{ t('flow.title') }}</div>
+    </div>
+    <button class="m btn-ghost x" type="button" [attr.aria-label]="t('flow.close')" (click)="store.closeFlow(true)">✕</button>
+  </div>
+
+  @if (phase() === 'loading') {
+    <p class="m wait pad">{{ t('flow.loading') }}</p>
+  } @else if (phase() === 'error') {
+    <div class="m err pad" role="alert">{{ error() }}</div>
+  } @else if (phase() === 'edit' || phase() === 'planning') {
+    <p class="intro">{{ t('flow.intro') }}</p>
+    <div class="main">
+      <aside class="side">
+        <div class="row"><span class="m lbl">{{ t('flow.repos') }}</span></div>
+        <app-flow-list class="repos" searchable [items]="repoItems()" (pick)="add($event)" />
+      </aside>
+
+      <section class="mid">
+        <div class="row">
+          <span class="m lbl">{{ t('flow.board') }}</span>
+          <app-flow-zoom [pct]="zoomPct()" (zoomOut)="zoomBy(1 / 1.25)" (zoomIn)="zoomBy(1.25)" (fit)="fit()" />
+        </div>
+        <div class="board" [class.panning]="panning()" [class.linking]="linking()" (pointerdown)="startPan($event)" (wheel)="onWheel($event)" (click)="cancelLink()" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+          <div class="world" [style.transform]="worldTransform()">
+            <svg class="wires" width="1" height="1" aria-hidden="true">
+              <defs>
+                @for (k of kindList; track k) {
+                  <marker [attr.id]="'ah-' + k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" [attr.fill]="kindColors[k]" /></marker>
+                }
+              </defs>
+              @for (e of edges(); track e.key) {
+                <path class="wire" [class.sel]="e.selected" [class.hot]="e.hot" [class.dim]="e.dim" [class.priv]="e.rule.visibility === 'private'" [attr.d]="e.d" [attr.stroke]="e.color" [attr.marker-end]="e.end ? 'url(#ah-' + e.rule.kind + ')' : null" [attr.marker-start]="e.start ? 'url(#ah-' + e.rule.kind + ')' : null" />
+                <path class="hit" [attr.d]="e.d" (pointerenter)="hoverKey.set(e.key)" (pointerleave)="hoverKey.set(null)" (pointerdown)="$event.stopPropagation()" (click)="$event.stopPropagation(); select(e.key)" />
+              }
+              @if (draft(); as d) { <path class="wire draft" [attr.d]="d" /> }
+            </svg>
+            @for (e of edges(); track e.key) {
+              <button class="m tag" type="button" [class.sel]="e.selected" [class.hot]="e.hot" [class.dim]="e.dim" [style.left.px]="e.mid.x" [style.top.px]="e.mid.y" [style.border-color]="e.color" [style.color]="e.color"
+                      [attr.aria-label]="t('flow.edge', { from: e.rule.from, to: e.rule.to, kind: e.label })" (pointerenter)="hoverKey.set(e.key)" (pointerleave)="hoverKey.set(null)" (click)="$event.stopPropagation(); select(e.key)">{{ e.label }}</button>
+            }
+            @for (c of cards(); track c.name) {
+              <div class="card" [attr.data-card]="c.name" [class.target]="linking() && linking()!.name !== c.name" [class.from]="linking()?.name === c.name" [style.left.px]="c.pos.x" [style.top.px]="c.pos.y" [style.width.px]="cardW" [style.height.px]="cardH"
+                   (pointerdown)="startDrag(c.name, $event)" (pointerenter)="hoverCard.set(c.name)" (pointerleave)="hoverCard.set(null)" (click)="$event.stopPropagation(); cardClick(c.name)">
+                <div class="chead">
+                  <span class="grip" aria-hidden="true">⠿</span><span class="cn">{{ c.name }}</span>
+                  <button class="m cx" type="button" [title]="t('flow.removeCard')" [attr.aria-label]="t('flow.removeCard')" (pointerdown)="$event.stopPropagation()" (click)="removeCard(c.name, $event)">✕</button>
+                </div>
+                <div class="m cmeta">@if (stackOf(c.repo); as st) { {{ st }} · }@if (c.repo) { {{ t('right.agentsCount', { n: c.repo.agents.length }) }} }</div>
+                @for (side of sides; track side) {
+                  <button class="port" [class]="'port ' + side" [attr.data-port]="side" type="button" [title]="t('flow.portTip')" [attr.aria-label]="t('flow.port', { name: c.name })" (pointerdown)="startLink(c.name, side, $event)"></button>
+                }
+              </div>
+            }
+          </div>
+          @if (cards().length === 0) { <div class="m empty">{{ t('flow.empty') }}</div> }
+          <div class="m bhint">
+            @if (linking(); as l) { <span class="lk">{{ t('flow.linking', { name: l.name }) }}</span> }
+            @else if (notice(); as n) { <span class="nt">{{ n }}</span> }
+            @else { {{ t('flow.canvasHint') }} }
+          </div>
+        </div>
+      </section>
+
+      <aside class="ed">
+        @if (selected(); as r) {
+          <div class="row"><span class="m lbl dir">{{ t('flow.ed.direction', { from: r.from, to: r.to }) }}</span></div>
+          <app-flow-editor [rule]="r" [envText]="envText()" [envBad]="envBad()" [takenKinds]="takenKinds()"
+                           (kind)="setKind($event)" (auth)="setAuth($event)" (env)="setEnv($event)" (notes)="setNotes($event)" (swap)="swap()" (direction)="setDirection($event)" (visibility)="setVisibility($event)" (remove)="deleteSelected()" />
+        } @else {
+          <div class="row"><span class="m lbl">{{ t('flow.rules', { n: rules().length }) }}</span></div>
+          <p class="text">{{ t('flow.selectHint') }}</p>
+          <app-flow-list class="rlist" [items]="ruleItems()" (pick)="select($event)" (hover)="hoverKey.set($event)" />
+        }
+      </aside>
+    </div>
+
+    @if (error(); as e) { <div class="m err pad" role="alert">{{ e }}</div> }
+    <div class="foot">
+      <span class="m state" [class.dirty]="dirty()">{{ dirty() ? t('flow.unsaved') : t('flow.saved') }}</span>
+      <div class="btns">
+        <button class="m btn-solid go" type="button" [disabled]="!dirty() || phase() === 'planning' || envBad().length > 0" (click)="preview()">{{ phase() === 'planning' ? t('flow.planning') : t('flow.preview') }}</button>
+        <button class="m btn-ghost" type="button" (click)="store.closeFlow(true)">{{ t('flow.closeBtn') }}</button>
+      </div>
+    </div>
+  } @else {
+    <div class="planbox">
+      @if (phase() === 'done') { <p class="lead">{{ t('flow.done') }}</p> }
+      <div class="pscroll">
+        @if (plan(); as p) { <app-flow-plan [plan]="p" [done]="phase() === 'done'" /> }
+        @if (error(); as e) { <div class="m err" role="alert">{{ e }}</div> }
+      </div>
+      <div class="btns">
+        @if (phase() === 'done') {
+          <button class="m btn-solid go" type="button" (click)="store.closeFlow(true)">{{ t('flow.closeBtn') }}</button>
+        } @else {
+          <button class="m btn-solid go" type="button" [disabled]="phase() !== 'plan' || !actionable()" (click)="confirm()">{{ phase() === 'saving' ? t('flow.saving') : t('flow.save') }}</button>
+          <button class="m btn-ghost" type="button" [disabled]="phase() === 'saving'" (click)="backToEdit()">{{ t('flow.back') }}</button>
+        }
+      </div>
+    </div>
+  }
+</div>

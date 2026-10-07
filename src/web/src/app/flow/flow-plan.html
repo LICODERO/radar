@@ -1,0 +1,36 @@
+@let p = plan();
+@if (p.blocked) {
+  <div class="m warn" role="alert">{{ blockedText(p) }}</div>
+} @else if (p.repos.length === 0) {
+  <p class="m hint">{{ t('flow.nothing') }}</p>
+} @else {
+  <div class="top">
+    <span class="m sum">{{ done() ? t('flow.didLabel') : t('flow.willLabel') }} · {{ t('flow.sum.repos', { n: p.repos.length }) }} · {{ t('flow.sum.files', { n: files() }) }}</span>
+    <button class="m all" type="button" (click)="toggleAll()">{{ allOpen() ? t('flow.collapseAll') : t('flow.expandAll') }}</button>
+  </div>
+  @for (rp of p.repos; track rp.repo) {
+    <section class="rp" [class.open]="isOpen(rp.repo)">
+      <button class="m rh" type="button" [attr.aria-expanded]="isOpen(rp.repo)" (click)="toggle(rp.repo)">
+        <span class="chev">▸</span>
+        <span class="rpn">{{ rp.repo }}</span>
+        @for (c of counts(rp); track c.action) { <span class="pill" [attr.data-a]="c.action">{{ c.n }}× {{ actionText(c.action) }}</span> }
+      </button>
+      @if (isOpen(rp.repo)) {
+        <ul class="parts">
+          @for (part of rp.parts; track $index) {
+            <li>
+              <button class="m ph" type="button" [attr.aria-expanded]="isOpen(rp.repo + '|' + $index)" [disabled]="!part.text" (click)="toggle(rp.repo + '|' + $index)">
+                <span class="chev">{{ part.text ? '▸' : '' }}</span>
+                <span class="pt">{{ partTitle(part.id) }}</span>
+                <span class="pill" [attr.data-a]="part.action">{{ actionText(part.action) }}</span>
+                <span class="pa">{{ part.file }}</span>
+              </button>
+              @if (part.text && isOpen(rp.repo + '|' + $index)) { <pre class="m block">{{ part.text }}</pre> }
+            </li>
+          }
+        </ul>
+        @for (n of rp.notes; track n) { <p class="m note">{{ noteText(rp.repo) }}</p> }
+      }
+    </section>
+  }
+}

@@ -1,0 +1,30 @@
+@use 'tokens' as *;
+
+:host { display: block; scrollbar-width: thin; scrollbar-color: #4dd6ff55 transparent; }
+.block { scrollbar-width: thin; scrollbar-color: #4dd6ff55 transparent; }
+.hint { margin: 8px 0 0; font-size: fs(12); line-height: 1.5; color: #a3a9bf; }
+.note { margin: 8px 12px 12px; padding: 8px 12px; font-size: fs(12); line-height: 1.5; color: $amber; border: 1px solid #ffb84d55; background: #ffb84d0d; }
+.warn { margin: 6px 0; padding: 9px 12px; font-size: fs(13); line-height: 1.5; color: #ff9cc9; border: 1px solid #ff4fa366; background: #ff4fa310; }
+.top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.sum { font-size: fs(11); letter-spacing: .14em; color: $muted; }
+.all { padding: 6px 12px; font-size: fs(10.5); letter-spacing: .12em; color: $workflow; background: transparent; border: 1px solid #4dd6ff66; cursor: pointer; }
+.all:hover { background: #4dd6ff14; }
+.rp { border: 1px solid #ffffff1a; margin-bottom: 8px; background: #0a0e15; }
+.rp.open { border-color: #4dd6ff55; }
+.rh, .ph { width: 100%; display: flex; align-items: center; gap: 10px; background: transparent; border: 0; color: $text; text-align: left; cursor: pointer; }
+.rh { padding: 12px 14px; }
+.rh:hover, .ph:hover:not(:disabled) { background: #4dd6ff12; }
+.chev { width: 10px; flex: none; font-size: fs(11); color: $workflow; transition: transform .12s; }
+.open > .rh .chev, [aria-expanded='true'] > .chev { transform: rotate(90deg); }
+.rpn { font-size: fs(14); letter-spacing: .08em; color: $workflow; margin-right: auto; }
+.pill { padding: 2px 8px; font-size: fs(10.5); letter-spacing: .06em; border: 1px solid; white-space: nowrap; }
+.pill[data-a='create'] { color: $lime; border-color: #c6ff3d66; }
+.pill[data-a='update'] { color: $amber; border-color: #ffb84d66; }
+.pill[data-a='remove'] { color: $magenta; border-color: #ff4fa366; }
+.pill[data-a='unchanged'] { color: $muted; border-color: #ffffff33; }
+.parts { list-style: none; margin: 0; padding: 0 0 4px; border-top: 1px solid #ffffff12; }
+.ph { padding: 8px 14px 8px 18px; }
+.ph:disabled { cursor: default; }
+.pt { font-size: fs(12.5); color: #fff; margin-right: auto; }
+.pa { font-size: fs(11.5); color: $muted; min-width: 190px; text-align: right; word-break: break-all; }
+.block { margin: 0 14px 8px 38px; padding: 9px 12px; max-height: 190px; overflow: auto; font-size: fs(11.5); line-height: 1.5; white-space: pre-wrap; word-break: break-word; color: $text; background: #ffffff0a; }

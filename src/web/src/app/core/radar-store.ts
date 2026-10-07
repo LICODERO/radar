@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { AI_TOOLS } from './ai-tools';
-import { CopyAgentResult, CopyKind, ItemKind, LocalPlan, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus, Visibility, VisibilityOutcome, WorkflowInfo } from './models';
+import { CopyAgentResult, CopyKind, ItemKind, LocalPlan, FlowRule, FlowPlan, EnableProjectResult, Hover, Pick, PickKind, RepoInfo, ScanResult, Settings, SkillStatus, ToolStatus, ToolsInfo, VaultStatus, Visibility, VisibilityOutcome, WorkflowInfo } from './models';
 import { buildPager } from './pager';
 import { ApiError, RadarApi } from './radar-api';
 import { GapItem, Tool, buildCommand, countByType } from './commands';
@@ -106,6 +106,10 @@ export class RadarStore {
   readonly qualityOpen = signal(false);
   /** the shared-copies view (agents and skills that live in several repos) */
   readonly insightsOpen = signal(false);
+  readonly flowOpen = signal(false);
+  /** the flow wizard holds changes nobody saved: Escape and a click beside it must not throw them away */
+  readonly flowDirty = signal(false);
+  readonly flowFocus = signal<string | null>(null);
   /** how the average coverage moved over the scan the user just ran; shown for a few seconds */
   readonly coverageToast = signal<{ from: number; to: number } | null>(null);
   /** average coverage before the running scan, when there is something to compare with (same directory) */
@@ -424,6 +428,27 @@ export class RadarStore {
   /** Writes the files, then rescans quietly (a workflow named in CLAUDE.local.md counts as linked). */
   async applyLocalFile(repoId: string, includePublic: boolean): Promise<LocalPlan> {
     const r = await this.api.localFile(repoId, includePublic, true);
+    void this.refreshQuiet();
+    return r;
+  }
+
+  /** `focus`: a repo (by name) to have on the board when the wizard opens */
+  openFlow(focus?: string): void {
+    if (this.mode() !== 'api' || this.repos().length < 2) return;
+    this.flowFocus.set(focus ?? null);
+    this.flowOpen.set(true);
+  }
+  /** `force` is the explicit close button; Escape and the backdrop leave a dialog with unsaved rules open */
+  closeFlow(force = false): void {
+    if (this.flowDirty() && !force) return;
+    this.flowOpen.set(false);
+    this.flowDirty.set(false);
+  }
+  flowRules(): Promise<FlowRule[]> { return this.api.flowRules(); }
+  planFlow(rules: FlowRule[]): Promise<FlowPlan> { return this.api.saveFlowRules(rules, false); }
+  /** Writes the rules into the repos, then rescans quietly (CLAUDE.md and the relations files changed). */
+  async applyFlow(rules: FlowRule[]): Promise<FlowPlan> {
+    const r = await this.api.saveFlowRules(rules, true);
     void this.refreshQuiet();
     return r;
   }

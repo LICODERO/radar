@@ -91,4 +91,7 @@
   <button class="m btn-ghost tip tip-l" type="button" [class.warn]="vaultState() !== 'ok'" [disabled]="isMock()" [attr.data-tip]="vaultTip()" (click)="store.openVault()">{{ t('right.vault') }}</button>
   <button class="m btn-ghost tip tip-r" type="button" [disabled]="!canEnable()" [attr.data-tip]="enableTip()" (click)="store.openProject()">{{ t('right.enableRepo') }}</button>
 </div>
+<div class="acts vault">
+  <button class="m btn-ghost tip tip-l" type="button" [disabled]="!canFlow()" [attr.data-tip]="t('right.flowTip')" (click)="store.openFlow(store.selected()?.name)">{{ t('right.flow') }}</button>
+</div>
 </div>

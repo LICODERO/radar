@@ -64,6 +64,7 @@ span.chipx { cursor: default; }
 .sel { color: #fff; }
 .acts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
 .acts.vault { margin-top: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.acts.vault:last-child { grid-template-columns: minmax(0, 1fr); }
 .act { height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 1px solid; padding: 0; cursor: pointer; }
 .act:disabled { opacity: .5; }
 .plus { font-size: fs(20); line-height: 1; }

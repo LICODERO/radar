@@ -1,0 +1,41 @@
+<label class="m fld">{{ t('flow.ed.kind') }}
+  <select [value]="rule().kind" (change)="kind.emit($any($event.target).value)">
+    @for (k of kinds; track k) { <option [value]="k" [selected]="k === rule().kind" [disabled]="takenKinds().includes(k)">{{ kindText(k) }}</option> }
+  </select>
+</label>
+<div class="m fld">{{ t('flow.ed.dataDir') }}
+  @if (sync()) {
+    <span class="sub">{{ t('flow.dir.sync', { from: rule().from, to: rule().to }) }}</span>
+  } @else {
+    <div class="seg">
+      @for (d of directions; track d) {
+        <button type="button" [class.on]="rule().direction === d" [title]="dirText(d)" (click)="direction.emit(d)">{{ arrows[d] }}</button>
+      }
+    </div>
+    <span class="sub">{{ dirText(rule().direction) }}</span>
+  }
+</div>
+<label class="m fld">{{ t('flow.ed.auth') }}
+  <select [value]="rule().auth" (change)="auth.emit($any($event.target).value)">
+    @for (a of auths; track a) { <option [value]="a" [selected]="a === rule().auth">{{ authText(a) }}</option> }
+  </select>
+</label>
+<label class="m fld">{{ t('flow.ed.env') }}
+  <input type="text" autocomplete="off" spellcheck="false" [disabled]="rule().auth === 'none'" [value]="envText()" (input)="env.emit($any($event.target).value)" placeholder="PAYMENT_CLIENT_ID, PAYMENT_CLIENT_SECRET" />
+  <span class="sub">{{ rule().auth === 'none' ? t('flow.ed.envNone') : t('flow.ed.envHint') }}</span>
+  @if (envBad().length) { <span class="bad" role="alert">{{ t('flow.ed.envBad', { bad: envBad().join(', ') }) }}</span> }
+</label>
+<label class="m fld">{{ t('flow.ed.notes') }}
+  <textarea rows="4" maxlength="500" [value]="rule().notes ?? ''" [placeholder]="t('flow.ed.notesPh')" (input)="notes.emit($any($event.target).value)"></textarea>
+</label>
+<div class="m fld">{{ t('flow.ed.visibility') }}
+  <div class="seg">
+    <button type="button" [class.on]="rule().visibility === 'public'" (click)="visibility.emit('public')">{{ t('flow.ed.public') }}</button>
+    <button type="button" [class.on]="rule().visibility === 'private'" (click)="visibility.emit('private')">{{ t('flow.ed.private') }}</button>
+  </div>
+  <span class="sub">{{ rule().visibility === 'public' ? t('flow.ed.publicHint') : t('flow.ed.privateHint') }}</span>
+</div>
+<div class="btns">
+  <button class="m swap" type="button" [title]="t('flow.swapTip')" (click)="swap.emit()">⇄ {{ t('flow.swap') }}</button>
+  <button class="m del" type="button" (click)="remove.emit()">{{ t('flow.ed.delete') }}</button>
+</div>

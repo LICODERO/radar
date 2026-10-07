@@ -101,6 +101,32 @@ export interface LocalPlan {
   applied: boolean;
 }
 
+/** one rule of the flow between two repos: `from` (the consumer) talks to `to` (the provider); repos by name, secrets never (only the names of the variables that hold them) */
+export const FLOW_KINDS = ['rest', 'graphql', 'grpc', 'events', 'db', 'files', 'other'] as const;
+export const FLOW_AUTHS = ['none', 'api-key', 'oauth-client', 'bearer', 'basic', 'mtls', 'other'] as const;
+export type FlowKind = (typeof FLOW_KINDS)[number];
+export type FlowAuth = (typeof FLOW_AUTHS)[number];
+export interface FlowRule {
+  from: string;
+  to: string;
+  kind: FlowKind;
+  auth: FlowAuth;
+  authEnv: string[];
+  contract?: string | null;
+  notes?: string | null;
+  visibility: 'public' | 'private';
+  /** which way the data travels: out (from sends to to), in (from receives from to), both; request/response kinds always read as out */
+  direction: 'out' | 'in' | 'both';
+}
+/** what happens in one repo: part ids = exclude | relations | relations-local | pointer | pointer-local | agents-md */
+export interface FlowRepoPlan { repo: string; parts: { id: string; file: string; action: 'create' | 'update' | 'remove' | 'unchanged'; text?: string | null }[]; notes: 'no-claude-md'[] }
+export interface FlowPlan {
+  repos: FlowRepoPlan[];
+  blocked: 'no-git' | 'local-tracked' | 'exclude-damaged' | 'file-damaged' | 'forbidden' | 'too-big' | 'ambiguous' | 'unknown-repo' | null;
+  blockedRepo?: string | null;
+  applied: boolean;
+}
+
 export interface CopyTarget { repoId: string; status: 'ready' | 'created' | 'exists' | 'unknown-repo' | 'repo-missing' | 'forbidden' | 'cannot-hide'; path?: string | null; hidden?: boolean }
 export interface SkippedFile { path: string; reason: 'symlink' | 'binary' | 'unreadable' }
 /** what a copy did or would do; for a skill `files`/`bytes`/`skipped` describe the folder that travels */

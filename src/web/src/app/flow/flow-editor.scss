@@ -1,0 +1,22 @@
+@use 'tokens' as *;
+
+:host { display: block; }
+.fld { display: flex; flex-direction: column; gap: 5px; margin: 0 0 14px; font-size: fs(10.5); letter-spacing: .12em; color: $muted; }
+.fld select, .fld input, .fld textarea { box-sizing: border-box; width: 100%; padding: 8px 10px; font: inherit; font-size: fs(12.5); letter-spacing: 0; color: $text; background: #ffffff0a; border: 1px solid #ffffff26; cursor: pointer; }
+.fld input, .fld textarea { cursor: text; }
+.fld select:hover, .fld input:hover:not(:disabled), .fld textarea:hover { border-color: #4dd6ff77; }
+.fld select:focus, .fld input:focus, .fld textarea:focus { outline: none; border-color: $workflow; }
+.fld input:disabled { opacity: .45; cursor: default; }
+.fld textarea { resize: vertical; }
+.sub { font-size: fs(11); letter-spacing: 0; color: $muted; line-height: 1.45; }
+.bad { font-size: fs(11.5); letter-spacing: 0; color: #ff9cc9; }
+.seg { display: flex; }
+.seg button { flex: 1; padding: 8px 0; font: inherit; font-size: fs(12); letter-spacing: .08em; color: $muted; background: transparent; border: 1px solid #ffffff26; cursor: pointer; }
+.seg button:hover:not(.on) { color: $text; border-color: #4dd6ff77; }
+.seg button + button { border-left: 0; }
+.seg button.on { color: #06131a; background: $workflow; border-color: $workflow; font-weight: 600; }
+.del { padding: 9px 12px; font-size: fs(11.5); letter-spacing: .12em; color: #ff9cc9; background: transparent; border: 1px solid #ff4fa366; cursor: pointer; }
+.del:hover { background: #ff4fa314; border-color: $magenta; }
+.btns { display: flex; gap: 8px; }
+.swap { padding: 9px 12px; font-size: fs(11.5); letter-spacing: .12em; color: $workflow; background: transparent; border: 1px solid #4dd6ff66; cursor: pointer; }
+.swap:hover { background: #4dd6ff14; border-color: $workflow; }

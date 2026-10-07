@@ -1,0 +1,7 @@
+@use 'tokens' as *;
+
+:host { display: flex; align-items: center; gap: 4px; }
+button { min-width: 28px; height: 26px; padding: 0 8px; font-size: fs(14); color: $text; background: transparent; border: 1px solid #ffffff26; cursor: pointer; }
+button:hover { border-color: $workflow; color: $workflow; }
+.fit { font-size: fs(10.5); letter-spacing: .1em; }
+.pct { min-width: 44px; text-align: center; font-size: fs(11.5); color: $muted; }

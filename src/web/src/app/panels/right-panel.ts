@@ -41,6 +41,7 @@ export class RightPanel {
       : v?.state === 'missing' ? this.t('right.vaultTip.missing')
       : this.t('right.vaultTip.none');
   });
+  protected readonly canFlow = computed(() => !this.isMock() && this.store.repos().length > 1 && !this.store.scanning());
   protected readonly canEnable = computed(() => !this.isMock() && this.store.vaultReady() && !!this.store.selected() && !this.store.scanning());
   protected readonly enableTip = computed(() =>
     this.isMock() ? this.t('right.needServer')
