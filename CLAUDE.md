@@ -91,4 +91,11 @@ Everything except `session`/`health` needs `X-Radar-Token` (or `?token=` for SSE
 5. Distribution (GitHub Actions release binaries).
 6. Second brain: vault logic, bundled skill and per-repo enabling on the server, and their UI in `src/web/src/app/vault/` (`vault-dialog`: intro / location / manage / relink + skill install, `project-dialog`: preview then confirm; opened from the right panel) are done; repo relations are done too (the flow wizard above); the second brain's own relations (export/import of a vault's relation map) are still open.
 
+## Distribution
+
+- Releases: push a tag `vX.Y.Z` (it must equal `<Version>` in `Directory.Build.props`, and `CHANGELOG.md` needs a `## X.Y.Z – date` section). `.github/workflows/release.yml` builds the UI once, then self-contained single-file binaries (`osx-arm64`, `osx-x64`, `win-x64`, `linux-x64`) with the UI in a `wwwroot` folder next to the executable, smoke-tests them (start from another directory, `/api/health`, the UI) and creates a **draft** release in the public repo `lookashdev/radar-releases` (secret `RELEASES_TOKEN`, a fine-grained token with write access to that repo only). Assets keep fixed names without a version so `releases/latest/download/<name>` links never change. A published copy resolves `wwwroot` from `AppContext.BaseDirectory` (see `Program.cs`), not from the working directory.
+- The source stays private. `distribution/releases-repo/` holds what lives in the public repo (README, freeware LICENSE draft, SECURITY.md, issue templates). Third-party licences ship as `THIRD-PARTY-NOTICES.md`; update it when `src/web/package.json` dependencies change.
+- CI (`ci.yml`): Linux on every push, macOS and Windows on pull requests into main and on demand (they cost 10x and 2x the minutes of a private repo and are what exercises the Windows code paths).
+- The one-page site lives in `site/` (see its README) and is uploaded over FTPS by `site.yml`. Binaries are not signed or notarized (no paid certificates): the site and the releases README tell macOS users to run `xattr -dr com.apple.quarantine`.
+
 Requirements, mockup and the MVP spec live outside the repo (see `CLAUDE.local.md` if present).

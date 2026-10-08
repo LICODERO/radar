@@ -1,0 +1,131 @@
+name: Release
+
+# Push a tag like v0.2.0 (it must match <Version> in Directory.Build.props). The workflow builds self-contained binaries for macOS,
+# Windows and Linux, smoke-tests them, and creates a DRAFT release in the public releases repo; publishing it is a manual step.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+env:
+  RELEASES_REPO: lookashdev/radar-releases
+
+jobs:
+  ui:
+    name: Build the UI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: The tag must match the version in the code
+        run: |
+          v=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)
+          [ "v$v" = "$GITHUB_REF_NAME" ] || { echo "Tag $GITHUB_REF_NAME does not match <Version>$v</Version>"; exit 1; }
+          grep -q "^## $v " CHANGELOG.md || { echo "CHANGELOG.md has no '## $v' section"; exit 1; }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/web/package-lock.json
+      - name: Build
+        working-directory: src/web
+        run: |
+          npm ci
+          npx ng build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ui
+          path: src/web/dist/web/browser
+          if-no-files-found: error
+
+  build:
+    name: Build ${{ matrix.rid }}
+    needs: ui
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { rid: osx-arm64, os: macos-latest, smoke: true }
+          - { rid: osx-x64, os: macos-latest, smoke: false }   # built on an Apple Silicon runner, which cannot run it natively
+          - { rid: win-x64, os: windows-latest, smoke: true }
+          - { rid: linux-x64, os: ubuntu-latest, smoke: true }
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/download-artifact@v4
+        with:
+          name: ui
+          path: src/api/Radar.Server/wwwroot
+      - name: Publish (self-contained, single file)
+        run: dotnet publish src/api/Radar.Server -c Release -r ${{ matrix.rid }} --self-contained -p:PublishSingleFile=true -p:DebugType=none -o out/radar
+      - name: Stage the package
+        run: |
+          exe=Radar.Server; [ "${{ matrix.rid }}" = "win-x64" ] && exe=Radar.Server.exe
+          target=radar; [ "${{ matrix.rid }}" = "win-x64" ] && target=radar.exe
+          mv "out/radar/$exe" "out/radar/$target"
+          rm -f out/radar/*.pdb out/radar/*.staticwebassets.endpoints.json
+          cp THIRD-PARTY-NOTICES.md out/radar/
+          cp distribution/releases-repo/LICENSE out/radar/LICENSE.txt
+          ls -la out/radar
+      - name: Smoke test (start it elsewhere, ask for the UI and the health check)
+        if: ${{ matrix.smoke }}
+        run: |
+          bin="$PWD/out/radar/radar"; [ "${{ matrix.rid }}" = "win-x64" ] && bin="$bin.exe"
+          mkdir -p "$RUNNER_TEMP/elsewhere" "$RUNNER_TEMP/data"
+          cd "$RUNNER_TEMP/elsewhere"
+          Radar__OpenBrowser=false Radar__Url=http://127.0.0.1:5199 Radar__DataDir="$RUNNER_TEMP/data" "$bin" > "$RUNNER_TEMP/radar.log" 2>&1 &
+          pid=$!
+          for i in $(seq 1 40); do curl -fsS http://127.0.0.1:5199/api/health && break; sleep 1; done
+          curl -fsS http://127.0.0.1:5199/api/health | grep -q '"status":"ok"'
+          curl -fsS http://127.0.0.1:5199/ | grep -q 'R.A.D.A.R.'
+          kill $pid || true
+      - name: Archive
+        run: |
+          name=radar-${{ matrix.rid }}
+          cd out
+          case "${{ matrix.rid }}" in
+            win-x64) 7z a -tzip "../$name.zip" radar > /dev/null ;;
+            osx-*) zip -qry "../$name.zip" radar ;;
+            *) tar -czf "../$name.tar.gz" radar ;;
+          esac
+          ls -la ..
+      - uses: actions/upload-artifact@v4
+        with:
+          name: archive-${{ matrix.rid }}
+          path: |
+            radar-*.zip
+            radar-*.tar.gz
+          if-no-files-found: error
+
+  release:
+    name: Draft the release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: archive-*
+          merge-multiple: true
+          path: dist
+      - name: Checksums and notes
+        run: |
+          cd dist
+          sha256sum radar-* > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+          v="${GITHUB_REF_NAME#v}"
+          awk -v v="$v" '/^## /{p=(index($0, "## " v " ")==1); next} p' ../CHANGELOG.md > ../notes.md
+          [ -s ../notes.md ] || { echo "No notes for $v in CHANGELOG.md"; exit 1; }
+      - name: Create the draft release in the public repo
+        env:
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" --repo "$RELEASES_REPO" --draft --target main \
+            --title "R.A.D.A.R. ${GITHUB_REF_NAME#v}" --notes-file notes.md dist/*

@@ -17,7 +17,15 @@ using Radar.Server.Infrastructure.Security;
 using Radar.Server.Infrastructure.Storage;
 using Radar.Server.Infrastructure.Localization;
 
-var builder = WebApplication.CreateBuilder(args);
+// A published copy keeps the UI in a wwwroot folder next to the executable; resolve it from there, not from the folder the user
+// happened to start the app in (a double click starts it in the home directory). A build output has no such folder, so
+// `dotnet run` and the tests keep the default.
+var appDir = AppContext.BaseDirectory;
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = Directory.Exists(Path.Combine(appDir, "wwwroot")) ? appDir : null
+});
 
 // Local-only server: never listen on anything but the loopback interface.
 builder.WebHost.UseUrls(builder.Configuration["Radar:Url"] ?? "http://127.0.0.1:5178");

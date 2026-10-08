@@ -1,0 +1,68 @@
+name: CI
+
+# Linux runs on every push and pull request. macOS and Windows cost 10x and 2x the minutes of a private repo, so they run on pull
+# requests into main and on demand (they are what proves the Windows and macOS code paths).
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test (linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/web/package-lock.json
+      - name: .NET tests
+        run: dotnet test --nologo
+      - name: UI tests and build
+        working-directory: src/web
+        run: |
+          npm ci
+          npm test -- --watch=false
+          npx ng build
+
+  cross:
+    name: Test (${{ matrix.os }})
+    # only for pull requests into main and manual runs
+    if: github.event_name != 'push'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/web/package-lock.json
+      - name: .NET tests
+        run: dotnet test --nologo
+      - name: UI tests and build
+        working-directory: src/web
+        run: |
+          npm ci
+          npm test -- --watch=false
+          npx ng build

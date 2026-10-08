@@ -1,0 +1,35 @@
+name: Bug report / Zgłoszenie błędu
+description: Something does not work as it should
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? / Co się stało?
+      description: What you did, what you expected, what you got. A screenshot helps.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: R.A.D.A.R. version / Wersja
+      description: Bottom-right corner of the app, or the name of the archive you downloaded.
+      placeholder: v0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: System
+      options: [macOS (Apple Silicon), macOS (Intel), Windows 10/11, Linux]
+    validations:
+      required: true
+  - type: input
+    id: tools
+    attributes:
+      label: Claude Code / Codex CLI version (if relevant)
+  - type: textarea
+    id: log
+    attributes:
+      label: Log from the terminal window (if any)
+      render: text

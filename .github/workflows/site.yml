@@ -1,0 +1,43 @@
+name: Site
+
+# Uploads the one-page site (site/) to the web host over FTP/FTPS. Secrets (Settings -> Secrets and variables -> Actions):
+#   FTP_SERVER   host name, e.g. ftp.example.com
+#   FTP_USER     FTP user
+#   FTP_PASSWORD FTP password
+#   FTP_DIR      remote folder of radar.licodero.pl, with a trailing slash, e.g. /domains/radar.licodero.pl/public_html/
+# Set FTP_PROTOCOL (a repository variable) to ftps if the host supports it, which it should; plain ftp sends the password in clear.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['site/**']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: The analytics id is set at deploy time, never committed
+        env:
+          GA_ID: ${{ vars.GA_ID }}
+        run: |
+          if [ -n "$GA_ID" ]; then sed -i "s/GA_ID: ''/GA_ID: '$GA_ID'/" site/assets/config.js; fi
+          grep -n "GA_ID" site/assets/config.js
+      - name: Upload
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: site/
+          server-dir: ${{ secrets.FTP_DIR }}
+          exclude: |
+            **/README.md
