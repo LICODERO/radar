@@ -2,9 +2,11 @@ name: Release
 
 # Push a tag like v0.2.0 (it must match <Version> in Directory.Build.props). The workflow builds self-contained binaries for macOS,
 # Windows and Linux, smoke-tests them, and creates a DRAFT release in the public releases repo; publishing it is a manual step.
+# A manual run (workflow_dispatch) builds and smoke-tests everything but does not touch the releases repo.
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -19,6 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: The tag must match the version in the code
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           v=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)
           [ "v$v" = "$GITHUB_REF_NAME" ] || { echo "Tag $GITHUB_REF_NAME does not match <Version>$v</Version>"; exit 1; }
@@ -107,6 +110,7 @@ jobs:
   release:
     name: Draft the release
     needs: build
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
