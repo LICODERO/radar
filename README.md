@@ -1,24 +1,46 @@
+<p align="center">
+  <img src="assets/logo.svg" width="80" alt="R.A.D.A.R.">
+</p>
+
 # R.A.D.A.R.
 
-**Repo AI Discovery And Review** – a local-first dashboard that scans a directory of repositories for their AI setup (`CLAUDE.md`, agents, skills, workflows, memory), shows coverage and gaps, and generates Claude Code / Codex CLI commands to fill them.
+**Repo AI Discovery And Review: a local dashboard that shows how well your repositories are set up for AI coding agents, where the gaps are, and how repos talk to each other.**
 
-> **Status:** early development (read-only MVP in progress). Scanning, folder selection, live scan progress, saved results, read-only file preview and the command generator work.
+**Website:** [radar.licodero.pl](https://radar.licodero.pl) · **Install:** [one sentence to your agent](#install) · **Issues:** [report a bug or idea](https://github.com/lookashdev/radar/issues/new/choose)
+
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+![Platforms: macOS, Windows, Linux](https://img.shields.io/badge/platforms-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey.svg)
+![Runs locally: no network, no telemetry](https://img.shields.io/badge/runs%20locally-no%20telemetry-brightgreen.svg)
+![Built with .NET 10 and Angular](https://img.shields.io/badge/.NET%2010%20%C2%B7%20Angular-512bd4.svg)
+
+Claude Code and Codex CLI do their best work in repositories that tell them how things are done: a `CLAUDE.md` with real commands, agents with clear descriptions, skills and workflows for the procedures you repeat. Most repos have some of that, in various states of repair, and nobody knows which. R.A.D.A.R. scans a folder of repositories and shows what each one has, **rates the quality of those files, not just their presence**, lists the gaps, and hands you ready commands to fill them with Claude Code or Codex CLI.
+
+Everything runs on your machine. The server binds `127.0.0.1`, the scan is read-only, and the app makes no network calls and sends no telemetry. It writes into a repository only after it has shown you what it will write and you have confirmed it.
+
+## Screenshots
+
+### The orbit
+
+Repositories, agents, skills and workflows on concentric rings. Colour shows coverage, a click lights up the relations, and the panel on the right lists what the selected repo has and what it is missing:
+
+![The orbit view: ten repositories, the selected one with its agents, skills and workflows](assets/orbit.png)
+
+### Flow between repos
+
+Draw which repo calls which, how it authenticates and which way the data goes. The rules are written to **both** repos, with a short pointer in `CLAUDE.md`, so an agent working on a feature in one repo knows it has to look at the other, and asks before it changes anything there:
+
+![The flow wizard: repositories as cards on a board, connected by lines labelled with the kind of connection](assets/flow.png)
 
 ## What it does
 
-- Scans a chosen directory (default `~/projects`) and detects Git repositories.
-- For each repository finds:
-  - `CLAUDE.md`
-  - agents – `.claude/agents/*.md`
-  - skills – `.claude/skills/*/SKILL.md`
-  - workflows – `.claude/workflows/*.md`
-- Detects the tech stack heuristically (.NET, Angular, Node, YAML, SQL).
-- Computes AI coverage per repository and overall, and lists gaps (for example a missing `CLAUDE.md`).
-- Rates the quality of the files that exist, not just their presence: a thin or stale `CLAUDE.md`, one that points at files which are gone, agents without a usable description, skills that cannot be triggered. Checks are local heuristics; Claude Code can fix what they find.
-- After a rescan it tells you whether and how the average coverage changed. It also shows which agents and skills live in several repositories with copies that drifted apart, and lets you copy an agent from its panel to other repositories after you confirm; existing files are never overwritten.
-- Shows everything in an "Orbit" HUD: repositories, agents, skills and workflows on concentric rings, with relations highlighted on selection.
-- Lets you preview and edit markdown files in a side panel and create missing ones from templates.
-- Generates ready-to-copy commands for Claude Code and Codex CLI for each gap.
+- **Finds repositories** under a folder (recursive, default depth 4) and detects the stack.
+- **Scans each one** for `CLAUDE.md`, agents (`.claude/agents`), skills (`.claude/skills`) and workflows (`.claude/workflows`).
+- **Scores coverage and quality.** Coverage says what exists; quality says whether it is worth anything: a thin or stale `CLAUDE.md`, references to files that are gone, an agent without a description, duplicate names. Every file gets a 0–100 score and a concrete hint.
+- **Lists the gaps** and gives you ready commands for Claude Code and Codex CLI. One click opens a terminal in the repo, after you confirm.
+- **Drafts agents, skills and workflows** from a description in plain words (one small `claude -p` call with no tools), copies shared ones between repos, and keeps private ones out of git.
+- **Second brain:** a vault of markdown notes outside your repositories, wired into each project through `CLAUDE.local.md`, so the agent can read it and git sees nothing.
+- **Flow between repos** (above): rules for who talks to whom, kept in the repos themselves.
+- **Bilingual UI** (Polish and English), with `prefers-reduced-motion` respected.
 
 ### Coverage
 
@@ -30,66 +52,71 @@ Per repository, coverage is the sum of:
 | at least one agent | 30 |
 | at least one skill | 30 |
 
-## Privacy and safety
+Colour on the orbit: 70 and above white, 40–69 amber, below 40 magenta.
 
-- The scan is **local and read-only**. Scanning sends nothing anywhere and works offline; only the optional agent drafting calls `claude`.
-- Only AI/markdown files are read. Secrets such as `.env` files and keys are never touched.
-- The only thing the app writes into a repository is a new agent file, after an explicit SAVE and only inside detected repositories (paths are validated, existing files are never overwritten). Drafting sends your description to Claude through your own CLI; nothing else leaves your machine.
-- The local server listens on `127.0.0.1` only and requires a per-session token, so other websites cannot reach it.
+## Install
 
-## Planned stack
+Requires nothing but a terminal. Claude Code or Codex CLI on your `PATH` are only needed for the buttons that draft files or open sessions.
 
-- **Scanner and server:** .NET (ASP.NET Core minimal API), progress streamed to the UI with Server-Sent Events.
-- **UI:** Angular (standalone components, signals), served by the same process.
-- **Distribution:** a single self-contained binary per platform, no installer and no code signing.
+### Hand it to your agent (easiest)
 
-The UI is available in Polish and English (switch in the header); code and identifiers are in English.
+You are probably already in a coding agent. Paste this and let it do the install:
 
-## Usage
-
-**From source** (requires the .NET SDK 10 and Node.js 22+; on Windows use `./run.ps1` instead of `./run.sh`):
-
-```bash
-git clone https://github.com/<owner>/radar.git
-cd radar
-./run.sh
+```text
+Read https://raw.githubusercontent.com/lookashdev/radar/main/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.
 ```
 
-`run.sh` builds the UI on the first run (`./run.sh --rebuild` to rebuild), starts the server on `http://127.0.0.1:5178` and opens it in your browser. Then:
+[AGENT_INSTALL.md](AGENT_INSTALL.md) tells the agent to read the installer, run it, verify the result and report back. It forbids `sudo`, edits to your shell profile and installing anything else.
 
-1. Click **ZMIEŃ** and pick the directory that contains your repositories (macOS shows a native folder dialog). Picking a directory starts the scan right away.
-2. The overlay shows real progress from the scanner; when it finishes, close it to see the dashboard. Use **SKANUJ PONOWNIE** to rescan the same directory.
-3. Click an agent, skill or workflow (or **OTWÓRZ CLAUDE.md**) and choose **OTWÓRZ PLIK** for a read-only preview of the file.
-4. **+ AGENT** (left panel) drafts a new agent from a description in your own words: it calls your `claude` CLI once, with no tools and in an empty temporary directory, sending only your description, the stack name and existing agent names. You review and edit the draft; **ZAPISZ** then creates `.claude/agents/<name>.md` (never overwriting an existing file).
-5. **GENERUJ POLECENIA** lists ready-made `claude` / `codex` commands for the gaps (missing `CLAUDE.md`, agents, skills, unlinked workflows). **KOPIUJ** copies a command (POSIX or PowerShell flavour, depending on your system); **URUCHOM** opens iTerm2 or Terminal.app (macOS; iTerm2 when installed, override with `Radar__Terminal=terminal` or `iterm`) or PowerShell (Windows) in the repo and starts `claude` / `codex` with the prompt after you confirm. The session is interactive, so you approve every change in the tool; the app itself never writes into your repos.
-
-6. **SECOND BRAIN** (right panel) sets up a vault: a folder of markdown notes (`raw/`, `memory/`, `outputs/` per project) that lives outside your repositories, so nothing from it is committed. The wizard creates it in an empty folder (or offers a subfolder), and you can point R.A.D.A.R. to a new place if you move it. It can also install the bundled `radar-second-brain` skill into your Claude Code skills folder, only on your click and never over an existing file. **+ FOR THIS REPO** shows what it would write, and after you confirm it creates the project folder in the vault and adds a marked block with the vault path to that repo's `CLAUDE.local.md` (keep that file out of git). This is the only other write besides new agent files.
-
-7. **FLOW BETWEEN REPOS** (bottom left) is a wizard for how your repositories talk to each other. Put repos on a board, drag a connection from the caller to the called repo and describe it: kind (REST, gRPC, events...), authentication (API key, OAuth client id and secret...), the *names* of the environment variables that hold the secrets (never the values), the contract and notes. After a preview and your confirmation R.A.D.A.R. writes the rule to `.claude/relations.md` of **both** repos (or `.claude/relations.local.md`, kept out of git, for private rules) and adds a short pointer to `CLAUDE.md` (or `CLAUDE.local.md`). An agent working on a feature in one repo then knows it has to look at the other repo, work through its agent and ask before changing anything there.
-
-The last scan and your settings are saved in `~/Library/Application Support/RADAR` (`%APPDATA%\RADAR` on Windows, `~/.local/share/radar` on Linux), so the next start shows the previous result immediately.
-
-**Development:** `./dev.sh` runs the .NET server with hot reload and the Angular dev server (`http://localhost:4200`). The UI can also run on sample data without the server: `cd src/web && npm start`, then open `http://localhost:4200/?mock` (or `?mock=150` / `?mock=400` for large data sets).
-
-**Tests:** `dotnet test` (scanner and server) and `cd src/web && npm test -- --watch=false` (UI).
-
-**Release binaries** (planned): download the archive for your platform from GitHub Releases and run `radar`.
-
-Binaries are not code-signed. If macOS shows an "unverified developer" warning for a file downloaded in a browser, right-click the file and choose Open, or run:
+### One command
 
 ```bash
-xattr -d com.apple.quarantine ./radar
+# macOS / Linux
+curl -fsSL https://raw.githubusercontent.com/lookashdev/radar/main/install.sh | sh
 ```
+
+```powershell
+# Windows (PowerShell)
+irm https://raw.githubusercontent.com/lookashdev/radar/main/install.ps1 | iex
+```
+
+The scripts ([install.sh](install.sh), [install.ps1](install.ps1)) are short; they download the archive for your system from the [latest release](https://github.com/lookashdev/radar/releases/latest), **stop if the SHA256 checksum does not match**, and unpack it into `~/.radar/app`. No administrator rights needed. Run `radar` to start; it opens `http://127.0.0.1:5178`.
+
+### More ways
+
+Download by hand, run from source, update and remove: see **[INSTALL.md](INSTALL.md)**. The binaries are not code-signed (no paid certificates), so a *browser* download triggers macOS Gatekeeper or Windows SmartScreen; the installers avoid that because a file fetched from a terminal carries no "downloaded from the internet" mark. INSTALL.md explains both cases.
+
+## How it stays safe
+
+A tool that touches your repositories has to be careful. The rules, kept by the code and covered by tests (details in [SECURITY.md](SECURITY.md)):
+
+- Listens on `127.0.0.1` only, needs a per-session token and checks the `Host` and `Origin` headers, so other websites cannot reach it.
+- Makes no network calls while running. No telemetry, accounts or background updates; the fonts are bundled.
+- Reads only AI and markdown files, never `.env` or keys, and every path is resolved and checked to lie inside a detected repository (no symlink escapes).
+- Writes only after you have seen the exact plan and confirmed it: a new agent, skill or workflow file, marked blocks in `CLAUDE.local.md` and `CLAUDE.md`, and entries in `.git/info/exclude`. A write is all-or-nothing, never overwrites, and the app never makes commits.
+- The server builds every command it runs and every text it writes. The browser sends identifiers of ready templates, never text to execute.
+- Flow rules hold the **names** of environment variables, never their values.
+
+## Develop
+
+You need the .NET SDK 10 and Node.js 22.
+
+```bash
+./run.sh            # build the UI if needed and start the app on http://127.0.0.1:5178 (Windows: ./run.ps1)
+./dev.sh            # dotnet watch + ng serve on http://localhost:4200
+dotnet test         # scanner and server tests
+cd src/web && npm test -- --watch=false      # UI tests
+```
+
+`npm start` in `src/web` with `?mock` in the URL runs the UI on sample data without the server. Stack: an ASP.NET Core minimal API with server-sent events for scan progress (`src/api`), an Angular UI with signals (`src/web`), JSON files for state. [CLAUDE.md](CLAUDE.md) documents the architecture and conventions; [CONTRIBUTING.md](CONTRIBUTING.md) is the short version for contributors.
+
+The last scan and your settings live in `~/Library/Application Support/RADAR` (macOS), `%APPDATA%\RADAR` (Windows) or `~/.local/share/radar` (Linux).
 
 ## Roadmap
 
-1. ~~Skeleton and the Orbit layout on mock data~~
-2. ~~Scanner (repositories, `CLAUDE.md`, agents, skills, workflows, stack, coverage, gaps)~~
-3. ~~Scan from the UI with real progress, saved result and "last scan"~~
-4. ~~Read-only markdown preview and command generator for gaps (Claude Code and Codex CLI)~~
-5. Distribution (release binaries)
-6. Later: markdown editor with templates for new files, memory vault presentation, global agents/skills, scan history
+- Done: orbit view, scanner, quality scoring, gap commands, agent/skill/workflow drafts, visibility (public vs private files), second brain, flow between repos, release binaries and installers.
+- Later: markdown editor with templates, a presentation of the second brain, global agents and skills, scan history.
 
 ## License
 
-See [LICENSE](LICENSE).
+[MIT](LICENSE). Third-party components are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

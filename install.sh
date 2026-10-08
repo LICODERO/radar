@@ -1,7 +1,7 @@
 #!/bin/sh
 # R.A.D.A.R. installer for macOS and Linux.
 #
-#   curl -fsSL https://raw.githubusercontent.com/lookashdev/radar-releases/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/lookashdev/radar/main/install.sh | sh
 #
 # What it does, and nothing else:
 #   1. picks the archive for this system from the latest release (or RADAR_VERSION=0.1.0),
@@ -11,13 +11,13 @@
 # It needs no sudo and does not touch your shell configuration. To remove R.A.D.A.R., delete ~/.radar and ~/.local/bin/radar.
 #
 # Environment (all optional): RADAR_VERSION, RADAR_HOME (default ~/.radar), RADAR_BIN_DIR (default ~/.local/bin),
-# RADAR_REPO (default lookashdev/radar-releases), RADAR_BASE_URL (a mirror or a test server; replaces the GitHub download URL).
+# RADAR_REPO (default lookashdev/radar), RADAR_BASE_URL (a mirror or a test server; replaces the GitHub download URL).
 
 # the whole script lives in a function that is called on the last line, so a download that is cut short never runs half of it
 main() {
   set -eu
 
-  REPO="${RADAR_REPO:-lookashdev/radar-releases}"
+  REPO="${RADAR_REPO:-lookashdev/radar}"
   HOME_DIR="${RADAR_HOME:-$HOME/.radar}"
   BIN_DIR="${RADAR_BIN_DIR:-$HOME/.local/bin}"
 

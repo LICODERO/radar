@@ -1,5 +1,7 @@
 # Installing R.A.D.A.R. (instructions for a coding agent)
 
+> People: you do not need this file. See [INSTALL.md](INSTALL.md) for every way to install and run R.A.D.A.R.
+
 You are asked to install R.A.D.A.R. for the user on their machine. R.A.D.A.R. is a local dashboard that shows how well a folder of git
 repositories is set up for AI coding agents. Follow these steps in order, keep the user informed, and stop at the first problem.
 
@@ -23,13 +25,13 @@ Linux on ARM is not supported; say so and stop.
 ## 2. Read the installer, then run it
 
 The scripts are small and do exactly this: download the archive for this system from the latest GitHub release of
-`lookashdev/radar-releases`, download `SHA256SUMS.txt`, **stop if the checksum differs**, unpack into `~/.radar/app`
+`lookashdev/radar`, download `SHA256SUMS.txt`, **stop if the checksum differs**, unpack into `~/.radar/app`
 (Windows: `%LOCALAPPDATA%\RADAR\app`), and link `~/.local/bin/radar` (macOS/Linux). They need no administrator rights.
 
 macOS / Linux:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lookashdev/radar-releases/main/install.sh -o /tmp/radar-install.sh
+curl -fsSL https://raw.githubusercontent.com/lookashdev/radar/main/install.sh -o /tmp/radar-install.sh
 less /tmp/radar-install.sh   # or print it, so the user can see what it does
 sh /tmp/radar-install.sh
 ```
@@ -37,7 +39,7 @@ sh /tmp/radar-install.sh
 Windows (PowerShell):
 
 ```powershell
-irm https://raw.githubusercontent.com/lookashdev/radar-releases/main/install.ps1 -OutFile $env:TEMP\radar-install.ps1
+irm https://raw.githubusercontent.com/lookashdev/radar/main/install.ps1 -OutFile $env:TEMP\radar-install.ps1
 Get-Content $env:TEMP\radar-install.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File $env:TEMP\radar-install.ps1
 ```
@@ -62,4 +64,4 @@ Do not start the app unless the user asks. If they do, run it in a separate term
 - Claude Code (`claude`) or Codex CLI on the PATH is optional: it is only needed for the buttons that draft files or open sessions.
 - To update, run the same installer again. To remove: delete `~/.radar` and `~/.local/bin/radar` (Windows: `%LOCALAPPDATA%\RADAR`); the app's
   settings live in `~/Library/Application Support/RADAR` (macOS), `~/.local/share/radar` (Linux) or `%APPDATA%\RADAR` (Windows).
-- Help and bug reports: https://github.com/lookashdev/radar-releases/issues
+- Help and bug reports: https://github.com/lookashdev/radar/issues

@@ -1,7 +1,7 @@
 (() => {
   const CFG = window.RADAR_SITE || {};
-  const BASE = 'https://github.com/' + (CFG.REPO || 'lookashdev/radar-releases');
-  const RAW = CFG.RAW || 'https://raw.githubusercontent.com/' + (CFG.REPO || 'lookashdev/radar-releases') + '/main';
+  const BASE = 'https://github.com/' + (CFG.REPO || 'lookashdev/radar');
+  const RAW = CFG.RAW || 'https://raw.githubusercontent.com/' + (CFG.REPO || 'lookashdev/radar') + '/main';
   const LANG_KEY = 'radar.site.lang';
   const CONSENT_KEY = 'radar.site.consent';
 
@@ -15,7 +15,7 @@
     'nav.features': 'Features', 'nav.flow': 'Flow', 'nav.safety': 'Safety', 'nav.download': 'Install',
     'hero.title': 'See how ready your repos are for <em>AI agents</em>.',
     'hero.lead': 'R.A.D.A.R. scans a folder of repositories and shows CLAUDE.md, agents, skills and workflows on one orbit. It points out the gaps, rates the quality of your files and gives you ready commands for Claude Code and Codex CLI.',
-    'hero.fine': 'Free · runs locally · macOS, Windows, Linux', 'hero.tag': 'ORBIT · SCAN OF 10 REPOS',
+    'hero.fine': 'Free · open source (MIT) · runs locally', 'hero.tag': 'ORBIT · SCAN OF 10 REPOS',
     'cta.install': 'Install', 'cta.more': 'See what it does',
     'strip.1t': 'Local', 'strip.1d': 'Nothing leaves your computer', 'strip.2t': 'Zero network', 'strip.2d': 'No telemetry, accounts or sign-ups',
     'strip.3t': 'After you confirm', 'strip.3d': 'Writes to a repo only with your consent', 'strip.4t': '3 systems',
@@ -53,19 +53,20 @@
     'd.diy': 'PREFER TO DO IT YOURSELF? ONE COMMAND',
     'd.read': 'The scripts are short and worth reading: <a data-link="installsh" href="#">install.sh</a> · <a data-link="installps" href="#">install.ps1</a>. They verify the SHA256 checksum and need no administrator rights.',
     'd.nowarn': 'The installer downloads the file from a terminal, so macOS and Windows usually do not show the unknown-app warning that a browser download triggers.',
+    'd.more': 'All the ways, including from source: <a data-link="installmd" href="#">INSTALL.md</a>.',
     'd.manual': 'Or download it by hand',
     'd.arm': 'Apple Silicon (M1 and newer)', 'd.all': 'All versions and release notes',
     'n.mac': 'macOS: first start after a manual download', 'n.macp': 'A package downloaded in the browser gets the quarantine flag, and the app is not signed with an Apple certificate, so the system blocks the first start. Remove the flag once, in the unpacked folder:',
     'n.win': 'Windows: SmartScreen warning after a manual download', 'n.winp': 'The file is not signed, so Windows may show "Windows protected your PC". Choose "More info", then "Run anyway". The console window shows the log; close it to quit.',
     'n.lin': 'Linux', 'n.linp': 'Opening a terminal from the app works on macOS and Windows. On Linux, copy the generated commands.',
     'q.title': 'Frequently asked questions',
-    'q1': 'Is it free?', 'q1a': 'Yes. You can use R.A.D.A.R. for free, including at work. The details are in the LICENSE file in the package.',
+    'q1': 'Is it free?', 'q1a': 'Yes. R.A.D.A.R. is free and open source under the MIT licence: use it at home or at work, read the code, change it.',
     'q2': 'Does the app send anything to the internet?', 'q2a': 'No. It runs locally and has no telemetry. The only thing that can leave is a command you run yourself in a terminal through Claude Code or Codex CLI. (This website uses analytics only after you agree.)',
     'q3': 'Does it change my repositories?', 'q3a': 'The scan is read-only. It writes only after you have seen the plan and confirmed: a new agent, skill or workflow file, marked blocks in CLAUDE.local.md and CLAUDE.md, and entries in .git/info/exclude. The app never makes commits.',
     'q4': 'Which tools does it work with?', 'q4a': 'It scans the Claude Code setup (CLAUDE.md, agents, skills, workflows) and can open Claude Code and Codex CLI sessions. You need neither for the dashboard itself.',
-    'q5': 'Why is the source not open?', 'q5a': 'For now I share ready packages and an issue tracker. The code is private, but nothing stops me from opening it one day. Trust comes from the safety notes above and from the fact that the app works only locally.',
+    'q5': 'Can I read and change the code?', 'q5a': 'Yes, the whole project is on GitHub under the MIT licence. You can read it, run it from source (see INSTALL.md) and send a pull request. Because the app touches your repositories, the safety rules it keeps are written down in SECURITY.md and CONTRIBUTING.md.',
     'q6': 'Where do I report a bug or an idea?', 'q6a': 'In GitHub issues:',
-    'ft.issues': 'Report a bug or idea', 'ft.changes': 'Changelog', 'ft.repo': 'Releases repository', 'ft.cookies': 'Cookie settings',
+    'ft.issues': 'Report a bug or idea', 'ft.changes': 'Changelog', 'ft.repo': 'Source code on GitHub', 'ft.cookies': 'Cookie settings',
     'ck.text': 'This site may use Google Analytics to see how many people visit it. The R.A.D.A.R. app collects nothing. Do you agree to analytics?', 'ck.ok': 'I agree', 'ck.no': 'No, thanks',
     'alt.orbit': 'The R.A.D.A.R. dashboard: repositories, agents, skills and workflows on an orbit, with a selected repository', 'alt.flow': 'The flow wizard: repositories as cards on a board, connected by lines that show who calls whom',
     'meta.title': 'R.A.D.A.R. – Repo AI Discovery And Review',
@@ -93,7 +94,7 @@
 
   // ---- links -------------------------------------------------------------------------------------
   document.querySelectorAll('a.os[data-file]').forEach((a) => { a.href = `${BASE}/releases/latest/download/${a.dataset.file}`; if (a.dataset.os === OS) a.classList.add('rec'); });
-  const LINKS = { installsh: `${RAW}/install.sh`, installps: `${RAW}/install.ps1`, sums: `${BASE}/releases/latest/download/SHA256SUMS.txt`, releases: `${BASE}/releases`, issues: `${BASE}/issues`, repo: BASE };
+  const LINKS = { installsh: `${RAW}/install.sh`, installps: `${RAW}/install.ps1`, installmd: `${BASE}/blob/main/INSTALL.md`, sums: `${BASE}/releases/latest/download/SHA256SUMS.txt`, releases: `${BASE}/releases`, issues: `${BASE}/issues`, repo: BASE };
   const wireLinks = () => document.querySelectorAll('[data-link]').forEach((a) => { a.href = LINKS[a.dataset.link]; a.rel = 'noopener'; });
   wireLinks();
 

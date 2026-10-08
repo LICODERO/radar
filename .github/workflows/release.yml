@@ -1,7 +1,8 @@
 name: Release
 
-# Push a tag like v0.2.0 (it must match <Version> in Directory.Build.props). The workflow builds self-contained binaries for macOS,
-# Windows and Linux, smoke-tests them, and creates a DRAFT release in the public releases repo; publishing it is a manual step.
+# Push a tag like v0.2.0 (it must match <Version> in Directory.Build.props and have a section in CHANGELOG.md). The workflow builds
+# self-contained binaries for macOS, Windows and Linux, smoke-tests them (and the install scripts), and creates a DRAFT release in this
+# repository; publishing the draft is a manual step.
 # A push to a dryrun/** branch (or a manual run) builds and smoke-tests everything but does not touch the releases repo.
 on:
   push:
@@ -12,8 +13,6 @@ on:
 permissions:
   contents: read
 
-env:
-  RELEASES_REPO: lookashdev/radar-releases
 
 jobs:
   ui:
@@ -76,7 +75,7 @@ jobs:
           mv "out/radar/$exe" "out/radar/$target"
           rm -f out/radar/*.pdb out/radar/*.staticwebassets.endpoints.json
           cp THIRD-PARTY-NOTICES.md out/radar/
-          cp distribution/releases-repo/LICENSE out/radar/LICENSE.txt
+          cp LICENSE out/radar/LICENSE.txt
           ls -la out/radar
       - name: Smoke test (start it elsewhere, ask for the UI and the health check)
         if: ${{ matrix.smoke }}
@@ -118,11 +117,11 @@ jobs:
           export RADAR_BASE_URL=http://127.0.0.1:8099
           if [ "${{ matrix.rid }}" = "win-x64" ]; then
             export RADAR_HOME="$RUNNER_TEMP\\inst\\home"
-            powershell -NoProfile -ExecutionPolicy Bypass -File distribution/releases-repo/install.ps1
+            powershell -NoProfile -ExecutionPolicy Bypass -File install.ps1
             bin="$RADAR_HOME/app/radar.exe"
           else
             export RADAR_HOME="$RUNNER_TEMP/inst/home" RADAR_BIN_DIR="$RUNNER_TEMP/inst/bin"
-            sh distribution/releases-repo/install.sh
+            sh install.sh
             bin="$RADAR_HOME/app/radar"
           fi
           test -f "$bin"
@@ -145,6 +144,8 @@ jobs:
     needs: build
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -160,9 +161,9 @@ jobs:
           v="${GITHUB_REF_NAME#v}"
           awk -v v="$v" '/^## /{p=(index($0, "## " v " ")==1); next} p' ../CHANGELOG.md > ../notes.md
           [ -s ../notes.md ] || { echo "No notes for $v in CHANGELOG.md"; exit 1; }
-      - name: Create the draft release in the public repo
+      - name: Create the draft release
         env:
-          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" --repo "$RELEASES_REPO" --draft --target main \
+          gh release create "$GITHUB_REF_NAME" --draft --verify-tag \
             --title "R.A.D.A.R. ${GITHUB_REF_NAME#v}" --notes-file notes.md dist/*

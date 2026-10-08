@@ -23,6 +23,7 @@
         <a href="#safety" data-i18n="nav.safety">Bezpieczeństwo</a>
         <a href="#install" data-i18n="nav.download">Zainstaluj</a>
         <a href="#faq">FAQ</a>
+        <a data-link="repo" href="#">GitHub ↗</a>
       </nav>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" data-lang="pl" aria-pressed="true">PL</button>
@@ -45,7 +46,7 @@
             <a class="btn btn-solid" id="cta-download" href="#install" data-i18n="cta.install">Zainstaluj</a>
             <a class="btn btn-ghost" href="#features" data-i18n="cta.more">Zobacz, co potrafi</a>
           </div>
-          <div class="fine"><i>●</i> <span data-i18n="hero.fine">Za darmo · działa lokalnie · macOS, Windows, Linux</span> · v<span class="ver"></span></div>
+          <div class="fine"><i>●</i> <span data-i18n="hero.fine">Za darmo · open source (MIT) · działa lokalnie</span> · v<span class="ver"></span></div>
         </div>
         <div class="bezel">
           <div class="screen">
@@ -152,6 +153,8 @@
         </div>
         <p class="fine rv" style="margin-top:18px" data-i18n="d.nowarn">Instalator pobiera plik z terminala, więc macOS i Windows zwykle nie pokazują ostrzeżenia o nieznanym programie, które dostajesz po pobraniu pliku w przeglądarce.</p>
 
+        <p class="fine rv" style="margin-top:8px" data-i18n-html="d.more">Wszystkie sposoby, także ze źródeł: <a data-link="installmd" href="#">INSTALL.md</a>.</p>
+
         <h3 class="rv sublead" data-i18n="d.manual">Albo pobierz ręcznie</h3>
         <div class="dl rv">
           <a class="os" data-os="mac" data-arch="arm" data-rec="" data-file="radar-osx-arm64.zip" href="#"><span class="n">macOS</span><span class="a" data-i18n="d.arm">Apple Silicon (M1 i nowsze)</span><span class="f">radar-osx-arm64.zip ↓</span></a>
@@ -174,11 +177,11 @@
         <div class="kicker rv"><b>06 //</b><span>FAQ</span></div>
         <h2 class="rv" data-i18n="q.title">Najczęstsze pytania</h2>
         <div class="faq rv" style="margin-top:30px">
-          <details><summary data-i18n="q1">Czy to jest darmowe?</summary><div class="in" data-i18n="q1a">Tak. Możesz używać R.A.D.A.R. za darmo, także w pracy. Szczegóły są w pliku LICENSE w paczce.</div></details>
-          <details><summary data-i18n="q2">Czy aplikacja coś wysyła do internetu?</summary><div class="in" data-i18n="q2a">Nie. Działa tylko lokalnie i nie ma telemetrii. Jedyne, co może pójść w świat, to polecenia, które sam uruchomisz w terminalu przez Claude Code lub Codex CLI. (Ta strona używa analityki dopiero po Twojej zgodzie.)</div></details>
+          <details><summary data-i18n="q1">Czy to jest darmowe?</summary><div class="in" data-i18n="q1a">Tak. R.A.D.A.R. jest darmowy i ma otwarty kod na licencji MIT: możesz go używać w domu i w pracy, czytać kod i go zmieniać.</div></details>
+          <details><summary data-i18n="q2">Czy aplikacja coś wysyła do internetu?</summary><div class="in" data-i18n="q2a">Nie. Działa tylko lokalnie i nie ma telemetrii. Jedyne, co może wyjść poza komputer, to polecenia, które sam uruchomisz w terminalu przez Claude Code lub Codex CLI. (Ta strona używa analityki dopiero po Twojej zgodzie.)</div></details>
           <details><summary data-i18n="q3">Czy zmienia moje repozytoria?</summary><div class="in" data-i18n="q3a">Skan jest tylko do odczytu. Zapis następuje wyłącznie po tym, jak zobaczysz plan i potwierdzisz: nowy plik agenta, skilla lub workflow, bloki oznaczone w CLAUDE.local.md i CLAUDE.md oraz wpisy w .git/info/exclude. Aplikacja nigdy nie robi commitów.</div></details>
           <details><summary data-i18n="q4">Z jakimi narzędziami działa?</summary><div class="in" data-i18n="q4a">Skanuje konfigurację Claude Code (CLAUDE.md, agenci, skille, workflow) i potrafi otwierać sesje Claude Code oraz Codex CLI. Do samego dashboardu nie potrzebujesz żadnego z nich.</div></details>
-          <details><summary data-i18n="q5">Dlaczego kod nie jest otwarty?</summary><div class="in" data-i18n="q5a">Na razie udostępniam gotowe paczki i tracker zgłoszeń. Kod jest prywatny, ale nic nie stoi na przeszkodzie, żeby kiedyś go otworzyć. Zaufanie budują opis zabezpieczeń powyżej i fakt, że aplikacja pracuje wyłącznie lokalnie.</div></details>
+          <details><summary data-i18n="q5">Czy mogę przeczytać i zmienić kod?</summary><div class="in" data-i18n="q5a">Tak, cały projekt jest na GitHubie na licencji MIT. Możesz go przeczytać, uruchomić ze źródeł (zobacz INSTALL.md) i wysłać pull request. Ponieważ aplikacja dotyka Twoich repozytoriów, zasady bezpieczeństwa, których przestrzega, są spisane w SECURITY.md i CONTRIBUTING.md.</div></details>
           <details><summary data-i18n="q6">Gdzie zgłosić błąd albo pomysł?</summary><div class="in"><span data-i18n="q6a">W zgłoszeniach na GitHubie:</span> <a data-link="issues" href="#">GitHub Issues</a>.</div></details>
         </div>
       </div>
@@ -192,7 +195,7 @@
       <div class="links">
         <a data-link="issues" href="#" data-i18n="ft.issues">Zgłoś błąd lub pomysł</a>
         <a data-link="releases" href="#" data-i18n="ft.changes">Historia zmian</a>
-        <a data-link="repo" href="#" data-i18n="ft.repo">Repozytorium wydań</a>
+        <a data-link="repo" href="#" data-i18n="ft.repo">Kod źródłowy na GitHubie</a>
         <button class="link-btn" id="cookie-settings" type="button" hidden data-i18n="ft.cookies">Ustawienia cookies</button>
       </div>
     </div>
