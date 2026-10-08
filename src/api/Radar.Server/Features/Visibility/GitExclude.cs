@@ -62,6 +62,7 @@ public static class GitExclude
         var o = GitProcess.Run(repoDir, ["rev-parse", "--path-format=absolute", "--git-path", "info/exclude"]);
         if (o is not { ExitCode: 0 }) return null;
         var path = o.Text.Trim();
-        return Path.IsPathRooted(path) ? path : null;
+        // git prints forward slashes on Windows; hand back the platform's own form
+        return Path.IsPathRooted(path) ? Path.GetFullPath(path) : null;
     }
 }
