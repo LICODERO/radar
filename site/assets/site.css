@@ -119,6 +119,22 @@ h2 { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.2vw
 .safe p { margin: 0; color: #b9c2d4; font-size: 14px; }
 .safe b { color: var(--text); font-weight: 500; }
 
+/* install */
+.plabel { font-size: 11.5px; letter-spacing: .24em; color: var(--lime); margin-bottom: 10px; }
+.paste { margin-bottom: 34px; }
+.cmdbox { position: relative; background: #ffffff08; border: 1px solid #c6ff3d44; border-left: 3px solid var(--lime); box-shadow: 0 0 40px #c6ff3d12; }
+.cmdbox[hidden] { display: none; }
+.cmd { margin: 0; padding: 18px 120px 18px 20px; font: 500 14px/1.7 var(--mono); color: var(--text); white-space: pre-wrap; word-break: break-word; }
+.copy { position: absolute; top: 10px; right: 10px; padding: 7px 12px; font: 600 11.5px var(--display); letter-spacing: .16em; color: var(--lime); background: #04050acc; border: 1px solid #c6ff3d77; cursor: pointer; }
+.copy:hover { background: var(--lime); color: #0b1006; }
+.copy.done { background: var(--lime); color: #0b1006; }
+.tabs { display: flex; gap: 0; margin-bottom: -1px; position: relative; z-index: 1; }
+.tabs button { padding: 8px 16px; font: 500 12.5px var(--mono); letter-spacing: .08em; color: var(--muted); background: transparent; border: 1px solid var(--line); border-bottom: 0; cursor: pointer; }
+.tabs button + button { border-left: 0; }
+.tabs button[aria-selected='true'] { color: var(--lime); background: #ffffff08; border-color: #c6ff3d44; }
+.tabs button:hover:not([aria-selected='true']) { color: var(--text); }
+.sublead { font: 700 18px var(--display); letter-spacing: .08em; color: var(--text); margin: 54px 0 16px; text-transform: uppercase; }
+
 /* download */
 .dl { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 .os { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 24px 20px; background: #ffffff06; border: 1px solid #ffffff1f; color: var(--text); transition: border-color .2s, transform .2s, background .2s; }
@@ -180,6 +196,8 @@ footer a:hover { color: var(--lime); }
   .rings { right: -420px; }
 }
 @media (max-width: 600px) {
+  .cmd { padding-right: 20px; padding-bottom: 54px; font-size: 13px; }
+  .copy { top: auto; bottom: 10px; }
   .grid, .dl { grid-template-columns: 1fr; }
   .hero { padding-top: 48px; }
   .strip .wrap { grid-template-columns: 1fr; }

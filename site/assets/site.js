@@ -1,6 +1,7 @@
 (() => {
   const CFG = window.RADAR_SITE || {};
   const BASE = 'https://github.com/' + (CFG.REPO || 'lookashdev/radar-releases');
+  const RAW = CFG.RAW || 'https://raw.githubusercontent.com/' + (CFG.REPO || 'lookashdev/radar-releases') + '/main';
   const LANG_KEY = 'radar.site.lang';
   const CONSENT_KEY = 'radar.site.consent';
 
@@ -11,11 +12,11 @@
 
   // English texts. The Polish ones are what the HTML ships with: they are read from the page the first time, so there is one copy of each.
   const EN = {
-    'nav.features': 'Features', 'nav.flow': 'Flow', 'nav.safety': 'Safety', 'nav.download': 'Download',
+    'nav.features': 'Features', 'nav.flow': 'Flow', 'nav.safety': 'Safety', 'nav.download': 'Install',
     'hero.title': 'See how ready your repos are for <em>AI agents</em>.',
     'hero.lead': 'R.A.D.A.R. scans a folder of repositories and shows CLAUDE.md, agents, skills and workflows on one orbit. It points out the gaps, rates the quality of your files and gives you ready commands for Claude Code and Codex CLI.',
     'hero.fine': 'Free · runs locally · macOS, Windows, Linux', 'hero.tag': 'ORBIT · SCAN OF 10 REPOS',
-    'cta.download': 'Download for', 'cta.more': 'See what it does',
+    'cta.install': 'Install', 'cta.more': 'See what it does',
     'strip.1t': 'Local', 'strip.1d': 'Nothing leaves your computer', 'strip.2t': 'Zero network', 'strip.2d': 'No telemetry, accounts or sign-ups',
     'strip.3t': 'After you confirm', 'strip.3d': 'Writes to a repo only with your consent', 'strip.4t': '3 systems',
     'f.kicker': 'SCAN · RATE · FILL', 'f.title': 'Everything AI knows about your repositories, in one place.',
@@ -46,11 +47,16 @@
     'p.4': '<b>Writes only after you confirm.</b> First a plan with the exact text, then your yes. It never makes commits.',
     'p.5': '<b>The server builds the commands.</b> The browser never sends text to run, only identifiers of ready templates.',
     'p.6': '<b>Secrets stay out of files.</b> Flow rules hold the names of environment variables, never their values.',
-    'd.kicker': 'DOWNLOAD · v<span class="ver"></span>', 'd.title': 'Zero dependencies. Unpack and run.',
-    'd.sub': 'A single package with everything inside, no .NET or Node to install. You only need Claude Code or Codex CLI if you want R.A.D.A.R. to open sessions for you.',
+    'd.kicker': 'INSTALL · v<span class="ver"></span>', 'd.title': 'One sentence to your agent.',
+    'd.sub': 'Paste it into Claude Code, Codex or any other agent in a terminal. It downloads the right package, checks the checksum and tells you how to start it. You install nothing else: no .NET, no Node.',
+    'd.paste': 'PASTE THIS TO YOUR CODING AGENT', 'd.copy': 'COPY', 'd.copied': 'COPIED',
+    'd.diy': 'PREFER TO DO IT YOURSELF? ONE COMMAND',
+    'd.read': 'The scripts are short and worth reading: <a data-link="installsh" href="#">install.sh</a> · <a data-link="installps" href="#">install.ps1</a>. They verify the SHA256 checksum and need no administrator rights.',
+    'd.nowarn': 'The installer downloads the file from a terminal, so macOS and Windows usually do not show the unknown-app warning that a browser download triggers.',
+    'd.manual': 'Or download it by hand',
     'd.arm': 'Apple Silicon (M1 and newer)', 'd.all': 'All versions and release notes',
-    'n.mac': 'macOS: first start', 'n.macp': 'The app is not signed with an Apple certificate, so the system blocks the first start. Remove the download flag once, in the unpacked folder:',
-    'n.win': 'Windows: SmartScreen warning', 'n.winp': 'The file is not signed, so Windows may show "Windows protected your PC". Choose "More info", then "Run anyway". The console window shows the log; close it to quit.',
+    'n.mac': 'macOS: first start after a manual download', 'n.macp': 'A package downloaded in the browser gets the quarantine flag, and the app is not signed with an Apple certificate, so the system blocks the first start. Remove the flag once, in the unpacked folder:',
+    'n.win': 'Windows: SmartScreen warning after a manual download', 'n.winp': 'The file is not signed, so Windows may show "Windows protected your PC". Choose "More info", then "Run anyway". The console window shows the log; close it to quit.',
     'n.lin': 'Linux', 'n.linp': 'Opening a terminal from the app works on macOS and Windows. On Linux, copy the generated commands.',
     'q.title': 'Frequently asked questions',
     'q1': 'Is it free?', 'q1a': 'Yes. You can use R.A.D.A.R. for free, including at work. The details are in the LICENSE file in the package.',
@@ -66,6 +72,7 @@
     'meta.desc': 'R.A.D.A.R. scans your repositories and shows how well they are set up for AI agents. Local, free, macOS · Windows · Linux.'
   };
   const PL_EXTRA = {
+    'd.copied': 'SKOPIOWANO',
     'alt.orbit': 'Dashboard R.A.D.A.R.: repozytoria, agenci, skille i workflow na orbicie, z zaznaczonym repozytorium',
     'alt.flow': 'Kreator przepływu: repozytoria jako karty na planszy, połączone liniami pokazującymi, kto kogo wywołuje',
     'meta.title': 'R.A.D.A.R. – Repo AI Discovery And Review',
@@ -83,15 +90,39 @@
   // ---- OS ----------------------------------------------------------------------------------------
   const platform = ((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || navigator.userAgent || '').toLowerCase();
   const OS = /mac/.test(platform) ? 'mac' : /win/.test(platform) ? 'win' : /linux|x11|cros/.test(platform) ? 'linux' : '';
-  const OS_NAME = { mac: 'macOS', win: 'Windows', linux: 'Linux' };
 
   // ---- links -------------------------------------------------------------------------------------
   document.querySelectorAll('a.os[data-file]').forEach((a) => { a.href = `${BASE}/releases/latest/download/${a.dataset.file}`; if (a.dataset.os === OS) a.classList.add('rec'); });
-  const LINKS = { sums: `${BASE}/releases/latest/download/SHA256SUMS.txt`, releases: `${BASE}/releases`, issues: `${BASE}/issues`, repo: BASE };
-  document.querySelectorAll('[data-link]').forEach((a) => { a.href = LINKS[a.dataset.link]; a.rel = 'noopener'; });
-  const cta = document.getElementById('cta-download');
-  if (OS === 'win' || OS === 'linux') cta.href = `${BASE}/releases/latest/download/${OS === 'win' ? 'radar-win-x64.zip' : 'radar-linux-x64.tar.gz'}`;
-  document.getElementById('cta-os').textContent = OS ? OS_NAME[OS] : '';
+  const LINKS = { installsh: `${RAW}/install.sh`, installps: `${RAW}/install.ps1`, sums: `${BASE}/releases/latest/download/SHA256SUMS.txt`, releases: `${BASE}/releases`, issues: `${BASE}/issues`, repo: BASE };
+  const wireLinks = () => document.querySelectorAll('[data-link]').forEach((a) => { a.href = LINKS[a.dataset.link]; a.rel = 'noopener'; });
+  wireLinks();
+
+  // ---- install commands: copy buttons, OS tabs ----------------------------------------------------
+  const CMD = {
+    agent: { pl: `Przeczytaj ${RAW}/AGENT_INSTALL.md i zainstaluj mi R.A.D.A.R.: wykonaj kroki, sprawdź sumę kontrolną i powiedz, jak go uruchomić.`,
+             en: `Read ${RAW}/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.` },
+    sh: { pl: `curl -fsSL ${RAW}/install.sh | sh`, en: `curl -fsSL ${RAW}/install.sh | sh` },
+    ps: { pl: `irm ${RAW}/install.ps1 | iex`, en: `irm ${RAW}/install.ps1 | iex` }
+  };
+  const fillCommands = (lang) => document.querySelectorAll('[data-cmd]').forEach((el) => { el.textContent = CMD[el.dataset.cmd][lang]; });
+  const copyText = async (text) => {
+    try { await navigator.clipboard.writeText(text); return true; } catch { /* fall through */ }
+    const t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch { /* none */ } t.remove(); return ok;
+  };
+  document.querySelectorAll('button[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    const pre = document.querySelector(`[data-cmd="${b.dataset.copy}"]`);
+    if (!(await copyText(pre.textContent))) return;
+    const lang = document.documentElement.lang;
+    b.textContent = DICT[lang]['d.copied'] || 'OK'; b.classList.add('done');
+    setTimeout(() => { b.textContent = DICT[document.documentElement.lang]['d.copy']; b.classList.remove('done'); }, 1600);
+  }));
+  const showTab = (name) => {
+    document.querySelectorAll('.tabs button').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
+    document.querySelectorAll('[data-panel]').forEach((p) => (p.hidden = p.dataset.panel !== name));
+  };
+  document.querySelectorAll('.tabs button').forEach((t) => t.addEventListener('click', () => showTab(t.dataset.tab)));
+  if (OS === 'win') showTab('ps');
 
   // ---- language ----------------------------------------------------------------------------------
   function apply(lang) {
@@ -105,6 +136,8 @@
     document.title = d['meta.title'];
     document.querySelector('meta[name=description]').content = d['meta.desc'];
     fillVersion();
+    fillCommands(lang);
+    wireLinks();
     safe.set(LANG_KEY, lang);
   }
   document.querySelectorAll('.lang button').forEach((b) => b.addEventListener('click', () => apply(b.dataset.lang)));

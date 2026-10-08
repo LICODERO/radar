@@ -100,6 +100,38 @@ jobs:
             *) tar -czf "../$name.tar.gz" radar ;;
           esac
           ls -la ..
+      - name: Installer test (the real install script against a local copy of the release)
+        if: ${{ matrix.smoke }}
+        run: |
+          py=$(command -v python3 || command -v python)
+          mkdir -p installer-test "$RUNNER_TEMP/inst"
+          cp radar-${{ matrix.rid }}.* installer-test/
+          (cd installer-test && "$py" - <<'PY'
+          import glob, hashlib
+          with open('SHA256SUMS.txt', 'w') as out:
+              for f in sorted(glob.glob('radar-*')):
+                  out.write(hashlib.sha256(open(f, 'rb').read()).hexdigest() + '  ' + f + '\n')
+          PY
+          )
+          (cd installer-test && "$py" -m http.server 8099 --bind 127.0.0.1 > "$RUNNER_TEMP/http.log" 2>&1 &)
+          sleep 2
+          export RADAR_BASE_URL=http://127.0.0.1:8099
+          if [ "${{ matrix.rid }}" = "win-x64" ]; then
+            export RADAR_HOME="$RUNNER_TEMP\\inst\\home"
+            powershell -NoProfile -ExecutionPolicy Bypass -File distribution/releases-repo/install.ps1
+            bin="$RADAR_HOME/app/radar.exe"
+          else
+            export RADAR_HOME="$RUNNER_TEMP/inst/home" RADAR_BIN_DIR="$RUNNER_TEMP/inst/bin"
+            sh distribution/releases-repo/install.sh
+            bin="$RADAR_HOME/app/radar"
+          fi
+          test -f "$bin"
+          cd "$RUNNER_TEMP"
+          Radar__OpenBrowser=false Radar__Url=http://127.0.0.1:5197 Radar__DataDir="$RUNNER_TEMP/idata" "$bin" > "$RUNNER_TEMP/installed.log" 2>&1 &
+          pid=$!
+          for i in $(seq 1 40); do curl -fsS http://127.0.0.1:5197/api/health && break; sleep 1; done
+          curl -fsS http://127.0.0.1:5197/api/health | grep -q '"status":"ok"'
+          kill $pid || true
       - uses: actions/upload-artifact@v4
         with:
           name: archive-${{ matrix.rid }}

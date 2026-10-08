@@ -21,7 +21,7 @@
         <a href="#features" data-i18n="nav.features">Funkcje</a>
         <a href="#flow" data-i18n="nav.flow">Przepływ</a>
         <a href="#safety" data-i18n="nav.safety">Bezpieczeństwo</a>
-        <a href="#download" data-i18n="nav.download">Pobierz</a>
+        <a href="#install" data-i18n="nav.download">Zainstaluj</a>
         <a href="#faq">FAQ</a>
       </nav>
       <div class="lang" role="group" aria-label="Language">
@@ -42,7 +42,7 @@
           <h1 data-i18n-html="hero.title">Zobacz, jak Twoje repozytoria są gotowe na <em>agentów AI</em>.</h1>
           <p class="lead" data-i18n="hero.lead">R.A.D.A.R. skanuje folder z repozytoriami i pokazuje CLAUDE.md, agentów, skille i workflow na jednej orbicie. Wskazuje luki, ocenia jakość plików i podaje gotowe komendy dla Claude Code i Codex CLI.</p>
           <div class="cta">
-            <a class="btn btn-solid" id="cta-download" href="#download"><span data-i18n="cta.download">Pobierz</span> <span id="cta-os"></span></a>
+            <a class="btn btn-solid" id="cta-download" href="#install" data-i18n="cta.install">Zainstaluj</a>
             <a class="btn btn-ghost" href="#features" data-i18n="cta.more">Zobacz, co potrafi</a>
           </div>
           <div class="fine"><i>●</i> <span data-i18n="hero.fine">Za darmo · działa lokalnie · macOS, Windows, Linux</span> · v<span class="ver"></span></div>
@@ -131,11 +131,28 @@
       </div>
     </section>
 
-    <section id="download">
+    <section id="install">
       <div class="wrap">
-        <div class="kicker rv"><b>05 //</b><span data-i18n-html="d.kicker">POBIERZ · v<span class="ver"></span></span></div>
-        <h2 class="rv" data-i18n="d.title">Zero zależności. Rozpakuj i uruchom.</h2>
-        <p class="sub rv" data-i18n="d.sub">Pojedyncza paczka z wszystkim w środku, nie trzeba instalować .NET ani Node. Potrzebujesz tylko Claude Code lub Codex CLI, jeśli chcesz, żeby R.A.D.A.R. otwierał sesje za Ciebie.</p>
+        <div class="kicker rv"><b>05 //</b><span data-i18n-html="d.kicker">ZAINSTALUJ · v<span class="ver"></span></span></div>
+        <h2 class="rv" data-i18n="d.title">Jedno zdanie do Twojego agenta.</h2>
+        <p class="sub rv" data-i18n="d.sub">Wklej je do Claude Code, Codex albo innego agenta w terminalu. Agent pobierze właściwą paczkę, sprawdzi sumę kontrolną i powie, jak uruchomić. Nic więcej nie instalujesz: ani .NET, ani Node.</p>
+        <div class="paste rv">
+          <div class="plabel" data-i18n="d.paste">WKLEJ TO SWOJEMU AGENTOWI</div>
+          <div class="cmdbox"><pre class="cmd" data-cmd="agent"></pre><button class="copy" type="button" data-copy="agent" data-i18n="d.copy">KOPIUJ</button></div>
+        </div>
+        <div class="diy rv">
+          <div class="plabel" data-i18n="d.diy">WOLISZ ZROBIĆ TO SAM? JEDNA KOMENDA</div>
+          <div class="tabs" role="tablist">
+            <button type="button" role="tab" data-tab="sh" aria-selected="true">macOS · Linux</button>
+            <button type="button" role="tab" data-tab="ps" aria-selected="false">Windows</button>
+          </div>
+          <div class="cmdbox" data-panel="sh"><pre class="cmd" data-cmd="sh"></pre><button class="copy" type="button" data-copy="sh" data-i18n="d.copy">KOPIUJ</button></div>
+          <div class="cmdbox" data-panel="ps" hidden><pre class="cmd" data-cmd="ps"></pre><button class="copy" type="button" data-copy="ps" data-i18n="d.copy">KOPIUJ</button></div>
+          <p class="fine" style="margin-top:12px" data-i18n-html="d.read">Skrypty są krótkie i warto je przeczytać: <a data-link="installsh" href="#">install.sh</a> · <a data-link="installps" href="#">install.ps1</a>. Sprawdzają sumę SHA256 i nie wymagają uprawnień administratora.</p>
+        </div>
+        <p class="fine rv" style="margin-top:18px" data-i18n="d.nowarn">Instalator pobiera plik z terminala, więc macOS i Windows zwykle nie pokazują ostrzeżenia o nieznanym programie, które dostajesz po pobraniu pliku w przeglądarce.</p>
+
+        <h3 class="rv sublead" data-i18n="d.manual">Albo pobierz ręcznie</h3>
         <div class="dl rv">
           <a class="os" data-os="mac" data-arch="arm" data-rec="" data-file="radar-osx-arm64.zip" href="#"><span class="n">macOS</span><span class="a" data-i18n="d.arm">Apple Silicon (M1 i nowsze)</span><span class="f">radar-osx-arm64.zip ↓</span></a>
           <a class="os" data-os="mac" data-arch="intel" data-rec="" data-file="radar-osx-x64.zip" href="#"><span class="n">macOS</span><span class="a">Intel</span><span class="f">radar-osx-x64.zip ↓</span></a>
@@ -144,9 +161,9 @@
         </div>
         <p class="fine rv" style="margin-top:16px"><a data-link="sums" href="#">SHA256SUMS.txt</a> · <a data-link="releases" href="#" data-i18n="d.all">Wszystkie wersje i historia zmian</a></p>
         <div class="notes rv">
-          <details><summary><span data-i18n="n.mac">macOS: pierwsze uruchomienie</span></summary><div class="in"><p data-i18n="n.macp">Aplikacja nie jest podpisana certyfikatem Apple, więc system blokuje pierwszy start. Zdejmij flagę pobrania raz, w rozpakowanym folderze:</p><pre>xattr -dr com.apple.quarantine .
+          <details><summary><span data-i18n="n.mac">macOS: pierwsze uruchomienie po ręcznym pobraniu</span></summary><div class="in"><p data-i18n="n.macp">Paczka pobrana w przeglądarce dostaje flagę kwarantanny, a aplikacja nie jest podpisana certyfikatem Apple, więc system zablokuje pierwszy start. Zdejmij flagę raz, w rozpakowanym folderze:</p><pre>xattr -dr com.apple.quarantine .
 ./radar</pre></div></details>
-          <details><summary><span data-i18n="n.win">Windows: ostrzeżenie SmartScreen</span></summary><div class="in"><p data-i18n="n.winp">Plik nie jest podpisany, więc Windows może pokazać „System Windows ochronił ten komputer". Wybierz „Więcej informacji", potem „Uruchom mimo to". Okno konsoli pokazuje log, zamknij je, żeby zakończyć.</p></div></details>
+          <details><summary><span data-i18n="n.win">Windows: ostrzeżenie SmartScreen po ręcznym pobraniu</span></summary><div class="in"><p data-i18n="n.winp">Plik nie jest podpisany, więc Windows może pokazać „System Windows ochronił ten komputer". Wybierz „Więcej informacji", potem „Uruchom mimo to". Okno konsoli pokazuje log, zamknij je, żeby zakończyć.</p></div></details>
           <details><summary><span data-i18n="n.lin">Linux</span></summary><div class="in"><pre>tar -xzf radar-linux-x64.tar.gz &amp;&amp; cd radar &amp;&amp; ./radar</pre><p data-i18n="n.linp">Otwieranie terminala z poziomu aplikacji działa na macOS i Windows. Na Linuksie skopiuj wygenerowane komendy.</p></div></details>
         </div>
       </div>

@@ -2,6 +2,8 @@
 window.RADAR_SITE = {
   VERSION: '0.1.0',
   REPO: 'lookashdev/radar-releases',
+  // Where AGENT_INSTALL.md, install.sh and install.ps1 live (a folder URL without the trailing slash). Change it if they move to another repo.
+  RAW: 'https://raw.githubusercontent.com/lookashdev/radar-releases/main',
   // Google Analytics 4 measurement id (G-XXXXXXXXXX). Empty = no analytics and no cookie banner. It only loads after the visitor accepts.
   GA_ID: ''
 };
