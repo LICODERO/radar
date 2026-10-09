@@ -88,6 +88,19 @@ cd radar
 - **Update:** run the installer again. A manual install: replace the folder with the new archive.
 - **Remove:** run `radar uninstall` (it lists what it would delete; add `--confirm` to do it, `--data` to also forget the settings, `--skill` for the bundled skill). Versions before 0.1.2 do not have it, and by hand it is: delete `~/.radar` and `~/.local/bin/radar` (Windows: `%LOCALAPPDATA%\RADAR`). The app keeps its settings and the last scan in `~/Library/Application Support/RADAR` (macOS), `~/.local/share/radar` (Linux) or `%APPDATA%\RADAR` (Windows); delete that folder to forget them.
 
+## Claude Code plugin (optional)
+
+If you use Claude Code, a small plugin gives you slash commands for the day-to-day: `/radar:install`, `/radar:start`, `/radar:update` and
+`/radar:uninstall`. It does not contain the app; the commands run the installer and `radar uninstall` described here.
+
+```bash
+claude plugin marketplace add lookashdev/radar
+claude plugin install radar@radar
+```
+
+Then run `/reload-plugins` (or start a new session) and `/radar:install`. Adding a marketplace and a plugin changes your Claude Code settings, so
+this is always your choice. To remove it: `claude plugin uninstall radar@radar`, which does not remove the app (`/radar:uninstall` does).
+
 ## Troubleshooting
 
 - **"Address already in use":** something else uses port 5178. Start with another one: `Radar__Url=http://127.0.0.1:5179 radar` (Windows PowerShell: `$env:Radar__Url='http://127.0.0.1:5179'; radar`).
