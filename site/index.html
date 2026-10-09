@@ -6,7 +6,7 @@
   <title>R.A.D.A.R. – Repo AI Discovery And Review</title>
   <meta name="description" content="R.A.D.A.R. skanuje Twoje repozytoria i pokazuje, jak dobrze są przygotowane pod agentów AI. Lokalnie, za darmo, macOS · Windows · Linux.">
   <meta property="og:title" content="R.A.D.A.R. – Repo AI Discovery And Review">
-  <meta property="og:description" content="Zobacz, jak Twoje repozytoria są gotowe na agentów AI. Lokalny dashboard dla Claude Code.">
+  <meta property="og:description" content="Zobacz, jak Twoje repozytoria dogadują się z agentami AI. Lokalny dashboard dla Claude Code.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://radar.licodero.pl/">
   <meta property="og:image" content="https://radar.licodero.pl/assets/img/social-preview.png">
@@ -21,14 +21,12 @@
 <body>
   <header class="top">
     <div class="wrap">
-      <a class="logo" href="#top" aria-label="R.A.D.A.R.">R.A.D.A.R.</a>
+      <a class="brand" href="#top" aria-label="R.A.D.A.R."><svg viewBox="0 0 96 96" aria-hidden="true"><g fill="none" stroke="#c6ff3d" stroke-width="5"><circle cx="48" cy="48" r="38" opacity=".45"/><circle cx="48" cy="48" r="24" opacity=".75"/><circle cx="48" cy="48" r="9"/></g><path d="M48 48 L78 24" stroke="#c6ff3d" stroke-width="6" stroke-linecap="round"/><circle cx="70" cy="38" r="6" fill="#4dd6ff"/><circle cx="30" cy="64" r="5" fill="#a99bff"/></svg><span class="logo">R.A.D.A.R.</span></a>
       <nav aria-label="Menu">
         <a href="#features" data-i18n="nav.features">Funkcje</a>
-        <a href="#flow" data-i18n="nav.flow">Przepływ</a>
-        <a href="#safety" data-i18n="nav.safety">Bezpieczeństwo</a>
-        <a href="#install" data-i18n="nav.download">Zainstaluj</a>
         <a href="#faq">FAQ</a>
         <a data-link="repo" href="#">GitHub ↗</a>
+        <a class="nav-cta" href="#install" data-i18n="nav.download">Zainstaluj</a>
       </nav>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" data-lang="pl" aria-pressed="true">PL</button>
@@ -39,13 +37,10 @@
 
   <main id="top">
     <div class="hero">
-      <div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i>
-        <b style="left:62%;top:30%;color:#c6ff3d;background:#c6ff3d"></b><b style="left:28%;top:58%;color:#4dd6ff;background:#4dd6ff;animation-delay:1.1s"></b>
-        <b style="left:70%;top:68%;color:#a99bff;background:#a99bff;animation-delay:2.2s"></b><b style="left:44%;top:18%;color:#ff4fa3;background:#ff4fa3;animation-delay:.6s"></b></div>
       <div class="wrap">
         <div>
           <div class="eyebrow"><b>//</b> Repo AI Discovery And Review</div>
-          <h1 data-i18n-html="hero.title">Zobacz, jak Twoje repozytoria są gotowe na <em>agentów AI</em>.</h1>
+          <h1 data-i18n-html="hero.title">Zobacz, jak Twoje repozytoria dogadują się z <em>agentami AI</em>.</h1>
           <p class="lead" data-i18n="hero.lead">R.A.D.A.R. skanuje folder z repozytoriami i pokazuje CLAUDE.md, agentów, skille i workflow na jednej orbicie. Wskazuje luki, ocenia jakość plików i podaje gotowe komendy dla Claude Code.</p>
           <div class="cta">
             <a class="btn btn-solid" id="cta-download" href="#install" data-i18n="cta.install">Zainstaluj</a>
@@ -53,37 +48,23 @@
           </div>
           <div class="fine"><i>●</i> <span data-i18n="hero.fine">Za darmo · open source (MIT) · działa lokalnie</span> · v<span class="ver"></span></div>
         </div>
-        <div class="bezel">
-          <div class="screen">
-            <img data-shot="orbit" alt="" width="2880" height="1800" decoding="async" fetchpriority="high">
-            <div class="sweep" aria-hidden="true"></div>
-          </div>
-          <span class="hud-tag" data-i18n="hero.tag">ORBITA · SKAN 10 REPO</span>
-        </div>
+        <div class="window"><div class="wbar"><i></i><i></i><i></i><span data-i18n="hero.tag">ORBITA · SKAN 10 REPO</span></div><img data-shot="orbit" alt="" width="2880" height="1800" decoding="async" fetchpriority="high"></div>
       </div>
     </div>
 
-    <div class="strip">
-      <div class="wrap">
-        <div><strong data-i18n="strip.1t">Lokalnie</strong><span data-i18n="strip.1d">Nic nie opuszcza Twojego komputera</span></div>
-        <div><strong data-i18n="strip.2t">Zero sieci</strong><span data-i18n="strip.2d">Bez telemetrii, kont i rejestracji</span></div>
-        <div><strong data-i18n="strip.3t">Po potwierdzeniu</strong><span data-i18n="strip.3d">Zapis do repo tylko za Twoją zgodą</span></div>
-        <div><strong data-i18n="strip.4t">3 systemy</strong><span>macOS · Windows · Linux</span></div>
-      </div>
-    </div>
 
     <section id="features">
       <div class="wrap">
-        <div class="kicker rv"><b>01 //</b><span data-i18n="f.kicker">SKANUJ · OCEŃ · UZUPEŁNIJ</span></div>
-        <h2 class="rv" data-i18n="f.title">Wszystko, co AI wie o Twoich repozytoriach, w jednym miejscu.</h2>
+        <div class="kicker rv"><span data-i18n="f.kicker">SKANUJ · OCEŃ · UZUPEŁNIJ</span></div>
+        <h2 class="rv" data-i18n="f.title">Zobaczysz, co AI wie o Twoich repozytoriach, w jednym miejscu.</h2>
         <p class="sub rv" data-i18n="f.sub">Wskaż folder. R.A.D.A.R. znajdzie repozytoria, sprawdzi ich konfigurację pod agentów i pokaże, co warto poprawić.</p>
         <div class="grid">
-          <article class="card rv" style="--c:#c6ff3d"><div class="no" data-i18n="c1.no">ORBITA</div><h3 data-i18n="c1.t">Cały obraz na jednej orbicie</h3><p data-i18n="c1.d">Repozytoria, agenci, skille i workflow na koncentrycznych pierścieniach. Pokrycie i luki widać od razu, a po kliknięciu podświetlają się powiązania.</p></article>
-          <article class="card rv" style="--c:#a99bff"><div class="no" data-i18n="c2.no">JAKOŚĆ</div><h3 data-i18n="c2.t">Nie tylko czy plik istnieje</h3><p data-i18n="c2.d">Cienki lub nieaktualny CLAUDE.md, odwołania do plików, których już nie ma, agent bez opisu. Każdy plik dostaje wynik 0–100 i konkretną wskazówkę.</p></article>
-          <article class="card rv" style="--c:#ff4fa3"><div class="no" data-i18n="c3.no">LUKI</div><h3 data-i18n="c3.t">Od luki do działającej komendy</h3><p data-i18n="c3.d">Gotowe polecenia dla Claude Code. Jednym kliknięciem otwiera terminal w repo, ale dopiero po Twoim potwierdzeniu.</p></article>
-          <article class="card rv" style="--c:#4dd6ff"><div class="no" data-i18n="c4.no">SZKICE</div><h3 data-i18n="c4.t">Agenci, skille i workflow z opisu</h3><p data-i18n="c4.d">Opisujesz po ludzku, R.A.D.A.R. szkicuje plik. Kopiuje wspólnych agentów między repo i pilnuje, żeby prywatne nie trafiły do gita.</p></article>
-          <article class="card rv" style="--c:#ffb84d"><div class="no" data-i18n="c5.no">SECOND BRAIN</div><h3 data-i18n="c5.t">Pamięć poza repozytorium</h3><p data-i18n="c5.d">Vault notatek markdown poza repo, podpięty do każdego projektu przez CLAUDE.local.md. Agent czyta go bez pytania, a w gicie nic się nie zmienia.</p></article>
-          <article class="card rv" style="--c:#e6e9f2"><div class="no" data-i18n="c6.no">PRZEPŁYW</div><h3 data-i18n="c6.t">Kto z kim rozmawia</h3><p data-i18n="c6.d">Rysujesz, które repo wywołuje które, jak się uwierzytelnia i którędy płyną dane. Agent pracujący w jednym repo wie, że musi zajrzeć do drugiego.</p></article>
+          <article class="card rv" style="--c:#c6ff3d"><div class="no" data-i18n="c1.no">ORBITA</div><h3 data-i18n="c1.t">Cały obraz na jednej orbicie</h3><p data-i18n="c1.d">R.A.D.A.R. ułoży repozytoria, agentów, skille i workflow na koncentrycznych pierścieniach. Pokrycie i luki zobaczysz od razu, a po kliknięciu podświetlą się powiązania.</p></article>
+          <article class="card rv" style="--c:#a99bff"><div class="no" data-i18n="c2.no">JAKOŚĆ</div><h3 data-i18n="c2.t">Nie tylko czy plik istnieje</h3><p data-i18n="c2.d">R.A.D.A.R. wyłapie szczątkowy lub nieaktualny CLAUDE.md, odwołania do plików, których już nie ma, i agenta bez opisu. Każdy plik dostanie wynik 0–100 i konkretną wskazówkę.</p></article>
+          <article class="card rv" style="--c:#ff4fa3"><div class="no" data-i18n="c3.no">LUKI</div><h3 data-i18n="c3.t">Od luki do działającej komendy</h3><p data-i18n="c3.d">R.A.D.A.R. wygeneruje gotowe prompty dla Claude Code. Jedno kliknięcie otworzy terminal w repozytorium i uruchomi sesję z właściwym zadaniem, wyłącznie po Twoim potwierdzeniu.</p></article>
+          <article class="card rv" style="--c:#4dd6ff"><div class="no" data-i18n="c4.no">SZKICE</div><h3 data-i18n="c4.t">Agenci, skille i workflow z opisu</h3><p data-i18n="c4.d">Opiszesz, czego potrzebujesz, a R.A.D.A.R. wygeneruje szkic pliku. Wspólnych agentów i skille skopiuje do repozytoriów, w których ich brakuje, a prywatne zachowa poza gitem.</p></article>
+          <article class="card rv" style="--c:#ffb84d"><div class="no" data-i18n="c5.no">SECOND BRAIN</div><h3 data-i18n="c5.t">Pamięć poza repozytorium</h3><p data-i18n="c5.d">R.A.D.A.R. założy vault notatek markdown poza repozytoriami i podepnie go do każdego projektu przez CLAUDE.local.md. Agent czyta go bez pytania, a git o nim nie wie.</p></article>
+          <article class="card rv" style="--c:#e6e9f2"><div class="no" data-i18n="c6.no">PRZEPŁYWY</div><h3 data-i18n="c6.t">Kto z kim rozmawia</h3><p data-i18n="c6.d">Narysujesz, które repozytoria się ze sobą komunikują, jak się uwierzytelniają i którędy płyną dane. R.A.D.A.R. zapisze to w obu repozytoriach, a agent pracujący w jednym repo będzie wiedział, że przed zmianą powinien zajrzeć do drugiego.</p></article>
         </div>
       </div>
     </section>
@@ -91,9 +72,9 @@
     <section id="flow">
       <div class="wrap spot">
         <div>
-          <div class="kicker rv"><b>02 //</b><span data-i18n="s.kicker">KREATOR PRZEPŁYWU</span></div>
-          <h2 class="rv" data-i18n="s.title">Agent, który wie, że zmiana w jednym repo dotyka drugiego.</h2>
-          <p class="sub rv" style="margin-bottom:0" data-i18n="s.sub">Gdy pracujesz nad funkcją w repo A, agent powinien sprawdzić repo B, które z niego korzysta. Teraz zapisujesz tę wiedzę raz, na planszy.</p>
+          <div class="kicker rv"><span data-i18n="s.kicker">KREATOR PRZEPŁYWU</span></div>
+          <h2 class="rv" data-i18n="s.title">Zdefiniujesz, jak repozytoria ze sobą współpracują. Agent się tego trzyma.</h2>
+          <p class="sub rv" style="margin-bottom:0" data-i18n="s.sub">Na planszy łączysz repozytoria, które się ze sobą komunikują. R.A.D.A.R. zapisze tę relację w obu repozytoriach i doda wskazówkę do CLAUDE.md, więc agent pracujący w repo A sprawdzi też repo B, które od niego zależy.</p>
           <ul class="ticks rv">
             <li data-i18n-html="s.l1"><b>Rysujesz połączenia</b> między repo: REST, GraphQL, gRPC, zdarzenia, baza.</li>
             <li data-i18n-html="s.l2"><b>Opisujesz uwierzytelnianie</b>: klucz API, OAuth, token. Zapisuje tylko <b>nazwy zmiennych</b>, nigdy sekrety.</li>
@@ -102,90 +83,90 @@
             <li data-i18n-html="s.l5"><b>Agent najpierw sprawdza, potem pyta</b>, zanim cokolwiek zmieni w drugim repo.</li>
           </ul>
         </div>
-        <div class="bezel rv">
-          <div class="screen"><img data-shot="flow" alt="" width="2880" height="1800" loading="lazy" decoding="async"></div>
-          <span class="hud-tag" style="color:var(--cyan);border-color:#4dd6ff55" data-i18n="s.tag">PLANSZA PRZEPŁYWU</span>
-        </div>
+        <div class="window rv"><div class="wbar"><i></i><i></i><i></i><span data-i18n="s.tag">PLANSZA PRZEPŁYWU</span></div><img data-shot="flow" alt="" width="2880" height="1800" loading="lazy" decoding="async"></div>
       </div>
     </section>
 
-    <section id="how">
+    <section id="visibility">
       <div class="wrap">
-        <div class="kicker rv"><b>03 //</b><span data-i18n="h.kicker">TRZY KROKI</span></div>
-        <h2 class="rv" data-i18n="h.title">Od pobrania do pierwszego skanu w minutę.</h2>
-        <div class="steps rv" style="margin-top:34px">
-          <div class="step"><h3 data-i18n="h.1t">Rozpakuj i uruchom</h3><p data-i18n="h.1d">Nic nie instalujesz. Uruchom plik radar, a w przeglądarce otworzy się lokalny dashboard.</p></div>
-          <div class="step"><h3 data-i18n="h.2t">Wskaż folder</h3><p data-i18n="h.2d">Wybierz katalog z repozytoriami. Skan jest tylko do odczytu i trwa kilka sekund.</p></div>
-          <div class="step"><h3 data-i18n="h.3t">Uzupełnij luki</h3><p data-i18n="h.3d">Skopiuj gotową komendę albo otwórz sesję Claude Code w repo. Opisz przepływ między repo.</p></div>
+        <div class="kicker rv"><span data-i18n="v.kicker">PRYWATNE I WSPÓLNE</span></div>
+        <h2 class="rv" data-i18n="v.title">Ustalisz, czym chcesz podzielić się z zespołem.</h2>
+        <p class="sub rv" data-i18n="v.sub">Na liście R.A.D.A.R. pokaże, czy dany plik agenta, skilla, workflow lub reguły przepływu jest prywatny, czy wspólny. Zmienisz to jednym kliknięciem, a przed zapisem zobaczysz plan zmian.</p>
+        <div class="grid two rv">
+          <article class="card" style="--c:#a99bff">
+            <div class="no" data-i18n="v1.no">TYLKO DLA CIEBIE</div>
+            <h3 data-i18n="v1.t">Prywatne</h3>
+            <ul class="ticks">
+              <li data-i18n="v1.l1">Plik zostaje na Twoim komputerze i nie trafia do repozytorium.</li>
+              <li data-i18n="v1.l2">Ukrywa go wpis w .git/info/exclude, który nie jest commitowany, więc nikt nie zobaczy, co trzymasz dla siebie.</li>
+              <li data-i18n="v1.l3">Claude nadal go widzi: agentów i skille znajduje sam, a prywatne workflow podpowiada mu indeks w CLAUDE.local.md.</li>
+              <li data-i18n="v1.l4">Nowe pliki są domyślnie prywatne.</li>
+            </ul>
+          </article>
+          <article class="card" style="--c:#c6ff3d">
+            <div class="no" data-i18n="v2.no">DLA CAŁEGO ZESPOŁU</div>
+            <h3 data-i18n="v2.t">Wspólne</h3>
+            <ul class="ticks">
+              <li data-i18n="v2.l1">Plik jest w repozytorium, więc dostaje go każdy, kto zrobi pull: współpracownicy i ich agenci.</li>
+              <li data-i18n="v2.l2">Reguły przepływu między repo trafiają do .claude/relations.md i są wersjonowane razem z kodem.</li>
+              <li data-i18n="v2.l3">R.A.D.A.R. niczego nie commituje. Commit robisz Ty, kiedy uznasz, że zespół ma to dostać.</li>
+            </ul>
+          </article>
         </div>
+        <p class="fine rv" style="margin-top:18px" data-i18n="v.note">Zmiana działa w obie strony, także dla plików już śledzonych przez git (zdejmuje je z indeksu, plik zostaje na dysku). Gdy ta sama nazwa istnieje w wersji wspólnej i prywatnej, R.A.D.A.R. ostrzega, bo Claude widzi obie.</p>
       </div>
     </section>
 
-    <section id="safety">
+    <section id="brain">
       <div class="wrap">
-        <div class="kicker rv"><b>04 //</b><span data-i18n="p.kicker">BEZPIECZEŃSTWO</span></div>
-        <h2 class="rv" data-i18n="p.title">Narzędzie, które dotyka Twoich repozytoriów, musi być ostrożne.</h2>
-        <p class="sub rv" data-i18n="p.sub">Dlatego jest zbudowane tak, żeby nie zrobić nic, czego nie widziałeś wcześniej.</p>
-        <div class="safe rv">
-          <div><i></i><p data-i18n-html="p.1"><b>Tylko Twój komputer.</b> Serwer słucha wyłącznie na 127.0.0.1, wymaga tokenu sesji i sprawdza nagłówki Host i Origin.</p></div>
-          <div><i></i><p data-i18n-html="p.2"><b>Zero sieci w trakcie pracy.</b> Bez telemetrii, kont i aktualizacji w tle. Czcionki są w paczce.</p></div>
-          <div><i></i><p data-i18n-html="p.3"><b>Czyta tylko pliki AI i markdown.</b> Nigdy .env, kluczy ani niczego spoza repozytorium.</p></div>
-          <div><i></i><p data-i18n-html="p.4"><b>Zapis dopiero po potwierdzeniu.</b> Najpierw plan z dokładną treścią, potem Twoje „tak". Nigdy nie robi commitów.</p></div>
-          <div><i></i><p data-i18n-html="p.5"><b>Komendy buduje serwer.</b> Przeglądarka nie wysyła tekstu do uruchomienia, tylko identyfikatory z gotowych szablonów.</p></div>
-          <div><i></i><p data-i18n-html="p.6"><b>Sekrety zostają poza plikami.</b> Reguły przepływu zawierają nazwy zmiennych środowiskowych, nigdy ich wartości.</p></div>
+        <div class="kicker rv"><span data-i18n="b.kicker">SECOND BRAIN</span></div>
+        <h2 class="rv" data-i18n="b.title">Przygotujesz pamięć projektu, którą poprowadzi agent. Poza repozytorium.</h2>
+        <p class="sub rv" data-i18n="b.sub">R.A.D.A.R. założy vault notatek markdown poza repozytoriami i podepnie go do projektu przez CLAUDE.local.md, z dostępem dla agenta bez pytania o zgodę. Git nic o nim nie wie.</p>
+        <div class="spot">
+          <div>
+            <ul class="ticks rv" style="margin-top:0">
+              <li data-i18n-html="b.l1"><b>Surowe źródła zostają nietknięte.</b> Trafiają do <i>raw/</i> i agent nigdy ich nie zmienia ani nie usuwa.</li>
+              <li data-i18n-html="b.l2"><b>Wiki prowadzi agent.</b> Strony w <i>memory/</i> łączą się ze sobą, a spis w <i>_index.md</i> mówi, co gdzie jest.</li>
+              <li data-i18n-html="b.l3"><b>Struktura jest stała dla każdego projektu</b>, więc agent wie, gdzie szukać i gdzie zapisać wynik.</li>
+              <li data-i18n-html="b.l4"><b>R.A.D.A.R. zakłada strukturę i podpina ją do repo.</b> Treści vaultu nie czyta, tym zajmuje się agent.</li>
+            </ul>
+            <p class="fine rv" style="margin-top:18px" data-i18n="b.credit">Układ opiera się na wzorcu „LLM Wiki" Andreja Karpathy'ego: surowe źródła, wiki utrzymywane przez model i schemat, który mówi modelowi, jak to robić.</p>
+          </div>
+          <div class="window rv"><div class="wbar"><i></i><i></i><i></i><span>vault</span></div><pre class="tree" data-i18n-html="b.tree"><b>second-brain/</b>
+├─ _indexMain.md        <span>zasady użycia vaultu</span>
+└─ <b>shop-api/</b>
+   ├─ _index.md         <span>spis stron wiki</span>
+   ├─ raw/              <span>źródła, tylko do odczytu</span>
+   ├─ memory/           <span>wiki prowadzone przez agenta</span>
+   └─ outputs/          <span>zapisane odpowiedzi</span></pre></div>
         </div>
       </div>
     </section>
 
     <section id="install">
       <div class="wrap">
-        <div class="kicker rv"><b>05 //</b><span data-i18n-html="d.kicker">ZAINSTALUJ · v<span class="ver"></span></span></div>
-        <h2 class="rv" data-i18n="d.title">Jedno zdanie do Twojego agenta.</h2>
-        <p class="sub rv" data-i18n="d.sub">Wklej je do Claude Code albo innego agenta w terminalu. Agent pobierze właściwą paczkę, sprawdzi sumę kontrolną i powie, jak uruchomić. Nic więcej nie instalujesz: ani .NET, ani Node.</p>
+        <div class="kicker rv"><span data-i18n-html="d.kicker">ZAINSTALUJ · v<span class="ver"></span></span></div>
+        <h2 class="rv" data-i18n="d.title">Zainstalujesz to jednym zdaniem do agenta.</h2>
+        <p class="sub rv" data-i18n="d.sub">Wklej je do Claude Code albo innego agenta w terminalu. Agent pobierze właściwą paczkę, sprawdzi sumę kontrolną i powie, jak uruchomić.</p>
+        <div class="opt rv" data-i18n="d.oa">OPCJA A</div>
         <div class="paste rv">
           <div class="plabel" data-i18n="d.paste">WKLEJ TO SWOJEMU AGENTOWI</div>
           <div class="cmdbox"><pre class="cmd" data-cmd="agent"></pre><button class="copy" type="button" data-copy="agent" data-i18n="d.copy">KOPIUJ</button></div>
         </div>
+        <div class="opt rv" data-i18n="d.ob">OPCJA B</div>
         <div class="paste rv">
           <div class="plabel" data-i18n="d.plugin">UŻYWASZ CLAUDE CODE? DWIE KOMENDY W SESJI</div>
           <div class="cmdbox"><pre class="cmd" data-cmd="plugin"></pre><button class="copy" type="button" data-copy="plugin" data-i18n="d.copy">KOPIUJ</button></div>
-          <p class="fine" style="margin-top:12px" data-i18n-html="d.pluginnote">Dodaje plugin z komendami <i>/radar:install</i>, <i>/radar:start</i>, <i>/radar:update</i> i <i>/radar:uninstall</i>. Sam plugin nie zawiera aplikacji: <i>/radar:install</i> pobiera ją tak jak zdanie wyżej.</p>
         </div>
-        <div class="diy rv">
-          <div class="plabel" data-i18n="d.diy">WOLISZ ZROBIĆ TO SAM? JEDNA KOMENDA</div>
-          <div class="tabs" role="tablist">
-            <button type="button" role="tab" data-tab="sh" aria-selected="true">macOS · Linux</button>
-            <button type="button" role="tab" data-tab="ps" aria-selected="false">Windows</button>
-          </div>
-          <div class="cmdbox" data-panel="sh"><pre class="cmd" data-cmd="sh"></pre><button class="copy" type="button" data-copy="sh" data-i18n="d.copy">KOPIUJ</button></div>
-          <div class="cmdbox" data-panel="ps" hidden><pre class="cmd" data-cmd="ps"></pre><button class="copy" type="button" data-copy="ps" data-i18n="d.copy">KOPIUJ</button></div>
-          <p class="fine" style="margin-top:12px" data-i18n-html="d.read">Skrypty są krótkie i warto je przeczytać: <a data-link="installsh" href="#">install.sh</a> · <a data-link="installps" href="#">install.ps1</a>. Sprawdzają sumę SHA256 i nie wymagają uprawnień administratora.</p>
-        </div>
-        <p class="fine rv" style="margin-top:18px" data-i18n="d.nowarn">Instalator pobiera plik z terminala, więc macOS i Windows zwykle nie pokazują ostrzeżenia o nieznanym programie, które dostajesz po pobraniu pliku w przeglądarce.</p>
+        <p class="fine" style="margin:-6px 2px 22px" data-i18n-html="d.pluginnote">Dodaje plugin z komendami <i>/radar:install</i>, <i>/radar:start</i>, <i>/radar:update</i> i <i>/radar:uninstall</i>. Sam plugin nie zawiera aplikacji: <i>/radar:install</i> pobiera ją tak jak zdanie wyżej.</p>
+        <p class="fine rv" style="margin-top:8px" data-i18n-html="d.more">Instalacja ze źródeł i szczegóły: <a data-link="installmd" href="#">INSTALL.md</a>.</p>
 
-        <p class="fine rv" style="margin-top:8px" data-i18n-html="d.more">Wszystkie sposoby, także ze źródeł: <a data-link="installmd" href="#">INSTALL.md</a>.</p>
-        <p class="fine rv" style="margin-top:8px" data-i18n-html="d.run">Uruchomienie: <i>~/.local/bin/radar</i> (Windows: <i>%LOCALAPPDATA%\RADAR\app\radar.exe</i>). Samo <i>radar</i> działa dopiero, gdy <i>~/.local/bin</i> jest w Twoim PATH. Usunięcie: <i>radar uninstall</i> pokazuje, co zostanie skasowane, a <i>--confirm</i> to robi.</p>
-
-        <h3 class="rv sublead" data-i18n="d.manual">Albo pobierz ręcznie</h3>
-        <div class="dl rv">
-          <a class="os" data-os="mac" data-arch="arm" data-rec="" data-file="radar-osx-arm64.zip" href="#"><span class="n">macOS</span><span class="a" data-i18n="d.arm">Apple Silicon (M1 i nowsze)</span><span class="f">radar-osx-arm64.zip ↓</span></a>
-          <a class="os" data-os="mac" data-arch="intel" data-rec="" data-file="radar-osx-x64.zip" href="#"><span class="n">macOS</span><span class="a">Intel</span><span class="f">radar-osx-x64.zip ↓</span></a>
-          <a class="os" data-os="win" data-rec="" data-file="radar-win-x64.zip" href="#"><span class="n">Windows</span><span class="a">10 / 11 · 64-bit</span><span class="f">radar-win-x64.zip ↓</span></a>
-          <a class="os" data-os="linux" data-rec="" data-file="radar-linux-x64.tar.gz" href="#"><span class="n">Linux</span><span class="a">x86-64</span><span class="f">radar-linux-x64.tar.gz ↓</span></a>
-        </div>
-        <p class="fine rv" style="margin-top:16px"><a data-link="sums" href="#">SHA256SUMS.txt</a> · <a data-link="releases" href="#" data-i18n="d.all">Wszystkie wersje i historia zmian</a></p>
-        <div class="notes rv">
-          <details><summary><span data-i18n="n.mac">macOS: pierwsze uruchomienie po ręcznym pobraniu</span></summary><div class="in"><p data-i18n="n.macp">Paczka pobrana w przeglądarce dostaje flagę kwarantanny, a aplikacja nie jest podpisana certyfikatem Apple, więc system zablokuje pierwszy start. Zdejmij flagę raz, w rozpakowanym folderze:</p><pre>xattr -dr com.apple.quarantine .
-./radar</pre></div></details>
-          <details><summary><span data-i18n="n.win">Windows: ostrzeżenie SmartScreen po ręcznym pobraniu</span></summary><div class="in"><p data-i18n="n.winp">Plik nie jest podpisany, więc Windows może pokazać „System Windows ochronił ten komputer". Wybierz „Więcej informacji", potem „Uruchom mimo to". Okno konsoli pokazuje log, zamknij je, żeby zakończyć.</p></div></details>
-          <details><summary><span data-i18n="n.lin">Linux</span></summary><div class="in"><pre>tar -xzf radar-linux-x64.tar.gz &amp;&amp; cd radar &amp;&amp; ./radar</pre><p data-i18n="n.linp">Otwieranie terminala z poziomu aplikacji działa na macOS i Windows. Na Linuksie skopiuj wygenerowane komendy.</p></div></details>
-        </div>
       </div>
     </section>
 
     <section id="faq">
       <div class="wrap">
-        <div class="kicker rv"><b>06 //</b><span>FAQ</span></div>
+        <div class="kicker rv"><span>FAQ</span></div>
         <h2 class="rv" data-i18n="q.title">Najczęstsze pytania</h2>
         <div class="faq rv" style="margin-top:30px">
           <details><summary data-i18n="q1">Czy to jest darmowe?</summary><div class="in" data-i18n="q1a">Tak. R.A.D.A.R. jest darmowy i ma otwarty kod na licencji MIT: możesz go używać w domu i w pracy, czytać kod i go zmieniać.</div></details>
@@ -202,7 +183,7 @@
   <footer>
     <div class="wrap">
       <span class="logo">R.A.D.A.R.</span>
-      <span>© 2026 Łukasz Antoniak</span>
+      <span>© 2026 Łukasz Antoniak (Licodero)</span>
       <div class="links">
         <a data-link="issues" href="#" data-i18n="ft.issues">Zgłoś błąd lub pomysł</a>
         <a data-link="releases" href="#" data-i18n="ft.changes">Historia zmian</a>
