@@ -10,12 +10,17 @@ using Radar.Server.Features.Relations;
 using Radar.Server.Features.Scans;
 using Radar.Server.Features.Session;
 using Radar.Server.Features.Settings;
+using Radar.Server.Features.Uninstall;
 using Radar.Server.Features.Skills;
 using Radar.Server.Features.Vault;
 using Radar.Server.Features.Visibility;
 using Radar.Server.Infrastructure.Security;
 using Radar.Server.Infrastructure.Storage;
 using Radar.Server.Infrastructure.Localization;
+
+// `radar uninstall` runs instead of the server: it never opens the port.
+if (args.Length > 0 && args[0].Equals("uninstall", StringComparison.OrdinalIgnoreCase))
+    return UninstallCommand.Run(args[1..], Console.Out);
 
 // A published copy keeps the UI in a wwwroot folder next to the executable; resolve it from there, not from the folder the user
 // happened to start the app in (a double click starts it in the home directory). A build output has no such folder, so
@@ -95,6 +100,7 @@ if (app.Configuration.GetValue("Radar:OpenBrowser", true))
 }
 
 app.Run();
+return 0;
 
 // Exposed for integration tests.
 public partial class Program;

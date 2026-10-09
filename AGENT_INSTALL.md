@@ -69,19 +69,27 @@ Do not start the app unless the user asks. If they do, run it in a separate term
 
 ## Uninstalling (only when the user asks)
 
-Tell the user what you are about to delete, then do exactly this and nothing more. Never touch their repositories.
+Never touch the user's repositories. Quit a running R.A.D.A.R. first (`pkill -x radar` on macOS/Linux, `Stop-Process -Name radar` on Windows) if
+`http://127.0.0.1:5178/api/health` answers.
 
-1. Stop a running R.A.D.A.R. (`pkill -x radar` on macOS/Linux, `Stop-Process -Name radar` on Windows) if `http://127.0.0.1:5178/api/health` answers.
-2. Delete the app and the link:
-   - macOS/Linux: `rm -rf ~/.radar` and `rm -f ~/.local/bin/radar` (only if it is a symlink into `~/.radar`: check with `readlink`).
-   - Windows: delete `%LOCALAPPDATA%\RADAR`.
-3. Delete the app's own settings and last scan (`settings.json`, `scan-result.json`): the folder `~/Library/Application Support/RADAR` (macOS),
-   `~/.local/share/radar` (Linux) or `%APPDATA%\RADAR` (Windows). Ask first: this forgets the chosen scan folder and relations layout.
-4. Remove what you or the user added to the shell: the `export PATH=...` line in `~/.zshrc`/`~/.bashrc` **only if it was added for R.A.D.A.R. and the
-   user agrees**; on Windows, the `%LOCALAPPDATA%\RADAR\app` entry in the user PATH if `-AddToPath` was used.
-5. Optional, ask separately: the `radar-second-brain` skill in `~/.claude/skills/radar-second-brain` (or `$CLAUDE_CONFIG_DIR/skills/...`), only
-   when its `SKILL.md` has the R.A.D.A.R. marker line.
+R.A.D.A.R. removes itself. Use the full path (see step 4 for why), first without `--confirm`, which only lists what would go:
 
-Leave these alone and tell the user they remain, so they can decide: the second-brain vault folder (their notes), and what the app wrote into
-repositories after they confirmed it: `.claude/` files it created, the `radar` blocks in `CLAUDE.local.md` / `CLAUDE.md` (between `<!-- radar:... -->`
-markers) and in `.git/info/exclude` (between `# >>> radar:private >>>` markers). Offer to list them, but delete them only per repository on request.
+```
+~/.local/bin/radar uninstall                  # Windows: & "$env:LOCALAPPDATA\RADAR\app\radar.exe" uninstall
+```
+
+It lists the program folder, the `radar` link (Windows: the user PATH entry, if `-AddToPath` was used) and what it leaves alone. Show that to
+the user. Then ask, separately, about the two optional parts and add the flags they agree to:
+
+- `--data`: the app's own settings and last scan (the chosen scan folder and flow layout are forgotten).
+- `--skill`: the `radar-second-brain` skill in Claude's skills folder, only when it is an untouched copy of ours.
+
+Run the same command again with `--confirm` (and those flags) to delete. It never touches repositories, the second-brain vault or shell
+profiles. Tell the user what remains so they can decide: the vault folder (their notes); what the app wrote into repositories after they
+confirmed it (`.claude/` files it created, the `radar` blocks in `CLAUDE.local.md` / `CLAUDE.md` between `<!-- radar:... -->` markers, the block in
+`.git/info/exclude`); and a `export PATH=...` line in `~/.zshrc`/`~/.bashrc` if one was added (remove it only if the user agrees). Offer to list the
+repository files, but change them per repository, on request only.
+
+If the installed copy has no `uninstall` command (versions before 0.1.2), do it by hand and say so: delete `~/.radar` and `~/.local/bin/radar`
+(only if `readlink` shows it points into `~/.radar`), on Windows `%LOCALAPPDATA%\RADAR` and its entry in the user PATH; the settings folder
+(`~/Library/Application Support/RADAR`, `~/.local/share/radar` or `%APPDATA%\RADAR`) only after asking.
