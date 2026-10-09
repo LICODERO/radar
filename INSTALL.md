@@ -86,7 +86,7 @@ cd radar
 
 - **Start:** `radar` (if `~/.local/bin` is on your PATH), or the full path the installer printed. The app opens your browser; close the terminal window (or press Ctrl+C) to quit. It needs Claude Code (`claude`) or Codex CLI on your PATH only for the buttons that draft files or open sessions.
 - **Update:** run the installer again. A manual install: replace the folder with the new archive.
-- **Remove:** delete `~/.radar` and `~/.local/bin/radar` (Windows: `%LOCALAPPDATA%\RADAR`). The app keeps its settings and the last scan in `~/Library/Application Support/RADAR` (macOS), `~/.local/share/radar` (Linux) or `%APPDATA%\RADAR` (Windows); delete that folder to forget them.
+- **Remove:** (an agent can do this for you, see AGENT_INSTALL.md) delete `~/.radar` and `~/.local/bin/radar` (Windows: `%LOCALAPPDATA%\RADAR`). The app keeps its settings and the last scan in `~/Library/Application Support/RADAR` (macOS), `~/.local/share/radar` (Linux) or `%APPDATA%\RADAR` (Windows); delete that folder to forget them.
 
 ## Troubleshooting
 

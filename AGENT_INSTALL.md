@@ -57,11 +57,31 @@ Do not start the app unless the user asks. If they do, run it in a separate term
 
 ## 4. Tell the user
 
-- How to start it: `~/.local/bin/radar` (or just `radar` if `~/.local/bin` is on their PATH; otherwise offer the `export PATH=...` line the
-  installer printed, but do not add it yourself). On Windows: `%LOCALAPPDATA%\RADAR\app\radar.exe`.
+- How to start it: give the **full path**, `~/.local/bin/radar` (Windows: `%LOCALAPPDATA%\RADAR\app\radar.exe`). Do not tell the user to type
+  plain `radar` unless you have checked their own shell, not yours: your session's `PATH` is often not the one their terminal has
+  (`~/.local/bin` is usually missing on a fresh macOS). Check with `"$SHELL" -lic 'command -v radar'`; if it prints nothing, say plain `radar`
+  will not work yet and offer the line `echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc` (`~/.bashrc` for bash). Do not run it yourself.
 - The first start asks which folder holds their repositories. Scanning is read-only; the app writes into a repository only after it shows a
   plan and the user confirms.
 - Claude Code (`claude`) or Codex CLI on the PATH is optional: it is only needed for the buttons that draft files or open sessions.
-- To update, run the same installer again. To remove: delete `~/.radar` and `~/.local/bin/radar` (Windows: `%LOCALAPPDATA%\RADAR`); the app's
-  settings live in `~/Library/Application Support/RADAR` (macOS), `~/.local/share/radar` (Linux) or `%APPDATA%\RADAR` (Windows).
+- To update, run the same installer again. To remove it, see "Uninstalling" below.
 - Help and bug reports: https://github.com/lookashdev/radar/issues
+
+## Uninstalling (only when the user asks)
+
+Tell the user what you are about to delete, then do exactly this and nothing more. Never touch their repositories.
+
+1. Stop a running R.A.D.A.R. (`pkill -x radar` on macOS/Linux, `Stop-Process -Name radar` on Windows) if `http://127.0.0.1:5178/api/health` answers.
+2. Delete the app and the link:
+   - macOS/Linux: `rm -rf ~/.radar` and `rm -f ~/.local/bin/radar` (only if it is a symlink into `~/.radar`: check with `readlink`).
+   - Windows: delete `%LOCALAPPDATA%\RADAR`.
+3. Delete the app's own settings and last scan (`settings.json`, `scan-result.json`): the folder `~/Library/Application Support/RADAR` (macOS),
+   `~/.local/share/radar` (Linux) or `%APPDATA%\RADAR` (Windows). Ask first: this forgets the chosen scan folder and relations layout.
+4. Remove what you or the user added to the shell: the `export PATH=...` line in `~/.zshrc`/`~/.bashrc` **only if it was added for R.A.D.A.R. and the
+   user agrees**; on Windows, the `%LOCALAPPDATA%\RADAR\app` entry in the user PATH if `-AddToPath` was used.
+5. Optional, ask separately: the `radar-second-brain` skill in `~/.claude/skills/radar-second-brain` (or `$CLAUDE_CONFIG_DIR/skills/...`), only
+   when its `SKILL.md` has the R.A.D.A.R. marker line.
+
+Leave these alone and tell the user they remain, so they can decide: the second-brain vault folder (their notes), and what the app wrote into
+repositories after they confirmed it: `.claude/` files it created, the `radar` blocks in `CLAUDE.local.md` / `CLAUDE.md` (between `<!-- radar:... -->`
+markers) and in `.git/info/exclude` (between `# >>> radar:private >>>` markers). Offer to list them, but delete them only per repository on request.
