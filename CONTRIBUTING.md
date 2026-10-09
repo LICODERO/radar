@@ -4,7 +4,7 @@ Thanks for taking a look. Bug reports, ideas and pull requests are welcome. This
 
 ## Before you start
 
-- **Bugs and ideas:** [open an issue](https://github.com/lookashdev/radar/issues/new/choose). The templates ask for your system and the app version.
+- **Bugs and ideas:** [open an issue](https://github.com/LICODERO/radar/issues/new/choose). The templates ask for your system and the app version.
 - **Small fixes** (typos, a clear bug with a test): send a pull request straight away.
 - **Bigger changes** (a new feature, anything that writes into a user's repositories or runs commands): open an issue first so we agree on the approach. R.A.D.A.R. touches other people's repositories, so those parts are reviewed with extra care. See [SECURITY.md](SECURITY.md) for the rules the app keeps.
 

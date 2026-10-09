@@ -6,7 +6,7 @@
 
 **Repo AI Discovery And Review: a local dashboard that shows how well your repositories are set up for AI coding agents, where the gaps are, and how repos talk to each other.**
 
-**Website:** [radar.licodero.pl](https://radar.licodero.pl) · **Install:** [one sentence to your agent](#install) · **Issues:** [report a bug or idea](https://github.com/lookashdev/radar/issues/new/choose)
+**Website:** [radar.licodero.pl](https://radar.licodero.pl) · **Install:** [one sentence to your agent](#install) · **Issues:** [report a bug or idea](https://github.com/LICODERO/radar/issues/new/choose)
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Platforms: macOS, Windows, Linux](https://img.shields.io/badge/platforms-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey.svg)
@@ -63,7 +63,7 @@ Requires nothing but a terminal. Claude Code or Codex CLI on your `PATH` are onl
 You are probably already in a coding agent. Paste this and let it do the install:
 
 ```text
-Read https://raw.githubusercontent.com/lookashdev/radar/main/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.
+Read https://raw.githubusercontent.com/LICODERO/radar/main/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.
 ```
 
 [AGENT_INSTALL.md](AGENT_INSTALL.md) tells the agent to read the installer, run it, verify the result and report back. It forbids `sudo`, edits to your shell profile and installing anything else.
@@ -72,15 +72,15 @@ Read https://raw.githubusercontent.com/lookashdev/radar/main/AGENT_INSTALL.md an
 
 ```bash
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/lookashdev/radar/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/LICODERO/radar/main/install.sh | sh
 ```
 
 ```powershell
 # Windows (PowerShell)
-irm https://raw.githubusercontent.com/lookashdev/radar/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/LICODERO/radar/main/install.ps1 | iex
 ```
 
-The scripts ([install.sh](install.sh), [install.ps1](install.ps1)) are short; they download the archive for your system from the [latest release](https://github.com/lookashdev/radar/releases/latest), **stop if the SHA256 checksum does not match**, and unpack it into `~/.radar/app`. No administrator rights needed. Run `radar` to start; it opens `http://127.0.0.1:5178`.
+The scripts ([install.sh](install.sh), [install.ps1](install.ps1)) are short; they download the archive for your system from the [latest release](https://github.com/LICODERO/radar/releases/latest), **stop if the SHA256 checksum does not match**, and unpack it into `~/.radar/app`. No administrator rights needed. Run `radar` to start; it opens `http://127.0.0.1:5178`.
 
 ### More ways
 
@@ -120,3 +120,5 @@ The last scan and your settings live in `~/Library/Application Support/RADAR` (m
 ## License
 
 [MIT](LICENSE). Third-party components are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+
+Made by Łukasz Antoniak at [Licodero](https://github.com/LICODERO).

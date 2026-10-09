@@ -16,7 +16,7 @@ Nothing needs administrator rights, and nothing is installed outside the folders
 Paste this into Claude Code, Codex or any agent that works in a terminal:
 
 ```text
-Read https://raw.githubusercontent.com/lookashdev/radar/main/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.
+Read https://raw.githubusercontent.com/LICODERO/radar/main/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.
 ```
 
 [AGENT_INSTALL.md](AGENT_INSTALL.md) tells the agent to read the installer, run it, verify the result and report back. It forbids `sudo`, edits to your shell profile and installing anything else. The agent asks for your approval for each command in the usual way, so you see what it does.
@@ -26,18 +26,18 @@ Read https://raw.githubusercontent.com/lookashdev/radar/main/AGENT_INSTALL.md an
 macOS and Linux:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/lookashdev/radar/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/LICODERO/radar/main/install.sh | sh
 ```
 
 Windows (PowerShell):
 
 ```powershell
-irm https://raw.githubusercontent.com/lookashdev/radar/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/LICODERO/radar/main/install.ps1 | iex
 ```
 
 If you would rather read a script before you run it (a good habit), open [install.sh](install.sh) or [install.ps1](install.ps1). They do exactly this:
 
-1. choose the archive for your system from the latest [release](https://github.com/lookashdev/radar/releases/latest),
+1. choose the archive for your system from the latest [release](https://github.com/LICODERO/radar/releases/latest),
 2. download it and `SHA256SUMS.txt`, and **stop if the checksum does not match** (nothing is installed then),
 3. unpack it into `~/.radar/app` (Windows: `%LOCALAPPDATA%\RADAR\app`) and, on macOS and Linux, link it as `~/.local/bin/radar`.
 
@@ -47,7 +47,7 @@ A file fetched from a terminal does not carry the "downloaded from the internet"
 
 ## 3. Download by hand
 
-Take the archive for your system from the [latest release](https://github.com/lookashdev/radar/releases/latest), unpack it and start `radar` (`radar.exe` on Windows):
+Take the archive for your system from the [latest release](https://github.com/LICODERO/radar/releases/latest), unpack it and start `radar` (`radar.exe` on Windows):
 
 | System | File |
 |---|---|
@@ -75,7 +75,7 @@ The app is not code-signed (no paid certificates), so a **browser** download tri
 You need the [.NET SDK 10](https://dotnet.microsoft.com/download) and [Node.js 22](https://nodejs.org). Then:
 
 ```bash
-git clone https://github.com/lookashdev/radar.git
+git clone https://github.com/LICODERO/radar.git
 cd radar
 ./run.sh            # Windows: ./run.ps1
 ```
@@ -94,7 +94,7 @@ If you use Claude Code, a small plugin gives you slash commands for the day-to-d
 `/radar:uninstall`. It does not contain the app; the commands run the installer and `radar uninstall` described here.
 
 ```bash
-claude plugin marketplace add lookashdev/radar
+claude plugin marketplace add LICODERO/radar
 claude plugin install radar@radar
 ```
 
@@ -106,4 +106,4 @@ this is always your choice. To remove it: `claude plugin uninstall radar@radar`,
 - **"Address already in use":** something else uses port 5178. Start with another one: `Radar__Url=http://127.0.0.1:5179 radar` (Windows PowerShell: `$env:Radar__Url='http://127.0.0.1:5179'; radar`).
 - **The browser does not open:** open `http://127.0.0.1:5178` yourself. Set `Radar__OpenBrowser=false` to stop it from trying.
 - **`radar: command not found`:** `~/.local/bin` is not on your PATH. Add `export PATH="$HOME/.local/bin:$PATH"` to your shell profile, or run `~/.radar/app/radar`.
-- **Anything else:** [open an issue](https://github.com/lookashdev/radar/issues/new/choose) with your system, the version (bottom-right corner of the app) and the text from the terminal window.
+- **Anything else:** [open an issue](https://github.com/LICODERO/radar/issues/new/choose) with your system, the version (bottom-right corner of the app) and the text from the terminal window.

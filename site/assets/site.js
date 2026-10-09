@@ -1,7 +1,7 @@
 (() => {
   const CFG = window.RADAR_SITE || {};
-  const BASE = 'https://github.com/' + (CFG.REPO || 'lookashdev/radar');
-  const RAW = CFG.RAW || 'https://raw.githubusercontent.com/' + (CFG.REPO || 'lookashdev/radar') + '/main';
+  const BASE = 'https://github.com/' + (CFG.REPO || 'LICODERO/radar');
+  const RAW = CFG.RAW || 'https://raw.githubusercontent.com/' + (CFG.REPO || 'LICODERO/radar') + '/main';
   const LANG_KEY = 'radar.site.lang';
   const CONSENT_KEY = 'radar.site.consent';
 
@@ -105,7 +105,7 @@
   const CMD = {
     agent: { pl: `Przeczytaj ${RAW}/AGENT_INSTALL.md i zainstaluj mi R.A.D.A.R.: wykonaj kroki, sprawdź sumę kontrolną i powiedz, jak go uruchomić.`,
              en: `Read ${RAW}/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.` },
-    plugin: { pl: '/plugin marketplace add lookashdev/radar\n/plugin install radar@radar', en: '/plugin marketplace add lookashdev/radar\n/plugin install radar@radar' },
+    plugin: { pl: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar', en: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar' },
     sh: { pl: `curl -fsSL ${RAW}/install.sh | sh`, en: `curl -fsSL ${RAW}/install.sh | sh` },
     ps: { pl: `irm ${RAW}/install.ps1 | iex`, en: `irm ${RAW}/install.ps1 | iex` }
   };

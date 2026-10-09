@@ -1,7 +1,7 @@
 name: Site
 
 # Publishes the one-page site (site/) with GitHub Pages: no server, no passwords. One-time setup in the repository settings:
-# Settings -> Pages -> Source: GitHub Actions, custom domain radar.licodero.pl (a CNAME record radar -> lookashdev.github.io).
+# Settings -> Pages -> Source: GitHub Actions, custom domain radar.licodero.pl (a CNAME record radar -> licodero.github.io).
 # The optional repository variable GA_ID (a GA4 measurement id) switches the cookie banner and Google Analytics on.
 on:
   workflow_dispatch:
