@@ -50,6 +50,8 @@
     'd.kicker': 'INSTALL · v<span class="ver"></span>', 'd.title': 'One sentence to your agent.',
     'd.sub': 'Paste it into Claude Code, Codex or any other agent in a terminal. It downloads the right package, checks the checksum and tells you how to start it. You install nothing else: no .NET, no Node.',
     'd.paste': 'PASTE THIS TO YOUR CODING AGENT', 'd.copy': 'COPY', 'd.copied': 'COPIED',
+    'd.plugin': 'USE CLAUDE CODE? TWO COMMANDS IN A SESSION',
+    'd.pluginnote': 'Adds a plugin with the commands <i>/radar:install</i>, <i>/radar:start</i>, <i>/radar:update</i> and <i>/radar:uninstall</i>. The plugin does not contain the app: <i>/radar:install</i> downloads it the same way as the sentence above.',
     'd.diy': 'PREFER TO DO IT YOURSELF? ONE COMMAND',
     'd.read': 'The scripts are short and worth reading: <a data-link="installsh" href="#">install.sh</a> · <a data-link="installps" href="#">install.ps1</a>. They verify the SHA256 checksum and need no administrator rights.',
     'd.nowarn': 'The installer downloads the file from a terminal, so macOS and Windows usually do not show the unknown-app warning that a browser download triggers.',
@@ -103,6 +105,7 @@
   const CMD = {
     agent: { pl: `Przeczytaj ${RAW}/AGENT_INSTALL.md i zainstaluj mi R.A.D.A.R.: wykonaj kroki, sprawdź sumę kontrolną i powiedz, jak go uruchomić.`,
              en: `Read ${RAW}/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.` },
+    plugin: { pl: '/plugin marketplace add lookashdev/radar\n/plugin install radar@radar', en: '/plugin marketplace add lookashdev/radar\n/plugin install radar@radar' },
     sh: { pl: `curl -fsSL ${RAW}/install.sh | sh`, en: `curl -fsSL ${RAW}/install.sh | sh` },
     ps: { pl: `irm ${RAW}/install.ps1 | iex`, en: `irm ${RAW}/install.ps1 | iex` }
   };
