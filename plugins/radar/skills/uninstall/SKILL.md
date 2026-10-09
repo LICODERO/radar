@@ -5,7 +5,7 @@ disable-model-invocation: true
 ---
 
 Remove R.A.D.A.R. for the user, following the section "Uninstalling" of
-https://raw.githubusercontent.com/lookashdev/radar/main/AGENT_INSTALL.md. In short:
+https://raw.githubusercontent.com/LICODERO/radar/main/AGENT_INSTALL.md. In short:
 
 1. Quit a running copy if `http://127.0.0.1:5178/api/health` answers.
 2. Run `~/.local/bin/radar uninstall` (Windows: `& "$env:LOCALAPPDATA\RADAR\app\radar.exe" uninstall`) **without** `--confirm` and show the

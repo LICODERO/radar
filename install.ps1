@@ -3,7 +3,7 @@
   R.A.D.A.R. installer for Windows.
 
 .DESCRIPTION
-  irm https://raw.githubusercontent.com/lookashdev/radar/main/install.ps1 | iex
+  irm https://raw.githubusercontent.com/LICODERO/radar/main/install.ps1 | iex
 
   What it does, and nothing else:
     1. downloads radar-win-x64.zip from the latest release (or $env:RADAR_VERSION = '0.1.0') and SHA256SUMS.txt,
@@ -12,7 +12,7 @@
   It needs no administrator rights and changes neither the registry nor PATH. To put "radar" on your PATH, run with -AddToPath
   (download the script first: irm <url> -OutFile install.ps1; .\install.ps1 -AddToPath). To remove R.A.D.A.R., delete %LOCALAPPDATA%\RADAR.
 
-  Environment (all optional): RADAR_VERSION, RADAR_HOME, RADAR_REPO (default lookashdev/radar),
+  Environment (all optional): RADAR_VERSION, RADAR_HOME, RADAR_REPO (default LICODERO/radar),
   RADAR_BASE_URL (a mirror or a test server; replaces the GitHub download URL).
 #>
 param([switch]$AddToPath)
@@ -25,7 +25,7 @@ param([switch]$AddToPath)
 
   function Fail($m) { throw "R.A.D.A.R. installer: $m" }
 
-  $repo = if ($env:RADAR_REPO) { $env:RADAR_REPO } else { 'lookashdev/radar' }
+  $repo = if ($env:RADAR_REPO) { $env:RADAR_REPO } else { 'LICODERO/radar' }
   $root = if ($env:RADAR_HOME) { $env:RADAR_HOME } else { Join-Path $env:LOCALAPPDATA 'RADAR' }
   $file = 'radar-win-x64.zip'
 

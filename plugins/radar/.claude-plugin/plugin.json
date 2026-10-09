@@ -3,6 +3,6 @@
   "description": "Install, start, update and remove R.A.D.A.R. from Claude Code",
   "author": { "name": "Łukasz Antoniak" },
   "homepage": "https://radar.licodero.pl",
-  "repository": "https://github.com/lookashdev/radar",
+  "repository": "https://github.com/LICODERO/radar",
   "license": "MIT"
 }

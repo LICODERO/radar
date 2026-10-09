@@ -1,7 +1,7 @@
 (() => {
   const CFG = window.RADAR_SITE || {};
-  const BASE = 'https://github.com/' + (CFG.REPO || 'lookashdev/radar');
-  const RAW = CFG.RAW || 'https://raw.githubusercontent.com/' + (CFG.REPO || 'lookashdev/radar') + '/main';
+  const BASE = 'https://github.com/' + (CFG.REPO || 'LICODERO/radar');
+  const RAW = CFG.RAW || 'https://raw.githubusercontent.com/' + (CFG.REPO || 'LICODERO/radar') + '/main';
   const LANG_KEY = 'radar.site.lang';
   const CONSENT_KEY = 'radar.site.consent';
 
@@ -14,7 +14,7 @@
   const EN = {
     'nav.features': 'Features', 'nav.flow': 'Flow', 'nav.safety': 'Safety', 'nav.download': 'Install',
     'hero.title': 'See how ready your repos are for <em>AI agents</em>.',
-    'hero.lead': 'R.A.D.A.R. scans a folder of repositories and shows CLAUDE.md, agents, skills and workflows on one orbit. It points out the gaps, rates the quality of your files and gives you ready commands for Claude Code and Codex CLI.',
+    'hero.lead': 'R.A.D.A.R. scans a folder of repositories and shows CLAUDE.md, agents, skills and workflows on one orbit. It points out the gaps, rates the quality of your files and gives you ready commands for Claude Code.',
     'hero.fine': 'Free · open source (MIT) · runs locally', 'hero.tag': 'ORBIT · SCAN OF 10 REPOS',
     'cta.install': 'Install', 'cta.more': 'See what it does',
     'strip.1t': 'Local', 'strip.1d': 'Nothing leaves your computer', 'strip.2t': 'Zero network', 'strip.2d': 'No telemetry, accounts or sign-ups',
@@ -24,7 +24,7 @@
     'c1.no': 'ORBIT', 'c2.no': 'QUALITY', 'c3.no': 'GAPS', 'c4.no': 'DRAFTS', 'c5.no': 'SECOND BRAIN', 'c6.no': 'FLOW',
     'c1.t': 'The whole picture on one orbit', 'c1.d': 'Repositories, agents, skills and workflows on concentric rings. Coverage and gaps are visible at a glance, and a click lights up the relations.',
     'c2.t': 'Not just whether a file exists', 'c2.d': 'A thin or stale CLAUDE.md, references to files that are gone, an agent without a description. Every file gets a 0–100 score and a concrete hint.',
-    'c3.t': 'From a gap to a working command', 'c3.d': 'Ready prompts for Claude Code and Codex CLI. One click opens a terminal in the repo, but only after you confirm.',
+    'c3.t': 'From a gap to a working command', 'c3.d': 'Ready prompts for Claude Code. One click opens a terminal in the repo, but only after you confirm.',
     'c4.t': 'Agents, skills and workflows from a description', 'c4.d': 'Describe it in plain words and R.A.D.A.R. drafts the file. It copies shared agents between repos and keeps private ones out of git.',
     'c5.t': 'Memory outside the repository', 'c5.d': 'A vault of markdown notes outside your repos, wired to each project through CLAUDE.local.md. The agent reads it without asking, and git sees nothing.',
     'c6.t': 'Who talks to whom', 'c6.d': 'Draw which repo calls which, how it authenticates and where the data flows. An agent working in one repo knows it has to look at the other.',
@@ -48,7 +48,7 @@
     'p.5': '<b>The server builds the commands.</b> The browser never sends text to run, only identifiers of ready templates.',
     'p.6': '<b>Secrets stay out of files.</b> Flow rules hold the names of environment variables, never their values.',
     'd.kicker': 'INSTALL · v<span class="ver"></span>', 'd.title': 'One sentence to your agent.',
-    'd.sub': 'Paste it into Claude Code, Codex or any other agent in a terminal. It downloads the right package, checks the checksum and tells you how to start it. You install nothing else: no .NET, no Node.',
+    'd.sub': 'Paste it into Claude Code or any other agent in a terminal. It downloads the right package, checks the checksum and tells you how to start it. You install nothing else: no .NET, no Node.',
     'd.paste': 'PASTE THIS TO YOUR CODING AGENT', 'd.copy': 'COPY', 'd.copied': 'COPIED',
     'd.plugin': 'USE CLAUDE CODE? TWO COMMANDS IN A SESSION',
     'd.pluginnote': 'Adds a plugin with the commands <i>/radar:install</i>, <i>/radar:start</i>, <i>/radar:update</i> and <i>/radar:uninstall</i>. The plugin does not contain the app: <i>/radar:install</i> downloads it the same way as the sentence above.',
@@ -64,9 +64,9 @@
     'n.lin': 'Linux', 'n.linp': 'Opening a terminal from the app works on macOS and Windows. On Linux, copy the generated commands.',
     'q.title': 'Frequently asked questions',
     'q1': 'Is it free?', 'q1a': 'Yes. R.A.D.A.R. is free and open source under the MIT licence: use it at home or at work, read the code, change it.',
-    'q2': 'Does the app send anything to the internet?', 'q2a': 'No. It runs locally and has no telemetry. The only thing that can leave is a command you run yourself in a terminal through Claude Code or Codex CLI. (This website uses analytics only after you agree.)',
+    'q2': 'Does the app send anything to the internet?', 'q2a': 'No. It runs locally and has no telemetry. The only thing that can leave is a command you run yourself in a terminal through Claude Code. (This website uses analytics only after you agree.)',
     'q3': 'Does it change my repositories?', 'q3a': 'The scan is read-only. It writes only after you have seen the plan and confirmed: a new agent, skill or workflow file, marked blocks in CLAUDE.local.md and CLAUDE.md, and entries in .git/info/exclude. The app never makes commits.',
-    'q4': 'Which tools does it work with?', 'q4a': 'It scans the Claude Code setup (CLAUDE.md, agents, skills, workflows) and can open Claude Code and Codex CLI sessions. You need neither for the dashboard itself.',
+    'q4': 'Which tools does it work with?', 'q4a': 'It scans the Claude Code setup (CLAUDE.md, agents, skills, workflows) and can open Claude Code sessions. You do not need it for the dashboard itself.',
     'q5': 'Can I read and change the code?', 'q5a': 'Yes, the whole project is on GitHub under the MIT licence. You can read it, run it from source (see INSTALL.md) and send a pull request. Because the app touches your repositories, the safety rules it keeps are written down in SECURITY.md and CONTRIBUTING.md.',
     'q6': 'Where do I report a bug or an idea?', 'q6a': 'In GitHub issues:',
     'ft.issues': 'Report a bug or idea', 'ft.changes': 'Changelog', 'ft.repo': 'Source code on GitHub', 'ft.cookies': 'Cookie settings',
@@ -105,7 +105,7 @@
   const CMD = {
     agent: { pl: `Przeczytaj ${RAW}/AGENT_INSTALL.md i zainstaluj mi R.A.D.A.R.: wykonaj kroki, sprawdź sumę kontrolną i powiedz, jak go uruchomić.`,
              en: `Read ${RAW}/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.` },
-    plugin: { pl: '/plugin marketplace add lookashdev/radar\n/plugin install radar@radar', en: '/plugin marketplace add lookashdev/radar\n/plugin install radar@radar' },
+    plugin: { pl: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar', en: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar' },
     sh: { pl: `curl -fsSL ${RAW}/install.sh | sh`, en: `curl -fsSL ${RAW}/install.sh | sh` },
     ps: { pl: `irm ${RAW}/install.ps1 | iex`, en: `irm ${RAW}/install.ps1 | iex` }
   };
