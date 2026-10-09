@@ -4,7 +4,7 @@ Pick whichever fits you. All of them end with the same app: a local dashboard on
 
 | | Needs | Best for |
 |---|---|---|
-| [1. Let your coding agent do it](#1-let-your-coding-agent-do-it) | Claude Code, Codex or another terminal agent | the least typing |
+| [1. Let your coding agent do it](#1-let-your-coding-agent-do-it) | Claude Code or another terminal agent | the least typing |
 | [2. One command](#2-one-command) | `curl` (macOS/Linux) or PowerShell (Windows) | a quick install without an agent |
 | [3. Download by hand](#3-download-by-hand) | a browser | when you prefer to see every step |
 | [4. Run from source](#4-run-from-source) | .NET SDK 10 and Node.js 22 | contributors, or when you want to read and build it yourself |
@@ -13,7 +13,7 @@ Nothing needs administrator rights, and nothing is installed outside the folders
 
 ## 1. Let your coding agent do it
 
-Paste this into Claude Code, Codex or any agent that works in a terminal:
+Paste this into Claude Code or any agent that works in a terminal:
 
 ```text
 Read https://raw.githubusercontent.com/LICODERO/radar/main/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.
@@ -84,7 +84,7 @@ cd radar
 
 ## Starting, updating, removing
 
-- **Start:** `radar` (if `~/.local/bin` is on your PATH), or the full path the installer printed. The app opens your browser; close the terminal window (or press Ctrl+C) to quit. It needs Claude Code (`claude`) or Codex CLI on your PATH only for the buttons that draft files or open sessions.
+- **Start:** `radar` (if `~/.local/bin` is on your PATH), or the full path the installer printed. The app opens your browser; close the terminal window (or press Ctrl+C) to quit. It needs Claude Code (`claude`) on your PATH only for the buttons that draft files or open sessions.
 - **Update:** run the installer again. A manual install: replace the folder with the new archive.
 - **Remove:** run `radar uninstall` (it lists what it would delete; add `--confirm` to do it, `--data` to also forget the settings, `--skill` for the bundled skill). Versions before 0.1.2 do not have it, and by hand it is: delete `~/.radar` and `~/.local/bin/radar` (Windows: `%LOCALAPPDATA%\RADAR`). The app keeps its settings and the last scan in `~/Library/Application Support/RADAR` (macOS), `~/.local/share/radar` (Linux) or `%APPDATA%\RADAR` (Windows); delete that folder to forget them.
 

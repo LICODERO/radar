@@ -13,7 +13,7 @@
 ![Runs locally: no network, no telemetry](https://img.shields.io/badge/runs%20locally-no%20telemetry-brightgreen.svg)
 ![Built with .NET 10 and Angular](https://img.shields.io/badge/.NET%2010%20%C2%B7%20Angular-512bd4.svg)
 
-Claude Code and Codex CLI do their best work in repositories that tell them how things are done: a `CLAUDE.md` with real commands, agents with clear descriptions, skills and workflows for the procedures you repeat. Most repos have some of that, in various states of repair, and nobody knows which. R.A.D.A.R. scans a folder of repositories and shows what each one has, **rates the quality of those files, not just their presence**, lists the gaps, and hands you ready commands to fill them with Claude Code or Codex CLI.
+Claude Code does its best work in repositories that tell it how things are done: a `CLAUDE.md` with real commands, agents with clear descriptions, skills and workflows for the procedures you repeat. Most repos have some of that, in various states of repair, and nobody knows which. R.A.D.A.R. scans a folder of repositories and shows what each one has, **rates the quality of those files, not just their presence**, lists the gaps, and hands you ready commands to fill them with Claude Code.
 
 Everything runs on your machine. The server binds `127.0.0.1`, the scan is read-only, and the app makes no network calls and sends no telemetry. It writes into a repository only after it has shown you what it will write and you have confirmed it.
 
@@ -36,7 +36,7 @@ Draw which repo calls which, how it authenticates and which way the data goes. T
 - **Finds repositories** under a folder (recursive, default depth 4) and detects the stack.
 - **Scans each one** for `CLAUDE.md`, agents (`.claude/agents`), skills (`.claude/skills`) and workflows (`.claude/workflows`).
 - **Scores coverage and quality.** Coverage says what exists; quality says whether it is worth anything: a thin or stale `CLAUDE.md`, references to files that are gone, an agent without a description, duplicate names. Every file gets a 0–100 score and a concrete hint.
-- **Lists the gaps** and gives you ready commands for Claude Code and Codex CLI. One click opens a terminal in the repo, after you confirm.
+- **Lists the gaps** and gives you ready commands for Claude Code. One click opens a terminal in the repo, after you confirm.
 - **Drafts agents, skills and workflows** from a description in plain words (one small `claude -p` call with no tools), copies shared ones between repos, and keeps private ones out of git.
 - **Second brain:** a vault of markdown notes outside your repositories, wired into each project through `CLAUDE.local.md`, so the agent can read it and git sees nothing.
 - **Flow between repos** (above): rules for who talks to whom, kept in the repos themselves.
@@ -56,7 +56,7 @@ Colour on the orbit: 70 and above white, 40–69 amber, below 40 magenta.
 
 ## Install
 
-Requires nothing but a terminal. Claude Code or Codex CLI on your `PATH` are only needed for the buttons that draft files or open sessions.
+Requires nothing but a terminal. Claude Code (`claude`) on your `PATH` is only needed for the buttons that draft files or open sessions.
 
 ### Hand it to your agent (easiest)
 
