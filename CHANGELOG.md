@@ -2,6 +2,12 @@
 
 Newest first. A release needs a `## <version> – <date>` heading here: its text becomes the release notes.
 
+## 0.1.1 – 2026-10-09
+
+Test release of the installers.
+
+- Rebuilt the release archives so the one-command and agent installers have a published release to download.
+
 ## 0.1.0 – 2026-10-07
 
 First public release.
