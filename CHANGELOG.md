@@ -2,6 +2,11 @@
 
 Newest first. A release needs a `## <version> – <date>` heading here: its text becomes the release notes.
 
+## 0.1.2 – 2026-10-09
+
+- `radar uninstall`: lists what it would remove (the program, the `radar` link or PATH entry) and deletes only with `--confirm`; `--data` also forgets the settings, `--skill` removes the bundled skill. Repositories, the vault and shell profiles are never touched.
+- The agent install guide now gives the full path to start the app, checks the user's own PATH before suggesting plain `radar`, and has an uninstall section.
+
 ## 0.1.1 – 2026-10-09
 
 Test release of the installers.

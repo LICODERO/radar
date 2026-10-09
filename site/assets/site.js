@@ -54,6 +54,7 @@
     'd.read': 'The scripts are short and worth reading: <a data-link="installsh" href="#">install.sh</a> · <a data-link="installps" href="#">install.ps1</a>. They verify the SHA256 checksum and need no administrator rights.',
     'd.nowarn': 'The installer downloads the file from a terminal, so macOS and Windows usually do not show the unknown-app warning that a browser download triggers.',
     'd.more': 'All the ways, including from source: <a data-link="installmd" href="#">INSTALL.md</a>.',
+    'd.run': 'To start: <i>~/.local/bin/radar</i> (Windows: <i>%LOCALAPPDATA%\\RADAR\\app\\radar.exe</i>). Plain <i>radar</i> works only once <i>~/.local/bin</i> is on your PATH. To remove: <i>radar uninstall</i> shows what would be deleted, and <i>--confirm</i> does it.',
     'd.manual': 'Or download it by hand',
     'd.arm': 'Apple Silicon (M1 and newer)', 'd.all': 'All versions and release notes',
     'n.mac': 'macOS: first start after a manual download', 'n.macp': 'A package downloaded in the browser gets the quarantine flag, and the app is not signed with an Apple certificate, so the system blocks the first start. Remove the flag once, in the unpacked folder:',
