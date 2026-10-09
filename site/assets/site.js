@@ -12,56 +12,60 @@
 
   // English texts. The Polish ones are what the HTML ships with: they are read from the page the first time, so there is one copy of each.
   const EN = {
-    'nav.features': 'Features', 'nav.flow': 'Flow', 'nav.safety': 'Safety', 'nav.download': 'Install',
+    'nav.features': 'Features', 'nav.download': 'Install',
     'hero.title': 'See how ready your repos are for <em>AI agents</em>.',
     'hero.lead': 'R.A.D.A.R. scans a folder of repositories and shows CLAUDE.md, agents, skills and workflows on one orbit. It points out the gaps, rates the quality of your files and gives you ready commands for Claude Code.',
     'hero.fine': 'Free · open source (MIT) · runs locally', 'hero.tag': 'ORBIT · SCAN OF 10 REPOS',
     'cta.install': 'Install', 'cta.more': 'See what it does',
-    'strip.1t': 'Local', 'strip.1d': 'Nothing leaves your computer', 'strip.2t': 'Zero network', 'strip.2d': 'No telemetry, accounts or sign-ups',
-    'strip.3t': 'After you confirm', 'strip.3d': 'Writes to a repo only with your consent', 'strip.4t': '3 systems',
-    'f.kicker': 'SCAN · RATE · FILL', 'f.title': 'Everything AI knows about your repositories, in one place.',
+    'f.kicker': 'SCAN · RATE · FILL', 'f.title': 'You\'ll see what AI knows about your repositories, in one place.',
     'f.sub': 'Point it at a folder. R.A.D.A.R. finds the repositories, checks how they are set up for agents and shows what is worth fixing.',
-    'c1.no': 'ORBIT', 'c2.no': 'QUALITY', 'c3.no': 'GAPS', 'c4.no': 'DRAFTS', 'c5.no': 'SECOND BRAIN', 'c6.no': 'FLOW',
-    'c1.t': 'The whole picture on one orbit', 'c1.d': 'Repositories, agents, skills and workflows on concentric rings. Coverage and gaps are visible at a glance, and a click lights up the relations.',
-    'c2.t': 'Not just whether a file exists', 'c2.d': 'A thin or stale CLAUDE.md, references to files that are gone, an agent without a description. Every file gets a 0–100 score and a concrete hint.',
-    'c3.t': 'From a gap to a working command', 'c3.d': 'Ready prompts for Claude Code. One click opens a terminal in the repo, but only after you confirm.',
-    'c4.t': 'Agents, skills and workflows from a description', 'c4.d': 'Describe it in plain words and R.A.D.A.R. drafts the file. It copies shared agents between repos and keeps private ones out of git.',
-    'c5.t': 'Memory outside the repository', 'c5.d': 'A vault of markdown notes outside your repos, wired to each project through CLAUDE.local.md. The agent reads it without asking, and git sees nothing.',
-    'c6.t': 'Who talks to whom', 'c6.d': 'Draw which repo calls which, how it authenticates and where the data flows. An agent working in one repo knows it has to look at the other.',
-    's.kicker': 'FLOW WIZARD', 's.title': 'An agent that knows a change in one repo touches another.',
-    's.sub': 'When you work on a feature in repo A, the agent should check repo B that depends on it. Now you record that knowledge once, on a board.',
+    'c1.no': 'ORBIT', 'c2.no': 'QUALITY', 'c3.no': 'GAPS', 'c4.no': 'DRAFTS', 'c5.no': 'SECOND BRAIN', 'c6.no': 'FLOWS',
+    'c1.t': 'The whole picture on one orbit', 'c1.d': 'R.A.D.A.R. lays out your repositories, agents, skills and workflows on concentric rings. You see coverage and gaps at a glance, and a click lights up the relations.',
+    'c2.t': 'Not just whether a file exists', 'c2.d': 'R.A.D.A.R. catches a thin or stale CLAUDE.md, references to files that are gone and an agent without a description. Every file gets a 0–100 score and a concrete hint.',
+    'c3.t': 'From a gap to a working command', 'c3.d': 'R.A.D.A.R. generates ready prompts for Claude Code. One click opens a terminal in the repository and starts a session with the right task, only after you confirm.',
+    'c4.t': 'Agents, skills and workflows from a description', 'c4.d': 'You describe what you need and R.A.D.A.R. generates a draft of the file. It copies shared agents and skills to the repositories that lack them and keeps private ones out of git.',
+    'c5.t': 'Memory outside the repository', 'c5.d': 'R.A.D.A.R. sets up a vault of markdown notes outside your repositories and links it to each project through CLAUDE.local.md. The agent reads it without asking, and git knows nothing about it.',
+    'c6.t': 'Who talks to whom', 'c6.d': 'You draw which repositories talk to each other, how they authenticate and where the data flows. R.A.D.A.R. writes it into both repositories, so an agent working in one repo knows to check the other before it changes anything.',
+    's.kicker': 'FLOW WIZARD', 's.title': 'You\'ll define how your repositories work together. The agent follows it.',
+    's.sub': 'On a board you connect the repositories that talk to each other. R.A.D.A.R. writes that relation into both repositories and adds a pointer to CLAUDE.md, so an agent working in repo A also checks repo B, which depends on it.',
     's.l1': '<b>Draw connections</b> between repos: REST, GraphQL, gRPC, events, database.',
     's.l2': '<b>Describe authentication</b>: API key, OAuth, token. It stores only the <b>names of variables</b>, never secrets.',
     's.l3': '<b>Mark the direction</b> of the data where it makes sense.',
     's.l4': '<b>Rules go to both repos</b> with a short pointer in CLAUDE.md. Public, or private (kept out of git).',
     's.l5': '<b>The agent checks first, then asks</b>, before it changes anything in the other repo.', 's.tag': 'FLOW BOARD',
-    'h.kicker': 'THREE STEPS', 'h.title': 'From download to your first scan in a minute.',
-    'h.1t': 'Unpack and run', 'h.1d': 'Nothing to install. Run the radar file and a local dashboard opens in your browser.',
-    'h.2t': 'Pick a folder', 'h.2d': 'Choose the directory with your repositories. The scan is read-only and takes a few seconds.',
-    'h.3t': 'Fill the gaps', 'h.3d': 'Copy a ready command or open a Claude Code session in the repo. Describe the flow between repos.',
-    'p.kicker': 'SAFETY', 'p.title': 'A tool that touches your repositories has to be careful.',
-    'p.sub': 'So it is built not to do anything you have not seen first.',
-    'p.1': '<b>Your computer only.</b> The server listens on 127.0.0.1 only, needs a session token and checks the Host and Origin headers.',
-    'p.2': '<b>Zero network while running.</b> No telemetry, accounts or background updates. Fonts ship in the package.',
-    'p.3': '<b>Reads only AI and markdown files.</b> Never .env, keys or anything outside the repository.',
-    'p.4': '<b>Writes only after you confirm.</b> First a plan with the exact text, then your yes. It never makes commits.',
-    'p.5': '<b>The server builds the commands.</b> The browser never sends text to run, only identifiers of ready templates.',
-    'p.6': '<b>Secrets stay out of files.</b> Flow rules hold the names of environment variables, never their values.',
-    'd.kicker': 'INSTALL · v<span class="ver"></span>', 'd.title': 'One sentence to your agent.',
-    'd.sub': 'Paste it into Claude Code or any other agent in a terminal. It downloads the right package, checks the checksum and tells you how to start it. You install nothing else: no .NET, no Node.',
+    'v.kicker': 'PRIVATE AND SHARED', 'v.title': 'You\'ll decide what to share with your team.',
+    'v.sub': 'R.A.D.A.R. shows in the list whether each agent, skill, workflow or flow rule file is private or shared. You change it with one click and see a plan of the changes before anything is written.',
+    'v1.no': 'JUST FOR YOU', 'v1.t': 'Private',
+    'v1.l1': 'The file stays on your computer and never reaches the repository.',
+    'v1.l2': 'An entry in .git/info/exclude hides it. That file is not committed, so nobody sees what you keep for yourself.',
+    'v1.l3': 'Claude still sees it: it finds agents and skills on its own, and an index in CLAUDE.local.md points it to private workflows.',
+    'v1.l4': 'New files are private by default.',
+    'v2.no': 'FOR THE WHOLE TEAM', 'v2.t': 'Shared',
+    'v2.l1': 'The file lives in the repository, so everyone who pulls gets it: teammates and their agents.',
+    'v2.l2': 'Flow rules between repos go into .claude/relations.md and are versioned with the code.',
+    'v2.l3': 'R.A.D.A.R. never commits. You commit when you decide the team should have it.',
+    'v.note': 'The change works both ways, also for files git already tracks (it removes them from the index, the file stays on disk). When the same name exists as shared and private, R.A.D.A.R. warns you, because Claude sees both.',
+    'b.kicker': 'SECOND BRAIN', 'b.title': 'You\'ll set up a project memory the agent will maintain. Outside the repository.',
+    'b.sub': 'R.A.D.A.R. sets up a vault of markdown notes outside your repositories and links it to the project through CLAUDE.local.md, with access for the agent without asking. Git knows nothing about it.',
+    'b.l1': '<b>Raw sources stay untouched.</b> They go into <i>raw/</i> and the agent never edits or deletes them.',
+    'b.l2': '<b>The agent keeps the wiki.</b> Pages in <i>memory/</i> link to each other, and the index in <i>_index.md</i> says what is where.',
+    'b.l3': '<b>The structure is the same for every project</b>, so the agent knows where to look and where to save a result.',
+    'b.l4': '<b>R.A.D.A.R. sets up the structure and links it to the repo.</b> It does not read the vault content: that is the agent\'s job.',
+    'b.credit': 'The layout follows Andrej Karpathy\'s "LLM Wiki" pattern: raw sources, a wiki maintained by the model, and a schema that tells the model how.',
+    'b.tree': `<b>second-brain/</b>
+├─ _indexMain.md        <span>how to use the vault</span>
+└─ <b>shop-api/</b>
+   ├─ _index.md         <span>index of the wiki pages</span>
+   ├─ raw/              <span>sources, read-only</span>
+   ├─ memory/           <span>wiki kept by the agent</span>
+   └─ outputs/          <span>saved answers</span>`,
+    'd.kicker': 'INSTALL · v<span class="ver"></span>', 'd.title': 'You\'ll install it with one sentence to your agent.',
+    'd.sub': 'Paste it into Claude Code or any other agent in a terminal. It downloads the right package, checks the checksum and tells you how to start it.',
     'd.paste': 'PASTE THIS TO YOUR CODING AGENT', 'd.copy': 'COPY', 'd.copied': 'COPIED',
     'd.plugin': 'USE CLAUDE CODE? TWO COMMANDS IN A SESSION',
     'd.pluginnote': 'Adds a plugin with the commands <i>/radar:install</i>, <i>/radar:start</i>, <i>/radar:update</i> and <i>/radar:uninstall</i>. The plugin does not contain the app: <i>/radar:install</i> downloads it the same way as the sentence above.',
-    'd.diy': 'PREFER TO DO IT YOURSELF? ONE COMMAND',
-    'd.read': 'The scripts are short and worth reading: <a data-link="installsh" href="#">install.sh</a> · <a data-link="installps" href="#">install.ps1</a>. They verify the SHA256 checksum and need no administrator rights.',
-    'd.nowarn': 'The installer downloads the file from a terminal, so macOS and Windows usually do not show the unknown-app warning that a browser download triggers.',
-    'd.more': 'All the ways, including from source: <a data-link="installmd" href="#">INSTALL.md</a>.',
-    'd.run': 'To start: <i>~/.local/bin/radar</i> (Windows: <i>%LOCALAPPDATA%\\RADAR\\app\\radar.exe</i>). Plain <i>radar</i> works only once <i>~/.local/bin</i> is on your PATH. To remove: <i>radar uninstall</i> shows what would be deleted, and <i>--confirm</i> does it.',
-    'd.manual': 'Or download it by hand',
-    'd.arm': 'Apple Silicon (M1 and newer)', 'd.all': 'All versions and release notes',
-    'n.mac': 'macOS: first start after a manual download', 'n.macp': 'A package downloaded in the browser gets the quarantine flag, and the app is not signed with an Apple certificate, so the system blocks the first start. Remove the flag once, in the unpacked folder:',
-    'n.win': 'Windows: SmartScreen warning after a manual download', 'n.winp': 'The file is not signed, so Windows may show "Windows protected your PC". Choose "More info", then "Run anyway". The console window shows the log; close it to quit.',
-    'n.lin': 'Linux', 'n.linp': 'Opening a terminal from the app works on macOS and Windows. On Linux, copy the generated commands.',
+    'd.more': 'Installing from source and the details: <a data-link="installmd" href="#">INSTALL.md</a>.',
+    'd.oa': 'OPTION A', 'd.ob': 'OPTION B',
     'q.title': 'Frequently asked questions',
     'q1': 'Is it free?', 'q1a': 'Yes. R.A.D.A.R. is free and open source under the MIT licence: use it at home or at work, read the code, change it.',
     'q2': 'Does the app send anything to the internet?', 'q2a': 'No. It runs locally and has no telemetry. The only thing that can leave is a command you run yourself in a terminal through Claude Code. (This website uses analytics only after you agree.)',
@@ -91,25 +95,18 @@
   const ver = CFG.VERSION || '';
   const fillVersion = () => document.querySelectorAll('.ver').forEach((e) => (e.textContent = ver));
 
-  // ---- OS ----------------------------------------------------------------------------------------
-  const platform = ((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || navigator.userAgent || '').toLowerCase();
-  const OS = /mac/.test(platform) ? 'mac' : /win/.test(platform) ? 'win' : /linux|x11|cros/.test(platform) ? 'linux' : '';
-
   // ---- links -------------------------------------------------------------------------------------
-  document.querySelectorAll('a.os[data-file]').forEach((a) => { a.href = `${BASE}/releases/latest/download/${a.dataset.file}`; if (a.dataset.os === OS) a.classList.add('rec'); });
-  const LINKS = { installsh: `${RAW}/install.sh`, installps: `${RAW}/install.ps1`, installmd: `${BASE}/blob/main/INSTALL.md`, sums: `${BASE}/releases/latest/download/SHA256SUMS.txt`, releases: `${BASE}/releases`, issues: `${BASE}/issues`, repo: BASE };
+  const LINKS = { installmd: `${BASE}/blob/main/INSTALL.md`, sums: `${BASE}/releases/latest/download/SHA256SUMS.txt`, releases: `${BASE}/releases`, issues: `${BASE}/issues`, repo: BASE };
   const wireLinks = () => document.querySelectorAll('[data-link]').forEach((a) => { a.href = LINKS[a.dataset.link]; a.rel = 'noopener'; });
   wireLinks();
 
-  // ---- install commands: copy buttons, OS tabs ----------------------------------------------------
+  // ---- install commands: copy buttons ----------------------------------------------------
   const CMD = {
     agent: { pl: `Przeczytaj ${RAW}/AGENT_INSTALL.md i zainstaluj mi R.A.D.A.R.: wykonaj kroki, sprawdź sumę kontrolną i powiedz, jak go uruchomić.`,
              en: `Read ${RAW}/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.` },
-    plugin: { pl: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar', en: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar' },
-    sh: { pl: `curl -fsSL ${RAW}/install.sh | sh`, en: `curl -fsSL ${RAW}/install.sh | sh` },
-    ps: { pl: `irm ${RAW}/install.ps1 | iex`, en: `irm ${RAW}/install.ps1 | iex` }
+    plugin: { pl: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar', en: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar' }
   };
-  const fillCommands = (lang) => document.querySelectorAll('[data-cmd]').forEach((el) => { el.textContent = CMD[el.dataset.cmd][lang]; });
+  const fillCommands = (lang) => document.querySelectorAll('[data-cmd]').forEach((el) => { const raw = CMD[el.dataset.cmd][lang]; el.dataset.raw = raw; el.replaceChildren(...raw.split('\n').map((line) => { const ln = document.createElement('span'); ln.className = 'ln'; ln.textContent = line; return ln; })); });
   const copyText = async (text) => {
     try { await navigator.clipboard.writeText(text); return true; } catch { /* fall through */ }
     const t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
@@ -117,17 +114,11 @@
   };
   document.querySelectorAll('button[data-copy]').forEach((b) => b.addEventListener('click', async () => {
     const pre = document.querySelector(`[data-cmd="${b.dataset.copy}"]`);
-    if (!(await copyText(pre.textContent))) return;
+    if (!(await copyText(pre.dataset.raw || pre.textContent))) return;
     const lang = document.documentElement.lang;
     b.textContent = DICT[lang]['d.copied'] || 'OK'; b.classList.add('done');
     setTimeout(() => { b.textContent = DICT[document.documentElement.lang]['d.copy']; b.classList.remove('done'); }, 1600);
   }));
-  const showTab = (name) => {
-    document.querySelectorAll('.tabs button').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
-    document.querySelectorAll('[data-panel]').forEach((p) => (p.hidden = p.dataset.panel !== name));
-  };
-  document.querySelectorAll('.tabs button').forEach((t) => t.addEventListener('click', () => showTab(t.dataset.tab)));
-  if (OS === 'win') showTab('ps');
 
   // ---- language ----------------------------------------------------------------------------------
   function apply(lang) {
@@ -136,7 +127,6 @@
     document.querySelectorAll('[data-i18n]').forEach((el) => { const v = d[el.dataset.i18n]; if (v !== undefined) el.textContent = v.replace(/<[^>]+>/g, ''); });
     document.querySelectorAll('[data-i18n-html]').forEach((el) => { const v = d[el.dataset.i18nHtml]; if (v !== undefined) el.innerHTML = v; });
     document.querySelectorAll('img[data-shot]').forEach((img) => { img.src = `assets/img/${img.dataset.shot}-${lang}.webp`; img.alt = d['alt.' + img.dataset.shot]; });
-    document.querySelectorAll('.os.rec').forEach((a) => a.setAttribute('data-rec', lang === 'pl' ? 'POLECANE' : 'RECOMMENDED'));
     document.querySelectorAll('.lang button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
     document.title = d['meta.title'];
     document.querySelector('meta[name=description]').content = d['meta.desc'];
