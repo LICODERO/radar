@@ -63,10 +63,10 @@ Requires nothing but a terminal. Claude Code (`claude`) on your `PATH` is only n
 You are probably already in a coding agent. Paste this and let it do the install:
 
 ```text
-Read https://raw.githubusercontent.com/LICODERO/radar/main/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.
+Read https://raw.githubusercontent.com/LICODERO/radar/main/AGENT_INSTALL.md and set up R.A.D.A.R. for me, together with the Claude Code plugin if you are Claude Code: run the steps, verify the checksum, and tell me how to start it.
 ```
 
-[AGENT_INSTALL.md](AGENT_INSTALL.md) tells the agent to read the installer, run it, verify the result and report back. It forbids `sudo`, edits to your shell profile and installing anything else.
+[AGENT_INSTALL.md](AGENT_INSTALL.md) tells the agent to read the installer, run it, verify the result and report back. It forbids `sudo`, edits to your shell profile and installing anything else (the Claude Code plugin is the one exception, and only when you asked for it).
 
 ### One command
 

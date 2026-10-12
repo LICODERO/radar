@@ -94,7 +94,7 @@ export class RadarApi {
   }
 
   /** Writes the reviewed skill (as .claude/skills/<name>/SKILL.md) or workflow (.claude/workflows/<name>.md); never overwrites. */
-  createItem(kind: Exclude<ItemKind, 'agent'>, repoId: string, content: string, visibility: 'private' | 'public' = 'public'): Promise<{ path: string; hidden?: boolean }> {
+  createItem(kind: Exclude<ItemKind, 'agent'>, repoId: string, content: string, visibility: 'private' | 'public' = 'public'): Promise<{ path: string; hidden?: boolean; localIndex?: 'updated' | 'blocked' | 'failed' | null }> {
     return this.call('POST', '/api/items', { kind, repoId, content, visibility });
   }
 

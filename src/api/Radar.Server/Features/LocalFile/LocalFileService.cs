@@ -19,6 +19,12 @@ public sealed record LocalPart(string Id, string File, string Action, string? Te
 public sealed record LocalPlan(IReadOnlyList<LocalPart> Parts, string? Blocked, IReadOnlyList<string> Notes, int PublicCandidates, bool Applied);
 
 /// <summary>
+/// A workflow the latest scan does not know in its current state: a file the app has just created (<paramref name="Entry"/> carries its text),
+/// or an existing one whose visibility has just changed (<paramref name="Entry"/> is null, the scan's entry is used).
+/// </summary>
+public sealed record PendingWorkflow(string Path, string Visibility, LocalBlocks.Entry? Entry);
+
+/// <summary>
 /// Keeps Claude informed about a repo's private setup: an index of private workflows and the AGENTS.md import in CLAUDE.local.md (and,
 /// when the user asks, of public workflows in CLAUDE.md), and makes sure CLAUDE.local.md itself never reaches a commit. Every block is
 /// marked, so only RADAR's own lines are ever rewritten. Without <c>apply</c> nothing is written.
@@ -29,7 +35,29 @@ public static class LocalFileService
     private const string LocalName = "CLAUDE.local.md";
     private const string ClaudeName = "CLAUDE.md";
 
-    public static LocalPlan? Run(ScanResult scan, RepoInfo repo, bool includePublic, bool apply)
+    /// <summary>
+    /// Keeps the private workflow index (and the AGENTS.md import next to it) in step with a change the app has just made, so the user does
+    /// not have to open the local instructions dialog for it. Returns null when nothing had to change, otherwise how it went:
+    /// updated | blocked | failed. A failure never undoes the change that triggered it: the dialog can still do it later.
+    /// </summary>
+    public static string? Refresh(ScanResult scan, RepoInfo repo, PendingWorkflow pending)
+    {
+        try
+        {
+            var plan = Run(scan, repo, includePublic: false, apply: true, pending, auto: true);
+            if (plan is null) return "failed";
+            if (plan.Blocked is not null) return "blocked";
+            return plan.Applied ? "updated" : null;
+        }
+        catch (LocalFileFailure) { return "failed"; }
+    }
+
+    /// <param name="pending">a workflow the scan has not seen in its present state (see <see cref="PendingWorkflow"/>)</param>
+    /// <param name="auto">
+    /// the call was not asked for by the user: CLAUDE.local.md is not created just to hold the AGENTS.md import
+    /// (it is added once the file exists for another reason)
+    /// </param>
+    public static LocalPlan? Run(ScanResult scan, RepoInfo repo, bool includePublic, bool apply, PendingWorkflow? pending = null, bool auto = false)
     {
         var root = Path.GetFullPath(scan.ScanRoot);
         var repoDir = GapCommands.DirOf(scan, repo);
@@ -50,8 +78,14 @@ public static class LocalFileService
         var mine = scan.Workflows
             .Select(w => (w, r: w.Repos.FirstOrDefault(x => x.RepoId == repo.Id)))
             .Where(x => x.r is not null)
-            .Select(x => (Entry: new LocalBlocks.Entry(x.w.Name, x.w.Description, x.w.When, x.r!.Path), x.r!.Visibility, x.r.Linked))
+            .Select(x => (Entry: new LocalBlocks.Entry(x.w.Name, x.w.Description, x.w.When, x.r!.Path), Visibility: x.r!.Visibility, Linked: x.r.Linked))
             .ToList();
+        if (pending is not null)
+        {
+            var at = mine.FindIndex(x => x.Entry.Path == pending.Path);
+            if (at >= 0) mine[at] = (mine[at].Entry, pending.Visibility, mine[at].Linked);
+            else if (pending.Entry is not null) mine.Add((pending.Entry, pending.Visibility, false));
+        }
         var localEntries = mine.Where(x => x.Visibility is Visibilities.Private or Visibilities.Untracked).Select(x => x.Entry).ToList();
         // a public workflow that CLAUDE.md already points at needs no second mention
         var publicEntries = mine.Where(x => x.Visibility == Visibilities.Public && !(claudeText?.Contains(x.Entry.Path, StringComparison.OrdinalIgnoreCase) ?? false)).Select(x => x.Entry).ToList();
@@ -62,7 +96,8 @@ public static class LocalFileService
 
         string? workflowsLocal = localEntries.Count > 0 ? LocalBlocks.Workflows(localEntries, isPrivate: true) : null;
         newLocal = Apply(newLocal, LocalBlocks.WorkflowsStart, LocalBlocks.WorkflowsEnd, workflowsLocal, out var damaged1);
-        var importText = LocalBlocks.NeedsAgentsImport(repoDir) ? LocalBlocks.AgentsImport : null;
+        var importWanted = LocalBlocks.NeedsAgentsImport(repoDir) && (!auto || localEntries.Count > 0 || localText is not null);
+        var importText = importWanted ? LocalBlocks.AgentsImport : null;
         newLocal = Apply(newLocal, LocalBlocks.AgentsStart, LocalBlocks.AgentsEnd, importText, out var damaged2);
         if (damaged1 || damaged2) return Blocked("local-damaged");
         parts.Add(Part("workflows-local", LocalName, localText, LocalBlocks.WorkflowsStart, LocalBlocks.WorkflowsEnd, workflowsLocal));

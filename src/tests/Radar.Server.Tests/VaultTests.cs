@@ -369,7 +369,7 @@ public class SecondBrainSkillTests : IDisposable
         var text = File.ReadAllText(Skill.FilePath);
         Assert.Equal(SecondBrainSkill.Render(), text);
         Assert.Contains("name: radar-second-brain", text);
-        Assert.Matches(@"<!-- radar-skill v1 sha256:[0-9a-f]{64} -->\n$", text);
+        Assert.Matches(@"<!-- radar-skill v2 sha256:[0-9a-f]{64} -->\n$", text);
         Assert.Equal(SkillState.UpToDate, Skill.Status().State);
         Assert.Equal(SkillOutcome.AlreadyInstalled, Skill.Install(update: false));
     }

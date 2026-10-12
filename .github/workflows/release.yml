@@ -76,6 +76,10 @@ jobs:
           rm -f out/radar/*.pdb out/radar/*.staticwebassets.endpoints.json
           cp THIRD-PARTY-NOTICES.md out/radar/
           cp LICENSE out/radar/LICENSE.txt
+          # the installed version can then be read without starting the program (the Claude Code plugin does)
+          v=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' Directory.Build.props)
+          [ -n "$v" ] || { echo "No <Version> in Directory.Build.props"; exit 1; }
+          printf '%s\n' "$v" > out/radar/VERSION
           ls -la out/radar
       - name: Smoke test (start it elsewhere, ask for the UI and the health check)
         if: ${{ matrix.smoke }}
@@ -88,6 +92,9 @@ jobs:
           for i in $(seq 1 40); do curl -fsS http://127.0.0.1:5199/api/health && break; sleep 1; done
           curl -fsS http://127.0.0.1:5199/api/health | grep -q '"status":"ok"'
           curl -fsS http://127.0.0.1:5199/ | grep -q 'R.A.D.A.R.'
+          # the VERSION file next to the program says what the program itself reports
+          reported=$(curl -fsS http://127.0.0.1:5199/api/session | sed -n 's/.*"version":"\([^"]*\)".*/\1/p')
+          [ "$(tr -d '\r\n' < "$PWD/out/radar/VERSION")" = "$reported" ] || { echo "VERSION file differs from the reported version ($reported)"; exit 1; }
           kill $pid || true
       - name: Archive
         run: |
@@ -125,6 +132,7 @@ jobs:
             bin="$RADAR_HOME/app/radar"
           fi
           test -f "$bin"
+          test -f "$(dirname "$bin")/VERSION"
           cd "$RUNNER_TEMP"
           Radar__OpenBrowser=false Radar__Url=http://127.0.0.1:5197 Radar__DataDir="$RUNNER_TEMP/idata" "$bin" > "$RUNNER_TEMP/installed.log" 2>&1 &
           pid=$!

@@ -63,11 +63,13 @@ Do not start the app unless the user asks. If they do, run it in a separate term
   will not work yet and offer the line `echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc` (`~/.bashrc` for bash). Do not run it yourself.
 - The first start asks which folder holds their repositories. Scanning is read-only; the app writes into a repository only after it shows a
   plan and the user confirms.
-- If you are Claude Code, you may **offer** the optional plugin that adds `/radar:start`, `/radar:update` and `/radar:uninstall`, and install it only
-  when the user says yes (it changes their Claude Code settings): `claude plugin marketplace add LICODERO/radar`, then
-  `claude plugin install radar@radar`, then `/reload-plugins`. Other agents skip this.
+- If you are Claude Code, install the plugin as part of this install **when the user's request names it** (the sentence on the website and in the
+  README does: "together with the Claude Code plugin"); it changes their Claude Code settings, so without that mention only offer it and wait
+  for a yes. Run `claude plugin marketplace add LICODERO/radar`, then `claude plugin install radar@radar`, then tell the user to run
+  `/reload-plugins` (or start a new session). The plugin adds the `/radar` command (status, start, stop, open, update, uninstall) and a row above
+  the prompt with the version, the state and start/stop/open buttons. Other agents skip this.
 - Claude Code (`claude`) on the PATH is optional: it is only needed for the buttons that draft files or open sessions.
-- To update, run the same installer again. To remove it, see "Uninstalling" below.
+- To update, run the same installer again (or `/radar update` with the plugin). To remove it, see "Uninstalling" below (or `/radar uninstall`).
 - Help and bug reports: https://github.com/LICODERO/radar/issues
 
 ## Uninstalling (only when the user asks)

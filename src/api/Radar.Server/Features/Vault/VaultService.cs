@@ -178,6 +178,8 @@ public sealed partial class VaultService(ISettingsStore settings)
 
         Start with `{Path.Combine(vault, VaultFiles.IndexMain)}` (how to use the vault), then `{Path.Combine(projectDir, VaultFiles.ProjectIndex)}`. `raw/` is read-only.
         Use the `radar-second-brain` skill, when it is available, to add a source to the vault, answer a question from it or check it.
+        When a decision is made or a durable constraint is learned, offer to save it to the vault (`memory/`).
+        Always save artifacts you produce (pages, summaries, comparisons, reports) in the project's `outputs/` folder, never in the repository.
         """;
 
     /// <summary>A repo name as a folder name: letters, digits, dot, underscore and dash only.</summary>

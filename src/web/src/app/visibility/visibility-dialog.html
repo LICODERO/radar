@@ -35,6 +35,7 @@
           }
         </ul>
         @for (n of notes(); track n) { <p class="m note">{{ noteText(n) }}</p> }
+        @if (outcome()?.localIndex === 'blocked' || outcome()?.localIndex === 'failed') { <p class="m note">{{ t('visibility.localIndexFailed') }}</p> }
       }
     }
     @if (error(); as e) { <div class="m err" role="alert">{{ e }}</div> }

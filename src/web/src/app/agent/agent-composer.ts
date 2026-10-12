@@ -36,6 +36,8 @@ export class AgentComposer {
   protected readonly savedPath = signal<string | null>(null);
   protected readonly visibility = signal<NewVisibility>('private');
   protected readonly savedHidden = signal(false);
+  /** how the workflow index in CLAUDE.local.md went after saving a private workflow (null: untouched) */
+  protected readonly savedIndex = signal<'updated' | 'blocked' | 'failed' | null>(null);
   protected readonly rescanning = signal(false);
   protected readonly kind = computed<ItemKind>(() => this.store.composerKind());
   /** every text that differs between an agent, a skill and a workflow comes from `agent.*` or `composer.<kind>.*` */
@@ -117,6 +119,7 @@ export class AgentComposer {
         : await this.api.createItem(kind, repo.id, this.content(), this.visibility());
       this.savedPath.set(r.path);
       this.savedHidden.set(!!r.hidden);
+      this.savedIndex.set((r as { localIndex?: 'updated' | 'blocked' | 'failed' | null }).localIndex ?? null);
       this.phase.set('saved');
       this.rescanning.set(true);
       await this.store.refreshQuiet();

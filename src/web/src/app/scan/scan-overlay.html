@@ -61,6 +61,6 @@
   @if (running()) {
     <button class="m btn-ghost cancel" type="button" (click)="store.cancelScan()">{{ t('scan.cancel') }}</button>
   } @else {
-    <button class="m btn-solid close" type="button" (click)="store.closeScan()">{{ failed() ? t('scan.close') : t('scan.closeResults') }}</button>
+    <button class="m btn-solid finish" type="button" (click)="store.closeScan()">{{ failed() ? t('scan.close') : t('scan.closeResults') }}</button>
   }
 </div>

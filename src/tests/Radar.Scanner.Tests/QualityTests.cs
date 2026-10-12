@@ -124,6 +124,20 @@ public class QualityTests
     }
 
     [Fact]
+    public void A_CLAUDE_md_of_a_few_long_paragraphs_is_not_thin_but_a_few_short_lines_are()
+    {
+        using var t = new FixtureTree();
+        t.Repo("long");
+        t.Repo("short");
+        var paragraph = string.Concat(Enumerable.Repeat("This service stores orders; run dotnet test before every commit and keep the API contract stable. ", 6));
+        t.File("long/CLAUDE.md", $"# Orders\n\n{paragraph}\n\n{paragraph}\n");
+        t.File("short/CLAUDE.md", "# Orders\n\nStores orders.\nUse dotnet.\n");
+
+        Assert.DoesNotContain("claude-md-thin", Codes(Quality_(t, "long"), "CLAUDE.md"));
+        Assert.Contains("claude-md-thin", Codes(Quality_(t, "short"), "CLAUDE.md"));
+    }
+
+    [Fact]
     public void Agents_are_checked_for_frontmatter_description_tools_and_prompt()
     {
         using var t = new FixtureTree();
@@ -139,6 +153,33 @@ public class QualityTests
         Assert.Contains("agent-no-tools", vague);
         Assert.Contains("agent-thin-prompt", vague);
         Assert.Equal(["agent-name-mismatch"], Codes(q, ".claude/agents/odd-name.md"));
+    }
+
+    [Fact]
+    public void A_few_long_paragraphs_are_a_full_definition_but_a_few_short_lines_are_not()
+    {
+        using var t = new FixtureTree();
+        t.Repo("r");
+        var paragraph = string.Concat(Enumerable.Repeat("Read the change carefully and report only what you can prove. ", 8));
+        t.File("r/.claude/agents/prose.md", $"---\nname: prose\ndescription: Use when a change needs a careful review before merge.\ntools: Read\n---\n{paragraph}\n\n{paragraph}\n\n{paragraph}\n");
+        t.File("r/.claude/skills/prose/SKILL.md", $"---\nname: prose\ndescription: Use when a change needs a careful review before it is merged.\n---\n{paragraph}\n\n{paragraph}\n");
+        t.File("r/.claude/agents/short.md", "---\nname: short\ndescription: Use when a change needs a careful review before merge.\ntools: Read\n---\nBe careful.\nBe brief.\n");
+        var q = Quality_(t, "r");
+
+        Assert.Empty(Codes(q, ".claude/agents/prose.md"));
+        Assert.Empty(Codes(q, ".claude/skills/prose/SKILL.md"));
+        Assert.Contains("agent-thin-prompt", Codes(q, ".claude/agents/short.md"));
+    }
+
+    [Fact]
+    public void A_folded_or_literal_description_is_judged_by_its_text_not_by_its_marker()
+    {
+        using var t = new FixtureTree();
+        t.Repo("r");
+        t.File("r/.claude/skills/folded/SKILL.md", "---\nname: folded\ndescription: >\n  Use when the user wants a thorough review of a change, including tests and docs.\n---\n# Steps\n\n1. Read.\n2. Check.\n3. Report.\n4. Stop.\n");
+        var analysis = RepoAnalyzer.Analyze(t.Root, t.Path_("r"));
+        Assert.Empty(Codes(analysis.Repo.Quality!, ".claude/skills/folded/SKILL.md"));
+        Assert.StartsWith("Use when the user wants", analysis.Repo.Skills.Single().Description);
     }
 
     [Fact]

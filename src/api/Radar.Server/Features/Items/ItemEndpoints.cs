@@ -2,6 +2,7 @@ using Radar.Scanner;
 using Radar.Server.Features.Agents;
 using Radar.Server.Features.Files;
 using Radar.Server.Features.Gaps;
+using Radar.Server.Features.LocalFile;
 using Radar.Server.Features.Scans;
 using Radar.Server.Features.Skills;
 using Radar.Server.Features.Visibility;
@@ -115,9 +116,19 @@ public static class ItemEndpoints
                     return Results.Json(new { error = m.T(e.Key, e.Args) }, statusCode: StatusCodes.Status409Conflict);
                 }
             }
+
+            // Claude only knows a workflow from a file it always reads: a private one goes into the index in CLAUDE.local.md right away
+            // (a public one is mentioned in CLAUDE.md through the local instructions dialog, because that file is tracked)
+            string? localIndex = null;
+            if (hide && !isSkill && written.Status == WriteStatus.Created)
+            {
+                var fm = Frontmatter.Parse(text);
+                var entry = new LocalBlocks.Entry(name, fm.Get("description") ?? string.Empty, fm.Get("when") ?? string.Empty, written.RelativePath!);
+                localIndex = LocalFileService.Refresh(result, repo, new PendingWorkflow(written.RelativePath!, Visibilities.Private, entry));
+            }
             return written.Status switch
             {
-                WriteStatus.Created => Results.Created($"/api/file?repo={Uri.EscapeDataString(repo.Id)}&path={Uri.EscapeDataString(written.RelativePath!)}", new { path = written.RelativePath, hidden = hide }),
+                WriteStatus.Created => Results.Created($"/api/file?repo={Uri.EscapeDataString(repo.Id)}&path={Uri.EscapeDataString(written.RelativePath!)}", new { path = written.RelativePath, hidden = hide, localIndex }),
                 WriteStatus.Exists => Results.Json(new { error = m[Msg.ItemExists] }, statusCode: StatusCodes.Status409Conflict),
                 WriteStatus.RepoMissing => Results.NotFound(new { error = m[Msg.RepoDirMissing] }),
                 _ => Results.Json(new { error = m[Msg.WriteForbidden] }, statusCode: StatusCodes.Status403Forbidden)

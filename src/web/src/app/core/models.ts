@@ -85,9 +85,11 @@ export interface VisibilityOutcome {
   target: 'private' | 'public';
   changes: VisibilityChange[];
   blocked: 'no-git' | 'exclude-damaged' | 'other-rule' | null;
-  notes: ('commit-removal' | 'commit-to-share')[];
+  notes: ('commit-removal' | 'commit-to-share' | 'local-index')[];
   applied: boolean;
   visibility: Visibility;
+  /** workflows only, once applied: how the index in CLAUDE.local.md went (absent when it did not change) */
+  localIndex?: 'updated' | 'blocked' | 'failed' | null;
 }
 
 /** one change of the local instructions: id = exclude | agents-md | workflows-local | workflows-public; action = create | update | remove */

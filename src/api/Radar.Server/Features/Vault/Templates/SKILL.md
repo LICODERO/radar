@@ -22,6 +22,10 @@ Always start by reading `<vault>/_indexMain.md` (the usage rules) and `<project 
 2. Answer from them and name the pages you used. Say clearly when the wiki does not cover the question; do not fill the gap from guesses.
 3. If the answer is worth keeping, save it in `outputs/` and offer to fold it into `memory/`.
 
+## Artifacts
+
+Every artifact you produce for this project (a page, a summary, a comparison, a report, an analysis) goes into the project's `outputs/` folder, as a markdown file named by date and topic, unless the user names another place. Add one line for it under `outputs` in `_index.md`. Do not leave artifacts in the repository. When an artifact holds a durable finding, offer to fold it into `memory/`.
+
 ## Lint: "check the second brain"
 
 Report, without changing anything until the user agrees:

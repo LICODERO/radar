@@ -236,6 +236,110 @@ public class LocalFileTests : IDisposable
         finally { try { Directory.Delete(vault, true); } catch { /* best effort */ } }
     }
 
+    private async Task<JsonElement> CreateWorkflowAsync(string name, string visibility, string kind = "workflow")
+    {
+        var content = $"---\nname: {name}\ndescription: Procedure for {name} changes\nwhen: before touching {name}\n---\nStep one: do it.\nStep two: check it.\n";
+        var r = await _c.PostAsJsonAsync("/api/items", new { kind, repoId = "app", content, visibility });
+        Assert.Equal(HttpStatusCode.Created, r.StatusCode);
+        return await r.Content.ReadFromJsonAsync<JsonElement>();
+    }
+
+    private static string? LocalIndex(JsonElement body) =>
+        body.TryGetProperty("localIndex", out var v) && v.ValueKind == JsonValueKind.String ? v.GetString() : null;
+
+    [Fact]
+    public async Task A_new_private_workflow_is_listed_in_CLAUDE_local_md_without_the_dialog()
+    {
+        await StartAsync();
+        var body = await CreateWorkflowAsync("deploy", "private");
+
+        Assert.Equal("updated", LocalIndex(body));
+        var text = File.ReadAllText(Local);
+        Assert.Contains("`deploy`", text);
+        Assert.Contains("Procedure for deploy changes", text);
+        Assert.Contains("File: `.claude/workflows/deploy.md`", text);
+        // the workflows that were already private join the same index, and git never offers the file for commit
+        Assert.Contains("`scratch`", text);
+        Assert.Contains("CLAUDE.local.md", File.ReadAllText(Exclude));
+    }
+
+    [Fact]
+    public async Task A_new_public_workflow_or_a_skill_leaves_CLAUDE_local_md_alone()
+    {
+        await StartAsync(claudeMd: false, extra: () => Write("AGENTS.md", "# Rules\n"));
+        var publicWf = await CreateWorkflowAsync("deploy", "public");
+        Assert.Null(LocalIndex(publicWf));
+
+        var skill = "---\nname: lint-all\ndescription: Runs every linter of the project\n---\nRun the linters one after another.\n";
+        var r = await _c.PostAsJsonAsync("/api/items", new { kind = "skill", repoId = "app", content = skill, visibility = "private" });
+        Assert.Equal(HttpStatusCode.Created, r.StatusCode);
+        Assert.Null(LocalIndex(await r.Content.ReadFromJsonAsync<JsonElement>()));
+
+        // not even the AGENTS.md import is a reason to create the file on its own
+        Assert.False(File.Exists(Local));
+    }
+
+    [Fact]
+    public async Task A_new_private_workflow_in_an_AGENTS_md_repo_also_adds_the_import()
+    {
+        await StartAsync(claudeMd: false, extra: () => Write("AGENTS.md", "# Rules\n"));
+        await CreateWorkflowAsync("deploy", "private");
+
+        var text = File.ReadAllText(Local);
+        Assert.Contains("@AGENTS.md", text);
+        Assert.Contains("`deploy`", text);
+    }
+
+    [Fact]
+    public async Task Changing_the_visibility_of_a_workflow_moves_it_in_and_out_of_the_index()
+    {
+        await StartAsync();
+        await Run(confirm: true); // the index exists and lists `scratch`
+        Assert.DoesNotContain("`release`", File.ReadAllText(Local));
+
+        // plan: the user is told about the index, nothing is written
+        var plan = await (await _c.PostAsJsonAsync("/api/visibility", new { repoId = "app", path = ".claude/workflows/release.md", visibility = "private", confirm = false })).Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Contains("local-index", plan.GetProperty("notes").EnumerateArray().Select(n => n.GetString()));
+        Assert.DoesNotContain("`release`", File.ReadAllText(Local));
+
+        var hidden = await (await _c.PostAsJsonAsync("/api/visibility", new { repoId = "app", path = ".claude/workflows/release.md", visibility = "private", confirm = true })).Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal("updated", hidden.GetProperty("localIndex").GetString());
+        Assert.Contains("`release`", File.ReadAllText(Local));
+
+        // shared again it is untracked until committed, and an untracked workflow is as unknown to Claude as a private one: it stays listed
+        var shared = await (await _c.PostAsJsonAsync("/api/visibility", new { repoId = "app", path = ".claude/workflows/release.md", visibility = "public", confirm = true })).Content.ReadFromJsonAsync<JsonElement>();
+        Assert.True(shared.GetProperty("applied").GetBoolean());
+        Assert.Equal("untracked", shared.GetProperty("visibility").GetString());
+        var after = File.ReadAllText(Local);
+        Assert.Contains("`release`", after);
+        Assert.Contains("`scratch`", after);
+
+        // once it is committed (public) the local instructions dialog drops it from the index
+        Git(Repo, "add", ".claude/workflows/release.md");
+        Git(Repo, "commit", "-q", "-m", "share release");
+        await ScanAsync();
+        var (_, plan2) = await Run(confirm: true);
+        Assert.Contains("workflows-local", Ids(plan2));
+        Assert.DoesNotContain("`release`", File.ReadAllText(Local));
+        Assert.Contains("`scratch`", File.ReadAllText(Local));
+    }
+
+    [Fact]
+    public async Task Hiding_an_agent_does_not_touch_CLAUDE_local_md()
+    {
+        await StartAsync(extra: () =>
+        {
+            Write(".claude/agents/reviewer.md", "---\nname: reviewer\ndescription: Reviews every change carefully\n---\nReview the diff and report problems.\n");
+            Git(Repo, "add", ".claude/agents/reviewer.md");
+            Git(Repo, "commit", "-q", "-m", "agent");
+        });
+        var body = await (await _c.PostAsJsonAsync("/api/visibility", new { repoId = "app", path = ".claude/agents/reviewer.md", visibility = "private", confirm = true })).Content.ReadFromJsonAsync<JsonElement>();
+
+        Assert.True(body.GetProperty("applied").GetBoolean());
+        Assert.False(File.Exists(Local));
+        Assert.DoesNotContain("local-index", body.GetProperty("notes").EnumerateArray().Select(n => n.GetString()));
+    }
+
     [Fact]
     public async Task Unknown_repos_are_rejected()
     {
