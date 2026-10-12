@@ -94,7 +94,7 @@ jobs:
           curl -fsS http://127.0.0.1:5199/ | grep -q 'R.A.D.A.R.'
           # the VERSION file next to the program says what the program itself reports
           reported=$(curl -fsS http://127.0.0.1:5199/api/session | sed -n 's/.*"version":"\([^"]*\)".*/\1/p')
-          [ "$(tr -d '\r\n' < "$PWD/out/radar/VERSION")" = "$reported" ] || { echo "VERSION file differs from the reported version ($reported)"; exit 1; }
+          [ "$(tr -d '\r\n' < "$(dirname "$bin")/VERSION")" = "$reported" ] || { echo "VERSION file differs from the reported version ($reported)"; exit 1; }
           kill $pid || true
       - name: Archive
         run: |
