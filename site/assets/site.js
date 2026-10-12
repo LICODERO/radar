@@ -59,13 +59,11 @@
    ├─ raw/              <span>sources, read-only</span>
    ├─ memory/           <span>wiki kept by the agent</span>
    └─ outputs/          <span>saved answers</span>`,
-    'd.kicker': 'INSTALL · v<span class="ver"></span>', 'd.title': 'You\'ll install it with a command in Claude Code.',
-    'd.sub': 'Two commands add the plugin, the next ones download the app: they show a plan first and install only after you confirm. The installer checks the checksum.',
-    'd.paste': 'ANOTHER AGENT? PASTE THIS TO IT', 'd.copy': 'COPY', 'd.copied': 'COPIED',
-    'd.plugin': 'IN CLAUDE CODE: COMMANDS IN A SESSION',
-    'd.pluginnote': 'The plugin adds a row above the prompt with the version and state (a green or red dot) and the <i>/radar</i> command: <i>status</i>, <i>start</i>, <i>stop</i>, <i>open</i>, <i>update</i>, <i>uninstall</i>. It does not contain the app: <i>/radar install</i> downloads it with the installer from this repository, shows a plan and waits for <i>confirm</i>.',
+    'd.kicker': 'INSTALL · v<span class="ver"></span>', 'd.title': 'You\'ll install it with one sentence to your agent.',
+    'd.sub': 'Paste it into Claude Code or any other agent in a terminal. It downloads the right package, checks the checksum and tells you how to start it.',
+    'd.paste': 'PASTE THIS TO YOUR CODING AGENT', 'd.copy': 'COPY', 'd.copied': 'COPIED',
+    'd.pluginnote': 'In Claude Code the agent also installs the plugin: a row above the prompt with the version and state (a green or red dot) and the <i>/radar</i> command (<i>status</i>, <i>start</i>, <i>stop</i>, <i>open</i>, <i>update</i>, <i>uninstall</i>). Run <i>/reload-plugins</i> afterwards. The plugin does not contain the app.',
     'd.more': 'Installing from source and the details: <a data-link="installmd" href="#">INSTALL.md</a>.',
-    'd.oa': 'OPTION A', 'd.ob': 'OPTION B',
     'q.title': 'Frequently asked questions',
     'q1': 'Is it free?', 'q1a': 'Yes. R.A.D.A.R. is free and open source under the MIT licence: use it at home or at work, read the code, change it.',
     'q2': 'Does the app send anything to the internet?', 'q2a': 'No. It runs locally and has no telemetry. The only thing that can leave is a command you run yourself in a terminal through Claude Code. (This website uses analytics only after you agree.)',
@@ -103,8 +101,7 @@
   // ---- install commands: copy buttons ----------------------------------------------------
   const CMD = {
     agent: { pl: `Przeczytaj ${RAW}/AGENT_INSTALL.md i zainstaluj mi R.A.D.A.R., a jeśli jesteś Claude Code, to razem z pluginem do Claude Code: wykonaj kroki, sprawdź sumę kontrolną i powiedz, jak go uruchomić.`,
-             en: `Read ${RAW}/AGENT_INSTALL.md and set up R.A.D.A.R. for me, together with the Claude Code plugin if you are Claude Code: run the steps, verify the checksum, and tell me how to start it.` },
-    plugin: { pl: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar\n/reload-plugins\n/radar install\n/radar install confirm', en: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar\n/reload-plugins\n/radar install\n/radar install confirm' }
+             en: `Read ${RAW}/AGENT_INSTALL.md and set up R.A.D.A.R. for me, together with the Claude Code plugin if you are Claude Code: run the steps, verify the checksum, and tell me how to start it.` }
   };
   const fillCommands = (lang) => document.querySelectorAll('[data-cmd]').forEach((el) => { const raw = CMD[el.dataset.cmd][lang]; el.dataset.raw = raw; el.replaceChildren(...raw.split('\n').map((line) => { const ln = document.createElement('span'); ln.className = 'ln'; ln.textContent = line; return ln; })); });
   const copyText = async (text) => {
