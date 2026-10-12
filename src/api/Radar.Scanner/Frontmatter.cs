@@ -1,8 +1,13 @@
+using System.Text.RegularExpressions;
+
 namespace Radar.Scanner;
 
 /// <summary>Minimal, tolerant reader for the YAML-ish frontmatter used by Claude Code files.</summary>
-public sealed class Frontmatter
+public sealed partial class Frontmatter
 {
+    [GeneratedRegex(@"^[>|][+-]?\d?$")]
+    private static partial Regex BlockScalarMarker();
+
     private readonly Dictionary<string, string> _scalars = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, List<string>> _lists = new(StringComparer.OrdinalIgnoreCase);
 
@@ -24,7 +29,7 @@ public sealed class Frontmatter
         var fm = new Frontmatter { Present = false };
         if (string.IsNullOrEmpty(text)) return fm;
 
-        var lines = text.Replace("\r\n", "\n").Split('\n');
+        var lines = Lines(text);
         if (lines.Length == 0 || lines[0].Trim() != "---") return fm;
 
         var end = -1;
@@ -36,10 +41,28 @@ public sealed class Frontmatter
 
         var result = new Frontmatter { Present = true };
         string? listKey = null;
+        // a scalar can go on over the next indented lines: plain or quoted text, or a block scalar (`>` folded, `|` literal)
+        string? scalarKey = null;
+        var scalarParts = new List<string>();
+        void Flush()
+        {
+            if (scalarKey is not null) result._scalars[scalarKey] = Unquote(string.Join(' ', scalarParts).Trim());
+            scalarKey = null;
+            scalarParts.Clear();
+        }
+
         for (var i = 1; i < end; i++)
         {
             var line = lines[i];
-            if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith('#')) continue;
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            if (scalarKey is not null && char.IsWhiteSpace(line[0]))
+            {
+                scalarParts.Add(line.Trim());
+                continue;
+            }
+            Flush();
+            if (line.TrimStart().StartsWith('#')) continue;
 
             var trimmed = line.TrimStart();
             if (listKey is not null && trimmed.StartsWith("- ", StringComparison.Ordinal))
@@ -60,8 +83,11 @@ public sealed class Frontmatter
                 continue;
             }
             listKey = null;
-            result._scalars[key] = Unquote(value);
+            scalarKey = key;
+            // the marker itself (`>`, `|-`, `>2`...) is not the value; the indented lines that follow are
+            if (!BlockScalarMarker().IsMatch(value)) scalarParts.Add(value);
         }
+        Flush();
         return result;
     }
 
@@ -69,12 +95,15 @@ public sealed class Frontmatter
     public static string BodyOf(string? text)
     {
         if (string.IsNullOrEmpty(text)) return string.Empty;
-        var lines = text.Replace("\r\n", "\n").Split('\n');
+        var lines = Lines(text);
         if (lines.Length == 0 || lines[0].Trim() != "---") return string.Join('\n', lines);
         for (var i = 1; i < lines.Length; i++)
             if (lines[i].Trim() == "---") return string.Join('\n', lines.Skip(i + 1));
         return string.Join('\n', lines);
     }
+
+    /// <summary>Lines of a text whatever the line endings are (\n, \r\n, or a lone \r from very old editors).</summary>
+    public static string[] Lines(string text) => text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
 
     private static IReadOnlyList<string> SplitList(string s)
     {

@@ -16,6 +16,44 @@ public class FrontmatterTests
         Assert.Equal("sonnet", fm.Get("model"));
     }
 
+    [Theory]
+    [InlineData(">")]
+    [InlineData("|")]
+    [InlineData(">-")]
+    [InlineData("|+")]
+    public void Block_scalars_give_the_whole_text_not_the_marker(string marker)
+    {
+        var fm = Frontmatter.Parse($"---\nname: x\ndescription: {marker}\n  Use when the user wants a review.\n  Also covers follow-ups.\ntools: Read\n---\nbody");
+        Assert.Equal("Use when the user wants a review. Also covers follow-ups.", fm.Get("description"));
+        Assert.Equal("Read", fm.Get("tools"));
+        Assert.Equal("x", fm.Get("name"));
+    }
+
+    [Fact]
+    public void Plain_and_quoted_values_may_continue_on_the_next_lines()
+    {
+        var fm = Frontmatter.Parse("---\ndescription: Use when the user asks for a review,\n  including tests and docs.\nwhen: \"before a release,\n  after a freeze\"\n---\n");
+        Assert.Equal("Use when the user asks for a review, including tests and docs.", fm.Get("description"));
+        Assert.Equal("before a release, after a freeze", fm.Get("when"));
+    }
+
+    [Fact]
+    public void An_indented_map_under_a_key_is_not_taken_for_a_continuation()
+    {
+        var fm = Frontmatter.Parse("---\nname: x\nmetadata:\n  type: user\ndescription: A description long enough.\n---\n");
+        Assert.Equal("A description long enough.", fm.Get("description"));
+        Assert.Null(fm.Get("type"));
+    }
+
+    [Fact]
+    public void A_lone_carriage_return_still_separates_lines()
+    {
+        var fm = Frontmatter.Parse("---\rname: x\rdescription: Some description here.\r---\r# Body\r");
+        Assert.True(fm.Present);
+        Assert.Equal("Some description here.", fm.Get("description"));
+        Assert.Contains("# Body", Frontmatter.BodyOf("---\rname: x\r---\r# Body\r"));
+    }
+
     [Fact]
     public void Parses_bracket_and_block_lists()
     {

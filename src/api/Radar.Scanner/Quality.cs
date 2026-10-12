@@ -16,6 +16,15 @@ public static partial class Quality
     public const int MinSkillDescription = 40;
     public const int MinBodyLines = 5;
 
+    /// <summary>A body with fewer lines than <see cref="MinBodyLines"/> is still a real prompt when it runs to this many words (a few long paragraphs).</summary>
+    public const int MinBodyWords = 60;
+
+    /// <summary>CLAUDE.md: below these many lines it is "thin" (error / warning), unless it makes up for it in words (a few long paragraphs).</summary>
+    public const int ThinClaudeErrorLines = 4;
+    public const int ThinClaudeWarningLines = 12;
+    public const int ThinClaudeErrorWords = 40;
+    public const int ThinClaudeWarningWords = 150;
+
     /// <summary>CLAUDE.md untouched this long while the repo kept moving is probably out of date.</summary>
     public const int StaleDays = 180;
 
@@ -49,11 +58,12 @@ public static partial class Quality
     {
         var f = new List<QualityFinding>();
         if (text is null) return f;
-        var lines = text.Replace("\r\n", "\n").Split('\n');
+        var lines = Frontmatter.Lines(text);
         var nonEmpty = lines.Count(l => !string.IsNullOrWhiteSpace(l));
+        var words = text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length;
 
-        if (nonEmpty < 4) f.Add(new(path, "claude-md-thin", Severities.Error, nonEmpty.ToString()));
-        else if (nonEmpty < 12) f.Add(new(path, "claude-md-thin", Severities.Warning, nonEmpty.ToString()));
+        if (nonEmpty < ThinClaudeErrorLines && words < ThinClaudeErrorWords) f.Add(new(path, "claude-md-thin", Severities.Error, nonEmpty.ToString()));
+        else if (nonEmpty < ThinClaudeWarningLines && words < ThinClaudeWarningWords) f.Add(new(path, "claude-md-thin", Severities.Warning, nonEmpty.ToString()));
 
         if (lines.Length > ClaudeMdMaxLines) f.Add(new(path, "claude-md-too-long", Severities.Warning, lines.Length.ToString()));
 
@@ -152,7 +162,7 @@ public static partial class Quality
             else if (d.Length < MinDescription) f.Add(new(path, "agent-short-description", Severities.Warning, d.Length.ToString()));
             if (fm.Get("tools") is null && fm.GetList("tools").Count == 0) f.Add(new(path, "agent-no-tools", Severities.Info));
         }
-        if (BodyLines(text, fm) < MinBodyLines) f.Add(new(path, "agent-thin-prompt", Severities.Warning));
+        if (IsThinBody(text, fm)) f.Add(new(path, "agent-thin-prompt", Severities.Warning));
         return f;
     }
 
@@ -171,7 +181,7 @@ public static partial class Quality
             if (d is null) f.Add(new(path, "skill-no-description", Severities.Error));
             else if (d.Length < MinSkillDescription) f.Add(new(path, "skill-short-description", Severities.Warning, d.Length.ToString()));
         }
-        if (BodyLines(text, fm) < MinBodyLines) f.Add(new(path, "skill-thin-body", Severities.Warning));
+        if (IsThinBody(text, fm)) f.Add(new(path, "skill-thin-body", Severities.Warning));
         return f;
     }
 
@@ -182,9 +192,14 @@ public static partial class Quality
             .SelectMany(g => g.Skip(1).Select(a => new QualityFinding(a.Path, "agent-duplicate-name", Severities.Warning, a.Name)))
             .ToList();
 
-    private static int BodyLines(string text, Frontmatter fm) =>
-        (fm.Present && fm.Valid ? Frontmatter.BodyOf(text) : text)
-            .Split('\n').Count(l => !string.IsNullOrWhiteSpace(l));
+    /// <summary>Few lines and few words: a handful of long paragraphs is a full definition, a handful of short lines is not.</summary>
+    private static bool IsThinBody(string text, Frontmatter fm)
+    {
+        var body = fm.Present && fm.Valid ? Frontmatter.BodyOf(text) : text;
+        var lines = Frontmatter.Lines(body).Count(l => !string.IsNullOrWhiteSpace(l));
+        if (lines >= MinBodyLines) return false;
+        return body.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length < MinBodyWords;
+    }
 
     // ---- patterns ---------------------------------------------------------------------------------
 
