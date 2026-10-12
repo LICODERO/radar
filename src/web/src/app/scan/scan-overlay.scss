@@ -44,4 +44,4 @@
 
 .actions { position: absolute; left: 0; top: 780px; width: 1440px; display: flex; justify-content: center; gap: 12px; }
 .cancel { background: transparent; border: 1px solid #c6ff3d88; color: $lime; font-size: fs(11); letter-spacing: .14em; padding: 13px 26px; cursor: pointer; }
-.close { background: $lime; border: 0; color: #0b1006; font-size: fs(11); font-weight: 600; letter-spacing: .14em; padding: 14px 26px; cursor: pointer; }
+.finish { background: $lime; border: 0; color: #0b1006; font-size: fs(11); font-weight: 600; letter-spacing: .14em; padding: 14px 26px; cursor: pointer; }
