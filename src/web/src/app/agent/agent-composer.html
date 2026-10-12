@@ -13,6 +13,8 @@
       <div class="okt">{{ t('agent.saved') }}</div>
       <div class="m okp">{{ savedPath() }}</div>
       <div class="m okn">{{ savedHidden() ? t('agent.savedPrivateNote') : t('agent.savedNote') }} {{ rescanning() ? t('agent.rescanning') : t('agent.rescanned') }}</div>
+      @if (savedIndex() === 'updated') { <div class="m okn">{{ t('agent.savedIndex') }}</div> }
+      @else if (savedIndex()) { <div class="m okn">{{ t('agent.savedIndexFailed') }}</div> }
       <div class="btns">
         <button class="m btn-solid go" type="button" [disabled]="rescanning()" (click)="openSaved()">{{ t('agent.openFile') }}</button>
         <button class="m btn-ghost" type="button" (click)="another()">{{ t('agent.another') }}</button>

@@ -1,4 +1,5 @@
 using Radar.Scanner;
+using Radar.Server.Features.LocalFile;
 using Radar.Server.Features.Scans;
 using Radar.Server.Infrastructure.Localization;
 
@@ -25,7 +26,17 @@ public static class VisibilityEndpoints
             try
             {
                 var outcome = ItemVisibility.Run(result, repo, req.Path ?? string.Empty, req.Visibility, req.Confirm);
-                return outcome is null ? Results.NotFound(new { error = m[Msg.FileNotInScan] }) : Results.Ok(outcome);
+                if (outcome is null) return Results.NotFound(new { error = m[Msg.FileNotInScan] });
+
+                // a workflow is only known to Claude through the index in CLAUDE.local.md, so that follows the change
+                var isWorkflow = result.Workflows.Any(w => w.Repos.Any(r => r.RepoId == repo.Id && r.Path == req.Path));
+                if (isWorkflow && outcome.Blocked is null && outcome.Changes.Count > 0)
+                {
+                    outcome = outcome with { Notes = [.. outcome.Notes, "local-index"] };
+                    if (outcome.Applied)
+                        outcome = outcome with { LocalIndex = LocalFileService.Refresh(result, repo, new PendingWorkflow(req.Path!, outcome.Visibility, null)) };
+                }
+                return Results.Ok(outcome);
             }
             catch (VisibilityFailure e)
             {

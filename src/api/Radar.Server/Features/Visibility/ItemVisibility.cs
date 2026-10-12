@@ -14,9 +14,10 @@ public sealed record VisibilityChange(string Kind, string Text);
 /// <param name="Notes">codes the UI turns into advice: commit-removal (the file leaves the repo for everyone after the commit), commit-to-share</param>
 /// <param name="Applied">false for a plan; true once the changes were written</param>
 /// <param name="Visibility">the state after the change (or the unchanged one for a plan)</param>
+/// <param name="LocalIndex">workflows only, once applied: how the index in CLAUDE.local.md went (updated | blocked | failed), null when it did not change</param>
 public sealed record VisibilityOutcome(
     string Path, string Current, string Target, IReadOnlyList<VisibilityChange> Changes,
-    string? Blocked, IReadOnlyList<string> Notes, bool Applied, string Visibility);
+    string? Blocked, IReadOnlyList<string> Notes, bool Applied, string Visibility, string? LocalIndex = null);
 
 public sealed class VisibilityFailure(Infrastructure.Localization.Msg key, params object[] args) : Exception
 {
