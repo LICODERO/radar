@@ -18,7 +18,7 @@ Every project folder has three parts:
 
 - `raw/` – source material: specs, articles, transcripts, exports. Read-only: never edit or delete files there. New sources are added by the user.
 - `memory/` – the wiki you maintain: short markdown pages (decisions, concepts, how things work), linked to each other and listed in the project's `_index.md`.
-- `outputs/` – results of your work that are worth keeping (analyses, reports, answers). Fold the important findings back into `memory/` as wiki pages.
+- `outputs/` – every artifact you produce (pages, summaries, comparisons, analyses, reports, answers) goes here, never into the repository. Fold the important findings back into `memory/` as wiki pages.
 
 Rules:
 

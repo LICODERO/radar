@@ -19,7 +19,7 @@ public enum SkillOutcome { Installed, Updated, AlreadyInstalled, UpdateNeeded, M
 public sealed partial class SecondBrainSkill(string claudeDir)
 {
     public const string Name = "radar-second-brain";
-    public const int Version = 1;
+    public const int Version = 2;
     private const string MarkerPrefix = "<!-- radar-skill v";
 
     private string SkillsDir => Path.Combine(claudeDir, "skills");
