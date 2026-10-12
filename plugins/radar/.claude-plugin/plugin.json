@@ -1,8 +1,11 @@
 {
   "name": "radar",
-  "description": "Install, start, update and remove R.A.D.A.R. from Claude Code",
-  "author": { "name": "Łukasz Antoniak" },
+  "description": "R.A.D.A.R. in Claude Code: a row above the prompt with the version, state and start/stop/open buttons, and the /radar command (status, start, stop, open, install, update, uninstall)",
+  "author": {
+    "name": "Łukasz Antoniak"
+  },
   "homepage": "https://radar.licodero.pl",
   "repository": "https://github.com/LICODERO/radar",
-  "license": "MIT"
+  "license": "MIT",
+  "types": "./types/index.d.ts"
 }

@@ -85,21 +85,27 @@ cd radar
 ## Starting, updating, removing
 
 - **Start:** `radar` (if `~/.local/bin` is on your PATH), or the full path the installer printed. The app opens your browser; close the terminal window (or press Ctrl+C) to quit. It needs Claude Code (`claude`) on your PATH only for the buttons that draft files or open sessions.
-- **Update:** run the installer again. A manual install: replace the folder with the new archive.
+- **Update:** run the installer again (or `/radar update` with the plugin). A manual install: replace the folder with the new archive.
 - **Remove:** run `radar uninstall` (it lists what it would delete; add `--confirm` to do it, `--data` to also forget the settings, `--skill` for the bundled skill). Versions before 0.1.2 do not have it, and by hand it is: delete `~/.radar` and `~/.local/bin/radar` (Windows: `%LOCALAPPDATA%\RADAR`). The app keeps its settings and the last scan in `~/Library/Application Support/RADAR` (macOS), `~/.local/share/radar` (Linux) or `%APPDATA%\RADAR` (Windows); delete that folder to forget them.
 
-## Claude Code plugin (optional)
+## Claude Code plugin
 
-If you use Claude Code, a small plugin gives you slash commands for the day-to-day: `/radar:install`, `/radar:start`, `/radar:update` and
-`/radar:uninstall`. It does not contain the app; the commands run the installer and `radar uninstall` described here.
+If you use Claude Code, the plugin puts R.A.D.A.R. next to your prompt: a row above it shows the version and whether it runs (green or red
+dot) with start/stop and open buttons, and `/radar` does the day-to-day without the model: `status`, `start`, `stop`, `restart`, `open`,
+`hide`/`show`, and `install`, `update` and `uninstall`. Clicking the version lists them. The plugin does not contain the app: `/radar install`
+runs the installer described above, but first shows what it will download and waits for `/radar install confirm`.
 
-```bash
-claude plugin marketplace add LICODERO/radar
-claude plugin install radar@radar
+```text
+/plugin marketplace add LICODERO/radar
+/plugin install radar@radar
+/reload-plugins
+/radar install
+/radar install confirm
 ```
 
-Then run `/reload-plugins` (or start a new session) and `/radar:install`. Adding a marketplace and a plugin changes your Claude Code settings, so
-this is always your choice. To remove it: `claude plugin uninstall radar@radar`, which does not remove the app (`/radar:uninstall` does).
+macOS and Linux (on Windows the row and `/radar start` are not supported yet; use the installer and `radar` directly). Adding a marketplace and a
+plugin changes your Claude Code settings, so this is always your choice. To remove the plugin: `claude plugin uninstall radar@radar`, which does
+not remove the app (`/radar uninstall` does).
 
 ## Troubleshooting
 

@@ -59,11 +59,11 @@
    ├─ raw/              <span>sources, read-only</span>
    ├─ memory/           <span>wiki kept by the agent</span>
    └─ outputs/          <span>saved answers</span>`,
-    'd.kicker': 'INSTALL · v<span class="ver"></span>', 'd.title': 'You\'ll install it with one sentence to your agent.',
-    'd.sub': 'Paste it into Claude Code or any other agent in a terminal. It downloads the right package, checks the checksum and tells you how to start it.',
-    'd.paste': 'PASTE THIS TO YOUR CODING AGENT', 'd.copy': 'COPY', 'd.copied': 'COPIED',
-    'd.plugin': 'USE CLAUDE CODE? TWO COMMANDS IN A SESSION',
-    'd.pluginnote': 'Adds a plugin with the commands <i>/radar:install</i>, <i>/radar:start</i>, <i>/radar:update</i> and <i>/radar:uninstall</i>. The plugin does not contain the app: <i>/radar:install</i> downloads it the same way as the sentence above.',
+    'd.kicker': 'INSTALL · v<span class="ver"></span>', 'd.title': 'You\'ll install it with a command in Claude Code.',
+    'd.sub': 'Two commands add the plugin, the next ones download the app: they show a plan first and install only after you confirm. The installer checks the checksum.',
+    'd.paste': 'ANOTHER AGENT? PASTE THIS TO IT', 'd.copy': 'COPY', 'd.copied': 'COPIED',
+    'd.plugin': 'IN CLAUDE CODE: COMMANDS IN A SESSION',
+    'd.pluginnote': 'The plugin adds a row above the prompt with the version and state (a green or red dot) and the <i>/radar</i> command: <i>status</i>, <i>start</i>, <i>stop</i>, <i>open</i>, <i>update</i>, <i>uninstall</i>. It does not contain the app: <i>/radar install</i> downloads it with the installer from this repository, shows a plan and waits for <i>confirm</i>.',
     'd.more': 'Installing from source and the details: <a data-link="installmd" href="#">INSTALL.md</a>.',
     'd.oa': 'OPTION A', 'd.ob': 'OPTION B',
     'q.title': 'Frequently asked questions',
@@ -102,9 +102,9 @@
 
   // ---- install commands: copy buttons ----------------------------------------------------
   const CMD = {
-    agent: { pl: `Przeczytaj ${RAW}/AGENT_INSTALL.md i zainstaluj mi R.A.D.A.R.: wykonaj kroki, sprawdź sumę kontrolną i powiedz, jak go uruchomić.`,
-             en: `Read ${RAW}/AGENT_INSTALL.md and set up R.A.D.A.R. for me: run the steps, verify the checksum, and tell me how to start it.` },
-    plugin: { pl: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar', en: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar' }
+    agent: { pl: `Przeczytaj ${RAW}/AGENT_INSTALL.md i zainstaluj mi R.A.D.A.R., a jeśli jesteś Claude Code, to razem z pluginem do Claude Code: wykonaj kroki, sprawdź sumę kontrolną i powiedz, jak go uruchomić.`,
+             en: `Read ${RAW}/AGENT_INSTALL.md and set up R.A.D.A.R. for me, together with the Claude Code plugin if you are Claude Code: run the steps, verify the checksum, and tell me how to start it.` },
+    plugin: { pl: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar\n/reload-plugins\n/radar install\n/radar install confirm', en: '/plugin marketplace add LICODERO/radar\n/plugin install radar@radar\n/reload-plugins\n/radar install\n/radar install confirm' }
   };
   const fillCommands = (lang) => document.querySelectorAll('[data-cmd]').forEach((el) => { const raw = CMD[el.dataset.cmd][lang]; el.dataset.raw = raw; el.replaceChildren(...raw.split('\n').map((line) => { const ln = document.createElement('span'); ln.className = 'ln'; ln.textContent = line; return ln; })); });
   const copyText = async (text) => {

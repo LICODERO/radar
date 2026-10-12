@@ -1,12 +1,14 @@
 {
   "name": "radar",
   "description": "R.A.D.A.R.: see how well your repositories are set up for AI coding agents",
-  "owner": { "name": "Łukasz Antoniak" },
+  "owner": {
+    "name": "Łukasz Antoniak"
+  },
   "plugins": [
     {
       "name": "radar",
       "source": "./plugins/radar",
-      "description": "Install, start, update and remove R.A.D.A.R. from Claude Code"
+      "description": "R.A.D.A.R. in Claude Code: version and state above the prompt, and /radar to start, stop, install, update and remove it"
     }
   ]
 }

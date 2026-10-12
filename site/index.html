@@ -146,19 +146,19 @@
     <section id="install">
       <div class="wrap">
         <div class="kicker rv"><span data-i18n-html="d.kicker">ZAINSTALUJ · v<span class="ver"></span></span></div>
-        <h2 class="rv" data-i18n="d.title">Zainstalujesz to jednym zdaniem do agenta.</h2>
-        <p class="sub rv" data-i18n="d.sub">Wklej je do Claude Code albo innego agenta w terminalu. Agent pobierze właściwą paczkę, sprawdzi sumę kontrolną i powie, jak uruchomić.</p>
+        <h2 class="rv" data-i18n="d.title">Zainstalujesz to poleceniem w Claude Code.</h2>
+        <p class="sub rv" data-i18n="d.sub">Dwie komendy dodają plugin, kolejne pobierają aplikację: najpierw pokażą plan, a dopiero po Twoim potwierdzeniu zainstalują. Instalator sprawdza sumę kontrolną.</p>
         <div class="opt rv" data-i18n="d.oa">OPCJA A</div>
         <div class="paste rv">
-          <div class="plabel" data-i18n="d.paste">WKLEJ TO SWOJEMU AGENTOWI</div>
-          <div class="cmdbox"><pre class="cmd" data-cmd="agent"></pre><button class="copy" type="button" data-copy="agent" data-i18n="d.copy">KOPIUJ</button></div>
-        </div>
-        <div class="opt rv" data-i18n="d.ob">OPCJA B</div>
-        <div class="paste rv">
-          <div class="plabel" data-i18n="d.plugin">UŻYWASZ CLAUDE CODE? DWIE KOMENDY W SESJI</div>
+          <div class="plabel" data-i18n="d.plugin">W CLAUDE CODE: KOMENDY W SESJI</div>
           <div class="cmdbox"><pre class="cmd" data-cmd="plugin"></pre><button class="copy" type="button" data-copy="plugin" data-i18n="d.copy">KOPIUJ</button></div>
         </div>
-        <p class="fine" style="margin:-6px 2px 22px" data-i18n-html="d.pluginnote">Dodaje plugin z komendami <i>/radar:install</i>, <i>/radar:start</i>, <i>/radar:update</i> i <i>/radar:uninstall</i>. Sam plugin nie zawiera aplikacji: <i>/radar:install</i> pobiera ją tak jak zdanie wyżej.</p>
+        <p class="fine" style="margin:-6px 2px 22px" data-i18n-html="d.pluginnote">Plugin dodaje nad promptem wiersz z wersją i stanem (zielona albo czerwona kropka) oraz komendę <i>/radar</i>: <i>status</i>, <i>start</i>, <i>stop</i>, <i>open</i>, <i>update</i>, <i>uninstall</i>. Sam nie zawiera aplikacji: <i>/radar install</i> pobiera ją instalatorem z tego repozytorium, pokazuje plan i czeka na <i>confirm</i>.</p>
+        <div class="opt rv" data-i18n="d.ob">OPCJA B</div>
+        <div class="paste rv">
+          <div class="plabel" data-i18n="d.paste">INNY AGENT? WKLEJ TO SWOJEMU AGENTOWI</div>
+          <div class="cmdbox"><pre class="cmd" data-cmd="agent"></pre><button class="copy" type="button" data-copy="agent" data-i18n="d.copy">KOPIUJ</button></div>
+        </div>
         <p class="fine rv" style="margin-top:8px" data-i18n-html="d.more">Instalacja ze źródeł i szczegóły: <a data-link="installmd" href="#">INSTALL.md</a>.</p>
 
       </div>

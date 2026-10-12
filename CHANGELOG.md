@@ -2,6 +2,14 @@
 
 Newest first. A release needs a `## <version> – <date>` heading here: its text becomes the release notes.
 
+## Unreleased
+
+- The Claude Code plugin is now a control panel: a row above the prompt with the version and a green or red dot (running or not), start/stop and open buttons, and a window with every command when you click the version. `/radar` runs `status`, `start`, `stop`, `restart`, `open`, `hide`/`show`, and `install`, `update` and `uninstall` without the model (the last three show a plan first and wait for `confirm`).
+- The plugin's `/radar:install`, `/radar:start`, `/radar:update` and `/radar:uninstall` skills are gone: use `/radar install`, `/radar start`, `/radar update` and `/radar uninstall`.
+- The installed program folder has a `VERSION` file, so the version can be read without starting it.
+- A new private workflow is listed in `CLAUDE.local.md` right away (and kept in step when its visibility changes), and quality checks no longer call multi-line descriptions or a few long paragraphs "almost empty".
+- The agent that installs R.A.D.A.R. for you installs the plugin in the same go when your request says so.
+
 ## 0.1.2 – 2026-10-09
 
 First public release.
