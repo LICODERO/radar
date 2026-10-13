@@ -92,18 +92,18 @@ cd radar
 
 If you use Claude Code, the plugin puts R.A.D.A.R. next to your prompt: a row above it shows the version and whether it runs (green or red
 dot) with start/stop and open buttons, and `/radar` does the day-to-day without the model: `status`, `start`, `stop`, `restart`, `open`,
-`hide`/`show`, and `install`, `update` and `uninstall`. Clicking the version lists them. The plugin does not contain the app: `/radar install`
-runs the installer described above, but first shows what it will download and waits for `/radar install confirm`.
+`hide`/`show`, and `install`, `update` and `uninstall`. Clicking the version lists them. The plugin does not contain the app: first add the
+plugin (this is the one step you do yourself), then run `/radar:install`, which downloads and runs the installer described above.
 
 ```text
 /plugin marketplace add LICODERO/radar
 /plugin install radar@radar
 /reload-plugins
-/radar install
-/radar install confirm
+/radar:install
 ```
 
-macOS and Linux (on Windows the row and `/radar start` are not supported yet; use the installer and `radar` directly). Adding a marketplace and a
+After that the row shows above the prompt (run `/reload-plugins` once more, or start a new session, if it does not yet) and `/radar start` runs
+the app. Works on macOS, Linux and Windows. `/radar update` and `/radar uninstall` show a plan first and wait for `confirm`. Adding a marketplace and a
 plugin changes your Claude Code settings, so this is always your choice. To remove the plugin: `claude plugin uninstall radar@radar`, which does
 not remove the app (`/radar uninstall` does).
 

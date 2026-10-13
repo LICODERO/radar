@@ -2,6 +2,11 @@
 
 Newest first. A release needs a `## <version> – <date>` heading here: its text becomes the release notes.
 
+## Unreleased
+
+- The row above the prompt now appears right after the plugin is added (it no longer waits for the next session), and `/radar:install` is the first step: it installs the app, then `/radar` does everything else (`start`, `stop`, `update`, `show`, `hide`, `uninstall`...).
+- The plugin works on Windows: PowerShell for start, stop, open, install and uninstall, `curl.exe` for the probes, and one set of path helpers so `/` and `\` are never mixed.
+
 ## 0.1.3 – 2026-10-12
 
 - The Claude Code plugin is now a control panel: a row above the prompt with the version and a green or red dot (running or not), start/stop and open buttons, and a window with every command when you click the version. `/radar` runs `status`, `start`, `stop`, `restart`, `open`, `hide`/`show`, and `install`, `update` and `uninstall` without the model (the last three show a plan first and wait for `confirm`).

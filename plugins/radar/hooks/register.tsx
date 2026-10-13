@@ -1,7 +1,8 @@
 import { atom, read, update } from 'claude-code'
 import type { Register } from 'claude-code'
 
-import { bandOf, compareVersions, COMMANDS, describe, installPlan, isRadarHealth, parseLatestTag, parseProps, parseSessionVersion, parseVersionFile, pickSource, BASE_URL, RAW, USAGE } from './radar'
+import { bandOf, binaryOf, compareVersions, COMMANDS, describe, homeOf, installPlan, isRadarHealth, joinPath, osOf, parentDir, parseLatestTag, parseProps, parseSessionVersion, parseVersionFile, pickSource, powershell, runScriptOf, BASE_URL, PORT, RAW, USAGE } from './radar'
+import type { Os } from './radar'
 import type { Facts, Probe } from '../types'
 
 /** `$` as the state helpers take it, plus the calls this mod makes. */
@@ -14,7 +15,9 @@ type Api = Parameters<typeof update>[0] & {
       init?: { cwd?: string; env?: Record<string, string>; timeoutMs?: number },
     ): Promise<{ exitCode: number; stdout: string; stderr: string }>
   }
-  clock: { sleep(ms: number): Promise<void> }
+  session: { cwd(): Promise<string> }
+  command: { register(spec: { name: string; description: string }): Promise<unknown> }
+  clock: { sleep(ms: number): Promise<void>; every(ms: number, fn: () => void): unknown }
   ui: { toast(text: string): void; open(pane: { id: string; title?: string; focus?: boolean; closeOnEscape?: boolean }): Promise<unknown> }
   store: { get(key: string): Promise<unknown>; set(key: string, value: unknown): Promise<void> }
 }
@@ -30,14 +33,19 @@ const pendingAtom = atom({ plugin: 'radar', key: 'pending' } as const, null)
 
 const PANE = 'radar-commands'
 
-// the session's state; a reload starts it over and session.start fills it again
+// the module's state; a reload starts it over and ensureReady fills it again
 let cwd = ''
 let isSupported = true
+let os: Os = 'unix'
+let ready: Promise<void> | null = null
 
 async function radarHome($: Api): Promise<string> {
-  const custom = await $.env.get('RADAR_HOME')
-  if (custom) return custom
-  return `${(await $.env.get('HOME')) ?? ''}/.radar`
+  return homeOf(os, {
+    custom: await $.env.get('RADAR_HOME'),
+    home: await $.env.get('HOME'),
+    userProfile: await $.env.get('USERPROFILE'),
+    localAppData: await $.env.get('LOCALAPPDATA'),
+  })
 }
 
 async function readText($: Api, path: string): Promise<string | null> {
@@ -50,20 +58,36 @@ async function readText($: Api, path: string): Promise<string | null> {
 
 /** The checkout the session works in: the session's folder or the nearest one above it (a session often sits in a subfolder). */
 async function findRepo($: Api, start: string): Promise<string | null> {
+  const launcher = os === 'windows' ? 'run.ps1' : 'run.sh'
   let dir = start
   for (let i = 0; i < 8 && dir.length > 1; i++) {
-    if ((await $.fs.exists(`${dir}/Directory.Build.props`)) && (await $.fs.exists(`${dir}/src/api/Radar.Server`)) && (await $.fs.exists(`${dir}/run.sh`)))
+    if (
+      (await $.fs.exists(joinPath(os, dir, 'Directory.Build.props'))) &&
+      (await $.fs.exists(joinPath(os, dir, 'src', 'api', 'Radar.Server'))) &&
+      (await $.fs.exists(joinPath(os, dir, launcher)))
+    )
       return dir
-    dir = dir.slice(0, dir.lastIndexOf('/'))
+    const up = parentDir(dir)
+    if (up === '' || up === dir) break
+    dir = up
   }
   return null
 }
 
+/** The user's command line tools: `curl.exe` is the one shipped with Windows 10+, plain `curl` elsewhere. */
+const curl = () => (os === 'windows' ? 'curl.exe' : 'curl')
+
+/** Runs a short script in the system's shell; its values come in through `env`, never through the text. */
+function shell($: Api, unix: string, win: string, env: Record<string, string>, timeoutMs: number) {
+  const argv = os === 'windows' ? powershell(win) : ['/bin/sh', '-c', unix]
+  return $.process.run(argv, { env, timeoutMs })
+}
+
 async function probe($: Api): Promise<Probe> {
   try {
-    const health = await $.process.run(['curl', '-s', '-m', '2', `${BASE_URL}/api/health`], { timeoutMs: 5000 })
+    const health = await $.process.run([curl(), '-s', '-m', '2', `${BASE_URL}/api/health`], { timeoutMs: 5000 })
     if (health.exitCode !== 0 || !isRadarHealth(health.stdout)) return { isRunning: false, version: null }
-    const session = await $.process.run(['curl', '-s', '-m', '2', `${BASE_URL}/api/session`], { timeoutMs: 5000 })
+    const session = await $.process.run([curl(), '-s', '-m', '2', `${BASE_URL}/api/session`], { timeoutMs: 5000 })
     return { isRunning: true, version: parseSessionVersion(session.stdout) }
   } catch {
     return { isRunning: false, version: null }
@@ -72,13 +96,13 @@ async function probe($: Api): Promise<Probe> {
 
 async function facts($: Api): Promise<Facts> {
   const home = await radarHome($)
-  const binary = `${home}/app/radar`
+  const binary = binaryOf(os, home)
   const [isInstalled, versionText, root] = await Promise.all([
     $.fs.exists(binary),
-    readText($, `${home}/app/VERSION`),
+    readText($, joinPath(os, home, 'app', 'VERSION')),
     findRepo($, cwd),
   ])
-  const propsText = root ? await readText($, `${root}/Directory.Build.props`) : null
+  const propsText = root ? await readText($, joinPath(os, root, 'Directory.Build.props')) : null
   return {
     isSupported,
     probe: await probe($),
@@ -111,34 +135,57 @@ async function start($: Api, arg: string, f: Facts): Promise<string> {
       ? 'To nie jest repo R.A.D.A.R. (brak run.sh).'
       : 'R.A.D.A.R. nie jest zainstalowany. Użyj /radar install.'
   const home = await radarHome($)
-  const logs = `${home}/logs`
+  const logs = joinPath(os, home, 'logs')
+  const root = f.dev?.root ?? cwd
   // the program runs on after the command: detached, its output in a log, never into this call's pipes
-  const script = 'mkdir -p "$RL" && cd "$RD" && nohup "$RC" > "$RL/radar.log" 2>&1 < /dev/null &'
-  const env =
-    source === 'dev'
-      ? { RL: logs, RD: f.dev?.root ?? cwd, RC: `${f.dev?.root ?? cwd}/run.sh` }
-      : { RL: logs, RD: home, RC: `${home}/app/radar` }
-  await $.process.run(['/bin/sh', '-c', script], { env, timeoutMs: 10_000 })
-  const where = source === 'dev' ? 'ze źródeł (./run.sh, pierwszy start buduje UI)' : 'zainstalowaną kopię'
+  if (os === 'windows') {
+    const launch = source === 'dev' ? runScriptOf(os, root) : { file: binaryOf(os, home), args: '' }
+    const script =
+      "New-Item -ItemType Directory -Force -Path $env:RL | Out-Null; " +
+      "$a = @{ FilePath = $env:RC; WorkingDirectory = $env:RD; WindowStyle = 'Hidden'; " +
+      "RedirectStandardOutput = (Join-Path $env:RL 'radar.log'); RedirectStandardError = (Join-Path $env:RL 'radar.err.log') }; " +
+      'if ($env:RA) { $a.ArgumentList = $env:RA }; Start-Process @a'
+    await $.process.run(powershell(script), {
+      env: { RL: logs, RD: source === 'dev' ? root : home, RC: launch.file, RA: launch.args },
+      timeoutMs: 15_000,
+    })
+  } else {
+    const script = 'mkdir -p "$RL" && cd "$RD" && nohup "$RC" > "$RL/radar.log" 2>&1 < /dev/null &'
+    const env =
+      source === 'dev'
+        ? { RL: logs, RD: root, RC: runScriptOf(os, root).file }
+        : { RL: logs, RD: home, RC: binaryOf(os, home) }
+    await $.process.run(['/bin/sh', '-c', script], { env, timeoutMs: 10_000 })
+  }
+  const where = source === 'dev' ? 'ze źródeł (run.sh / run.ps1, pierwszy start buduje UI)' : 'zainstalowaną kopię'
   if (await waitFor($, true, source === 'dev' ? 40 : 20)) return `Uruchomiono ${where}: ${BASE_URL}`
-  return `Uruchamiam ${where}, ale jeszcze nie odpowiada. Sprawdź za chwilę: /radar status (log: ${logs}/radar.log).`
+  return `Uruchamiam ${where}, ale jeszcze nie odpowiada. Sprawdź za chwilę: /radar status (log: ${joinPath(os, logs, 'radar.log')}).`
 }
 
 async function stop($: Api, f: Facts): Promise<string> {
   if (!f.probe.isRunning) return 'Nie działa.'
-  const found = await $.process.run(['lsof', '-nP', `-iTCP:${5178}`, '-sTCP:LISTEN', '-t'], { timeoutMs: 5000 })
-  const pids = found.stdout.split(/\s+/).filter(p => /^\d+$/.test(p))
-  if (found.exitCode !== 0 || pids.length !== 1) return 'Nie umiem ustalić procesu na porcie 5178, nic nie zatrzymuję.'
+  const found =
+    os === 'windows'
+      ? await $.process.run(
+          powershell(`Get-NetTCPConnection -LocalPort ${PORT} -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess`),
+          { timeoutMs: 10_000 },
+        )
+      : await $.process.run(['lsof', '-nP', `-iTCP:${PORT}`, '-sTCP:LISTEN', '-t'], { timeoutMs: 5000 })
+  const pids = [...new Set(found.stdout.split(/\s+/).filter(p => /^\d+$/.test(p)))]
+  if (found.exitCode !== 0 || pids.length !== 1) return `Nie umiem ustalić procesu na porcie ${PORT}, nic nie zatrzymuję.`
   // it was recognised as R.A.D.A.R. by its health answer just now; a single listener on its port is that process
-  await $.process.run(['kill', pids[0]], { timeoutMs: 5000 })
+  if (os === 'windows') await $.process.run(powershell(`Stop-Process -Id ${pids[0]} -Force`), { timeoutMs: 10_000 })
+  else await $.process.run(['kill', pids[0]], { timeoutMs: 5000 })
   return (await waitFor($, false, 10)) ? 'Zatrzymano.' : `Proces ${pids[0]} jeszcze działa; sprawdź /radar status.`
 }
 
 async function open($: Api, f: Facts): Promise<string> {
   if (!f.probe.isRunning) return 'Nie działa. Użyj /radar start.'
-  const uname = await $.process.run(['uname', '-s'], { timeoutMs: 3000 })
-  const opener = uname.stdout.trim() === 'Darwin' ? 'open' : 'xdg-open'
-  await $.process.run([opener, BASE_URL], { timeoutMs: 5000 })
+  if (os === 'windows') await $.process.run(powershell(`Start-Process '${BASE_URL}'`), { timeoutMs: 10_000 })
+  else {
+    const uname = await $.process.run(['uname', '-s'], { timeoutMs: 3000 })
+    await $.process.run([uname.stdout.trim() === 'Darwin' ? 'open' : 'xdg-open', BASE_URL], { timeoutMs: 5000 })
+  }
   return `Otwarto ${BASE_URL}`
 }
 
@@ -157,7 +204,7 @@ async function toggle($: Api): Promise<void> {
 async function latestRelease($: Api): Promise<string | null> {
   try {
     const r = await $.process.run(
-      ['curl', '-s', '-m', '5', '-H', 'Accept: application/vnd.github+json', 'https://api.github.com/repos/LICODERO/radar/releases/latest'],
+      [curl(), '-s', '-m', '5', '-H', 'Accept: application/vnd.github+json', 'https://api.github.com/repos/LICODERO/radar/releases/latest'],
       { timeoutMs: 8000 },
     )
     return parseLatestTag(r.stdout)
@@ -168,8 +215,23 @@ async function latestRelease($: Api): Promise<string | null> {
 
 /** The installer of the repository, fetched to a temporary file and run (it checks the archive's SHA256 itself). */
 async function runInstaller($: Api): Promise<string> {
-  const script = 'f=$(mktemp) && curl -fsSL "$U" -o "$f" && sh "$f"; rc=$?; rm -f "$f"; exit $rc'
-  const r = await $.process.run(['/bin/sh', '-c', script], { env: { U: `${RAW}/install.sh` }, timeoutMs: 300_000 })
+  const r =
+    os === 'windows'
+      ? await shell(
+          $,
+          '',
+          "$f = Join-Path $env:TEMP 'radar-install.ps1'; Invoke-WebRequest -UseBasicParsing -Uri $env:U -OutFile $f; " +
+            "& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $f; $rc = $LASTEXITCODE; Remove-Item $f -ErrorAction SilentlyContinue; exit $rc",
+          { U: `${RAW}/install.ps1` },
+          300_000,
+        )
+      : await shell(
+          $,
+          'f=$(mktemp) && curl -fsSL "$U" -o "$f" && sh "$f"; rc=$?; rm -f "$f"; exit $rc',
+          '',
+          { U: `${RAW}/install.sh` },
+          300_000,
+        )
   const tail = `${r.stdout}\n${r.stderr}`.trim().split('\n').slice(-8).join('\n')
   return r.exitCode === 0 ? tail : `Instalator zakończył się błędem (kod ${r.exitCode}):\n${tail}`
 }
@@ -177,12 +239,12 @@ async function runInstaller($: Api): Promise<string> {
 async function install($: Api, f: Facts, verb: 'install' | 'update', isConfirmed: boolean): Promise<string> {
   if (verb === 'install' && f.isInstalled) return 'R.A.D.A.R. jest już zainstalowany. Do aktualizacji użyj /radar update.'
   if (verb === 'update' && !f.isInstalled) return 'R.A.D.A.R. nie jest zainstalowany. Użyj /radar install.'
-  if (!isConfirmed) return installPlan(verb, f, await latestRelease($))
+  if (!isConfirmed) return installPlan(verb, f, await latestRelease($), os)
   const was = f.installedVersion
   let stopped = ''
   if (verb === 'update' && f.probe.isRunning) stopped = `${await stop($, f)}\n`
   const out = await runInstaller($)
-  const after = parseVersionFile(await readText($, `${await radarHome($)}/app/VERSION`))
+  const after = parseVersionFile(await readText($, joinPath(os, await radarHome($), 'app', 'VERSION')))
   return `${stopped}${out}\nWersja: ${was ?? 'nieznana'} → ${after ?? 'nieznana'}. Uruchom: /radar start`
 }
 
@@ -190,13 +252,15 @@ async function install($: Api, f: Facts, verb: 'install' | 'update', isConfirmed
 async function uninstall($: Api, f: Facts, args: string): Promise<string> {
   if (!f.isInstalled) return 'Nie ma czego usuwać (brak zainstalowanej kopii).'
   if (!f.installedVersion || compareVersions(f.installedVersion, '0.1.2') < 0)
-    return 'Ta kopia nie ma komendy uninstall (albo nie umiem ustalić jej wersji). Usuń ręcznie: rm -rf ~/.radar ~/.local/bin/radar'
+    return `Ta kopia nie ma komendy uninstall (albo nie umiem ustalić jej wersji). Usuń ręcznie: ${
+      os === 'windows' ? 'Remove-Item -Recurse -Force "$env:LOCALAPPDATA\\RADAR"' : 'rm -rf ~/.radar ~/.local/bin/radar'
+    }`
   const words = args.split(/\s+/).filter(w => w !== '')
   const isConfirmed = words.includes('confirm')
   const home = await radarHome($)
   let stopped = ''
   if (isConfirmed && f.probe.isRunning) stopped = `${await stop($, f)}\n`
-  const argv = [`${home}/app/radar`, 'uninstall']
+  const argv = [binaryOf(os, home), 'uninstall']
   if (isConfirmed) argv.push('--confirm')
   if (words.includes('data')) argv.push('--data')
   if (words.includes('skill')) argv.push('--skill')
@@ -274,28 +338,50 @@ async function openBrowser($: Api): Promise<void> {
   $.ui.toast(await open($, await facts($)))
 }
 
-export const register: Register = on => {
-  on('session.start', async ($, e, next) => {
-    cwd = e.cwd
-    const isHiddenBefore = await $.store.get('isHidden')
+/**
+ * Everything the row and the command need once: the system, the folder, the command, the timer, the first probe.
+ * Started from `session.start` and, because a plugin enabled or reloaded in a running session may never see that event, from the first
+ * render or command too; without that the row would stay empty until the next session.
+ */
+function ensureReady($: Api): Promise<void> {
+  ready ??= (async () => {
     try {
-      await $.process.run(['uname', '-s'], { timeoutMs: 3000 })
+      cwd = await $.session.cwd()
     } catch {
-      isSupported = false
+      cwd = ''
     }
+    os = osOf(await $.env.get('OS'))
+    if (os === 'unix') {
+      try {
+        await $.process.run(['uname', '-s'], { timeoutMs: 3000 })
+      } catch {
+        isSupported = false
+      }
+    }
+    const isHiddenBefore = await $.store.get('isHidden')
     await $.command.register({
       name: COMMAND,
-      description: 'R.A.D.A.R.: status, start, stop, restart, open, hide, show',
+      description: 'R.A.D.A.R.: status, start, stop, restart, open, hide, show, install, update, uninstall',
     })
-    await update($, hiddenAtom, () => (isHiddenBefore === true))
-    void refresh($)
+    await update($, hiddenAtom, () => isHiddenBefore === true)
+    await refresh($)
     $.clock.every(REFRESH_MS, () => {
       void tick($)
     })
+  })().catch(() => {
+    ready = null
+  })
+  return ready
+}
+
+export const register: Register = on => {
+  on('session.start', async ($, e, next) => {
+    await ensureReady($)
     return next(e)
   })
 
   on('command.run', { command: COMMAND }, async ($, e) => {
+    await ensureReady($)
     const [verb = 'status', ...rest] = e.args.trim().split(/\s+/)
     const text = await execute($, verb, rest.join(' '))
     await refresh($)
@@ -305,7 +391,12 @@ export const register: Register = on => {
   // the row above the prompt: version, state and the buttons
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     const f = await read($, factsAtom)
-    if (f === null || (await read($, hiddenAtom))) return next(e)
+    if (f === null) {
+      // nothing probed yet (the plugin came in after session.start): start it, the next render draws the row
+      void ensureReady($)
+      return next(e)
+    }
+    if (await read($, hiddenAtom)) return next(e)
     const band = bandOf(f)
     if (!band.isVisible || e.props.hasSurvey) return next(e)
 
