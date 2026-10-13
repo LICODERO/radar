@@ -388,24 +388,26 @@ export const register: Register = on => {
     return { text }
   }).catch(($, e, next) => (next.called ? next(e) : { text: 'R.A.D.A.R.: komenda się nie powiodła. Sprawdź /radar status.' }))
 
-  // the row above the prompt: version, state and the buttons
+  // the row above the prompt: version, state and the buttons. The band has one slot, so this row goes under whatever the hooks beneath
+  // draw (another plugin's band) instead of replacing it, and it never swallows a survey.
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
+    const below = await next(e)
     const f = await read($, factsAtom)
     if (f === null) {
       // nothing probed yet (the plugin came in after session.start): start it, the next render draws the row
       void ensureReady($)
-      return next(e)
+      return below
     }
-    if (await read($, hiddenAtom)) return next(e)
+    if (await read($, hiddenAtom)) return below
     const band = bandOf(f)
-    if (!band.isVisible || e.props.hasSurvey) return next(e)
+    if (!band.isVisible || e.props.hasSurvey) return below
 
     const busy = await read($, busyAtom)
     const { Box, Button, Text } = $.ui.resolve(e)
     const state = busy === 'start' ? 'uruchamiam…' : busy === 'stop' ? 'zatrzymuję…' : ''
 
     // the name and state at the left edge, the buttons at the right one
-    return (
+    const row = (
       <Box justifyContent="space-between" width="100%" paddingX={1}>
         <Box>
           <Text dimColor>R.A.D.A.R. </Text>
@@ -423,6 +425,13 @@ export const register: Register = on => {
           {busy === null && <Text>  </Text>}
           {busy === null && <Button key="hide" label="✕" plain dimColor onPress={() => setHidden($, true)} />}
         </Box>
+      </Box>
+    )
+    if (below === null || below === undefined || typeof below !== 'object') return row
+    return (
+      <Box flexDirection="column" width="100%">
+        {below}
+        {row}
       </Box>
     )
   })
