@@ -428,8 +428,9 @@ export const register: Register = on => {
       </Box>
     )
     if (below === null || below === undefined || typeof below !== 'object') return row
+    // no `width` (or any other concealing prop) here: the engine refuses an engine node nested under a Box that has one
     return (
-      <Box flexDirection="column" width="100%">
+      <Box flexDirection="column">
         {below}
         {row}
       </Box>
