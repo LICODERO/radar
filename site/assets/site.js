@@ -62,7 +62,7 @@
     'd.kicker': 'INSTALL · v<span class="ver"></span>', 'd.title': 'You\'ll install it with one sentence to your agent.',
     'd.sub': 'Paste it into Claude Code or any other agent in a terminal. It downloads the right package, checks the checksum and tells you how to start it.',
     'd.paste': 'PASTE THIS TO YOUR CODING AGENT', 'd.copy': 'COPY', 'd.copied': 'COPIED',
-    'd.pluginnote': 'In Claude Code the agent also installs the plugin: a row above the prompt with the version and state (a green or red dot) and the <i>/radar</i> command (<i>status</i>, <i>start</i>, <i>stop</i>, <i>open</i>, <i>update</i>, <i>uninstall</i>). Run <i>/reload-plugins</i> afterwards. The plugin does not contain the app.',
+    'd.pluginnote': 'In Claude Code the agent also installs the plugin: a row above the prompt with the version and state (a green or red dot) and the <i>/radar</i> command (<i>status</i>, <i>start</i>, <i>stop</i>, <i>open</i>, <i>hide</i>, <i>show</i>, <i>update</i>, <i>uninstall</i>). After adding the plugin run <i>/reload-plugins</i>, then <i>/radar:install</i>, which installs the app itself. Works on macOS, Linux and Windows.',
     'd.more': 'Installing from source and the details: <a data-link="installmd" href="#">INSTALL.md</a>.',
     'q.title': 'Frequently asked questions',
     'q1': 'Is it free?', 'q1a': 'Yes. R.A.D.A.R. is free and open source under the MIT licence: use it at home or at work, read the code, change it.',

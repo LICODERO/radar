@@ -1,6 +1,6 @@
 {
   "name": "radar",
-  "description": "R.A.D.A.R. in Claude Code: a row above the prompt with the version, state and start/stop/open buttons, and the /radar command (status, start, stop, open, install, update, uninstall)",
+  "description": "R.A.D.A.R. in Claude Code: /radar:install installs the app, then /radar does status, start, stop, open, hide, show, update and uninstall, with a row above the prompt (macOS, Linux, Windows)",
   "author": {
     "name": "Łukasz Antoniak"
   },

@@ -66,7 +66,7 @@ Do not start the app unless the user asks. If they do, run it in a separate term
 - If you are Claude Code, install the plugin as part of this install **when the user's request names it** (the sentence on the website and in the
   README does: "together with the Claude Code plugin"); it changes their Claude Code settings, so without that mention only offer it and wait
   for a yes. Run `claude plugin marketplace add LICODERO/radar`, then `claude plugin install radar@radar`, then tell the user to run
-  `/reload-plugins` (or start a new session). The plugin adds the `/radar` command (status, start, stop, open, update, uninstall) and a row above
+  `/reload-plugins` (or start a new session). The plugin adds the `/radar` command (status, start, stop, open, update, uninstall; `/radar:install` installs the app itself) and a row above
   the prompt with the version, the state and start/stop/open buttons. Other agents skip this.
 - Claude Code (`claude`) on the PATH is optional: it is only needed for the buttons that draft files or open sessions.
 - To update, run the same installer again (or `/radar update` with the plugin). To remove it, see "Uninstalling" below (or `/radar uninstall`).

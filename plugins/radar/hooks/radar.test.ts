@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-import { bandOf, compareVersions, describe, installPlan, isRadarHealth, parseLatestTag, parseProps, parseSessionVersion, parseVersionFile, pickSource } from './radar'
+import { bandOf, binaryOf, compareVersions, describe, homeOf, installPlan, isRadarHealth, joinPath, osOf, parentDir, parseLatestTag, parseProps, parseSessionVersion, parseVersionFile, pickSource, runScriptOf } from './radar'
 import type { Facts } from '../types'
 
 const base: Facts = {
@@ -78,4 +78,29 @@ test('an update plan names the source, the versions and how to confirm', () => {
   expect(plan).toContain('zatrzymam')
   expect(plan).toContain('/radar update confirm')
   expect(installPlan('update', { ...base, isInstalled: true, installedVersion: '0.1.3' }, '0.1.3')).toContain('najnowszą')
+})
+
+test('paths use the separator of the system and never mix both', () => {
+  expect(joinPath('unix', '/home/me', '.radar', 'app', 'radar')).toBe('/home/me/.radar/app/radar')
+  expect(joinPath('windows', 'C:\\Users\\me\\AppData\\Local', 'RADAR', 'app/radar.exe')).toBe('C:\\Users\\me\\AppData\\Local\\RADAR\\app\\radar.exe')
+  expect(joinPath('windows', 'C:/Users/me/', '/src')).toBe('C:\\Users\\me\\src')
+  expect(joinPath('windows', '\\\\server\\share', 'RADAR')).toBe('\\\\server\\share\\RADAR')
+  expect(parentDir('C:\\Users\\me\\repo')).toBe('C:\\Users\\me')
+  expect(parentDir('C:\\Users')).toBe('C:\\')
+  expect(parentDir('/home/me/repo/')).toBe('/home/me')
+  expect(parentDir('/home')).toBe('/')
+  expect(parentDir('repo')).toBe('')
+})
+
+test('the install folder and program follow each system\'s defaults', () => {
+  expect(osOf('Windows_NT')).toBe('windows')
+  expect(osOf(undefined)).toBe('unix')
+  expect(homeOf('unix', { home: '/Users/me' })).toBe('/Users/me/.radar')
+  expect(homeOf('windows', { localAppData: 'C:\\Users\\me\\AppData\\Local' })).toBe('C:\\Users\\me\\AppData\\Local\\RADAR')
+  expect(homeOf('windows', { userProfile: 'C:\\Users\\me' })).toBe('C:\\Users\\me\\AppData\\Local\\RADAR')
+  expect(homeOf('windows', { custom: 'D:/tools/radar', localAppData: 'C:\\x' })).toBe('D:\\tools\\radar')
+  expect(binaryOf('unix', '/Users/me/.radar')).toBe('/Users/me/.radar/app/radar')
+  expect(binaryOf('windows', 'C:\\R')).toBe('C:\\R\\app\\radar.exe')
+  expect(runScriptOf('unix', '/src/radar').file).toBe('/src/radar/run.sh')
+  expect(runScriptOf('windows', 'C:/src/radar').args).toContain('-File "C:\\src\\radar\\run.ps1"')
 })
