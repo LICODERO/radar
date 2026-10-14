@@ -47,6 +47,8 @@
     <div class="btns">
       @if (phase() === 'done') {
         <button class="m btn-solid go" type="button" (click)="store.closeLocalFile()">{{ t('local.closeBtn') }}</button>
+      } @else if (nothingToDo()) {
+        <button class="m btn-solid go" type="button" (click)="store.closeLocalFile()">{{ t('local.closeBtn') }}</button>
       } @else {
         <button class="m btn-solid go" type="button" [disabled]="phase() !== 'plan' || !actionable()" (click)="confirm()">
           {{ phase() === 'saving' ? t('local.saving') : t('local.confirm') }}

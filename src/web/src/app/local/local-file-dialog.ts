@@ -31,6 +31,11 @@ export class LocalFileDialog {
     const p = this.plan();
     return !!p && !p.blocked && p.parts.length > 0;
   });
+  /** the plan is in and holds nothing to write: a dead save button would only confuse, so only close is offered */
+  protected readonly nothingToDo = computed(() => {
+    const p = this.plan();
+    return !!p && !p.blocked && p.parts.length === 0 && this.phase() !== 'done' && this.phase() !== 'loading';
+  });
   /** the checkbox is only worth showing when there is something public to list (or it is already ticked) */
   protected readonly canOfferPublic = computed(() => (this.plan()?.publicCandidates ?? 0) > 0 || this.includePublic());
 

@@ -56,8 +56,9 @@ describe('LocalFileDialog', () => {
 
   it('says there is nothing to do and offers no save', async () => {
     const { el } = await open(plan({ parts: [] }));
-    expect(el.textContent).toContain('Nothing to do');
-    expect(go(el).disabled).toBe(true);
+    expect(el.textContent).toContain('Nothing to write yet');
+    expect(el.textContent).not.toContain('SAVE');
+    expect(el.textContent).toContain('CLOSE');
   });
 
   it('explains why it refuses to write', async () => {
