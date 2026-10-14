@@ -4,6 +4,8 @@ Newest first. A release needs a `## <version> – <date>` heading here: its text
 
 ## Unreleased
 
+## 0.1.4 – 2026-10-14
+
 - The right panel's buttons are now AGENT / SKILL / WORKFLOW and SECOND BRAIN / RELATIONS (the flow between repos): "+ FOR THIS REPO" moved into the selected repo's card (the second brain line is a button there). The local instructions dialog no longer shows a dead save button or a misleading "nothing to do" when there is nothing to write.
 - The row above the prompt now appears right after the plugin is added (it no longer waits for the next session), and `/radar:install` is the first step: it installs the app, then `/radar` does everything else (`start`, `stop`, `update`, `show`, `hide`, `uninstall`...).
 - The row above the prompt shares its slot with other plugins' bands instead of replacing them (the band has one slot, and two plugins drawing there hid each other).
